@@ -3,17 +3,14 @@
     "description": "PHP email library",
     "type": "library",
     "repositories": [
-        {
-            "type": "pear",
-            "url": "https://pear.horde.org"
-        }
+        {"url": "https://horde-satis.maintaina.com", "type": "composer"}
     ],
     "require": {
         "php": ">=7.4",
         "ezyang/htmlpurifier": "^4.11",
         "laravel/lumen-framework": "5.8.*",
-        "pear-pear.horde.org/horde_imap_client": "2.30.*",
-        "pear-pear.horde.org/horde_smtp": "1.9.*"
+        "horde/imap_client": "dev-FRAMEWORK_6_0",
+        "horde/smtp": "dev-FRAMEWORK_6_0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -38,5 +35,11 @@
             "name": "Thorsten Suckow-Homberg",
             "email": "thorsten@suckow-homberg.de"
         }
-    ]
+    ],
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "horde/horde-installer-plugin": false
+        }
+    }
 }

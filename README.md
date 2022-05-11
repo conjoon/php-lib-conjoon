@@ -10,15 +10,13 @@ $ composer i
 ## Troubleshooting
 
 ### Composer 2.0 - Pear/Horde vows
-If you experience any troubles running `composer`, please revert to **Composer 1.***. You can safely 
-go back to **Composer 2** afterwards.
+As of **v1.0.1**, _php-lib-conjoon_ no longer requires _Composer 1.*_ for installation.
+For _Composer 2.*_-compatibility, _php-lib-conjoon_ relies on the following private composer 
+package repository:
 
- - remove `requires` and `repositories` from the _composer.json_, then run
-```shell
-composer self-update --1
 ```
- - add the previously removed `requires` and `repositories` back to _composer.json_, then run
-```shell
-composer update
-composer self-update --rollback
+https://horde-satis.maintaina.com
 ```
+
+This repository is also mentioned in the _composer.json_-file of 
+[horde\/horde_deployment](https://github.com/horde/horde-deployment/blob/master/composer.json).
