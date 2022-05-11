@@ -106,10 +106,9 @@ class DraftTraitTest extends TestCase
     }
 }
 
-// @codingStandardsIgnoreStart
+// phpcs:disable
 class MockTrait extends AbstractMessageItem
 {
     use DraftTrait;
 }
-// @codingStandardsIgnoreEnd
-
+// phpcs:enable
