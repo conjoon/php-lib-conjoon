@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class DataExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

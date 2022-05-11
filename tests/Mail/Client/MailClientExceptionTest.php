@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class MailClientExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

@@ -43,7 +43,6 @@ use Tests\TestCase;
  */
 class MessageKeyTest extends TestCase
 {
-
     /**
      * Test class
      */

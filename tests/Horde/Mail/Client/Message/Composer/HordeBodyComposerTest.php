@@ -41,8 +41,6 @@ use Tests\TestCase;
  */
 class HordeBodyComposerTest extends TestCase
 {
-
-
     /**
      * Test instance.
      */

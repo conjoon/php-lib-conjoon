@@ -43,8 +43,6 @@ use Tests\TestCase;
  */
 class DefaultMessageItemFieldsProcessorTest extends TestCase
 {
-
-
     /**
      * Test instance.
      */
@@ -85,7 +83,6 @@ class DefaultMessageItemFieldsProcessorTest extends TestCase
     {
 
         return new class ($this->createConverter()) extends DefaultMessageItemFieldsProcessor {
-
             public function process(AbstractMessageItem $messageItem, string $toCharset = "UTF-8"): AbstractMessageItem
             {
 

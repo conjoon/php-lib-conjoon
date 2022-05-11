@@ -45,7 +45,6 @@ use Tests\TestCase;
  */
 class DraftTraitTest extends TestCase
 {
-
     public function testTrait()
     {
         $trait = $this->getMockedTrait();

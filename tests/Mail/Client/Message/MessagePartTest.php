@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class MessagePartTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

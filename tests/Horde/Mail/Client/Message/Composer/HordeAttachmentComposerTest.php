@@ -43,7 +43,6 @@ use Tests\TestCase;
  */
 class HordeAttachmentComposerTest extends TestCase
 {
-
     public function testClass()
     {
         $composer = new HordeAttachmentComposer();

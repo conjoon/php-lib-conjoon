@@ -41,8 +41,6 @@ use Tests\TestCase;
  */
 class FolderKeyTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

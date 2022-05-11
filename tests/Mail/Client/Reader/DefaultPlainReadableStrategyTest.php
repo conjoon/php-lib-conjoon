@@ -36,8 +36,6 @@ use Tests\TestCase;
 
 class DefaultPlainReadableStrategyTest extends TestCase
 {
-
-
     public function testClass()
     {
 

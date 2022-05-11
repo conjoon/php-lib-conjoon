@@ -41,7 +41,6 @@ use Tests\TestCase;
  */
 class DefaultFolderIdToTypeMapperTest extends TestCase
 {
-
     /**
      * Tests constructor and base class.
      */

@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class DefaultPlainWritableStrategyTest extends TestCase
 {
-
     /**
      * Test inheritance
      */

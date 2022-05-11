@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class InvalidQueryExceptionTest extends TestCase
 {
-
     /**
      * test instance
      */

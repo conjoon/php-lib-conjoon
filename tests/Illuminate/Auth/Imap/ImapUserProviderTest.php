@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class ImapUserProviderTest extends TestCase
 {
-
     /**
      * getUser()
      */

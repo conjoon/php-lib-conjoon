@@ -210,7 +210,6 @@ class DefaultAttachmentServiceTest extends TestCase
     {
 
         return new class () implements FileAttachmentProcessor {
-
             public function process(FileAttachment $fileAttachment): FileAttachmentItem
             {
                 return new FileAttachmentItem(

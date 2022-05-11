@@ -37,7 +37,6 @@ use Tests\TestCase;
 
 class UtilTest extends TestCase
 {
-
     protected array $config = [
         "id"               => "dev_sys_conjoon_org",
         "inbox_type"      => "IMAP",

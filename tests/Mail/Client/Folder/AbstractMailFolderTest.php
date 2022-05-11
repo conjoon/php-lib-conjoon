@@ -40,8 +40,6 @@ use Tests\TestCase;
  */
 class AbstractMailFolderTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -126,7 +124,6 @@ class AbstractMailFolderTest extends TestCase
     {
         // Create a new instance from the Abstract Class
         return new class ($key, $data) extends AbstractMailFolder {
-
         };
     }
 }

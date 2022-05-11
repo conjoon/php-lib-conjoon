@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class MailAccountTest extends TestCase
 {
-
     protected array $accountConfig = [
         "id"               => "dev_sys_conjoon_org",
         "name"            => "conjoon developer",

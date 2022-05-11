@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class CharsetConverterTest extends TestCase
 {
-
     /**
      * Test inheritance
      */
@@ -63,7 +62,7 @@ class CharsetConverterTest extends TestCase
 
         $text = "€";
         $currentLocale = setlocale(LC_ALL, 0);
-        setLocale(LC_ALL,"en_US.UTF-8");
+        setLocale(LC_ALL, "en_US.UTF-8");
         $this->assertSame("EUR", $decoder->convert($text, "UTF-8", "ISO-8859-1"));
         setLocale(LC_ALL, $currentLocale);
 

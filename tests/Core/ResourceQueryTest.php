@@ -42,7 +42,6 @@ use Tests\TestCase;
  */
 class ResourceQueryTest extends TestCase
 {
-
     /**
      * Class functionality
      * @noinspection PhpUndefinedFieldInspection

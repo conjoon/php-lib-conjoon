@@ -45,8 +45,6 @@ use Tests\TestCase;
  */
 class HordeHeaderComposerTest extends TestCase
 {
-
-
     public function testClass()
     {
 

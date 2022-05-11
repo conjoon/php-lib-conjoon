@@ -42,7 +42,6 @@ use Tests\TestCase;
  */
 class ProblemFactoryTest extends TestCase
 {
-
     /**
      * test make
      */

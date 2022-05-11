@@ -38,8 +38,6 @@ use Tests\TestCase;
  */
 class ModifiableTraitTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

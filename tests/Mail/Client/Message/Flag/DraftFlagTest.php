@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class DraftFlagTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -35,7 +35,6 @@ namespace Tests\Conjoon\Horde\Mail\Client\Imap;
  */
 class SocketForTesting
 {
-
     public function connect()
     {
     }

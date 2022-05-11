@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class BadRequestProblemTest extends TestCase
 {
-
     /**
      * test instance
      */
