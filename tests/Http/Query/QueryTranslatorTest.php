@@ -42,7 +42,6 @@ use Tests\TestCase;
  */
 class QueryTranslatorTest extends TestCase
 {
-
     /**
      * Class functionality
      */
@@ -109,7 +108,6 @@ class QueryTranslatorTest extends TestCase
     protected function getResourceQuery(ParameterBag $bag): ResourceQuery
     {
         return new class ($bag) extends ResourceQuery {
-
         };
     }
 
@@ -120,7 +118,6 @@ class QueryTranslatorTest extends TestCase
     protected function getParameterResource(): object
     {
         return new class {
-
             public function getParameters(): array
             {
                 return [

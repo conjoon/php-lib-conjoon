@@ -43,8 +43,6 @@ use Tests\TestCase;
  */
 class LaravelAttachmentListJsonTransformerTest extends TestCase
 {
-
-
     /**
      * Test inheritance
      */

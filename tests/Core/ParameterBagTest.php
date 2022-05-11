@@ -41,7 +41,6 @@ use Tests\TestCase;
  */
 class ParameterBagTest extends TestCase
 {
-
     /**
      * Class functionality
      * @noinspection PhpUndefinedFieldInspection

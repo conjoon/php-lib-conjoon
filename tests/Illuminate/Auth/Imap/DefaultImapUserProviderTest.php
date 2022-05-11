@@ -41,7 +41,6 @@ use Tests\TestCase;
  */
 class DefaultImapUserProviderTest extends TestCase
 {
-
     /**
      * getUser()
      * @noinspection SpellCheckingInspection

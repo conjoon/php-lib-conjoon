@@ -42,8 +42,6 @@ use Tests\TestCase;
  */
 class FileAttachmentItemTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class InvalidParameterResourceExceptionTest extends TestCase
 {
-
     /**
      * test instance
      */

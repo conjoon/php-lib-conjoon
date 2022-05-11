@@ -40,8 +40,6 @@ use InvalidArgumentException;
  */
 class MessageItemChildCompoundKeyTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -197,7 +195,6 @@ class MessageItemChildCompoundKeyTest extends TestCase
             $parentMessageItemId,
             $id
         ) extends MessageItemChildCompoundKey {
-
         };
     }
 }

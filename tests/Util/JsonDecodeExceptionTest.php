@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class JsonDecodeExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

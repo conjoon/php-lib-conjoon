@@ -1401,7 +1401,6 @@ class HordeClientTest extends TestCase
         $rawMsg = "RAWMESSAGE";
         $fetchResult = [];
         $fetchResult[$messageKey->getId()] = new class ($rawMsg) {
-
             /**
              * @var string
              */

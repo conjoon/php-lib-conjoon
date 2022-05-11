@@ -44,8 +44,6 @@ use Tests\TestCase;
  */
 class AbstractMessagePartContentProcessorTest extends TestCase
 {
-
-
     /**
      * Test instance.
      */
@@ -108,7 +106,6 @@ class AbstractMessagePartContentProcessorTest extends TestCase
             $this->createPlainTextStrategy(),
             $this->createHtmlTextStrategy()
         ) extends AbstractMessagePartContentProcessor {
-
         };
     }
 

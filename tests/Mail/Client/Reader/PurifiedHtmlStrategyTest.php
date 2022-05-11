@@ -36,8 +36,6 @@ use Tests\TestCase;
 
 class PurifiedHtmlStrategyTest extends TestCase
 {
-
-
     public function testClass()
     {
 

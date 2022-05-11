@@ -44,8 +44,6 @@ use Tests\TestCase;
  */
 class ListMessageItemTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class JsonDecodableTest extends TestCase
 {
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -50,7 +49,6 @@ class JsonDecodableTest extends TestCase
     public function testInterface()
     {
         $c = new class implements JsonDecodable {
-
             public static function fromString(string $value): Jsonable
             {
                 $t = new class implements Jsonable {

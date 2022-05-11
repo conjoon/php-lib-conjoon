@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class ServiceExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

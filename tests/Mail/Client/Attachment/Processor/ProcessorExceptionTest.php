@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class ProcessorExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

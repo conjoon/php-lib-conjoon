@@ -42,8 +42,6 @@ use Tests\TestCase;
  */
 class MessageBodyDraftTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -44,8 +44,6 @@ use Tests\TestCase;
  */
 class MailAddressTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

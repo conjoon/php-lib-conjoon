@@ -43,7 +43,6 @@ use Conjoon\Mail\Client\Message\MessageItemDraft;
  */
 trait ClientGeneratorTrait
 {
-
     /**
      * @return BodyComposer
      */
@@ -51,7 +50,6 @@ trait ClientGeneratorTrait
     {
 
         return new class () implements BodyComposer {
-
             public function compose(string $target, MessageBodyDraft $messageBodyDraft): string
             {
                 return trim($target) . "\n\n" . "FULL_TXT_MSG";
@@ -67,7 +65,6 @@ trait ClientGeneratorTrait
     {
 
         return new class () implements AttachmentComposer {
-
             public function compose(string $target, FileAttachmentList $fileAttachmentList): string
             {
                 return trim($target) . "\n\nAttachments[" . count($fileAttachmentList) . "]";
@@ -83,7 +80,6 @@ trait ClientGeneratorTrait
     {
 
         return new class () implements HeaderComposer {
-
             public function compose(string $target, MessageItemDraft $source = null): string
             {
                 return "__HEADER__" . "\n\n" . trim($target);

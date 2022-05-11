@@ -43,8 +43,6 @@ use TypeError;
  */
 class AbstractListTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class ImapUserTest extends TestCase
 {
-
     /**
      * Tests ImapUser getter/constructor.
      */

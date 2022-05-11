@@ -42,7 +42,6 @@ use Tests\Conjoon\Mail\Client\Message\Text\AbstractMessagePartContentProcessorTe
  */
 class WritableMessagePartContentProcessorTest extends AbstractMessagePartContentProcessorTest
 {
-
     /**
      * Test instance.
      */

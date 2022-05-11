@@ -42,8 +42,6 @@ use Tests\TestCase;
  */
 class MailFolderChildListTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

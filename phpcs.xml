@@ -29,6 +29,7 @@
     <description>The coding standard (PSR-12) for conjoon/php-lib-conjoon.</description>
 
     <file>src/</file>
+    <file>tests/</file>
 
     <rule ref="PSR12" />
 </ruleset>

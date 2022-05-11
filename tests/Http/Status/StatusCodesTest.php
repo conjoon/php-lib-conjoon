@@ -38,7 +38,6 @@ use Tests\TestCase;
  */
 class StatusCodesTest extends TestCase
 {
-
     /**
      * test class
      */

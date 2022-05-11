@@ -41,8 +41,6 @@ use Tests\TestCase;
  */
 class AbstractAttachmentTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -164,7 +162,6 @@ class AbstractAttachmentTest extends TestCase
     {
         // Create a new instance from the Abstract Class
         return new class ($key, $data) extends AbstractAttachment {
-
             public function toJson(): array
             {
                 return [];

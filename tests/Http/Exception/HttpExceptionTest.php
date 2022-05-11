@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class HttpExceptionTest extends TestCase
 {
-
     /**
      * test instance
      */

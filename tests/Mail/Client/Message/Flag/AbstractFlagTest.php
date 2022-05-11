@@ -38,8 +38,6 @@ use Tests\TestCase;
  */
 class AbstractFlagTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

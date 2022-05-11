@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class MethodNotAllowedProblemTest extends TestCase
 {
-
     /**
      * test instance
      */

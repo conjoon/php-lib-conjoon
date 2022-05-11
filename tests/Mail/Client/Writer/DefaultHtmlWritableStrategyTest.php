@@ -40,8 +40,6 @@ use Tests\TestCase;
  */
 class DefaultHtmlWritableStrategyTest extends TestCase
 {
-
-
     /**
      * Test inheritance
      */

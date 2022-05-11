@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class AbstractProblemTest extends TestCase
 {
-
     /**
      * test instance
      */

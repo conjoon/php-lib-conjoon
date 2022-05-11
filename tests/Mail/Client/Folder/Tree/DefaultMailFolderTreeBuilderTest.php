@@ -44,7 +44,6 @@ use Tests\TestCase;
  */
 class DefaultMailFolderTreeBuilderTest extends TestCase
 {
-
     /**
      * Tests constructor and base class.
      */

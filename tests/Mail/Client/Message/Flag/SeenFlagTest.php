@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class SeenFlagTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

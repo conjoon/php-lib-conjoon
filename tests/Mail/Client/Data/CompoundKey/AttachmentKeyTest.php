@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class AttachmentKeyTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

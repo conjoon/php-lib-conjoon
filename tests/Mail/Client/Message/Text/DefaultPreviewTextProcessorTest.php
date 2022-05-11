@@ -45,8 +45,6 @@ use Tests\TestCase;
  */
 class DefaultPreviewTextProcessorTest extends TestCase
 {
-
-
     /**
      * Test instance.
      */
@@ -124,7 +122,6 @@ class DefaultPreviewTextProcessorTest extends TestCase
             $this->createPlainReadableStrategy(),
             $this->createHtmlReadableStrategy()
         ) extends ReadableMessagePartContentProcessor {
-
             public function process(
                 MessagePart $messagePart,
                 string $toCharset = "UTF-8",

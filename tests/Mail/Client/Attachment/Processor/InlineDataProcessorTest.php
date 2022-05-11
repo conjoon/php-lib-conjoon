@@ -41,8 +41,6 @@ use Tests\TestCase;
  */
 class InlineDataProcessorTest extends TestCase
 {
-
-
     /**
      * Test class
      */

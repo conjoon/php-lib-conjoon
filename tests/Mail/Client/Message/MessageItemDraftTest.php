@@ -46,8 +46,6 @@ use TypeError;
  */
 class MessageItemDraftTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

@@ -38,7 +38,6 @@ use Tests\TestCase;
  */
 class FilterTraitTest extends TestCase
 {
-
     /**
      * Tests getSearchQueryFromFilter
      */

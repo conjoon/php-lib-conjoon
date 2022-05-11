@@ -38,7 +38,6 @@ use Tests\TestCase;
  */
 class JsonableTest extends TestCase
 {
-
     protected static array $myJson = ["foo" => "bar"];
 
 // ---------------------

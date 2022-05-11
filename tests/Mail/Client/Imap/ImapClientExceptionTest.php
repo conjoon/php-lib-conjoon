@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class ImapClientExceptionTest extends TestCase
 {
-
-
     public function testInstance()
     {
 

@@ -41,8 +41,6 @@ use Tests\TestCase;
  */
 class DefaultMessageBodyDraftJsonTransformerTest extends TestCase
 {
-
-
     /**
      * Test inheritance
      */

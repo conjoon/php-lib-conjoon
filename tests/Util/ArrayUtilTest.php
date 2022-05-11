@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class ArrayUtilTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

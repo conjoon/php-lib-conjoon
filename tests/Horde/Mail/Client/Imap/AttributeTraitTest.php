@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class AttributeTraitTest extends TestCase
 {
-
     /**
      * getDefAttr()
      * @throws ReflectionException

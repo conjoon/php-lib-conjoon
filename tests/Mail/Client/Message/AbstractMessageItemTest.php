@@ -50,8 +50,6 @@ use TypeError;
  */
 class AbstractMessageItemTest extends TestCase
 {
-
-
 // ---------------------
 //    Tests
 // ---------------------

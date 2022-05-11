@@ -46,8 +46,6 @@ use Tests\TestCase;
  */
 class DefaultMessageItemDraftJsonTransformerTest extends TestCase
 {
-
-
     /**
      * Test type
      */

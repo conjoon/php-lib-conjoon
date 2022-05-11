@@ -40,7 +40,6 @@ use Tests\TestCase;
  */
 class InternalServerErrorExceptionTest extends TestCase
 {
-
     /**
      * test instance
      */
