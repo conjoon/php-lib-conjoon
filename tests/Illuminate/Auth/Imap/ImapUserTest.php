@@ -85,6 +85,26 @@ class ImapUserTest extends TestCase
 
 
     /**
+     * Tests getMailAccountForEmailAddress
+     * @return void
+     */
+    public function testGetMailAccountForEmailAddress()
+    {
+        $mailAccount = new MailAccount(["id" => "foo", "inbox_user" => "user", "inbox_password" => "password"]);
+
+        $user = $this->createUser(
+            $mailAccount->getInboxUser(),
+            $mailAccount->getInboxPassword(),
+            $mailAccount
+        );
+
+        $this->assertNull($user->getMailAccountForUserId("random"));
+
+        $this->assertSame($mailAccount, $user->getMailAccountForUserId($mailAccount->getInboxUser()));
+    }
+
+
+    /**
      * Creates a new user.
      *
      * @param string|null $username
