@@ -910,17 +910,13 @@ class HordeClientTest extends TestCase
         $imapStub->shouldReceive("append")
             ->with(
                 $messageKey->getMailFolderId(),
-                [["data" => $fullMsg]]
+                [[
+                    "data" => $fullMsg,
+                    "flags" => ["\\Draft"]
+                ]]
             )
             ->andReturn($resultList);
 
-        $imapStub->shouldReceive("store")
-            ->with(
-                $messageKey->getMailFolderId(),
-                ["ids" => $resultList,
-                    "add" => ["\Draft"]
-                ]
-            );
 
 
         $imapStub->shouldReceive("expunge")

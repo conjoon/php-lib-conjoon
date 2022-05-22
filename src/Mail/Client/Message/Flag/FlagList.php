@@ -39,6 +39,24 @@ use Conjoon\Util\AbstractList;
  */
 class FlagList extends AbstractList
 {
+    /**
+     * Returns the FlagList as a native PHP array with the values being the
+     * names of all the flags that are set to "true".
+     *
+     * @return array
+     */
+    public function resolveToFlags(): array
+    {
+        $flags = [];
+        foreach ($this as $flag) {
+            if ($flag->getValue()) {
+                $flags[] = $flag->getName();
+            }
+        }
+
+        return $flags;
+    }
+
 // -------------------------
 //  AbstractList
 // -------------------------

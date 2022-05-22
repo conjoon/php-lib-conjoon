@@ -493,13 +493,13 @@ class HordeClient implements MailClient
             ];
 
             foreach ($flagList as $flag) {
-                $messageKey = $flag->getValue() ? "add" : "remove";
+                $type = $flag->getValue() ? "add" : "remove";
 
-                if (!isset($options[$messageKey])) {
-                    $options[$messageKey] = [];
+                if (!isset($options[$type])) {
+                    $options[$type] = [];
                 }
 
-                $options[$messageKey][] = $flag->getName();
+                $options[$type][] = $flag->getName();
             }
 
             $client->store($mailFolderId, $options);
@@ -598,14 +598,16 @@ class HordeClient implements MailClient
 
             $fullText = $this->getHeaderComposer()->compose($msg, $messageItemDraft);
 
-            $ids = $client->append($mailFolderId, [["data" => $fullText]]);
+            $ids = $client->append($mailFolderId, [[
+                "data" =>  $fullText,
+                "flags" => $messageItemDraft->getFlagList()->resolveToFlags()
+            ]]);
+
             $newKey = new MessageKey(
                 $messageKey->getMailAccountId(),
                 $messageKey->getMailFolderId(),
                 (string)$ids->ids[0]
             );
-
-            $this->setFlags($newKey, $messageItemDraft->getFlagList());
 
             $this->deleteMessage($messageKey);
 

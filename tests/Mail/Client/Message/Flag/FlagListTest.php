@@ -30,7 +30,10 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Message\Flag;
 
 use Conjoon\Mail\Client\Message\Flag\AbstractFlag;
+use Conjoon\Mail\Client\Message\Flag\AnsweredFlag;
+use Conjoon\Mail\Client\Message\Flag\DraftFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
+use Conjoon\Mail\Client\Message\Flag\SeenFlag;
 use Conjoon\Util\AbstractList;
 use Tests\TestCase;
 
@@ -54,5 +57,26 @@ class FlagListTest extends TestCase
         $this->assertInstanceOf(AbstractList::class, $flagList);
 
         $this->assertSame(AbstractFlag::class, $flagList->getEntityType());
+    }
+
+
+    /**
+     * Tests resolveToFlags
+     */
+    public function testResolveToFlags()
+    {
+
+        $flagList = new FlagList();
+
+        $draftFlag    = new DraftFlag(true);
+        $seenFlag     = new SeenFlag(false);
+        $answeredFlag = new AnsweredFlag(true);
+
+
+        $flagList[] = $draftFlag;
+        $flagList[] = $seenFlag;
+        $flagList[] = $answeredFlag;
+
+        $this->assertEquals(["\\Draft", "\\Answered"], $flagList->resolveToFlags());
     }
 }
