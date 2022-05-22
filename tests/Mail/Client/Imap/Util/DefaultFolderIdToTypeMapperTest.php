@@ -145,7 +145,6 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
             ),
             MailFolder::TYPE_TRASH
         );
-
     }
 
 
