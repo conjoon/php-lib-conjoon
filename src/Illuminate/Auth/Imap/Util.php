@@ -49,7 +49,7 @@ class Util
      *                          "inbox_ssl"       => true,
      *                          "outbox_address"  => "234.2.2.2",
      *                          "outbox_port"     => 993,
-     *                          "outbox_ssl"      => true,
+     *                          "outbox_secure"   => "ssl",
      *                          "match"           => ["/\@(conjoon.)(org|de|com|info)$/mi"]]
      *       );
      *
@@ -68,7 +68,7 @@ class Util
      *       //  'outbox_port'     => 993,
      *       //  'outbox_user'     => "dev@conjoon.org",
      *       //  'outbox_password' => 'foo',
-     *       //  'outbox_ssl'      => true
+     *       //  'outbox_secure'   => "ssl"
      *
      *
      * @param string $username

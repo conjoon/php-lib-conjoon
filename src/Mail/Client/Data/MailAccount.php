@@ -51,11 +51,11 @@ use BadMethodCallException;
  *        "outbox_port"     => 993,
  *        "outbox_user"     => "outboxuser",
  *        "outbox_password" => "outboxpassword',
- *        'outbox_ssl'      => true,
+ *        'outbox_secure'   => "tls",
  *        'root'            => "INBOX"
  *    ]);
  *
- *    $account->getOutboxSsl(); // true
+ *    $account->getOutboxSecure(); // true
  *    $account->getInboxPort(); // 993
  *    $account->getReplyTo();   // ['name' => 'John Smith', 'address' => 'dev@conjoon.org'],
  *
@@ -77,7 +77,7 @@ use BadMethodCallException;
  * @method bool getInboxSsl()
  * @method string getOutboxAddress()
  * @method int getOutboxPort()
- * @method bool getOutboxSsl()
+ * @method string getOutboxSecure()
  * @method array getRoot()
  *
  * @noinspection SpellCheckingInspection
@@ -155,9 +155,9 @@ class MailAccount
     protected string $outbox_password;
 
     /**
-     * @var boolean
+     * @var string
      */
-    protected bool $outbox_ssl;
+    protected string $outbox_secure;
 
     /**
      * @var array
@@ -234,7 +234,7 @@ class MailAccount
             "outbox_port" => $this->getOutboxPort(),
             "outbox_user" => $this->getOutboxUser(),
             "outbox_password" => $this->getOutboxPassword(),
-            "outbox_ssl" => $this->getOutboxSsl(),
+            "outbox_secure" => $this->getOutboxSecure(),
             "root" => $this->getRoot()
         ];
     }

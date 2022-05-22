@@ -40,7 +40,7 @@ use Tests\TestCase;
 class MailAccountTest extends TestCase
 {
     protected array $accountConfig = [
-        "id"               => "dev_sys_conjoon_org",
+        "id"              => "dev_sys_conjoon_org",
         "name"            => "conjoon developer",
         "from"            => ["name" => "John Smith", "address" => "dev@conjoon.org"],
         "replyTo"         => ["name" => "John Smith", "address" => "dev@conjoon.org"],
@@ -54,7 +54,7 @@ class MailAccountTest extends TestCase
         "outbox_port"     => 993,
         "outbox_user"     => "user",
         "outbox_password" => "password outbox",
-        "outbox_ssl"      => true,
+        "outbox_secure"   => "ssl",
         "root"            => ["[Gmail]"]
     ];
 

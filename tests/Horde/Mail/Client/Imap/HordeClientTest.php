@@ -955,9 +955,6 @@ class HordeClientTest extends TestCase
     }
 
 
-    /**
-     * Tests getMailer()
-     */
     public function testGetMailer()
     {
         $mailAccount = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
@@ -976,6 +973,61 @@ class HordeClientTest extends TestCase
         $mailer3 = $client->getMailer($someAccount);
 
         $this->assertSame($mailer, $mailer3);
+    }
+
+
+    /**
+     * Tests getMailer() with secure param
+     */
+    public function testGetMailerSecure()
+    {
+        $mailAccount = new MailAccount([
+            "id"              => "id",
+            "outbox_address"  => "server.outbox.com",
+            "outbox_port"     => 993,
+            "outbox_user"     => "outboxUser",
+            "outbox_password" => "outboxPassword",
+            "outbox_secure"   => "ssl"
+        ]);
+        ;
+
+        $client = $this->createClient($mailAccount);
+        $mailer = $client->getMailer($mailAccount);
+        $reflection = new ReflectionClass($mailer);
+        $params = $reflection->getProperty("_params");
+        $params->setAccessible(true);
+        $this->assertSame("ssl", $params->getValue($mailer)["secure"]);
+
+        $mailAccount = new MailAccount([
+            "id"              => "id",
+            "outbox_address"  => "server.outbox.com",
+            "outbox_port"     => 993,
+            "outbox_user"     => "outboxUser",
+            "outbox_password" => "outboxPassword",
+            "outbox_secure"   => "tsl"
+        ]);
+        $client = $this->createClient($mailAccount);
+        $mailer = $client->getMailer($mailAccount);
+        $reflection = new ReflectionClass($mailer);
+        $params = $reflection->getProperty("_params");
+        $params->setAccessible(true);
+        $this->assertSame("tsl", $params->getValue($mailer)["secure"]);
+
+
+        $mailAccount = new MailAccount([
+            "id"              => "id",
+            "outbox_address"  => "server.outbox.com",
+            "outbox_port"     => 993,
+            "outbox_user"     => "outboxUser",
+            "outbox_password" => "outboxPassword",
+            "outbox_secure"   => "fooBar"
+        ]);
+        $client = $this->createClient($mailAccount);
+        $mailer = $client->getMailer($mailAccount);
+        $reflection = new ReflectionClass($mailer);
+        $params = $reflection->getProperty("_params");
+        $params->setAccessible(true);
+        $this->assertSame("fooBar", $params->getValue($mailer)["secure"]);
     }
 
 

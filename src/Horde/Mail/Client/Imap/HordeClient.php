@@ -799,8 +799,8 @@ class HordeClient implements MailClient
             "username" => $account->getOutboxUser()
         ];
 
-        if ($account->getOutboxSsl()) {
-            $smtpCfg["secure"] = 'ssl';
+        if ($account->getOutboxSecure()) {
+            $smtpCfg["secure"] = $account->getOutboxSecure();
         }
 
         $this->mailer = new Horde_Mail_Transport_Smtphorde($smtpCfg);
