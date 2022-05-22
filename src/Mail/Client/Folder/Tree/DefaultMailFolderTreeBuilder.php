@@ -111,7 +111,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
                 $systemFolderTypes[] = $folderType;
             }
 
-            $parentKey = implode($mailbox->getDelimiter(), $parts);
+            $parentKey = strtolower(implode($mailbox->getDelimiter(), $parts));
             if (!isset($folders[$parentKey])) {
                 $folders[$parentKey] = [];
             }
@@ -128,17 +128,10 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
                 return ($a->getFolderType() === MailFolder::TYPE_FOLDER) ? 1 : -1;
             });
 
-
-            if ($parentKey === "") {
-                $mailFolder = $mailFolders[0];
-                $mailFolderChildList[] = $mailFolder;
-                continue;
-            }
-
             $tmp = $this->getMailFolderWithId($parentKey, $folders);
             foreach ($mailFolders as $item) {
                 foreach ($root as $rootId) {
-                    if ($parentKey === $rootId) {
+                    if (strtolower($parentKey) === strtolower($rootId)) {
                         $mailFolderChildList[] = $item;
                         continue 2;
                     }
@@ -172,7 +165,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
         foreach ($folders as $folderList) {
             foreach ($folderList as $item) {
-                if ($item->getFolderKey()->getId() === $id) {
+                if (strtolower($item->getFolderKey()->getId()) === strtolower($id)) {
                     return $item;
                 }
             }
@@ -199,17 +192,20 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         $id = $listMailFolder->getFolderKey()->getId();
 
         $idParts = explode($listMailFolder->getDelimiter(), $id);
-        $skip = 0;
-        foreach ($root as $globalIds) {
-            $rootParts = explode($listMailFolder->getDelimiter(), $globalIds);
-            foreach ($rootParts as $key => $rootId) {
-                if (!isset($idParts[$key]) || $rootId !== $idParts[$key]) {
-                    $skip++;
+
+        if (count($root)) {
+            $skip = 0;
+            foreach ($root as $globalIds) {
+                $rootParts = explode($listMailFolder->getDelimiter(), $globalIds);
+                foreach ($rootParts as $key => $rootId) {
+                    if (!isset($idParts[$key]) || $rootId !== $idParts[$key]) {
+                        $skip++;
+                    }
                 }
             }
-        }
-        if ($skip === count($root)) {
-            return true;
+            if ($skip === count($root)) {
+                return true;
+            }
         }
 
         return in_array("\\noselect", $listMailFolder->getAttributes()) ||
