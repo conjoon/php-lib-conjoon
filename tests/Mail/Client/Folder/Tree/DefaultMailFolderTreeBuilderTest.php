@@ -164,6 +164,43 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
         $this->assertSame(0, count($children));
     }
 
+
+    /**
+     * Tests sortMailFolders
+     */
+    public function testSortMailFolders()
+    {
+
+        $builder = $this->createBuilder();
+
+        $mailFolderList = $this->createMailFolderList(
+            [
+                "Junk",
+                "INBOX",
+                "Drafts",
+                "INBOX.Sent",
+                "STUFF",
+                "TRASH",
+                "STUFF.Folder"
+            ]
+        );
+
+        $mailFolderChildList = $builder->listToTree($mailFolderList, []);
+
+        $this->assertSame(5, count($mailFolderChildList));
+
+        $mailFolder = $mailFolderChildList[0];
+        $this->assertSame("INBOX", $mailFolder->getName());
+        $mailFolder = $mailFolderChildList[1];
+        $this->assertSame("Drafts", $mailFolder->getName());
+        $mailFolder = $mailFolderChildList[2];
+        $this->assertSame("Junk", $mailFolder->getName());
+        $mailFolder = $mailFolderChildList[3];
+        $this->assertSame("TRASH", $mailFolder->getName());
+        $mailFolder = $mailFolderChildList[4];
+        $this->assertSame("STUFF", $mailFolder->getName());
+    }
+
 // -------------------------------
 //  Helper
 // -------------------------------

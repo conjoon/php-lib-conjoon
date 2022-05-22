@@ -121,12 +121,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         $mailFolderChildList = new MailFolderChildList();
 
         foreach ($folders as $parentKey => $mailFolders) {
-            usort($mailFolders, function ($a, $b) {
-                if ($a->getFolderType() == $b->getFolderType()) {
-                    return 0;
-                }
-                return ($a->getFolderType() === MailFolder::TYPE_FOLDER) ? 1 : -1;
-            });
+            $mailFolders = $this->sortMailFolders($mailFolders);
 
             $tmp = $this->getMailFolderWithId($parentKey, $folders);
             foreach ($mailFolders as $item) {
@@ -151,6 +146,38 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 // +-------------------------------
 // | Helper
 // +-------------------------------
+
+    /**
+     * Sorts the mailfolders given their type, if available, and will
+     * place INBOX, DRAFT, JUNK, SENT and TRASH folders at the firs
+     * indexes, in this order.
+     *
+     * @param $mailFolders
+     *
+     * @return mixed
+     */
+    private function sortMailFolders($mailFolders)
+    {
+
+        $findType = function ($types) use ($mailFolders) {
+            $found = array_filter(
+                $mailFolders,
+                fn($folder) => array_search($folder->getFolderType(), $types) !== false
+            );
+            return $found;
+        };
+
+        $mailFolders = array_merge(
+            $findType([MailFolder::TYPE_INBOX]),
+            $findType([MailFolder::TYPE_DRAFT]),
+            $findType([MailFolder::TYPE_JUNK]),
+            $findType([MailFolder::TYPE_SENT]),
+            $findType([MailFolder::TYPE_TRASH]),
+            $findType([MailFolder::TYPE_FOLDER])
+        );
+
+        return $mailFolders;
+    }
 
     /**
      * Looks up the folder with the specified id in the list of MailFolders.
