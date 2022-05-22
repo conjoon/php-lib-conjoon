@@ -113,6 +113,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
             case "[GOOGLE MAIL]/PAPIERKORB":
             case "TRASH":
             case "JUNK-E-MAIL":
+            case "DELETED":
             case "GELÖSCHTE ELEMENTE":
             case "INBOX" . $delimiter . "TRASH":
             case "INBOX" . $delimiter . "PAPIERKORB":

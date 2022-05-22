@@ -138,6 +138,14 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
             ),
             MailFolder::TYPE_DRAFT
         );
+
+        $this->assertSame(
+            $mapper->getFolderType(
+                $this->createListMailFolder("DELETED", ":")
+            ),
+            MailFolder::TYPE_TRASH
+        );
+
     }
 
 
