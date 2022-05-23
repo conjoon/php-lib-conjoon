@@ -145,6 +145,20 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
             ),
             MailFolder::TYPE_TRASH
         );
+
+        $this->assertSame(
+            MailFolder::TYPE_DRAFT,
+            $mapper->getFolderType(
+                $this->createListMailFolder("Draft", "-")
+            )
+        );
+
+        $this->assertSame(
+            MailFolder::TYPE_JUNK,
+            $mapper->getFolderType(
+                $this->createListMailFolder("Inbox.SPAMVerDacht", ".")
+            )
+        );
     }
 
 
