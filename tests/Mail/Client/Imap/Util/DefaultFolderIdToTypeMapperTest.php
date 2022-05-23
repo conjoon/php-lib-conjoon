@@ -219,6 +219,29 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Papierkorb", "."))
             );
         }
+
+
+        $this->assertSame(
+            MailFolder::TYPE_TRASH,
+            $mapper->getFolderType(
+                $this->createListMailFolder("PapIerKorb", ".")
+            )
+        );
+
+        $this->assertSame(
+            MailFolder::TYPE_DRAFT,
+            $mapper->getFolderType(
+                $this->createListMailFolder("Entwurf", "/")
+            )
+        );
+
+        $this->assertSame(
+            MailFolder::TYPE_JUNK,
+            $mapper->getFolderType(
+                $this->createListMailFolder("Spam", "-")
+            )
+        );
+
     }
 
 
