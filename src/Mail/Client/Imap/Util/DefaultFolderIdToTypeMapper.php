@@ -116,6 +116,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
             case "DELETED":
             case "DELETED MESSAGES":
             case "GELÖSCHTE ELEMENTE":
+            case "GELÖSCHT":
             case "INBOX" . $delimiter . "TRASH":
             case "INBOX" . $delimiter . "PAPIERKORB":
             case "INBOX" . $delimiter . "DELETED ITEMS":
@@ -138,6 +139,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
 // +------------------
             case "[GOOGLE MAIL]/GESENDET":
             case "GESENDETE ELEMENTE":
+            case "GESENDET":
             case "SENT":
             case "SENT MESSAGES":
             case "INBOX" . $delimiter . "SENT":
@@ -151,6 +153,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
 // +------------------
             case "[GOOGLE MAIL]/SPAM":
             case "JUNK":
+            case "SPAMVERDACHT":
             case "INBOX" . $delimiter . "JUNK":
             case "INBOX" . $delimiter . "SPAM":
             case "INBOX" . $delimiter . "SPAMVERDACHT":
