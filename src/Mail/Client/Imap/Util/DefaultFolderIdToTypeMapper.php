@@ -126,6 +126,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
 // +------------------
             case "[GOOGLE MAIL]/ENTWÜRFE":
             case "DRAFTS":
+            case "DRAFT":
             case "ENTWÜRFE":
             case "INBOX" . $delimiter . "DRAFTS":
                 $type = MailFolder::TYPE_DRAFT;
