@@ -163,7 +163,7 @@ class HordeHeaderComposer implements HeaderComposer
         }
 
 
-        return trim($headers->toString()) . "\n\n" . trim($part->toString());
+        return trim($headers->toString()) . "\n\n" . ltrim($part->toString());
     }
 
 

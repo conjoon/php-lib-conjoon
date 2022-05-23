@@ -323,6 +323,37 @@ class HordeHeaderComposerTest extends TestCase
     }
 
 
+    /**
+     * @throws Horde_Mime_Exception
+     */
+    public function testNoTrim()
+    {
+
+        $composer = new HordeHeaderComposer();
+
+
+        $messageItemDraft = new MessageItemDraft(new MessageKey("a", "b", "c"));
+        $messageItemDraft->setSubject("Test");
+
+        $msgText = "Subject: foobar\nMessage-Id: foobar\n\nHallo Welt!\n";
+        $result  = [
+            "Date: " . (new DateTime())->format("r"),
+            "Subject: Test",
+            "Message-ID: foobar",
+            "User-Agent: php-conjoon",
+            "",
+            "Hallo Welt!",
+            ""
+        ];
+
+        $this->assertSame(
+            implode("\n", $result),
+            $composer->compose($msgText, $messageItemDraft)
+        );
+    }
+
+
+
 // +-----------------------------------
 // | Helper
 // +-----------------------------------
