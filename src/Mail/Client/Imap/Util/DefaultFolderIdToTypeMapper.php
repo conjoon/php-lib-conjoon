@@ -150,6 +150,7 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
             case "JUNK":
             case "INBOX" . $delimiter . "JUNK":
             case "INBOX" . $delimiter . "SPAM":
+            case "INBOX" . $delimiter . "SPAMVERDACHT":
                 $type = MailFolder::TYPE_JUNK;
                 break;
         }
