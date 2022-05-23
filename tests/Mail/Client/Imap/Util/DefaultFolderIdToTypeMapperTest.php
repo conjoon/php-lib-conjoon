@@ -195,6 +195,30 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
                 $this->createListMailFolder("Gesendet", ".")
             )
         );
+
+
+        foreach (["Google Mail", "Gmail"] as $label) {
+            $this->assertSame(
+                MailFolder::TYPE_SENT,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Gesendet", "."))
+            );
+            $this->assertSame(
+                MailFolder::TYPE_DRAFT,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Entwürfe", "."))
+            );
+            $this->assertSame(
+                MailFolder::TYPE_INBOX,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Alle Nachrichten", "."))
+            );
+            $this->assertSame(
+                MailFolder::TYPE_JUNK,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Spam", "."))
+            );
+            $this->assertSame(
+                MailFolder::TYPE_TRASH,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Papierkorb", "."))
+            );
+        }
     }
 
 
