@@ -64,117 +64,69 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
             $this->createListMailFolder("Entwürfe", "/")
         ));
 
+        // +--------------------
+        // | INBOX
+        // +-------------------
         $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("SomeRandomFolder/Draft", "/")
-            ),
-            MailFolder::TYPE_FOLDER
+            MailFolder::TYPE_INBOX,
+            $mapper->getFolderType($this->createListMailFolder("INBOX", ".")),
         );
         $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("SomeRandomFolder/Draft/Test", "/")
-            ),
-            MailFolder::TYPE_FOLDER
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("SomeRandom", ".")
-            ),
-            MailFolder::TYPE_FOLDER
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX", ".")
-            ),
-            MailFolder::TYPE_INBOX
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX/Somefolder/Deep/Drafts", "/")
-            ),
-            MailFolder::TYPE_FOLDER
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX.Drafts", ".")
-            ),
-            MailFolder::TYPE_DRAFT
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX.Trash.Deep.Deeper.Folder", ".")
-            ),
-            MailFolder::TYPE_FOLDER
+            MailFolder::TYPE_INBOX,
+            $mapper->getFolderType($this->createListMailFolder("POSTEINGANG", ".")),
         );
 
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("Junk/Draft", "/")
-            ),
-            MailFolder::TYPE_FOLDER
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("TRASH.Draft.folder", ".")
-            ),
-            MailFolder::TYPE_FOLDER
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("TRASH", "/")
-            ),
-            MailFolder::TYPE_TRASH
-        );
-
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX:TRASH", ":")
-            ),
-            MailFolder::TYPE_TRASH
-        );
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("INBOX-DRAFTS", "-")
-            ),
-            MailFolder::TYPE_DRAFT
-        );
-
-        $this->assertSame(
-            $mapper->getFolderType(
-                $this->createListMailFolder("DELETED", ":")
-            ),
-            MailFolder::TYPE_TRASH
-        );
-
+        // DRAFTS
         $this->assertSame(
             MailFolder::TYPE_DRAFT,
-            $mapper->getFolderType(
-                $this->createListMailFolder("Draft", "-")
-            )
+            $mapper->getFolderType($this->createListMailFolder("INBOX.Drafts", "."))
+
+        );
+        $this->assertSame(
+            MailFolder::TYPE_DRAFT,
+            $mapper->getFolderType($this->createListMailFolder("INBOX-DRAFTS", "-"))
+        );
+        $this->assertSame(
+            MailFolder::TYPE_DRAFT,
+            $mapper->getFolderType($this->createListMailFolder("Draft", "-"))
+        );
+        $this->assertSame(
+            MailFolder::TYPE_DRAFT,
+            $mapper->getFolderType($this->createListMailFolder("Entwurf", "/"))
+        );
+
+
+        // TRASH
+        $this->assertSame(
+            $mapper->getFolderType($this->createListMailFolder("TRASH", "/")),
+            MailFolder::TYPE_TRASH
         );
 
         $this->assertSame(
-            MailFolder::TYPE_JUNK,
-            $mapper->getFolderType(
-                $this->createListMailFolder("Inbox.SPAMVerDacht", ".")
-            )
+            $mapper->getFolderType($this->createListMailFolder("INBOX:TRASH", ":")),
+            MailFolder::TYPE_TRASH
+        );
+
+        $this->assertSame(
+            $mapper->getFolderType($this->createListMailFolder("DELETED", ":")),
+            MailFolder::TYPE_TRASH
         );
 
         $this->assertSame(
             MailFolder::TYPE_TRASH,
-            $mapper->getFolderType(
-                $this->createListMailFolder("DELETED MESSAGES", ".")
-            )
+            $mapper->getFolderType($this->createListMailFolder("DELETED MESSAGES", "."))
         );
 
         $this->assertSame(
-            MailFolder::TYPE_SENT,
-            $mapper->getFolderType(
-                $this->createListMailFolder("SENT MESSAGES", ".")
-            )
+            MailFolder::TYPE_TRASH,
+            $mapper->getFolderType($this->createListMailFolder("GELÖSCHT", "."))
+        );
+        $this->assertSame(
+            MailFolder::TYPE_TRASH,
+            $mapper->getFolderType($this->createListMailFolder("PapIerKorb", "."))
         );
 
-
+        // JUNK
         $this->assertSame(
             MailFolder::TYPE_JUNK,
             $mapper->getFolderType(
@@ -183,30 +135,62 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
         );
 
         $this->assertSame(
-            MailFolder::TYPE_TRASH,
-            $mapper->getFolderType(
-                $this->createListMailFolder("GELÖSCHT", ".")
-            )
+            MailFolder::TYPE_JUNK,
+            $mapper->getFolderType($this->createListMailFolder("Inbox.SPAMVerDacht", "."))
+        );
+        $this->assertSame(
+            MailFolder::TYPE_JUNK,
+            $mapper->getFolderType($this->createListMailFolder("Spam", "-"))
         );
 
+        // SENT
         $this->assertSame(
             MailFolder::TYPE_SENT,
-            $mapper->getFolderType(
-                $this->createListMailFolder("Gesendet", ".")
-            )
+            $mapper->getFolderType($this->createListMailFolder("SENT MESSAGES", "."))
+        );
+        $this->assertSame(
+            MailFolder::TYPE_SENT,
+            $mapper->getFolderType($this->createListMailFolder("Gesendet", "."))
         );
 
 
+
+        // FOLDER
+        foreach ([
+                ["SomeRandomFolder/Draft", "/"],
+                ["SomeRandomFolder/Draft/Test", "/"],
+                ["SomeRandom", "."],
+                ["INBOX/Somefolder/Deep/Drafts", "/"],
+                ["INBOX.Trash.Deep.Deeper.Folder", "."],
+                ["Junk/Draft", "/"],
+                ["TRASH.Draft.folder", "."]
+            ] as $folder) {
+            $this->assertSame(
+                MailFolder::TYPE_FOLDER,
+                $mapper->getFolderType($this->createListMailFolder($folder[0], $folder[1]))
+            );
+        }
+
+
+        // GMAIL
         foreach (["Google Mail", "Gmail"] as $label) {
             $this->assertSame(
                 MailFolder::TYPE_SENT,
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Gesendet", "."))
             );
             $this->assertSame(
+                MailFolder::TYPE_SENT,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Sent", "."))
+            );
+            $this->assertSame(
                 MailFolder::TYPE_DRAFT,
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Entwürfe", "."))
             );
             $this->assertSame(
+                MailFolder::TYPE_DRAFT,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Drafts", "."))
+            );
+            $this->assertNotSame(
                 MailFolder::TYPE_INBOX,
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Alle Nachrichten", "."))
             );
@@ -218,29 +202,11 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
                 MailFolder::TYPE_TRASH,
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Papierkorb", "."))
             );
+            $this->assertSame(
+                MailFolder::TYPE_TRASH,
+                $mapper->getFolderType($this->createListMailFolder("[$label]/Trash", "."))
+            );
         }
-
-
-        $this->assertSame(
-            MailFolder::TYPE_TRASH,
-            $mapper->getFolderType(
-                $this->createListMailFolder("PapIerKorb", ".")
-            )
-        );
-
-        $this->assertSame(
-            MailFolder::TYPE_DRAFT,
-            $mapper->getFolderType(
-                $this->createListMailFolder("Entwurf", "/")
-            )
-        );
-
-        $this->assertSame(
-            MailFolder::TYPE_JUNK,
-            $mapper->getFolderType(
-                $this->createListMailFolder("Spam", "-")
-            )
-        );
 
     }
 
