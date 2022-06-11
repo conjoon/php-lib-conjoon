@@ -7,9 +7,12 @@ PHP library for IMAP operations.
 $ composer i
 ```
 
-## Troubleshooting
+## Additional Information
 
-### Composer 2.0 - Pear/Horde vows
+**php-lib-conjoon** is a side project of [**conjoon/lumen-app-email**](https://github.com/conjoon/lumen-app-email), a microservice for email operations based on [rest-api-email](https://www.conjoon.org/docs/api/rest-api/@conjoon/rest-api-description/rest-api-email).
+
+
+## Composer 2.0 - Pear/Horde vows
 As of **v1.0.1**, _php-lib-conjoon_ no longer requires _Composer 1.*_ for installation.
 For _Composer 2.*_-compatibility, _php-lib-conjoon_ relies on the following private composer 
 package repository:
