@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Folder;
 
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 
 /**
@@ -176,7 +177,7 @@ class MailFolder extends AbstractMailFolder implements Jsonable
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         $json = [

@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
 use Conjoon\Mail\Client\Data\MailAccount;
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 
 /**
@@ -163,7 +164,7 @@ class MessageKey extends CompoundKey
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $json = parent::toJson();
         $json["mailFolderId"] = $this->getMailFolderId();

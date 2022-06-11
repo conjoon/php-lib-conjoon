@@ -33,6 +33,7 @@ use Conjoon\Util\Copyable;
 use Conjoon\Util\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
+use Conjoon\Util\JsonStrategy;
 use Conjoon\Util\Stringable;
 use InvalidArgumentException;
 
@@ -197,7 +198,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         return [

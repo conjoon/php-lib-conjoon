@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Folder;
 
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class MailFolderList organizes a list of ListMailFolders.
@@ -72,7 +73,7 @@ class MailFolderChildList extends AbstractList implements Jsonable
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         $data = [];

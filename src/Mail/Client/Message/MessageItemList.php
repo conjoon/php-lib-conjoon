@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Message;
 
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class MessageItemList organizes a list of ListMessageItems.
@@ -75,7 +76,7 @@ class MessageItemList extends AbstractList implements Jsonable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         $data = [];

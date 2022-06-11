@@ -32,6 +32,7 @@ namespace Conjoon\Core;
 use Conjoon\Util\ArrayUtil;
 use BadMethodCallException;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * A ParameterBag providing object syntax for accessing array arguments and
@@ -172,7 +173,7 @@ class ParameterBag implements Jsonable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         return json_decode(json_encode($this->data), true);
     }

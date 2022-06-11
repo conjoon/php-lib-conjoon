@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 
 /**
@@ -124,7 +125,7 @@ abstract class MessageItemChildCompoundKey extends MessageKey
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $json = parent::toJson();
         $json["parentMessageItemId"] = $this->getParentMessageItemId();

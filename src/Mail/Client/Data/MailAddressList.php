@@ -34,6 +34,7 @@ use Conjoon\Util\Copyable;
 use Conjoon\Util\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
+use Conjoon\Util\JsonStrategy;
 use Conjoon\Util\Stringable;
 
 /**
@@ -168,7 +169,7 @@ class MailAddressList extends AbstractList implements JsonDecodable, Stringable,
      *
      * @see MailAddress::toJson()
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $jsonStrategy = null): array
     {
 
         $d = [];

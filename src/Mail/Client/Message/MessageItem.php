@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
+use Conjoon\Util\JsonStrategy;
+
 /**
  * Class MessageItem models envelope information of a Message.
  *
@@ -84,7 +86,7 @@ class MessageItem extends AbstractMessageItem
      * Only the data will be returned where the values are not null.
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $data = array_merge([
             'hasAttachments' => $this->getHasAttachments(),

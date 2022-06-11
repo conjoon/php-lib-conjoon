@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Message;
 
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class AbstractMessageBody models a simplified representation of mail message
@@ -143,7 +144,7 @@ abstract class AbstractMessageBody implements Jsonable
      * @return array
      *
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         $keyJson = $this->getMessageKey() ? $this->getMessageKey()->toJson() : null;

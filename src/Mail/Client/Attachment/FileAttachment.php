@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Attachment;
 
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Util\ArrayUtil;
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 
 /**
@@ -124,7 +125,7 @@ class FileAttachment extends AbstractAttachment
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         return array_merge(parent::toJson(), [
             "content" => $this->getContent(),

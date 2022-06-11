@@ -32,6 +32,7 @@ namespace Conjoon\Mail\Client\Message;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class ListMessageItem models envelope information along with a MessagePart
@@ -116,7 +117,7 @@ class ListMessageItem extends MessageItem
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $data = parent::toJson();
 

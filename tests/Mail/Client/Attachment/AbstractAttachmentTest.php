@@ -32,6 +32,7 @@ namespace Tests\Conjoon\Mail\Client\Attachment;
 use Conjoon\Mail\Client\Attachment\AbstractAttachment;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 use Tests\TestCase;
 
@@ -162,7 +163,7 @@ class AbstractAttachmentTest extends TestCase
     {
         // Create a new instance from the Abstract Class
         return new class ($key, $data) extends AbstractAttachment {
-            public function toJson(): array
+            public function toJson(JsonStrategy $strategy = null): array
             {
                 return [];
             }

@@ -30,6 +30,10 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Data;
 
 use BadMethodCallException;
+use Conjoon\Mail\Client\Util\JsonApiStrategy;
+use Conjoon\Util\Arrayable;
+use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class MailAccount models account information for a mail server.
@@ -82,7 +86,7 @@ use BadMethodCallException;
  *
  * @noinspection SpellCheckingInspection
  */
-class MailAccount
+class MailAccount implements Jsonable, Arrayable
 {
     /**
      * @var string
@@ -221,6 +225,7 @@ class MailAccount
     {
         return [
             "id" => $this->getId(),
+            "type" => "MailAccount",
             "name" => $this->getName(),
             "from" => $this->getFrom(),
             "replyTo" => $this->getReplyTo(),
@@ -238,4 +243,13 @@ class MailAccount
             "root" => $this->getRoot()
         ];
     }
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
+    }
+
 }

@@ -31,6 +31,7 @@ namespace Conjoon\Http\Json\Problem;
 
 use BadMethodCallException;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Abstract base class for representatives according to rfc7807.
@@ -146,7 +147,7 @@ abstract class AbstractProblem implements Jsonable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $data = [
             "status" => $this->status,

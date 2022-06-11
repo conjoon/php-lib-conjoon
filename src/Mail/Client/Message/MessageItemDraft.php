@@ -33,6 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class MessageItemDraft models envelope information of a Message Draft.
@@ -143,7 +144,7 @@ class MessageItemDraft extends AbstractMessageItem
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $data = array_merge(parent::toJson(), [
             'cc' => $this->getCc() ? $this->getCc()->toJson() : null,

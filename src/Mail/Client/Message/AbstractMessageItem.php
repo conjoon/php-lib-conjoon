@@ -39,6 +39,7 @@ use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use Conjoon\Util\Modifiable;
 use Conjoon\Util\ModifiableTrait;
 use DateTime;
@@ -414,7 +415,7 @@ abstract class AbstractMessageItem implements Jsonable, Modifiable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         $mk = $this->getMessageKey();
 

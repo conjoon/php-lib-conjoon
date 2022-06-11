@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Attachment;
 
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * Class FileAttachmentItemList organizes a list of FileAttachmentItems.
@@ -60,7 +61,7 @@ class FileAttachmentItemList extends AbstractList implements Jsonable
     /**
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
 
         $data = [];

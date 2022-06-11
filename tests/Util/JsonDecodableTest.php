@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Util;
 
 use Conjoon\Util\Jsonable;
 use Conjoon\Util\JsonDecodable;
+use Conjoon\Util\JsonStrategy;
 use Tests\TestCase;
 
 /**
@@ -52,7 +53,7 @@ class JsonDecodableTest extends TestCase
             public static function fromString(string $value): Jsonable
             {
                 $t = new class implements Jsonable {
-                    public function toJson(): array
+                    public function toJson(JsonStrategy $strategy = null): array
                     {
                         return[];
                     }
@@ -63,7 +64,7 @@ class JsonDecodableTest extends TestCase
             public static function fromArray(array $arr): Jsonable
             {
                 $t = new class implements Jsonable {
-                    public function toJson(): array
+                    public function toJson(JsonStrategy $strategy = null): array
                     {
                         return[];
                     }

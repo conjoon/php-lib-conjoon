@@ -31,6 +31,7 @@ namespace Conjoon\Core;
 
 use BadMethodCallException;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 
 /**
  * A ResourceQuery provides an interface for a validated and certified collection
@@ -107,7 +108,7 @@ abstract class ResourceQuery implements Jsonable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         return $this->parameters->toJson();
     }

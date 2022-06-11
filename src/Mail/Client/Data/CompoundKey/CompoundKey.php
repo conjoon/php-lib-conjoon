@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Data\CompoundKey;
 
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use Conjoon\Util\Stringable;
 
 /**
@@ -96,7 +97,7 @@ abstract class CompoundKey implements Jsonable, Stringable
      *
      * @return array
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         return [
             'id' => $this->getId(),

@@ -32,6 +32,7 @@ namespace Conjoon\Mail\Client\Attachment;
 use BadMethodCallException;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
 
 /**
@@ -155,7 +156,7 @@ abstract class AbstractAttachment implements Jsonable
     /**
      * @inheritdoc
      */
-    public function toJson(): array
+    public function toJson(JsonStrategy $strategy = null): array
     {
         return array_merge(
             $this->attachmentKey ? $this->attachmentKey->toJson() : [],
