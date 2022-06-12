@@ -37,25 +37,6 @@ use Conjoon\Http\Status\StatusCodes as Status;
  */
 class ProblemFactory
 {
-    /**
-     * Returns an array containing of the json representative for the made Problem,
-     * and the second index is the status used.
-     *
-     * @param int $status
-     * @param string|null $title
-     * @param string|null $detail
-     * @return array
-     */
-    public static function makeJson(int $status, string $title = null, string $detail = null): array
-    {
-        $made = self::make($status, $title, $detail);
-
-        return [
-            $made->toJson(),
-            $made->getStatus()
-        ];
-    }
-
 
     /**
      * Returns a new Problem based on the status submitted.

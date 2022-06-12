@@ -80,24 +80,4 @@ class ProblemFactoryTest extends TestCase
         $this->assertSame("detail", $problem->getDetail());
     }
 
-    /**
-     * test makeJson()
-     */
-    public function testMakeJson()
-    {
-        $statuses = [400, 405, 500, 123442];
-
-        foreach ($statuses as $status) {
-            $problem = ProblemFactory::makeJson($status, "title", "detail");
-            $this->assertIsArray($problem[0]);
-            $this->assertSame(
-                ProblemFactory::make($status, "title", "detail")->toJson(),
-                $problem[0]
-            );
-            $this->assertSame(
-                $status,
-                $problem[1]
-            );
-        }
-    }
 }
