@@ -52,7 +52,7 @@ use Conjoon\Util\JsonStrategy;
  *
  * @package Conjoon\Mail\Client\Folder
  */
-class MailFolderChildList extends AbstractList implements Arrayable
+class MailFolderChildList extends AbstractList implements Arrayable, Jsonable
 {
 // -------------------------
 //  AbstractList
@@ -68,7 +68,7 @@ class MailFolderChildList extends AbstractList implements Arrayable
 
 
 // -------------------------
-//  Jsonable
+//  Arrayable, Jsonable
 // -------------------------
 
     /**
@@ -83,7 +83,26 @@ class MailFolderChildList extends AbstractList implements Arrayable
             $data[] = $mailFolder->toArray();
         }
 
+        return $data;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $jsonStrategy = null): array
+    {
+        $data = [];
+
+        foreach ($this->data as $mailFolder) {
+            $data[] = $jsonStrategy
+                        ? $jsonStrategy->toJson($mailFolder)
+                        : $mailFolder->toArray();
+        }
 
         return $data;
     }
+
+
+
 }

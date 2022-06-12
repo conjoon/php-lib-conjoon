@@ -159,9 +159,6 @@ class MailAccountTest extends TestCase
             ->willReturn($account->toArray());
 
         $this->assertEquals($config, $account->toJson($strategyMock));
-
-
-
     }
 
 

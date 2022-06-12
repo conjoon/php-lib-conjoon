@@ -34,6 +34,8 @@ use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Arrayable;
+use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonStrategy;
 use Tests\TestCase;
 
 /**
@@ -55,6 +57,7 @@ class MailFolderChildListTest extends TestCase
         $mailFolderChildList = new MailFolderChildList();
         $this->assertInstanceOf(AbstractList::class, $mailFolderChildList);
         $this->assertInstanceOf(Arrayable::class, $mailFolderChildList);
+        $this->assertInstanceOf(Jsonable::class, $mailFolderChildList);
 
         $this->assertSame(MailFolder::class, $mailFolderChildList->getEntityType());
     }
@@ -93,4 +96,52 @@ class MailFolderChildListTest extends TestCase
             "data" => []
         ]], $mailFolderChildList->toArray());
     }
+
+
+    /**
+     * Tests constructor
+     */
+    public function testToJson()
+    {
+
+        $data = [
+            "name" => "INBOX",
+            "unreadMessages" => 5,
+            "totalMessages" => 10,
+            "folderType" => MailFolder::TYPE_INBOX
+        ];
+
+        $folder = new MailFolder(
+            new FolderKey("dev", "INBOX"),
+            $data
+        );
+
+        $mailFolderChildList = new MailFolderChildList();
+
+        $mailFolderChildList[] = $folder;
+
+        $this->assertEquals(
+            $mailFolderChildList->toArray(),
+            $mailFolderChildList->toJson()
+        );
+
+        // w/ strategy
+
+
+
+        $strategyMock =
+            $this->getMockBuilder(JsonStrategy::class)
+                ->getMockForAbstractClass();
+
+        $strategyMock
+            ->expects($this->exactly(1))
+            ->method("toJson")
+            ->with($folder)
+            ->willReturn($folder->toArray());
+
+        $this->assertEquals($folder->toArray(), $folder->toJson($strategyMock));
+
+
+    }
+
 }
