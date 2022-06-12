@@ -30,8 +30,9 @@ declare(strict_types=1);
 namespace Conjoon\Http\Json\Problem;
 
 use BadMethodCallException;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Abstract base class for representatives according to rfc7807.
@@ -48,7 +49,7 @@ use Conjoon\Util\JsonStrategy;
  * @method getType()
  * @method getInstance()
  */
-abstract class AbstractProblem implements Jsonable
+abstract class AbstractProblem implements Jsonable, Arrayable
 {
     /**
      * "status" (number) - The HTTP status code ([RFC7231], Section 6)
@@ -147,7 +148,7 @@ abstract class AbstractProblem implements Jsonable
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
         $data = [
             "status" => $this->status,
@@ -158,5 +159,14 @@ abstract class AbstractProblem implements Jsonable
         ];
 
         return array_filter($data, fn ($v) => !empty($v));
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
 }

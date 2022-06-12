@@ -31,7 +31,9 @@ namespace Tests\Conjoon\Http\Json\Problem;
 
 use BadMethodCallException;
 use Conjoon\Http\Json\Problem\AbstractProblem;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 use Tests\TestCase;
 
 /**
@@ -47,6 +49,7 @@ class AbstractProblemTest extends TestCase
     {
         $problem = $this->getMockForAbstractClass(AbstractProblem::class);
 
+        $this->assertInstanceOf(Arrayable::class, $problem);
         $this->assertInstanceOf(Jsonable::class, $problem);
 
         $this->assertNull($problem->getStatus());
@@ -71,7 +74,7 @@ class AbstractProblemTest extends TestCase
             "detail" => "detail",
             "type" => "type",
             "instance" => "instance"
-        ], $problem->toJson());
+        ], $problem->toArray());
     }
 
 
@@ -85,5 +88,32 @@ class AbstractProblemTest extends TestCase
 
         $problem = $this->getMockForAbstractClass(AbstractProblem::class);
         $problem->foo();
+    }
+
+
+    /**
+     * Tests toJson()
+     * @return void
+     */
+    public function testToJson()
+    {
+        $problem = $this->getMockForAbstractClass(
+            AbstractProblem::class,
+            ["title", "detail", "instance", "type"]
+        );
+
+        $this->assertEquals([
+            "title" => "title",
+            "detail" => "detail",
+            "type" => "type",
+            "instance" => "instance"
+        ], $problem->toJson());
+
+        $strategy = $this->getMockForAbstractClass(JsonStrategy::class);
+
+        $strategy->expects($this->once())->method("toJson")->with($problem)->willReturn($problem->toArray());
+
+        $this->assertEquals($problem->toJson($strategy), $problem->toArray());
+
     }
 }

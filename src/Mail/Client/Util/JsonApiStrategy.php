@@ -29,9 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Util;
 
+use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Mail\Client\Folder\AbstractMailFolder;
-use Conjoon\Util\JsonStrategy;
-use Conjoon\Util\Arrayable;
+use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Arrayable;
 
 /**
  * Class JsonApiStrategy
@@ -54,6 +55,10 @@ class JsonApiStrategy implements JsonStrategy
     public function toJson(Arrayable $source): array
     {
         $data = $source->toArray();
+
+        if ($source instanceof AbstractProblem) {
+            return $this->transformFromError($data);
+        }
 
         return $this->transform($data);
     }
@@ -128,5 +133,32 @@ class JsonApiStrategy implements JsonStrategy
         }
 
         return $result;
+    }
+
+
+    /**
+     * Transforms from a Problem-representative to an JSON:API error object.
+     *
+     * @param array $data
+     *
+     * @return array
+     *
+     * @see https://jsonapi.org/format/#errors
+     */
+    protected function transformFromError(array $data): array
+    {
+        $problem = [
+            "title" => $data["title"] ?? null,
+            "status" => $data["status"] ?? null,
+            "detail" => $data["detail"] ?? null,
+            "links" => $data["type"] ? [
+                "about" => $data["type"]
+            ] : null,
+            "meta" => isset($data["instance"]) ? [
+                "instance" => $data["instance"]
+            ] : null
+        ];
+
+        return array_filter($problem, fn ($v) => !empty($v));
     }
 }

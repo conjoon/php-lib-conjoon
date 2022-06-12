@@ -29,9 +29,10 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Util;
 
+use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
-use Conjoon\Util\Arrayable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\JsonStrategy;
 use Tests\TestCase;
 
 /**
@@ -157,5 +158,60 @@ class JsonApiStrategyTest extends TestCase
         }
     }
 
+
+    /**
+     * Tests toJson with a Problem-object
+     * @return void
+     */
+    public function testFromProblem()
+    {
+        $strategy = new JsonApiStrategy();
+
+        $problemMock = $this->getMockForAbstractClass(
+    AbstractProblem::class, [], '', true, true, true,
+        ["toArray"]);
+        $problemMock->expects($this->exactly(2))->method("toArray")->willReturnOnConsecutiveCalls(
+            [
+                "title" => "title",
+                "status" => 401,
+                "detail" => "detail",
+                "type" => "type",
+                "instance" => "instance"
+            ],
+            [
+                "status" => 401,
+                "detail" => "detail",
+                "type" => "type"
+            ]
+        );
+
+
+        $results = [
+            [
+                "title"  => "title",
+                "status" => 401,
+                "detail" => "detail",
+                "links"   => [
+                    "about" => "type"
+                ],
+                "meta"   => [
+                    "instance" => "instance"
+                ]
+            ],
+            [
+                "status" => 401,
+                "detail" => "detail",
+                "links"   => [
+                    "about" => "type"
+                ]
+            ]
+        ];
+
+
+        foreach ($results as $result) {
+            $this->assertEquals($result, $strategy->toJson($problemMock));
+        }
+
+    }
 
 }
