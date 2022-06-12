@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Util\AbstractList;
-use Conjoon\Util\Jsonable;
+use Conjoon\Util\Arrayable;
 use Tests\TestCase;
 
 /**
@@ -54,7 +54,7 @@ class MailFolderChildListTest extends TestCase
 
         $mailFolderChildList = new MailFolderChildList();
         $this->assertInstanceOf(AbstractList::class, $mailFolderChildList);
-        $this->assertInstanceOf(Jsonable::class, $mailFolderChildList);
+        $this->assertInstanceOf(Arrayable::class, $mailFolderChildList);
 
         $this->assertSame(MailFolder::class, $mailFolderChildList->getEntityType());
     }
@@ -63,12 +63,13 @@ class MailFolderChildListTest extends TestCase
     /**
      * Tests constructor
      */
-    public function testToJson()
+    public function testToArray()
     {
 
         $data = [
             "name" => "INBOX",
-            "unreadCount" => 5,
+            "unreadMessages" => 5,
+            "totalMessages" => 10,
             "folderType" => MailFolder::TYPE_INBOX
         ];
 
@@ -82,12 +83,14 @@ class MailFolderChildListTest extends TestCase
         $mailFolderChildList[] = $folder;
 
         $this->assertEquals([[
+            "type" => "MailFolder",
             "mailAccountId" => "dev",
             "id" => "INBOX",
             "folderType" => MailFolder::TYPE_INBOX,
-            "unreadCount" => 5,
+            "unreadMessages" => 5,
+            "totalMessages" => 10,
             "name" => "INBOX",
             "data" => []
-        ]], $mailFolderChildList->toJson());
+        ]], $mailFolderChildList->toArray());
     }
 }

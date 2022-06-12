@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Folder;
 
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
+use Conjoon\Util\Arrayable;
 use Conjoon\Util\Jsonable;
 use Conjoon\Util\JsonStrategy;
 use InvalidArgumentException;
@@ -46,7 +47,8 @@ use InvalidArgumentException;
  *              [
  *                 "name"        => "INBOX.Some Folder",
  *                 "folderType"   => "INBOX"
- *                 "unreadCount" => 4
+ *                 "unreadMessages" => 4,
+ *                 "totalMessages" => 756
  *              ]
  *            );
  *
@@ -57,7 +59,7 @@ use InvalidArgumentException;
  *
  * @package Conjoon\Mail\Client\Folder
  */
-class MailFolder extends AbstractMailFolder implements Jsonable
+class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
 {
     public const TYPE_INBOX = "INBOX";
 
@@ -155,7 +157,7 @@ class MailFolder extends AbstractMailFolder implements Jsonable
      *
      * @param MailFolder $mailFolder
      *
-     * @return MailFolder this
+     * @return MailFolder the added MailFolder
      */
     public function addMailFolder(MailFolder $mailFolder): MailFolder
     {
@@ -166,9 +168,33 @@ class MailFolder extends AbstractMailFolder implements Jsonable
 
         $this->data[] = $mailFolder;
 
-        return $this;
+        return $mailFolder;
     }
 
+// +-------------------------------
+// | Arrayable interface
+// +-------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $id = $this->getFolderKey()->getId();
+
+        $type = "MailFolder";
+
+        $arr = [
+            "type" => $type,
+            "name" => $this->getName(),
+            "unreadMessages" => $this->getUnreadMessages(),
+            "totalMessages" => $this->getTotalMessages(),
+            "folderType" => $this->getFolderType(),
+            "data" => $this->getData() ? $this->getData()->toArray() : []
+        ];
+
+        return array_merge($this->getFolderKey()->toArray(), $arr);
+    }
 
 // +-------------------------------
 // | Jsonable interface
@@ -179,14 +205,6 @@ class MailFolder extends AbstractMailFolder implements Jsonable
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
-
-        $json = [
-            "name" => $this->getName(),
-            "unreadCount" => $this->getUnreadCount(),
-            "folderType" => $this->getFolderType(),
-            "data" => $this->getData() ? $this->getData()->toJson() : []
-        ];
-
-        return array_merge($this->getFolderKey()->toJson(), $json);
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
 }

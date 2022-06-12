@@ -65,9 +65,9 @@ class MessageKeyTest extends TestCase
             "mailAccountId" => $mailAccountId,
             "mailFolderId" => $mailFolderId,
             "id" => $id
-        ], $key->toJson());
+        ], $key->toArray());
 
-        $this->assertSame(json_encode($key->toJson()), $key->toString());
+        $this->assertSame(json_encode($key->toArray()), $key->toString());
 
         $mailAccount = new MailAccount(["id" => "dev"]);
         $key = new MessageKey($mailAccount, $mailFolderId, $id);

@@ -54,7 +54,12 @@ abstract class AbstractMailFolder
     /**
      * @var int
      */
-    protected int $unreadCount;
+    protected int $unreadMessages;
+
+    /**
+     * @var int
+     */
+    protected int $totalMessages;
 
 
     /**
@@ -63,7 +68,7 @@ abstract class AbstractMailFolder
      * @param FolderKey $folderKey
      * @param array|null $data
      *
-     * @throws InvalidArgumentException if the name or unreadCount
+     * @throws InvalidArgumentException if the name, unreadMessages or totalMessages
      * in $data is missing
      */
     public function __construct(FolderKey $folderKey, array $data)
@@ -72,8 +77,10 @@ abstract class AbstractMailFolder
         $this->folderKey = $folderKey;
 
         $missing = "";
-        if (!isset($data["unreadCount"])) {
-            $missing = "unreadCount";
+        if (!isset($data["unreadMessages"])) {
+            $missing = "unreadMessages";
+        } elseif (!isset($data["totalMessages"])) {
+            $missing = "totalMessages";
         } elseif (!isset($data["name"])) {
             $missing = "name";
         }
@@ -126,23 +133,45 @@ abstract class AbstractMailFolder
 
 
     /**
-     * Sets the unread count for this ListMailFolder.
+     * Sets the number of unread messages for this ListMailFolder.
      *
-     * @param int $unreadCount
+     * @param int $unreadMessages
      */
-    protected function setUnreadCount(int $unreadCount)
+    protected function setUnreadMessages(int $unreadMessages)
     {
-        $this->unreadCount = $unreadCount;
+        $this->unreadMessages = $unreadMessages;
     }
 
 
     /**
-     * Returns the unread count for this ListMailFolder.
+     * Returns the number of unread messages for this ListMailFolder.
      *
      * @return int
      */
-    public function getUnreadCount(): int
+    public function getUnreadMessages(): int
     {
-        return $this->unreadCount;
+        return $this->unreadMessages;
+    }
+
+
+    /**
+     * Sets the number of total messages for this ListMailFolder.
+     *
+     * @param int $totalMessages
+     */
+    protected function setTotalMessages(int $totalMessages)
+    {
+        $this->totalMessages = $totalMessages;
+    }
+
+
+    /**
+     * Returns the number of total messages for this ListMailFolder.
+     *
+     * @return int
+     */
+    public function getTotalMessages(): int
+    {
+        return $this->totalMessages;
     }
 }

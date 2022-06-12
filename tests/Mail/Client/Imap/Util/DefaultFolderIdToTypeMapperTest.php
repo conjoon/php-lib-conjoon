@@ -229,7 +229,8 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
             new FolderKey("dev", $id),
             ["name"        => array_pop($parts),
                 "delimiter"   => $delimiter,
-                "unreadCount" => 0]
+                "unreadMessages" => 0,
+                "totalMessages" => 100]
         );
     }
 

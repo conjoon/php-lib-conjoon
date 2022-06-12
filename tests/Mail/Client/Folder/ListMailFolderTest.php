@@ -60,7 +60,8 @@ class ListMailFolderTest extends TestCase
             [
             "delimiter" => $delimiter,
             "name" => $name,
-            "unreadCount" => 0
+            "unreadMessages" => 0,
+            "totalMessages" => 10
             ]
         );
 
@@ -75,7 +76,8 @@ class ListMailFolderTest extends TestCase
             [
             "delimiter" => $delimiter,
             "name" => $name,
-            "unreadCount" => 0,
+            "unreadMessages" => 0,
+            "totalMessages" => 0,
             "attributes" => $attributes
             ]
         );
@@ -103,7 +105,8 @@ class ListMailFolderTest extends TestCase
             $folderKey,
             [
             "name" => $name,
-            "unreadCount" => 0
+            "unreadMessages" => 0,
+            "totalMessages" => 100
             ]
         );
     }

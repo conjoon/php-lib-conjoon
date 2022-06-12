@@ -59,9 +59,9 @@ class FolderKeyTest extends TestCase
         $this->assertSame($mailAccountId, $key->getMailAccountId());
         $this->assertSame($id, $key->getId());
 
-        $this->assertEquals(["mailAccountId" => $mailAccountId, "id" => $id], $key->toJson());
+        $this->assertEquals(["mailAccountId" => $mailAccountId, "id" => $id], $key->toArray());
 
-        $this->assertSame(json_encode($key->toJson()), $key->toString());
+        $this->assertSame(json_encode($key->toArray()), $key->toString());
 
         $mailAccount = new MailAccount(["id" => "dev"]);
         $key = new FolderKey($mailAccount, $id);

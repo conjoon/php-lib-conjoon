@@ -183,7 +183,9 @@ interface MailClient
 
 
     /**
-     * Returns the total number of messages in the specified $mailFolderId for the specified $account;
+     * Returns ab array keyed with "unreadMessages" and "totalMessages",
+     * set to the number ot unread messages and the number of messages available in the
+     * specified mailbox.
      *
      * @param FolderKey $folderKey
      *
@@ -191,19 +193,7 @@ interface MailClient
      *
      * @throws MailClientException if any exception occurs
      */
-    public function getTotalMessageCount(FolderKey $folderKey): int;
-
-
-    /**
-     * Returns the total number of UNREAD messages in the specified $mailFolderId for the specified $account;
-     *
-     * @param FolderKey $folderKey
-     *
-     * @return int
-     *
-     * @throws MailClientException if any exception occurs
-     */
-    public function getUnreadMessageCount(FolderKey $folderKey): int;
+    public function getMessageCount(FolderKey $folderKey): array;
 
 
     /**

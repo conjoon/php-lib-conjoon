@@ -57,26 +57,30 @@ class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
      *
      *   $listMailFolder = new ListMailFolder(new FolderKey("dev", "INBOX"),
      *                                       ["name"        => "INBOX",
-     *                                        "delimiter"   => "."
-     *                                        "unreadCount" => 4]);
+     *                                        "delimiter"   => ".",
+     *                                        "totalMessages" => 100,
+     *                                        "unreadMessages" => 4]);
      *   $this->getFolderType($listMailFolder); // returns "INBOX"
      *
      *   $listMailFolder = new ListMailFolder(new FolderKey("dev", "INBOX.SomeFolder.Deep.Drafts"),
      *                                       ["name"        => "Drafts",
-     *                                        "delimiter"   => "."
-     *                                        "unreadCount" => 4]);
+     *                                        "delimiter"   => ".",
+     *                                        "totalMessages" => 100,
+     *                                        "unreadMessages" => 4]);
      *   $this->getFolderType($listMailFolder); // returns "FOLDER"
      *
      *   $listMailFolder = new ListMailFolder(new FolderKey("dev", "INBOX.Drafts"),
      *                                       ["name"        => "Drafts",
-     *                                        "delimiter"   => "."
-     *                                        "unreadCount" => 4]);
+     *                                        "delimiter"   => ".",
+     *                                        "totalMessages" => 100,
+     *                                        "unreadMessages" => 4]);
      *   $this->getFolderType($listMailFolder); // returns "DRAFT"
      *
      *   $listMailFolder = new ListMailFolder(new FolderKey("dev", "INBOX.Trash.Deep.Deeper.Folder"),
      *                                       ["name"        => "Folder",
-     *                                        "delimiter"   => "."
-     *                                        "unreadCount" => 4]);
+     *                                        "delimiter"   => ".",
+     *                                        "totalMessages" => 100,
+     *                                        "unreadMessages" => 4]);
      *   $this->getFolderType($listMailFolder); // returns "FOLDER"
      *
      * @param ListMailFolder $listMailFolder

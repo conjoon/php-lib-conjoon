@@ -43,7 +43,8 @@ use InvalidArgumentException;
  *              [
  *                 "name"        => "INBOX.Some Folder",
  *                 "delimiter"   => "."
- *                 "unreadCount" => 4
+ *                 "unreadMessages" => 4,
+ *                 "totalMessages" => 100,
  *              ]
  *            );
  *

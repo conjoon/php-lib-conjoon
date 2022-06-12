@@ -228,7 +228,8 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
             $listMailFolder = new ListMailFolder(
                 new FolderKey("dev", $item),
                 array_merge(["name" => array_pop($parts),
-                    "unreadCount" => 0,
+                    "unreadMessages" => 0,
+                    "totalMessages" => 0,
                     "delimiter" => $delimiter], $cData)
             );
 
@@ -264,7 +265,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
             new FolderKey("dev", $id),
             ["name" => array_pop($parts),
                 "delimiter" => $delimiter,
-                "unreadCount" => 0]
+                "unreadMessages" => 0]
         );
     }
 

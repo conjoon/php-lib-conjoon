@@ -33,6 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Folder\AbstractMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
+use Conjoon\Mail\Client\Util\JsonApiStrategy;
 use InvalidArgumentException;
 use Tests\TestCase;
 
@@ -65,7 +66,8 @@ class MailFolderTest extends TestCase
             $folderKey,
             [
             "name" => "Folder",
-            "unreadCount" => 0,
+            "unreadMessages" => 0,
+            "totalMessages" => 0,
             "folderType" => MailFolder::TYPE_INBOX
             ]
         );
@@ -81,10 +83,13 @@ class MailFolderTest extends TestCase
 
         $mf = new MailFolder($this->createKey(), [
             "name" => "Folder2",
-            "unreadCount" => 32,
+            "unreadMessages" => 32,
+            "totalMessages" => 45,
             "folderType" => MailFolder::TYPE_INBOX
         ]);
-        $mailFolder->addMailFolder($mf);
+        $ret = $mailFolder->addMailFolder($mf);
+
+        $this->assertSame($mf, $ret);
 
         $this->assertSame(1, count($children));
         $this->assertSame($mf, $children[0]);
@@ -121,15 +126,16 @@ class MailFolderTest extends TestCase
 
 
     /**
-     * Test for toJson
+     * Test for toArray
      */
-    public function testToJson()
+    public function testToArray()
     {
 
         $data = [
             "folderType" => MailFolder::TYPE_INBOX,
             "name" => "INBOX",
-            "unreadCount" => 5
+            "unreadMessages" => 5,
+            "totalMessages" => 8
         ];
 
         $key = $this->createKey("dev", "INBOX");
@@ -141,7 +147,8 @@ class MailFolderTest extends TestCase
                 $this->createKey("dev", "INBOX.SubFolder"),
                 [
                     "name" => "A",
-                    "unreadCount" => 4,
+                    "unreadMessages" => 4,
+                    "totalMessages" => 2,
                     "folderType" => MailFolder::TYPE_INBOX
                 ]
             )
@@ -149,14 +156,119 @@ class MailFolderTest extends TestCase
 
         $json = $mf->toJson();
 
-        $expected = array_merge($key->toJson(), $data);
+        $expected = array_merge($key->toArray(), $data, ["type" => "MailFolder"]);
         $expected["data"] = [[
             "mailAccountId" => "dev",
+            "type" => "MailFolder",
             "id" => "INBOX.SubFolder",
             "name" => "A",
-            "unreadCount" => 4,
+            "unreadMessages" => 4,
+            "totalMessages" => 2,
             "folderType" => MailFolder::TYPE_INBOX,
             "data" => []
+        ]];
+
+
+        $this->assertEquals($expected, $json);
+    }
+
+
+    /**
+     * Test for toArray
+     */
+    public function testToJson()
+    {
+        $strategy = new JsonApiStrategy();
+
+        $data = [
+            "folderType" => MailFolder::TYPE_INBOX,
+            "name" => "INBOX",
+            "unreadMessages" => 5,
+            "totalMessages" => 400
+        ];
+
+        $key = $this->createKey("dev", "INBOX");
+
+        $mf = new MailFolder($key, $data);
+
+        $mf->addMailFolder(
+            new MailFolder(
+                $this->createKey("dev", "INBOX.SubFolder"),
+                [
+                    "name" => "A",
+                    "unreadMessages" => 4,
+                    "totalMessages" => 23,
+                    "folderType" => MailFolder::TYPE_INBOX
+                ]
+            )
+        )->addMailFolder(
+            new MailFolder(
+                $this->createKey("dev", "INBOX.SubFolder.last week"),
+                [
+                    "name" => "last week",
+                    "unreadMessages" => 0,
+                    "totalMessages" => 0,
+                    "folderType" => MailFolder::TYPE_INBOX
+                ]
+            )
+        );
+
+        $json = $mf->toJson($strategy);
+
+        $relationships = [
+            "MailAccounts" => [
+                "data" => [
+                    "id" => "dev",
+                    "type" => "MailAccount"
+                ]
+            ]
+        ];
+
+        $expected = [
+            "id" => $key->getId(),
+            "type" => "MailFolder",
+            "attributes" => $data,
+            "relationships" => $relationships
+        ];
+
+        $expected["attributes"]["data"] = [[
+            "id" => "INBOX.SubFolder",
+            "type" => "MailFolder",
+            "attributes" => [
+                "name" => "A",
+                "unreadMessages" => 4,
+                "totalMessages" => 23,
+                "folderType" => MailFolder::TYPE_INBOX,
+                "data" => [[
+
+                    "id" => "INBOX.SubFolder.last week",
+                    "type" => "MailFolder",
+                    "attributes" => [
+                        "name" => "last week",
+                        "unreadMessages" => 0,
+                        "totalMessages" => 0,
+                        "folderType" => MailFolder::TYPE_INBOX,
+                        "data" => []
+                    ],
+                    "relationships" => [
+                        "MailAccounts" => [
+                            "data" => [
+                                "id" => "dev",
+                                "type" => "MailAccount"
+                            ]
+                        ]
+                    ]
+
+                ]]
+            ],
+            "relationships" => [
+                "MailAccounts" => [
+                    "data" => [
+                        "id" => "dev",
+                        "type" => "MailAccount"
+                    ]
+                ]
+            ]
         ]];
 
 

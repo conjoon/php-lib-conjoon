@@ -39,8 +39,12 @@ use Conjoon\Util\AbstractList;
  *    $list = new MailFolderList();
  *
  *    $listMailFolder = new ListMailFolder(
- *      new FolderKey("dev", "INBOX"), ["delimiter" => ".", "name" => "INBOX", "unreadCount" => 23]
- *    );
+ *      new FolderKey("dev", "INBOX"), [
+ *              "delimiter" => ".",
+ *              "name" => "INBOX",
+ *              "unreadMessages" => 23,
+ *              "totalMessages" => 100
+ *      ]);
  *    $list[] = $listMailFolder;
  *
  *    foreach ($list as $key => $mItem) {

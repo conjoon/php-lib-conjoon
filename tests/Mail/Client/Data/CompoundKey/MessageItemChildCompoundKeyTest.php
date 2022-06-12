@@ -66,9 +66,9 @@ class MessageItemChildCompoundKeyTest extends TestCase
             "mailFolderId" => $mailFolderId,
             "parentMessageItemId" => $parentMessageItemId,
             "id" => $id
-        ], $key->toJson());
+        ], $key->toArray());
 
-        $this->assertSame(json_encode($key->toJson()), $key->toString());
+        $this->assertSame(json_encode($key->toArray()), $key->toString());
 
         // w/ MessageKey
         $mailAccountId = "dev1";
@@ -95,7 +95,7 @@ class MessageItemChildCompoundKeyTest extends TestCase
             "mailFolderId" => $mailFolderId,
             "parentMessageItemId" => $parentMessageItemId,
             "id" => $id
-        ], $key->toJson());
+        ], $key->toArray());
     }
 
 

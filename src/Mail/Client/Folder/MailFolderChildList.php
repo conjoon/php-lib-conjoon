@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Folder;
 
 use Conjoon\Util\AbstractList;
+use Conjoon\Util\Arrayable;
 use Conjoon\Util\Jsonable;
 use Conjoon\Util\JsonStrategy;
 
@@ -41,7 +42,7 @@ use Conjoon\Util\JsonStrategy;
  *    $list = new MailFolderChildList();
  *
  *    $mailFolder = new MailFolder(
- *      new FolderKey("dev", "INBOX"), ["name" => "INBOX", "unreadCount" => 23]
+ *      new FolderKey("dev", "INBOX"), ["name" => "INBOX", "unreadMessages" => 23, "totalMessages" => 100]
  *    );
  *    $list[] = $listMailFolder;
  *
@@ -51,7 +52,7 @@ use Conjoon\Util\JsonStrategy;
  *
  * @package Conjoon\Mail\Client\Folder
  */
-class MailFolderChildList extends AbstractList implements Jsonable
+class MailFolderChildList extends AbstractList implements Arrayable
 {
 // -------------------------
 //  AbstractList
@@ -73,13 +74,13 @@ class MailFolderChildList extends AbstractList implements Jsonable
     /**
      * @inheritdoc
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
 
         $data = [];
 
         foreach ($this->data as $mailFolder) {
-            $data[] = $mailFolder->toJson();
+            $data[] = $mailFolder->toArray();
         }
 
 

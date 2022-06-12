@@ -405,10 +405,10 @@ class DefaultMessageItemServiceTest extends TestCase
         $folderKey = $this->createFolderKey($account, $mailFolderId);
 
         $clientStub = $service->getMailClient();
-        $clientStub->method("getTotalMessageCount")
+        $clientStub->method("getMessageCount")
             ->with($folderKey)
             ->willReturn(
-                300
+                ["unreadMessages" => 5, "totalMessages" => 300]
             );
 
         $this->assertSame(300, $service->getTotalMessageCount($folderKey));
@@ -1193,8 +1193,7 @@ class DefaultMessageItemServiceTest extends TestCase
                 "getMessageItem",
                 "getMessageItemDraft",
                 "getMessageBody",
-                "getUnreadMessageCount",
-                "getTotalMessageCount",
+                "getMessageCount",
                 "getMailFolderList",
                 "getFileAttachmentList",
                 "setFlags",

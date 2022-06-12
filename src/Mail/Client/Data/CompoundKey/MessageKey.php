@@ -164,9 +164,9 @@ class MessageKey extends CompoundKey
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
-        $json = parent::toJson();
+        $json = parent::toArray();
         $json["mailFolderId"] = $this->getMailFolderId();
 
         return $json;

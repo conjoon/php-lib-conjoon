@@ -251,12 +251,13 @@ class HordeClient implements MailClient
             $mailFolderList = new MailFolderList();
 
             foreach ($mailboxes as $folderId => $mailbox) {
-                $status = ["unseen" => 0];
+                $status = ["unseen" => 0, "messages" => 0];
 
                 if ($this->isMailboxSelectable($mailbox)) {
                     $status = $client->status(
                         $folderId,
-                        Horde_Imap_Client::STATUS_UNSEEN
+                        Horde_Imap_Client::STATUS_UNSEEN,
+                        Horde_Imap_Client::STATUS_MESSAGES
                     );
                 }
 
@@ -264,7 +265,8 @@ class HordeClient implements MailClient
                 $mailFolderList[] = new ListMailFolder($folderKey, [
                     "name" => $folderId,
                     "delimiter" => $mailbox["delimiter"],
-                    "unreadCount" => $status["unseen"],
+                    "unreadMessages" => $status["unseen"],
+                    "totalMessages" => $status["messages"],
                     "attributes" => $mailbox["attributes"]
                 ]);
             }
@@ -306,31 +308,21 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function getTotalMessageCount(FolderKey $folderKey): int
+    public function getMessageCount(FolderKey $folderKey): array
     {
 
         try {
             $client = $this->connect($folderKey);
-            $results = $this->queryItems($client, $folderKey);
+            $status = $client->status(
+                $folderKey->getId(),
+                Horde_Imap_Client::STATUS_UNSEEN,
+                Horde_Imap_Client::STATUS_MESSAGES,
+            );
 
-            return count($results["match"]);
-        } catch (Exception $e) {
-            throw new ImapClientException($e->getMessage(), 0, $e);
-        }
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getUnreadMessageCount(FolderKey $folderKey): int
-    {
-
-        try {
-            $client = $this->connect($folderKey);
-            $status = $client->status($folderKey->getId(), Horde_Imap_Client::STATUS_UNSEEN);
-
-            return $status["unseen"];
+            return [
+                "unreadMessages" => $status["unseen"],
+                "totalMessages" => $status["messages"]
+            ];
         } catch (Exception $e) {
             throw new ImapClientException($e->getMessage(), 0, $e);
         }

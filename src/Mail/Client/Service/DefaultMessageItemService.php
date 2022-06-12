@@ -264,7 +264,7 @@ class DefaultMessageItemService implements MessageItemService
      */
     public function getUnreadMessageCount(FolderKey $folderKey): int
     {
-        return $this->getMailClient()->getUnreadMessageCount($folderKey);
+        return $this->getMailClient()->getMessageCount($folderKey)["unreadMessages"];
     }
 
 
@@ -273,7 +273,7 @@ class DefaultMessageItemService implements MessageItemService
      */
     public function getTotalMessageCount(FolderKey $folderKey): int
     {
-        return $this->getMailClient()->getTotalMessageCount($folderKey);
+        return $this->getMailClient()->getMessageCount($folderKey)["totalMessages"];
     }
 
     /**

@@ -125,9 +125,9 @@ abstract class MessageItemChildCompoundKey extends MessageKey
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
-        $json = parent::toJson();
+        $json = parent::toArray();
         $json["parentMessageItemId"] = $this->getParentMessageItemId();
 
         return $json;
