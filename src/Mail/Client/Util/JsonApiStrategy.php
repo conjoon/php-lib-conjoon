@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Util;
 
+use Conjoon\Mail\Client\Folder\AbstractMailFolder;
 use Conjoon\Util\JsonStrategy;
 use Conjoon\Util\Arrayable;
 
@@ -42,6 +43,7 @@ class JsonApiStrategy implements JsonStrategy
     /**
      * Transforms the $data to a format that matches the JSON:API specifications by considering
      * attributes and relationships.
+     * Makes sure child elements are properly considered where applicable, e.g. for MailFolders.
      *
      * @param Arrayable $source Expects $source to be an instance of jsonable
      *
@@ -52,6 +54,21 @@ class JsonApiStrategy implements JsonStrategy
     public function toJson(Arrayable $source): array
     {
         $data = $source->toArray();
+
+        return $this->transform($data);
+    }
+
+
+    /**
+     * Implementation for the json strategy.
+     *
+     * @param array $data
+     * @param boolean $recurse
+     *
+     * @return array|array[]
+     */
+    protected function transform (array $data, bool $recurse = false): array
+    {
 
         $types = [
             "mailFolderId"  => "MailFolder",
@@ -98,6 +115,16 @@ class JsonApiStrategy implements JsonStrategy
 
             $result["attributes"][$field] =$value;
 
+        }
+
+        // if type is MailFolder, recurse into child mail folders
+        $attributes = &$result["attributes"];
+        if (isset($attributes["data"]) && $result["type"] === "MailFolder") {
+            $children = [];
+            foreach ($attributes["data"] as $node) {
+                $children[] = $this->transform($node, true);
+            }
+            $attributes["data"] = $children;
         }
 
         return $result;

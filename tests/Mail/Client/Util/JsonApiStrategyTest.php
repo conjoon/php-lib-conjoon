@@ -58,7 +58,7 @@ class JsonApiStrategyTest extends TestCase
         $strategy = new JsonApiStrategy();
 
         $arrayMock = $this->getMockForAbstractClass(Arrayable::class);
-        $arrayMock->expects($this->exactly(3))->method("toArray")->willReturnOnConsecutiveCalls(
+        $arrayMock->expects($this->exactly(4))->method("toArray")->willReturnOnConsecutiveCalls(
             [
             "id" => 1,
             "type" => "Stub",
@@ -77,6 +77,20 @@ class JsonApiStrategyTest extends TestCase
             "type" => "Stub",
             "attribute_one" => "value",
             "attribute_two" => "value_2"
+            ], [
+                "id" => 1,
+                "type" => "MailFolder",
+                "attribute_one" => "value",
+                "attribute_two" => "value_2",
+                "data" => [[
+                    "id" => 2,
+                    "type" => "MailFolder",
+                    "field" => "value"
+                ],[
+                    "id" => 3,
+                    "type" => "MailFolder",
+                    "valueFor" => "field"
+                ]]
             ]
         );
 
@@ -109,8 +123,32 @@ class JsonApiStrategyTest extends TestCase
                         ]
                     ]
                 ]
+
             ]),
-            $base
+            $base,
+            [
+                "id" => 1,
+                "type" => "MailFolder",
+                "attributes" => [
+                    "attribute_one" => "value",
+                    "attribute_two" => "value_2",
+                    "data" => [
+                        [
+                            "id" => 2,
+                            "type" => "MailFolder",
+                            "attributes" => [
+                                "field" => "value"
+                            ]
+                        ], [
+                            "id" => 3,
+                            "type" => "MailFolder",
+                            "attributes" => [
+                                "valueFor" => "field"
+                            ]
+                        ]
+                    ]
+                ]
+            ]
         ];
 
 
