@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,33 +27,30 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Status;
+namespace Tests\Conjoon\Http\Json\Problem;
 
-use Conjoon\Http\Status\StatusCodes;
+
+use Conjoon\Http\Json\Problem\AbstractProblem;
+use Conjoon\Http\Json\Problem\NotFoundProblem;
+use Conjoon\Http\Status\StatusCodes as Status;
 use Tests\TestCase;
 
 /**
- * Class StatusCodesTest
- * @package Tests\Conjoon\Http\Status
+ * Class NotFoundProblemTest
+ * @package Tests\Conjoon\Http\Json\Problem
  */
-class StatusCodesTest extends TestCase
+class NotFoundProblemTest extends TestCase
 {
     /**
-     * test class
+     * test instance
      */
-    public function testClass()
+    public function testInstance()
     {
+        $problem = new NotFoundProblem();
 
-        $this->assertSame(400, StatusCodes::HTTP_400);
-        $this->assertSame(401, StatusCodes::HTTP_401);
-        $this->assertSame(404, StatusCodes::HTTP_404);
-        $this->assertSame(405, StatusCodes::HTTP_405);
-        $this->assertSame(500, StatusCodes::HTTP_500);
+        $this->assertInstanceOf(AbstractProblem::class, $problem);
 
-        $this->assertIsString(StatusCodes::HTTP_STATUS[400]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[401]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[404]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[405]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[500]);
+        $this->assertSame(404, $problem->getStatus());
+        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_404], $problem->getTitle());
     }
 }

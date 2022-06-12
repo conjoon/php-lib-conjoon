@@ -30,10 +30,12 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Http\Json\Problem;
 
 use Conjoon\Http\Json\Problem\InternalServerErrorProblem;
+use Conjoon\Http\Json\Problem\NotFoundProblem;
 use Conjoon\Http\Json\Problem\Problem;
 use Conjoon\Http\Json\Problem\BadRequestProblem;
 use Conjoon\Http\Json\Problem\MethodNotAllowedProblem;
 use Conjoon\Http\Json\Problem\ProblemFactory;
+use Conjoon\Http\Json\Problem\UnauthorizedProblem;
 use Tests\TestCase;
 
 /**
@@ -49,6 +51,16 @@ class ProblemFactoryTest extends TestCase
     {
         $problem = ProblemFactory::make(400, "title", "detail");
         $this->assertInstanceOf(BadRequestProblem::class, $problem);
+        $this->assertSame("title", $problem->getTitle());
+        $this->assertSame("detail", $problem->getDetail());
+
+        $problem = ProblemFactory::make(401, "title", "detail");
+        $this->assertInstanceOf(UnauthorizedProblem::class, $problem);
+        $this->assertSame("title", $problem->getTitle());
+        $this->assertSame("detail", $problem->getDetail());
+
+        $problem = ProblemFactory::make(404, "title", "detail");
+        $this->assertInstanceOf(NotFoundProblem::class, $problem);
         $this->assertSame("title", $problem->getTitle());
         $this->assertSame("detail", $problem->getDetail());
 

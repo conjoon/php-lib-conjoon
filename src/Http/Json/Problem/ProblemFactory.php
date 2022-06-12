@@ -77,6 +77,12 @@ class ProblemFactory
             case Status::HTTP_400:
                 return new BadRequestProblem($title, $detail);
 
+            case Status::HTTP_401:
+                return new UnauthorizedProblem($title, $detail);
+
+            case Status::HTTP_404:
+                return new NotFoundProblem($title, $detail);
+
             case Status::HTTP_405:
                 return new MethodNotAllowedProblem($title, $detail);
 
