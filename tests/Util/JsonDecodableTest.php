@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Util;
 
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 use Tests\TestCase;
 
 /**

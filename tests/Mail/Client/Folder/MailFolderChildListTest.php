@@ -33,9 +33,9 @@ use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Util\AbstractList;
-use Conjoon\Util\Arrayable;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 use Tests\TestCase;
 
 /**

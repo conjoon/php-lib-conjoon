@@ -31,10 +31,10 @@ namespace Conjoon\Mail\Client\Data;
 
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Copyable;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 use Conjoon\Util\Stringable;
 
 /**

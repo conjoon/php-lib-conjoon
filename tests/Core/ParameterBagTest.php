@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Core;
 
 use Conjoon\Core\ParameterBag;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use BadMethodCallException;
 use InvalidArgumentException;
 use Tests\TestCase;

@@ -31,8 +31,8 @@ namespace Conjoon\Core;
 
 use Conjoon\Util\ArrayUtil;
 use BadMethodCallException;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * A ParameterBag providing object syntax for accessing array arguments and

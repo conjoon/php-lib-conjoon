@@ -31,7 +31,7 @@ namespace Conjoon\Mail\Client\Attachment;
 
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Util\ArrayUtil;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 use InvalidArgumentException;
 
 /**

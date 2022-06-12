@@ -30,8 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Message;
 
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Class AbstractMessageBody models a simplified representation of mail message

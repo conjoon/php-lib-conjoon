@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Core;
 use Conjoon\Core\ParameterBag;
 use BadMethodCallException;
 use Conjoon\Core\ResourceQuery;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 

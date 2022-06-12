@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,23 +27,22 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core;
+
 
 /**
- * Interface Jsonable
- * @package Conjoon\Util
+ * Interface JsonStrategy
+ * @package Conjoon\Core
  */
-interface Jsonable
+interface JsonStrategy
 {
+
     /**
-     * Returns a JSON representation of this instance.
-     * Implementing APIs are advised to process associations related to this
-     * instance accordingly to return a proper and valid JSONed data structure.
+     * Returns a JSON representation of the data passed to this method.
      *
-     * @param JsonStrategy|null $strategy Allows to pass the strategy used for
-     * transforming **this** into JSON
+     * @param Arrayable $source
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array;
+    public function toJson(Arrayable $source): array;
 }

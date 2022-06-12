@@ -38,7 +38,7 @@ use Conjoon\Mail\Client\Message\Flag\DraftFlag;
 use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\Modifiable;
 use DateTime;
 use Tests\TestCase;

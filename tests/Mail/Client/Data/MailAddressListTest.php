@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Copyable;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
 use Tests\TestCase;

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Class MessageItem models envelope information of a Message.

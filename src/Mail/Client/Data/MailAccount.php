@@ -31,9 +31,9 @@ namespace Conjoon\Mail\Client\Data;
 
 use BadMethodCallException;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
-use Conjoon\Util\Arrayable;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Class MailAccount models account information for a mail server.

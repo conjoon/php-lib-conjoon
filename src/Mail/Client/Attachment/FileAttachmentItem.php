@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Attachment;
 
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 use InvalidArgumentException;
 
 /**

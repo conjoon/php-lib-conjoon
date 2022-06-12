@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Message;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Class ListMessageItem models envelope information along with a MessagePart

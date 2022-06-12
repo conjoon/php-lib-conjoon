@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Attachment\FileAttachmentItem;
 use Conjoon\Mail\Client\Attachment\FileAttachmentItemList;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Util\AbstractList;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Tests\TestCase;
 
 /**

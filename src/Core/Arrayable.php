@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core;
 
 /**
  * Interface Arrayable

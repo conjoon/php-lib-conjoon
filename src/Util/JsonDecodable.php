@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Util;
 
+use Conjoon\Core\Jsonable;
+
 /**
  * Interface JsonDecodable
  * @package Conjoon\Util

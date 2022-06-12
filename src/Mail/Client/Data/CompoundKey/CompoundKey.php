@@ -30,8 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
 use Conjoon\Mail\Client\Data\MailAccount;
-use Conjoon\Util\Arrayable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Arrayable;
+use Conjoon\Core\JsonStrategy;
 use Conjoon\Util\Stringable;
 
 /**

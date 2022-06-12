@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 use InvalidArgumentException;
 
 /**

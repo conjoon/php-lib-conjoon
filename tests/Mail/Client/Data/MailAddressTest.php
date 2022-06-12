@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Mail\Client\Data;
 
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Util\Copyable;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
 use Conjoon\Util\Stringable;

@@ -31,8 +31,8 @@ namespace Conjoon\Mail\Client\Attachment;
 
 use BadMethodCallException;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\Jsonable;
+use Conjoon\Core\JsonStrategy;
 use InvalidArgumentException;
 
 /**

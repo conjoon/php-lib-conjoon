@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Request\Message\Transformer;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Util\Jsonable;
+use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodeException;
 use Exception;
 

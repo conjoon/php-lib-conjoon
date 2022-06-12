@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Mail\Client\MailClientException;
-use Conjoon\Util\JsonStrategy;
+use Conjoon\Core\JsonStrategy;
 
 /**
  * Class MessageItemDraft models envelope information of a Message Draft.
