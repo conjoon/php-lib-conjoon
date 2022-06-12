@@ -569,8 +569,6 @@ class HordeClientTest extends TestCase
 
         $numbers = $client->getMessageCount($this->createFolderKey($account->getId(), "INBOX"));
         $this->assertEquals(["unreadMessages" => 2,  "totalMessages" => 100], $numbers);
-
-
     }
 
 

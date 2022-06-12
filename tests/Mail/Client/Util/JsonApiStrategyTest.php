@@ -67,18 +67,21 @@ class JsonApiStrategyTest extends TestCase
             "mailAccountId" => 4,
             "attribute_one" => "value",
             "attribute_two" => "value_2"
-            ], [
+            ],
+            [
             "id" => 1,
             "type" => "Stub",
             "mailAccountId" => 4,
             "attribute_one" => "value",
             "attribute_two" => "value_2"
-            ], [
+            ],
+            [
             "id" => 1,
             "type" => "Stub",
             "attribute_one" => "value",
             "attribute_two" => "value_2"
-            ], [
+            ],
+            [
                 "id" => 1,
                 "type" => "MailFolder",
                 "attribute_one" => "value",
@@ -168,8 +171,14 @@ class JsonApiStrategyTest extends TestCase
         $strategy = new JsonApiStrategy();
 
         $problemMock = $this->getMockForAbstractClass(
-    AbstractProblem::class, [], '', true, true, true,
-        ["toArray"]);
+            AbstractProblem::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ["toArray"]
+        );
         $problemMock->expects($this->exactly(3))->method("toArray")->willReturnOnConsecutiveCalls(
             [
                 "title" => "title",
@@ -220,7 +229,5 @@ class JsonApiStrategyTest extends TestCase
         foreach ($results as $result) {
             $this->assertEquals($result, $strategy->toJson($problemMock));
         }
-
     }
-
 }

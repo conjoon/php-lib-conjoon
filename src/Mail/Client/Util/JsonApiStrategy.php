@@ -40,7 +40,6 @@ use Conjoon\Core\Arrayable;
  */
 class JsonApiStrategy implements JsonStrategy
 {
-
     /**
      * Transforms the $data to a format that matches the JSON:API specifications by considering
      * attributes and relationships.
@@ -72,7 +71,7 @@ class JsonApiStrategy implements JsonStrategy
      *
      * @return array|array[]
      */
-    protected function transform (array $data, bool $recurse = false): array
+    protected function transform(array $data, bool $recurse = false): array
     {
 
         $types = [
@@ -118,8 +117,7 @@ class JsonApiStrategy implements JsonStrategy
                 continue;
             }
 
-            $result["attributes"][$field] =$value;
-
+            $result["attributes"][$field] = $value;
         }
 
         // if type is MailFolder, recurse into child mail folders

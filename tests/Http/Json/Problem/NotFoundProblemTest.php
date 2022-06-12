@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Json\Problem;
 
-
 use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Http\Json\Problem\NotFoundProblem;
 use Conjoon\Http\Status\StatusCodes as Status;

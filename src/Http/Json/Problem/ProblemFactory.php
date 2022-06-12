@@ -37,7 +37,6 @@ use Conjoon\Http\Status\StatusCodes as Status;
  */
 class ProblemFactory
 {
-
     /**
      * Returns a new Problem based on the status submitted.
      * The concrete representative for the status  gets configured with title and detail,

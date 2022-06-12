@@ -43,7 +43,6 @@ class DefaultAuthService implements AuthService
      */
     public function authenticate(MailAccount $mailAccount): bool
     {
-
         $connection = new Horde_Imap_Client_Socket(array(
             'username' => $mailAccount->getInboxUser(),
             'password' => $mailAccount->getInboxPassword(),

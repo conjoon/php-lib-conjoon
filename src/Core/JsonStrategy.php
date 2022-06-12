@@ -29,14 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\Core;
 
-
 /**
  * Interface JsonStrategy
  * @package Conjoon\Core
  */
 interface JsonStrategy
 {
-
     /**
      * Returns a JSON representation of the data passed to this method.
      *

@@ -140,8 +140,5 @@ class MailFolderChildListTest extends TestCase
             ->willReturn($folder->toArray());
 
         $this->assertEquals($folder->toArray(), $folder->toJson($strategyMock));
-
-
     }
-
 }

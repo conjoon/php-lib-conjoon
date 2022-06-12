@@ -101,12 +101,14 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             }
 
             $mailFolder = new MailFolder(
-                $mailbox->getFolderKey(), [
+                $mailbox->getFolderKey(),
+                [
                 "name" => $name,
                 "unreadMessages" => $mailbox->getUnreadMessages(),
                 "totalMessages" => $mailbox->getTotalMessages(),
                 "folderType" => $folderType
-            ]);
+                ]
+            );
 
             if ($folderType !== MailFolder::TYPE_FOLDER) {
                 $systemFolderTypes[] = $folderType;

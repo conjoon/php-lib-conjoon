@@ -102,7 +102,4 @@ class MailFolderChildList extends AbstractList implements Arrayable, Jsonable
 
         return $data;
     }
-
-
-
 }

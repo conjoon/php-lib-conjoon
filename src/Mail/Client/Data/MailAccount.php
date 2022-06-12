@@ -251,5 +251,4 @@ class MailAccount implements Jsonable, Arrayable
     {
         return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
-
 }

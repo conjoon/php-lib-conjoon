@@ -114,6 +114,5 @@ class AbstractProblemTest extends TestCase
         $strategy->expects($this->once())->method("toJson")->with($problem)->willReturn($problem->toArray());
 
         $this->assertEquals($problem->toJson($strategy), $problem->toArray());
-
     }
 }

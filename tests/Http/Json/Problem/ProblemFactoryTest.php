@@ -79,5 +79,4 @@ class ProblemFactoryTest extends TestCase
         $this->assertSame("title", $problem->getTitle());
         $this->assertSame("detail", $problem->getDetail());
     }
-
 }

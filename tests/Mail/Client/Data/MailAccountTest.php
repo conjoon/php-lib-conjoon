@@ -160,7 +160,4 @@ class MailAccountTest extends TestCase
 
         $this->assertEquals($config, $account->toJson($strategyMock));
     }
-
-
-
 }
