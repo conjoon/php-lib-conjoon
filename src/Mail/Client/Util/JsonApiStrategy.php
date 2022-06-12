@@ -151,7 +151,7 @@ class JsonApiStrategy implements JsonStrategy
             "title" => $data["title"] ?? null,
             "status" => $data["status"] ?? null,
             "detail" => $data["detail"] ?? null,
-            "links" => $data["type"] ? [
+            "links" => isset($data["type"]) && $data["type"] !== "about:blank" ? [
                 "about" => $data["type"]
             ] : null,
             "meta" => isset($data["instance"]) ? [

@@ -170,7 +170,7 @@ class JsonApiStrategyTest extends TestCase
         $problemMock = $this->getMockForAbstractClass(
     AbstractProblem::class, [], '', true, true, true,
         ["toArray"]);
-        $problemMock->expects($this->exactly(2))->method("toArray")->willReturnOnConsecutiveCalls(
+        $problemMock->expects($this->exactly(3))->method("toArray")->willReturnOnConsecutiveCalls(
             [
                 "title" => "title",
                 "status" => 401,
@@ -182,6 +182,11 @@ class JsonApiStrategyTest extends TestCase
                 "status" => 401,
                 "detail" => "detail",
                 "type" => "type"
+            ],
+            [
+                "status" => 401,
+                "detail" => "detail",
+                "type" => "about:blank"
             ]
         );
 
@@ -204,6 +209,10 @@ class JsonApiStrategyTest extends TestCase
                 "links"   => [
                     "about" => "type"
                 ]
+            ],
+            [
+                "status" => 401,
+                "detail" => "detail"
             ]
         ];
 
