@@ -62,6 +62,30 @@ class JsonApiStrategy implements JsonStrategy
             "attributes" => []
         ];
 
+
+        $createRelationship = function ($key) use ($types, $data, &$result) {
+            if (!isset($data[$key])) {
+                return false;
+            }
+            if (!isset($result["relationships"])) {
+                $result["relationships"] = [];
+            }
+            $result["relationships"]["$types[$key]s"] = [
+                "data" => [
+                    "id"   => $data[$key],
+                    "type" => $types[$key]
+                ]
+            ];
+            return true;
+        };
+
+        // look up MailFolderFirst, then create this relationship.
+        // nested MailAccount will not be reflected if a MailFolder is
+        // available, since the resource linkage to the owning MailAccount will
+        // be done given the MailFolder
+        $createRelationship("mailFolderId") ||
+        $createRelationship("mailAccountId");
+
         foreach ($data as $field => $value) {
             if (in_array($field, ["id", "type"])) {
                 $result[$field] = $value;
@@ -69,15 +93,6 @@ class JsonApiStrategy implements JsonStrategy
             }
 
             if (in_array($field, ["mailFolderId", "mailAccountId"])) {
-                if (!isset($result["relationships"])) {
-                    $result["relationships"] = [];
-                }
-                $result["relationships"]["$types[$field]s"] = [
-                    "data" => [
-                        "id"   => $value,
-                        "type" => $types[$field]
-                    ]
-                ];
                 continue;
             }
 

@@ -58,37 +58,66 @@ class JsonApiStrategyTest extends TestCase
         $strategy = new JsonApiStrategy();
 
         $arrayMock = $this->getMockForAbstractClass(Arrayable::class);
-        $arrayMock->expects($this->exactly(1))->method("toArray")->willReturn([
+        $arrayMock->expects($this->exactly(3))->method("toArray")->willReturnOnConsecutiveCalls(
+            [
             "id" => 1,
             "type" => "Stub",
             "mailFolderId" => 2,
             "mailAccountId" => 4,
             "attribute_one" => "value",
             "attribute_two" => "value_2"
-        ]);
+            ], [
+            "id" => 1,
+            "type" => "Stub",
+            "mailAccountId" => 4,
+            "attribute_one" => "value",
+            "attribute_two" => "value_2"
+            ], [
+            "id" => 1,
+            "type" => "Stub",
+            "attribute_one" => "value",
+            "attribute_two" => "value_2"
+            ]
+        );
 
-        $this->assertEquals([
+        $base = [
             "id" => 1,
             "type" => "Stub",
             "attributes" => [
                 "attribute_one" => "value",
                 "attribute_two" => "value_2"
-            ],
-            "relationships" => [
-                "MailAccounts" => [
-                    "data" => [
-                        "id"   => 4,
-                        "type" => "MailAccount"
-                    ]
-                ],
-                "MailFolders" => [
-                    "data" => [
-                        "id"   => 2,
-                        "type" => "MailFolder"
+            ]
+        ];
+
+        $results = [
+            array_merge($base, [
+                "relationships" => [
+                    "MailFolders" => [
+                        "data" => [
+                            "id"   => 2,
+                            "type" => "MailFolder"
+                        ]
                     ]
                 ]
-            ]
-        ], $strategy->toJson($arrayMock));
+            ]),
+            array_merge($base, [
+                "relationships" => [
+                    "MailAccounts" => [
+                        "data" => [
+                            "id"   => 4,
+                            "type" => "MailAccount"
+                        ]
+                    ]
+                ]
+            ]),
+            $base
+        ];
 
+
+        foreach ($results as $result) {
+            $this->assertEquals($result, $strategy->toJson($arrayMock));
+        }
     }
+
+
 }
