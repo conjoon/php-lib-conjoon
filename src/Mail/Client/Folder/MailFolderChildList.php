@@ -92,14 +92,6 @@ class MailFolderChildList extends AbstractList implements Arrayable, Jsonable
      */
     public function toJson(JsonStrategy $jsonStrategy = null): array
     {
-        $data = [];
-
-        foreach ($this->data as $mailFolder) {
-            $data[] = $jsonStrategy
-                        ? $jsonStrategy->toJson($mailFolder)
-                        : $mailFolder->toArray();
-        }
-
-        return $data;
+        return $jsonStrategy ? $jsonStrategy->toJson($this) : $this->toArray();
     }
 }

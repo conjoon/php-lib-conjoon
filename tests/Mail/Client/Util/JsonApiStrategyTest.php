@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Util;
 
+use Conjoon\Core\Jsonable;
 use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
 use Conjoon\Core\Arrayable;
 use Conjoon\Core\JsonStrategy;
+use Conjoon\Util\AbstractList;
 use Tests\TestCase;
 
 /**
@@ -268,4 +270,50 @@ class JsonApiStrategyTest extends TestCase
             $this->assertEquals($result, $strategy->toJson($problemMock));
         }
     }
+
+
+    /**
+     * Tests toJson with an abstract list
+     * @return void
+     */
+    public function testFromAbstractList()
+    {
+        $strategy = new JsonApiStrategy();
+
+        $list = $this->getMockForAbstractClass(
+            AbstractList::class,
+            [],
+            '',
+            true,
+            true,
+            true,
+            ["toJson"]
+        );
+        $list->method("getEntityType")->willReturn(Jsonable::class);
+
+        $len = 3;
+        for ($i = 0; $i < $len; $i++) {
+            $jsonable = $this->getMockBuilder(JsonableMock::class)->onlyMethods(["toJson"])->getMock();
+            $jsonable->expects($this->once())->method("toJson")->with($strategy)->willReturn([$i]);
+            $list[] = $jsonable;
+        }
+
+        $this->assertEquals([[0], [1], [2]], $strategy->toJson($list));
+    }
 }
+
+/**
+ * TestClass
+ */
+class JsonableMock implements Jsonable, Arrayable
+{
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return [];
+    }
+
+    public function toArray(): array
+    {
+        return [];
+    }
+} ;

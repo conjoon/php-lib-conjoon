@@ -33,6 +33,7 @@ use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Mail\Client\Folder\AbstractMailFolder;
 use Conjoon\Core\JsonStrategy;
 use Conjoon\Core\Arrayable;
+use Conjoon\Util\AbstractList;
 use UnexpectedValueException;
 
 /**
@@ -58,6 +59,10 @@ class JsonApiStrategy implements JsonStrategy
 
         if ($source instanceof AbstractProblem) {
             return $this->transformFromError($data);
+        }
+
+        if ($source instanceof AbstractList) {
+            return $this->fromAbstractList($source);
         }
 
         if (!isset($data["type"])) {
@@ -135,6 +140,26 @@ class JsonApiStrategy implements JsonStrategy
         }
 
         return $result;
+    }
+
+
+    /**
+     * Makes sure the abstract list is properly transformed into its JSON representative by forwarding THIS
+     * strategy to each of its list entries.
+     *
+     * @param AbstractList $source
+     *
+     * @return void
+     */
+    public function fromAbstractList(AbstractList $source)
+    {
+        $data = [];
+
+        foreach ($source as $item) {
+            $data[] = $item->toJson($this);
+        }
+
+        return $data;
     }
 
 

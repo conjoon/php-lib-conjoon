@@ -98,6 +98,30 @@ class AbstractListTest extends TestCase
     }
 
 
+    /**
+     * Tests Arrayable
+     */
+    public function testToArray()
+    {
+
+        $abstractList = $this->getMockForAbstractList();
+
+        $cmpList = [
+            new stdClass(),
+            new stdClass()
+        ];
+
+        $abstractList[] = $cmpList[0];
+        $abstractList[] = $cmpList[1];
+
+        $this->assertEquals([
+            $abstractList[0],
+            $abstractList[1]
+        ], $abstractList->toArray());
+    }
+
+
+
 // ---------------------
 //    Helper Functions
 // ---------------------

@@ -117,7 +117,6 @@ class MailFolderChildListTest extends TestCase
         );
 
         $mailFolderChildList = new MailFolderChildList();
-
         $mailFolderChildList[] = $folder;
 
         $this->assertEquals(
@@ -126,9 +125,6 @@ class MailFolderChildListTest extends TestCase
         );
 
         // w/ strategy
-
-
-
         $strategyMock =
             $this->getMockBuilder(JsonStrategy::class)
                 ->getMockForAbstractClass();
@@ -136,9 +132,9 @@ class MailFolderChildListTest extends TestCase
         $strategyMock
             ->expects($this->exactly(1))
             ->method("toJson")
-            ->with($folder)
-            ->willReturn($folder->toArray());
+            ->with($mailFolderChildList)
+            ->willReturn($mailFolderChildList->toArray());
 
-        $this->assertEquals($folder->toArray(), $folder->toJson($strategyMock));
+        $this->assertEquals($mailFolderChildList->toArray(), $mailFolderChildList->toJson($strategyMock));
     }
 }

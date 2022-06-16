@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Util;
 
 use ArrayAccess;
+use Conjoon\Core\Arrayable;
 use Countable;
 use Iterator;
 use TypeError;
@@ -41,7 +42,7 @@ use TypeError;
  *
  * @package Conjoon\Util
  */
-abstract class AbstractList implements ArrayAccess, Iterator, Countable
+abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countable
 {
     /**
      * @var array
@@ -175,5 +176,18 @@ abstract class AbstractList implements ArrayAccess, Iterator, Countable
     public function count()
     {
         return count($this->data);
+    }
+
+
+// --------------------------
+//  Arrayable interface
+// --------------------------
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return $this->data;
     }
 }
