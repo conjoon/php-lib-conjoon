@@ -44,7 +44,7 @@ trait FieldsTrait
      *
      * @return string[]
      */
-    protected function getDefFields(string $type, array $additional = [], array $exclude = []): array
+    protected function computeDefaultFields(string $type, array $additional = [], array $exclude = []): array
     {
 
         $def = $this->getDefaultFields($type);

@@ -41,10 +41,10 @@ use Tests\TestCase;
 class FieldsTraitTest extends TestCase
 {
     /**
-     * getDefAttr()
+     * testComputeDefaultFields()
      * @throws ReflectionException
      */
-    public function testGetDefAttr()
+    public function testComputeDefaultFields()
     {
         $client = $this->getMockedTrait();
 
@@ -52,7 +52,7 @@ class FieldsTraitTest extends TestCase
             $defs = array_map(fn ($item) => true, array_flip($client->getDefaultFields($type)));
 
             $reflection = new ReflectionClass($client);
-            $property = $reflection->getMethod("getDefFields");
+            $property = $reflection->getMethod("computeDefaultFields");
             $property->setAccessible(true);
 
             $this->assertEquals(
