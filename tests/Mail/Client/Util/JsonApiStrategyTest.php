@@ -59,7 +59,7 @@ class JsonApiStrategyTest extends TestCase
         $strategy = new JsonApiStrategy();
 
         $arrayMock = $this->getMockForAbstractClass(Arrayable::class);
-        $arrayMock->expects($this->exactly(5))->method("toArray")->willReturnOnConsecutiveCalls(
+        $arrayMock->expects($this->exactly(6))->method("toArray")->willReturnOnConsecutiveCalls(
             [
                 // type missing
                 "id" => 1,
@@ -103,6 +103,13 @@ class JsonApiStrategyTest extends TestCase
                     "type" => "MailFolder",
                     "valueFor" => "field"
                 ]]
+            ],
+            [
+                "id" => 1,
+                "mailFolderId" => "INBOX",
+                "mailAccountId" => "dev",
+                "type" => "MessageItem",
+                "previewText" => "..."
             ]
         );
 
@@ -168,9 +175,24 @@ class JsonApiStrategyTest extends TestCase
                         ]
                     ]
                 ]
-            ]
-        ];
+            ],
 
+            [
+                "id" => 1,
+                "type" => "MessageItem",
+                "relationships" => [
+                    "MailFolders" => [
+                        "data" => [
+                            "type" => "MailFolder", "id" => "INBOX"
+                        ]
+                    ]
+                ],
+                "attributes" => [
+                    "previewText" => "..."
+                ]
+            ]
+
+        ];
 
         foreach ($results as $result) {
             $this->assertEquals($result, $strategy->toJson($arrayMock));

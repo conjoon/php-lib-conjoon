@@ -101,17 +101,21 @@ class MessageItemTest extends TestCase
 
 
     /**
-     * toJson()
+     * tests toArray()
      */
-    public function testToJson()
+    public function testToArray()
     {
 
         $messageKey = $this->createMessageKey();
         $item = $this->createMessageItem($this->createMessageKey(), $this->getItemConfig());
 
-        $json = $item->toJson();
+        $json = $item->toArray();
 
-        $expected = array_merge($messageKey->toJson(), $this->getItemConfig());
+        $expected = array_merge(
+            ["type" => "MessageItem"],
+            $messageKey->toArray(),
+            $this->getItemConfig()
+        );
         unset($expected["charset"]);
 
         ksort($expected);

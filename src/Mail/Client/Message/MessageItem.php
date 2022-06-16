@@ -78,7 +78,7 @@ class MessageItem extends AbstractMessageItem
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
@@ -86,13 +86,14 @@ class MessageItem extends AbstractMessageItem
      * Only the data will be returned where the values are not null.
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
         $data = array_merge([
-            'hasAttachments' => $this->getHasAttachments(),
-            'size' => $this->getSize()
-        ], parent::toJson());
+            "type" => "MessageItem",
+            "hasAttachments" => $this->getHasAttachments(),
+            "size" => $this->getSize()
+        ], parent::toArray());
 
-        return $this->buildJson($data);
+        return $this->buildArray($data);
     }
 }
