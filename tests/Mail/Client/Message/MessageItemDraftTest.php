@@ -82,8 +82,8 @@ class MessageItemDraftTest extends TestCase
         $this->assertSame([], $messageItem->getModifiedFields());
         $this->assertSame([], $newItem->getModifiedFields());
 
-        $newItem->toJson();
-        $oldJson = $messageItem->toJson();
+        $newItem->toArray();
+        $oldJson = $messageItem->toArray();
 
         $expCaught = count(array_keys($oldJson)) - 3; // w/o messageKey data
 
@@ -153,9 +153,9 @@ class MessageItemDraftTest extends TestCase
 
 
     /**
-     * Test toJson
+     * Test toArray
      */
-    public function testToJson()
+    public function testToArray()
     {
         $item = $this->getItemConfig();
 
@@ -172,9 +172,9 @@ class MessageItemDraftTest extends TestCase
                 continue;
             }
             if (in_array($key, ["from", "replyTo", "to", "cc", "bcc"])) {
-                $this->assertEquals($item[$key]->toJson(), $messageItem->toJson()[$key]);
+                $this->assertEquals($item[$key]->toArray(), $messageItem->toArray()[$key]);
             } else {
-                $this->assertSame($item[$key], $messageItem->toJson()[$key]);
+                $this->assertSame($item[$key], $messageItem->toArray()[$key]);
             }
         }
 
@@ -183,15 +183,15 @@ class MessageItemDraftTest extends TestCase
         $messageItem = $this->createMessageItem($messageKey, $item);
 
 
-        $json = $messageItem->toJson();
-        $keyJson = $messageKey->toJson();
+        $json = $messageItem->toArray();
+        $keyJson = $messageKey->toArray();
 
         $this->assertSame($json["id"], $keyJson["id"]);
         $this->assertSame($json["mailAccountId"], $keyJson["mailAccountId"]);
         $this->assertSame($json["mailFolderId"], $keyJson["mailFolderId"]);
 
         $messageItem = $this->createMessageItem();
-        $json = $messageItem->toJson();
+        $json = $messageItem->toArray();
 
         $this->assertArrayNotHasKey("replyTo", $json);
         $this->assertArrayNotHasKey("cc", $json);
@@ -241,7 +241,7 @@ class MessageItemDraftTest extends TestCase
         $messageItem->setCc();
         $messageItem->setBcc();
 
-        $json = $messageItem->toJson();
+        $json = $messageItem->toArray();
 
         $this->assertArrayNotHasKey("from", $json);
         $this->assertArrayNotHasKey("replyTo", $json);

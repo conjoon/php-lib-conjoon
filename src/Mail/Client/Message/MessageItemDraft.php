@@ -138,20 +138,20 @@ class MessageItemDraft extends AbstractMessageItem
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
      * @inheritdoc
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
-        $data = array_merge(parent::toJson(), [
-            'cc' => $this->getCc() ? $this->getCc()->toJson() : null,
-            'bcc' => $this->getBcc() ? $this->getBcc()->toJson() : null,
-            'replyTo' => $this->getReplyTo() ? $this->getReplyTo()->toJson() : null
+        $data = array_merge(parent::toArray(), [
+            'cc' => $this->getCc() ? $this->getCc()->toArray() : null,
+            'bcc' => $this->getBcc() ? $this->getBcc()->toArray() : null,
+            'replyTo' => $this->getReplyTo() ? $this->getReplyTo()->toArray() : null
         ]);
 
-        return $this->buildJson($data);
+        return $this->buildArray($data);
     }
 }
