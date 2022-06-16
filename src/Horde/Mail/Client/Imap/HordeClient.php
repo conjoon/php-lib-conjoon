@@ -55,6 +55,7 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
 use Conjoon\Util\ArrayUtil;
 use DateTime;
@@ -236,8 +237,11 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function getMailFolderList(MailAccount $mailAccount): MailFolderList
+    public function getMailFolderList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderList
     {
+        $options = $query->toJson();
+
+        $options["fields"] = $options["fields"]["MailFolder"] ?? $this->getDefaultFields("MailFolder");
 
         try {
             $client = $this->connect($mailAccount->getId());
@@ -254,21 +258,31 @@ class HordeClient implements MailClient
                 $status = ["unseen" => 0, "messages" => 0];
 
                 if ($this->isMailboxSelectable($mailbox)) {
-                    $status = $client->status(
-                        $folderId,
-                        Horde_Imap_Client::STATUS_UNSEEN,
-                        Horde_Imap_Client::STATUS_MESSAGES
-                    );
+                    $args = [$folderId];
+
+                    in_array("unreadMessages", $options["fields"]) && ($args[] = Horde_Imap_Client::STATUS_UNSEEN);
+                    in_array("totalMessages", $options["fields"]) && ($args[] = Horde_Imap_Client::STATUS_MESSAGES);
+                    $status = $client->status(...$args);
+                }
+
+                $properties = [
+                    "delimiter" => $mailbox["delimiter"],
+                    "attributes" => $mailbox["attributes"]
+                ];
+
+                foreach (
+                    [
+                    "unreadMessages" => $status["unseen"],
+                    "totalMessages" => $status["messages"],
+                    "name" => $folderId] as $field => $value
+                ) {
+                    $properties = in_array($field, $options["fields"])
+                        ? array_merge($properties, [$field => $value])
+                        : $properties;
                 }
 
                 $folderKey = new FolderKey($mailAccount, $folderId);
-                $mailFolderList[] = new ListMailFolder($folderKey, [
-                    "name" => $folderId,
-                    "delimiter" => $mailbox["delimiter"],
-                    "unreadMessages" => $status["unseen"],
-                    "totalMessages" => $status["messages"],
-                    "attributes" => $mailbox["attributes"]
-                ]);
+                $mailFolderList[] = new ListMailFolder($folderKey, $properties);
             }
         } catch (Exception $e) {
             throw new ImapClientException($e->getMessage(), 0, $e);

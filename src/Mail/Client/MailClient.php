@@ -43,6 +43,7 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 /**
  * Interface MailClient
@@ -55,12 +56,15 @@ interface MailClient
      * mailboxes available for the specified MailAccount.
      *
      * @param MailAccount $mailAccount
+     * @param MailFolderListResourceQuery $query An additional set of options for querying the
+     * MailFolderIst, such as the fields to return with each entry.
+     * Clients need to return a default set of fields if no fields are defined. See #getDefaultFields
      *
      * @return MailFolderList
      *
      * @throws MailClientException if any exception occurs
      */
-    public function getMailFolderList(MailAccount $mailAccount): MailFolderList;
+    public function getMailFolderList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderList;
 
 
     /**

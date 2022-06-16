@@ -51,6 +51,7 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
 use DateTime;
 use Exception;
@@ -591,51 +592,83 @@ class HordeClientTest extends TestCase
     public function testGetMailFolderList()
     {
 
-        $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        foreach (
+            [
+            ["fields" => ["unreadMessages", "totalMessages", "name"]],
+            ["fields" => ["unreadMessages", "totalMessages"]],
+            ["fields" => ["totalMessages", "name"]],
+            ["fields" => ["name"]],
+            ] as $input
+        ) {
+            $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
-        $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
+            $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
 
-        $imapStub->shouldReceive("listMailboxes")->with(
-            "*",
-            Horde_Imap_Client::MBOX_ALL,
-            ["attributes" => true]
-        )->andReturn([
-            "INBOX" => ["delimiter" => ".", "attributes" => []],
-            "INBOX.Folder" => ["delimiter" => ":", "attributes" => ["\\noselect"]]
-        ]);
+            $imapStub->shouldReceive("listMailboxes")->with(
+                "*",
+                Horde_Imap_Client::MBOX_ALL,
+                ["attributes" => true]
+            )->andReturn([
+                "INBOX" => ["delimiter" => ".", "attributes" => []],
+                "INBOX.Folder" => ["delimiter" => ":", "attributes" => ["\\noselect"]]
+            ]);
 
-        $imapStub->shouldReceive("status")->with(
-            "INBOX",
-            Horde_Imap_Client::STATUS_UNSEEN,
-            Horde_Imap_Client::STATUS_MESSAGES
-        )->andReturn(["unseen" => 30, "messages" => 100]);
+            $inline = [];
+            $args = ["INBOX"];
+            $return = [];
 
-        $imapStub->shouldNotReceive("status")->with(
-            "INBOX.Folder",
-            Horde_Imap_Client::STATUS_UNSEEN,
-            Horde_Imap_Client::STATUS_MESSAGES
-        );
+            if (in_array("unreadMessages", $input["fields"])) {
+                $args[] = Horde_Imap_Client::STATUS_UNSEEN;
+                $return["unseen"] = 30;
+                $inline[] = fn($listMailFolder)
+                              =>  $this->assertSame(30, $listMailFolder->getUnreadMessages());
+            }
+            if (in_array("totalMessages", $input["fields"])) {
+                $args[] = Horde_Imap_Client::STATUS_MESSAGES;
+                $return["messages"] = 100;
+                $inline[] = fn($listMailFolder)
+                             =>  $this->assertSame(100, $listMailFolder->getTotalMessages());
+            }
+            if (in_array("name", $input["fields"])) {
+                $inline[] = fn($listMailFolder)
+                =>  $this->assertSame("INBOX", $listMailFolder->getName());
+            }
+            $imapStub->shouldReceive("status")->with(
+                ...$args
+            )->andReturn($return);
+
+            $imapStub->shouldNotReceive("status")->with(
+                "INBOX.Folder",
+                Horde_Imap_Client::STATUS_UNSEEN,
+                Horde_Imap_Client::STATUS_MESSAGES
+            );
 
 
-        $client = $this->createClient();
+            $client = $this->createClient();
 
-        $mailFolderList = $client->getMailFolderList($account);
+            $mailFolderList = $client->getMailFolderList(
+                $account,
+                new MailFolderListResourceQuery(new ParameterBag())
+            );
 
-        $this->assertInstanceOf(MailFolderList::class, $mailFolderList);
+            $this->assertInstanceOf(MailFolderList::class, $mailFolderList);
 
-        $listMailFolder = $mailFolderList[0];
-        $this->assertSame("INBOX", $listMailFolder->getName());
-        $this->assertSame(".", $listMailFolder->getDelimiter());
-        $this->assertSame(30, $listMailFolder->getUnreadMessages());
-        $this->assertSame(100, $listMailFolder->getTotalMessages());
-        $this->assertSame([], $listMailFolder->getAttributes());
+            $listMailFolder = $mailFolderList[0];
+            $this->assertSame(".", $listMailFolder->getDelimiter());
 
-        $listMailFolder = $mailFolderList[1];
-        $this->assertSame("INBOX.Folder", $listMailFolder->getName());
-        $this->assertSame(":", $listMailFolder->getDelimiter());
-        $this->assertSame(0, $listMailFolder->getUnreadMessages());
-        $this->assertSame(0, $listMailFolder->getTotalMessages());
-        $this->assertSame(["\\noselect"], $listMailFolder->getAttributes());
+            foreach ($inline as $func) {
+                $func($listMailFolder);
+            }
+
+            $this->assertSame([], $listMailFolder->getAttributes());
+
+            $listMailFolder = $mailFolderList[1];
+            $this->assertSame("INBOX.Folder", $listMailFolder->getName());
+            $this->assertSame(":", $listMailFolder->getDelimiter());
+            $this->assertSame(0, $listMailFolder->getUnreadMessages());
+            $this->assertSame(0, $listMailFolder->getTotalMessages());
+            $this->assertSame(["\\noselect"], $listMailFolder->getAttributes());
+        }
     }
 
 
