@@ -434,8 +434,8 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
         $mk = $this->getMessageKey();
 
         $data = array_merge($mk->toArray(), [
-            'from' => $this->getFrom() ? $this->getFrom()->toJson() : null,
-            'to' => $this->getTo() ? $this->getTo()->toJson() : null,
+            'from' => $this->getFrom() ? $this->getFrom()->toArray() : null,
+            'to' => $this->getTo() ? $this->getTo()->toArray() : null,
             'subject' => $this->getSubject(),
             'date' => $this->getDate() ? $this->getDate()->format("Y-m-d H:i:s O") : null,
             'seen' => $this->getSeen(),
@@ -447,7 +447,7 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
             'references' => $this->getReferences(),
         ]);
 
-        return $this->buildJson($data);
+        return $this->buildArray($data);
     }
 
 
@@ -457,7 +457,7 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
      * @param array $thisData
      * @return array
      */
-    protected function buildJson(array $thisData): array
+    protected function buildArray(array $thisData): array
     {
         $thisData = array_filter(
             $thisData,

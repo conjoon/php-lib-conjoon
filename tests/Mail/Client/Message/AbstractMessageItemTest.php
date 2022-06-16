@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Core\JsonStrategy;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
@@ -42,6 +43,7 @@ use Conjoon\Mail\Client\Message\Flag\SeenFlag;
 use Conjoon\Core\Jsonable;
 use Conjoon\Util\Modifiable;
 use DateTime;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 use TypeError;
 
@@ -51,6 +53,9 @@ use TypeError;
  */
 class AbstractMessageItemTest extends TestCase
 {
+    use JsonableTestTrait;
+
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -62,7 +67,6 @@ class AbstractMessageItemTest extends TestCase
     {
 
         $messageItem = $this->createMessageItem();
-        $this->assertInstanceOf(Jsonable::class, $messageItem);
         $this->assertInstanceOf(Modifiable::class, $messageItem);
 
         $this->assertNull($messageItem->getSeen());
@@ -200,17 +204,9 @@ class AbstractMessageItemTest extends TestCase
     public function testToJson()
     {
         $key = $this->createMessageKey();
-
         $messageItem = $this->createMessageItem($key, $this->getItemConfig());
 
-        $this->assertEquals($messageItem->toArray(), $messageItem->toJson());
-
-        $strategyStub = $this->getMockForAbstractClass(JsonStrategy::class);
-
-        $strategyStub->expects($this->once())->method("toJson")->with($messageItem)->willReturn($messageItem->toArray());
-
-
-        $this->assertEquals($messageItem->toArray(), $messageItem->toJson($strategyStub));
+        $this->runToJsonTest($messageItem);
     }
 
 
