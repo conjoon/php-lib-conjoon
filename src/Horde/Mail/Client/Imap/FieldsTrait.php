@@ -29,23 +29,25 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Imap;
 
+use InvalidArgumentException;
+
 /**
- * Helper-Trait for defining attribute-related information.
+ * Helper-Trait for defining field-related information.
  *
- * Trait AttributeTrait
+ * Trait FieldsTrait
  * @package Conjoon\Horde\Mail\Client\Imap
  */
-trait AttributeTrait
+trait FieldsTrait
 {
     /**
-     * Returns a list of default attributes to return with a MessageItem.
+     * Returns a list of default fields to return with the specified resource (e.g. MessageItem, MailFolder).
      *
      * @return string[]
      */
-    protected function getDefAttr($additional = [], $exclude = []): array
+    protected function getDefFields(string $type, array $additional = [], array $exclude = []): array
     {
 
-        $def = $this->getDefaultAttributes();
+        $def = $this->getDefaultFields($type);
         $ret = [];
         foreach ($def as $attr) {
             if (in_array($attr, $exclude)) {
@@ -55,7 +57,7 @@ trait AttributeTrait
         }
 
         foreach ($additional as $key => $fieldConf) {
-            $chk = $this->getAttr($key, $additional);
+            $chk = $this->getField($key, $additional);
             $chk && $ret[$key] = $chk;// true or array
         }
 
@@ -64,56 +66,79 @@ trait AttributeTrait
 
 
     /**
-     * @return string[]
+     * @return array[]
      */
-    public function getSupportedAttributes(): array
+    public function getSupportedFields(string $type): array
     {
-        return [
-            "hasAttachments",
-            "size",
-            "plain", // \ __Preview
-            "html",  // /   Text
-            "cc",
-            "bcc",
-            "replyTo",
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId"
-        ];
+        if (!in_array($type, ["MailFolder", "MessageItem"])) {
+            throw new InvalidArgumentException("\"$type\" must be \"MailFolder\" or \"MessageItem\"");
+        }
+
+        $fieldset = [
+            "MessageItem" => [
+                "hasAttachments",
+                "size",
+                "plain", // \ __Preview
+                "html",  // /   Text
+                "cc",
+                "bcc",
+                "replyTo",
+                "from",
+                "to",
+                "subject",
+                "date",
+                "seen",
+                "answered",
+                "draft",
+                "flagged",
+                "recent",
+                "charset",
+                "references",
+                "messageId"
+            ], "MailFolder" => [
+                "name",
+                "unreadMessages",
+                "totalMessages"
+            ]];
+
+        return $fieldset[$type];
     }
 
 
     /**
      * @inheritdoc
      */
-    public function getDefaultAttributes(): array
+    public function getDefaultFields(string $type): array
     {
-        return [
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId",
-            "plain",
-            "size",
-            "hasAttachments"
+        if (!in_array($type, ["MailFolder", "MessageItem"])) {
+            throw new InvalidArgumentException("\"$type\" must be \"MailFolder\" or \"MessageItem\"");
+        }
+
+        $fieldset = [
+            "MessageItem" => [
+                "from",
+                "to",
+                "subject",
+                "date",
+                "seen",
+                "answered",
+                "draft",
+                "flagged",
+                "recent",
+                "charset",
+                "references",
+                "messageId",
+                "plain",
+                "size",
+                "hasAttachments"
+            ], "MailFolder" => [
+                "name",
+                "unreadMessages",
+                "totalMessages"
+            ]
         ];
+
+        return $fieldset[$type];
     }
 
 
@@ -127,7 +152,7 @@ trait AttributeTrait
      * @return mixed|null
      * @noinspection PhpSameParameterValueInspection
      */
-    private function getAttr($key, $target, $default = null)
+    private function getField($key, $target, $default = null)
     {
         if (array_key_exists($key, $target)) {
             $val = $target[$key];

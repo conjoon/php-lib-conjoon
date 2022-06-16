@@ -30,14 +30,15 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Horde\Mail\Client\Imap\AttributeTrait;
+use Conjoon\Horde\Mail\Client\Imap\FieldsTrait;
 use ReflectionClass;
 use Tests\TestCase;
 
 /**
- * Class AttributeTraitTest
+ * Class FieldsTraitTest
  * @package Tests\Conjoon\Horde\Mail\Client\Imap
  */
-class AttributeTraitTest extends TestCase
+class FieldsTraitTest extends TestCase
 {
     /**
      * getDefAttr()
@@ -47,37 +48,39 @@ class AttributeTraitTest extends TestCase
     {
         $client = $this->getMockedTrait();
 
-        $defs = array_map(fn ($item) => true, array_flip($client->getDefaultAttributes()));
+        foreach (["MessageItem", "MailFolder"] as $type) {
+            $defs = array_map(fn ($item) => true, array_flip($client->getDefaultFields($type)));
 
-        $reflection = new ReflectionClass($client);
-        $property = $reflection->getMethod("getDefAttr");
-        $property->setAccessible(true);
+            $reflection = new ReflectionClass($client);
+            $property = $reflection->getMethod("getDefFields");
+            $property->setAccessible(true);
 
-        $this->assertEquals(
-            $defs,
-            $property->invokeArgs($client, [])
-        );
+            $this->assertEquals(
+                $defs,
+                $property->invokeArgs($client, [$type, ])
+            );
 
-        $this->assertEquals(
-            array_merge($defs, ["foo" => true]),
-            $property->invokeArgs($client, [["foo" => []]])
-        );
+            $this->assertEquals(
+                array_merge($defs, ["foo" => true]),
+                $property->invokeArgs($client, [$type, ["foo" => []]])
+            );
 
-        $this->assertEquals(
-            array_merge($defs, ["foo" => ["length" => 3]]),
-            $property->invokeArgs($client, [["foo" => ["length" => 3]]])
-        );
+            $this->assertEquals(
+                array_merge($defs, ["foo" => ["length" => 3]]),
+                $property->invokeArgs($client, [$type, ["foo" => ["length" => 3]]])
+            );
 
-        $this->assertEquals(
-            $defs,
-            $property->invokeArgs($client, [["foo" => false]])
-        );
+            $this->assertEquals(
+                $defs,
+                $property->invokeArgs($client, [$type, ["foo" => false]])
+            );
+        }
     }
 
     /**
-     * getSupportedAttributes()
+     * tests getSupportedFields()
      */
-    public function testGetSupportedAttributes()
+    public function testGetSupportedFields()
     {
         $client = $this->getMockedTrait();
         $this->assertEquals([
@@ -100,14 +103,20 @@ class AttributeTraitTest extends TestCase
             "charset",
             "references",
             "messageId"
-        ], $client->getSupportedAttributes());
+        ], $client->getSupportedFields("MessageItem"));
+
+        $this->assertEquals([
+            "name",
+            "unreadMessages",
+            "totalMessages"
+        ], $client->getSupportedFields("MailFolder"));
     }
 
 
     /**
-     * getDefaultAttributes()
+     * tests getDefaultFields()
      */
-    public function testGetDefaultAttributes()
+    public function testGetDefaultFields()
     {
         $client = $this->getMockedTrait();
         $this->assertEquals([
@@ -126,20 +135,26 @@ class AttributeTraitTest extends TestCase
             "plain",
             "size",
             "hasAttachments"
-        ], $client->getDefaultAttributes());
+        ], $client->getDefaultFields("MessageItem"));
+
+        $this->assertEquals([
+            "name",
+            "unreadMessages",
+            "totalMessages"
+        ], $client->getDefaultFields("MailFolder"));
     }
 
 
     /**
-     * getAttr()
+     * tests getField()
      * @throws ReflectionException
      */
-    public function testGetAttr()
+    public function testGetField()
     {
         $client = $this->getMockedTrait();
 
         $reflection = new ReflectionClass($client);
-        $property = $reflection->getMethod("getAttr");
+        $property = $reflection->getMethod("getField");
         $property->setAccessible(true);
 
         $this->assertEquals(
@@ -176,7 +191,7 @@ class AttributeTraitTest extends TestCase
     public function getMockedTrait()
     {
         return new class (){
-            use AttributeTrait;
+            use FieldsTrait;
         };
     }
 }
