@@ -241,7 +241,7 @@ class HordeClient implements MailClient
     {
         $options = $query->toJson();
 
-        $options["fields"] = $options["fields"]["MailFolder"] ?? $this->getDefaultFields("MailFolder");
+        $fields = $options["fields"] ?? $this->computeDefaultFields("MailFolder");
 
         try {
             $client = $this->connect($mailAccount->getId());
@@ -255,14 +255,33 @@ class HordeClient implements MailClient
             $mailFolderList = new MailFolderList();
 
             foreach ($mailboxes as $folderId => $mailbox) {
-                $status = ["unseen" => 0, "messages" => 0];
+                $status = [];
+
+                $args = ["name" => $folderId];
 
                 if ($this->isMailboxSelectable($mailbox)) {
-                    $args = [$folderId];
+                    foreach (
+                        [
+                        "unreadMessages" => Horde_Imap_Client::STATUS_UNSEEN,
+                        "totalMessages" => Horde_Imap_Client::STATUS_MESSAGES
+                        ] as $field => $attribute
+                    ) {
+                        if (in_array($field, $fields)) {
+                            $args[$field] = $attribute;
+                        }
+                    }
 
-                    in_array("unreadMessages", $options["fields"]) && ($args[] = Horde_Imap_Client::STATUS_UNSEEN);
-                    in_array("totalMessages", $options["fields"]) && ($args[] = Horde_Imap_Client::STATUS_MESSAGES);
-                    $status = $client->status(...$args);
+                    if (count($args) > 1) {
+                        $status = $client->status(...array_values($args));
+
+                        foreach (["unseen" => "unreadMessages", "messages" => "totalMessages"] as $key => $val) {
+                            if (array_key_exists($key, $status)) {
+                                $args[$val] = $status[$key];
+                            } else {
+                                unset($args[$val]);
+                            }
+                        }
+                    }
                 }
 
                 $properties = [
@@ -270,14 +289,9 @@ class HordeClient implements MailClient
                     "attributes" => $mailbox["attributes"]
                 ];
 
-                foreach (
-                    [
-                    "unreadMessages" => $status["unseen"],
-                    "totalMessages" => $status["messages"],
-                    "name" => $folderId] as $field => $value
-                ) {
-                    $properties = in_array($field, $options["fields"])
-                        ? array_merge($properties, [$field => $value])
+                foreach ($args as $field => $attribute) {
+                    $properties = in_array($field, $fields)
+                        ? array_merge($properties, [$field => $attribute])
                         : $properties;
                 }
 
@@ -305,7 +319,7 @@ class HordeClient implements MailClient
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
-            $options["fields"] = $options["fields"]["MessageItem"] ?? $this->getDefFields("MessageItem");
+            $options["fields"] = $options["fields"] ?? $this->computeDefaultFields("MessageItem");
 
             return $this->buildMessageItems(
                 $client,
@@ -363,7 +377,7 @@ class HordeClient implements MailClient
                  $client,
                  new FolderKey($messageKey->getMailAccountId(), $mailFolderId),
                  $fetchedItems[0],
-                 ["fields" => $this->getDefFields("MessageItem", ["hasAttachments" => true, "size" => true])]
+                 ["fields" => $this->computeDefaultFields("MessageItem", ["hasAttachments" => true, "size" => true])]
              );
 
              return new MessageItem($ret["messageKey"], array_filter($ret["data"], fn ($item) => $item !== null));
@@ -420,7 +434,7 @@ class HordeClient implements MailClient
                 $client,
                 new FolderKey($messageKey->getMailAccountId(), $mailFolderId),
                 $fetchedItems[0],
-                ["fields" => $this->getDefFields("MessageItem", ["cc" => true, "bcc" => true, "replyTo" => true])]
+                ["fields" => $this->computeDefaultFields("MessageItem", ["cc" => true, "bcc" => true, "replyTo" => true])]
             );
 
             return new MessageItemDraft(
