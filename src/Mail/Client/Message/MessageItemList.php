@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Util\AbstractList;
 use Conjoon\Core\Jsonable;
 use Conjoon\Core\JsonStrategy;
@@ -49,7 +50,7 @@ use Conjoon\Core\JsonStrategy;
  *
  * @package Conjoon\Mail\Client\Message
  */
-class MessageItemList extends AbstractList implements Jsonable
+class MessageItemList extends AbstractList implements Arrayable, Jsonable
 {
 // -------------------------
 //  AbstractList
@@ -63,6 +64,30 @@ class MessageItemList extends AbstractList implements Jsonable
         return ListMessageItem::class;
     }
 
+
+
+// --------------------------------
+//  Arrayable interface
+// --------------------------------
+
+    /**
+     * Returns an array representing this MessageItemList.
+     *
+     * Each entry in the returning array holds an array representation of
+     * a MessageItem.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $data = [];
+
+        foreach ($this->data as $messageItem) {
+            $data[] = $messageItem->toArray();
+        }
+
+        return $data;
+    }
 
 // --------------------------------
 //  Jsonable interface
@@ -78,13 +103,6 @@ class MessageItemList extends AbstractList implements Jsonable
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
-
-        $data = [];
-
-        foreach ($this->data as $messageItem) {
-            $data[] = $messageItem->toJson();
-        }
-
-        return $data;
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
 }

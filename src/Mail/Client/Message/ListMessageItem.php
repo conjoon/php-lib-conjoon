@@ -111,15 +111,15 @@ class ListMessageItem extends MessageItem
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
      * @inheritdoc
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
-        $data = parent::toJson();
+        $data = parent::toArray();
 
         if ($this->getMessagePart()) {
             $data["previewText"] = $this->getMessagePart()->getContents();
@@ -131,6 +131,6 @@ class ListMessageItem extends MessageItem
             'replyTo' => $this->getReplyTo() ? $this->getReplyTo()->toJson() : null
         ]);
 
-        return $this->buildJson($data);
+        return $this->buildArray($data);
     }
 }

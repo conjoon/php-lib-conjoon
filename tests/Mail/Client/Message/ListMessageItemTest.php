@@ -100,13 +100,13 @@ class ListMessageItemTest extends TestCase
         $replyTo = $this->createAddress(3);
         $messageItem->setReplyTo($replyTo);
 
-        $arr = $messageItem->toJson();
+        $arr = $messageItem->toArray();
         $this->assertSame("YO!", $arr["subject"]);
         $this->assertTrue($arr["draft"]);
 
-        $this->assertEquals($cc->toJson(), $arr["cc"]);
-        $this->assertEquals($bcc->toJson(), $arr["bcc"]);
-        $this->assertEquals($replyTo->toJson(), $arr["replyTo"]);
+        $this->assertEquals($cc->toArray(), $arr["cc"]);
+        $this->assertEquals($bcc->toArray(), $arr["bcc"]);
+        $this->assertEquals($replyTo->toArray(), $arr["replyTo"]);
 
         $this->assertSame("snafu", $arr["previewText"]);
     }

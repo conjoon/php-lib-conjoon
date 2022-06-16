@@ -29,12 +29,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\JsonStrategy;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Util\AbstractList;
-use Conjoon\Core\Jsonable;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -43,6 +44,8 @@ use Tests\TestCase;
  */
 class MessageItemListTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -53,12 +56,28 @@ class MessageItemListTest extends TestCase
     public function testClass()
     {
 
-        $messageItemList = new MessageItemList();
+        $messageItemList = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $messageItemList);
-        $this->assertInstanceOf(Jsonable::class, $messageItemList);
 
         $this->assertSame(ListMessageItem::class, $messageItemList->getEntityType());
 
+        $this->assertSame([
+            $messageItemList[0]->toArray(),
+            $messageItemList[1]->toArray()
+        ], $messageItemList->toArray());
+    }
+
+
+    public function testToJson()
+    {
+        $messageItemList = $this->createList();
+        $this->runToJsonTest($messageItemList);
+    }
+
+
+    protected function createList()
+    {
+        $messageItemList = new MessageItemList();
         $messageItemList[] = new ListMessageItem(
             new MessageKey("dev", "INBOX", "1"),
             null,
@@ -70,10 +89,6 @@ class MessageItemListTest extends TestCase
             new MessagePart("foo", "bar", "text/plain")
         );
 
-
-        $this->assertSame([
-            $messageItemList[0]->toJson(),
-            $messageItemList[1]->toJson()
-        ], $messageItemList->toJson());
+        return $messageItemList;
     }
 }
