@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\JsonStrategy;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
@@ -165,13 +166,13 @@ class AbstractMessageItemTest extends TestCase
 
 
     /**
-     * Test toJson
+     * Test toArray
      */
-    public function testToJson()
+    public function testToArray()
     {
         $key = $this->createMessageKey();
         $item = array_merge(
-            $key->toJson(),
+            $key->toArray(),
             $this->getItemConfig(true)
         );
         unset($item["charset"]);
@@ -190,6 +191,26 @@ class AbstractMessageItemTest extends TestCase
         $this->assertArrayNotHasKey("data", $json);
         $this->assertArrayNotHasKey("to", $json);
         $this->assertArrayNotHasKey("from", $json);
+    }
+
+
+    /**
+     * Test toJson
+     */
+    public function testToJson()
+    {
+        $key = $this->createMessageKey();
+
+        $messageItem = $this->createMessageItem($key, $this->getItemConfig());
+
+        $this->assertEquals($messageItem->toArray(), $messageItem->toJson());
+
+        $strategyStub = $this->getMockForAbstractClass(JsonStrategy::class);
+
+        $strategyStub->expects($this->once())->method("toJson")->with($messageItem)->willReturn($messageItem->toArray());
+
+
+        $this->assertEquals($messageItem->toArray(), $messageItem->toJson($strategyStub));
     }
 
 

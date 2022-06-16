@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Message;
 
 use BadMethodCallException;
+use Conjoon\Core\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
@@ -78,7 +79,7 @@ use TypeError;
  * @method getReferences()
  * @method getInReplyTo()
  */
-abstract class AbstractMessageItem implements Jsonable, Modifiable
+abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
 {
     use ModifiableTrait;
 
@@ -411,15 +412,28 @@ abstract class AbstractMessageItem implements Jsonable, Modifiable
 // --------------------------------
 
     /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
+    }
+
+
+// --------------------------------
+//  Arrayable interface
+// --------------------------------
+
+    /**
      * Returns an array representing this MessageItem.
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
         $mk = $this->getMessageKey();
 
-        $data = array_merge($mk->toJson(), [
+        $data = array_merge($mk->toArray(), [
             'from' => $this->getFrom() ? $this->getFrom()->toJson() : null,
             'to' => $this->getTo() ? $this->getTo()->toJson() : null,
             'subject' => $this->getSubject(),
