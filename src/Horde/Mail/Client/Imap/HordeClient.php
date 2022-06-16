@@ -80,7 +80,7 @@ use Horde_Mime_Part;
 class HordeClient implements MailClient
 {
     use FilterTrait;
-    use AttributeTrait;
+    use FieldsTrait;
     use AttachmentTrait;
 
     /**
@@ -291,7 +291,7 @@ class HordeClient implements MailClient
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
-            $options["attributes"] = $options["attributes"] ?? $this->getDefAttr();
+            $options["fields"] = $options["fields"]["MessageItem"] ?? $this->getDefFields("MessageItem");
 
             return $this->buildMessageItems(
                 $client,
@@ -349,7 +349,7 @@ class HordeClient implements MailClient
                  $client,
                  new FolderKey($messageKey->getMailAccountId(), $mailFolderId),
                  $fetchedItems[0],
-                 ["attributes" => $this->getDefAttr(["hasAttachments" => true, "size" => true])]
+                 ["fields" => $this->getDefFields("MessageItem", ["hasAttachments" => true, "size" => true])]
              );
 
              return new MessageItem($ret["messageKey"], array_filter($ret["data"], fn ($item) => $item !== null));
@@ -406,7 +406,7 @@ class HordeClient implements MailClient
                 $client,
                 new FolderKey($messageKey->getMailAccountId(), $mailFolderId),
                 $fetchedItems[0],
-                ["attributes" => $this->getDefAttr(["cc" => true, "bcc" => true, "replyTo" => true])]
+                ["fields" => $this->getDefFields("MessageItem", ["cc" => true, "bcc" => true, "replyTo" => true])]
             );
 
             return new MessageItemDraft(
@@ -446,7 +446,7 @@ class HordeClient implements MailClient
             $messageStructure = $serverItem->getStructure();
 
             $d = $this->getContents($client, $messageStructure, $messageKey, [
-                "attributes" => ["plain" => true, "html" => true]
+                "fields" => ["plain" => true, "html" => true]
             ]);
 
             $body = new MessageBody($messageKey);
@@ -902,12 +902,12 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param FolderKey $key
      * @param $item
-     * @param array $options An array with a key "attributes" that specifies the attributes to query.
-     * The keys are the attributes that should be considered, the values are configuration options for the queries
+     * @param array $options An array with a key "fields" that specifies the fields to query.
+     * The keys are the fields that should be considered, the values are configuration options for the queries
      * of the fields.
      *
      * @example
-     *    $this->buildMessageItem($client, $key, $item, ["attributes" => ["size" => [], "hasAttachments" => true]]);
+     *    $this->buildMessageItem($client, $key, $item, ["fields" => ["size" => [], "hasAttachments" => true]]);
      *
      *
      * @return array an array indexed with "messageKey" and "data" which should both be used to create
@@ -934,7 +934,7 @@ class HordeClient implements MailClient
 
     /**
      * Transform the passed list of $items to an instance of MessageItemList.
-     * If both html/plain attributes where requested, it will always try to use
+     * If both html/plain fields where requested, it will always try to use
      * text/plain for the MessagePart, then fall back to text/html if required.
      *
      * @param Horde_Imap_Client_Socket $client
@@ -956,7 +956,7 @@ class HordeClient implements MailClient
 
         $messageItems = new MessageItemList();
 
-        $attributes = $options["attributes"] ?? [];
+        $fields = $options["fields"] ?? [];
 
         foreach ($items as $item) {
             $result = $this->getItemStructure($client, $item, $key, $options);
@@ -968,12 +968,12 @@ class HordeClient implements MailClient
             $messagePart = null;
 
             $contentKeys = [];
-            $this->getAttr("plain", $attributes) && $contentKeys[] = "plain";
-            $this->getAttr("html", $attributes) && $contentKeys[] = "html";
+            $this->getField("plain", $fields) && $contentKeys[] = "plain";
+            $this->getField("html", $fields) && $contentKeys[] = "html";
 
             // if precedence is set for html, reverse this. Else, let plain
             // process first
-            if (ArrayUtil::unchain("html.precedence", $attributes, false) === true) {
+            if (ArrayUtil::unchain("html.precedence", $fields, false) === true) {
                 $contentKeys = array_reverse($contentKeys);
             }
 
@@ -1014,8 +1014,8 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param $item
      * @param FolderKey $key
-     * @param array $options An array providing "attributes" which is an associative array where the keys
-     * are the attributes that should be queried, and their values additional configuration options for the
+     * @param array $options An array providing "fields" which is an associative array where the keys
+     * are the fields that should be queried, and their values additional configuration options for the
      * query itself.
      *
      * @example
@@ -1023,7 +1023,7 @@ class HordeClient implements MailClient
      *     $client,
      *     $item,
      *     $key,
-     *     ["attributes" => [
+     *     ["fields" => [
      *          "from" => [], "to" => true, "plain" => ["length" => 200]
      *      ]]); // returns "from", "to" and "plain" with a length of 100 characters
      *
@@ -1041,7 +1041,7 @@ class HordeClient implements MailClient
     ): array {
 
         $wants = function ($key) use ($options) {
-            return $this->getAttr($key, $options["attributes"] ?? []);
+            return $this->getField($key, $options["fields"] ?? []);
         };
 
         $envelope = $item->getEnvelope();
@@ -1110,7 +1110,7 @@ class HordeClient implements MailClient
      * A filter is assembled using "property" (field-name), "operator" and "value" (value to look up). For
      * filtering for multiple ids, use a filter in the form of
      * (["property" => "id", "operator" => "in", "value" => ["1", "2", "3"]])
-     * - attributes (array) an assoc array of attributes that should be queried. Ignored by this method.
+     * - fields (array) an assoc array of fields that should be queried. Ignored by this method.
      *
      * @example
      *      $this->queryItems($client, $key, [
@@ -1164,13 +1164,13 @@ class HordeClient implements MailClient
 
     /**
      * Returns contents of the mail. Possible return keys are based on the passed
-     * $options "attributes": "html" (string), "plain" (string) and/or "hasAttachments" (bool)
+     * $options "fields": "html" (string), "plain" (string) and/or "hasAttachments" (bool)
      *
      * @param Horde_Imap_Client_Socket $client
      * @param $messageStructure
      * @param MessageKey $key
      * @param array $options = array (
-     *      "attributes" => [] // an array of attributes this method should consider. Possible
+     *      "fields" => [] // an array of fields this method should consider. Possible
      *                         // keys are html, plain, hasAttachments. The values are configuration
      *                        // objects this method should considered.
      *                        // Both "html" and "plain" allow for specifying a "length"-option
@@ -1180,7 +1180,7 @@ class HordeClient implements MailClient
      *
      * @example
      *   $this->getContents($client, $messageStructure, $key, [
-     *      "attributes" => ["html" => [], "plain" => [$length => 200]]
+     *      "fields" => ["html" => [], "plain" => [$length => 200]]
      *   ]); // returns full html, but only first 200 characters of plain.
      *
      *
@@ -1195,12 +1195,12 @@ class HordeClient implements MailClient
         array $options
     ): array {
 
-        $attributes = $options["attributes"] ?? [];
+        $fields = $options["fields"] ?? [];
 
         $ret = [];
-        $findHtml        = $this->getAttr("html", $attributes);
-        $findPlain       = $this->getAttr("plain", $attributes);
-        $findAttachments = $this->getAttr("hasAttachments", $attributes);
+        $findHtml        = $this->getField("html", $fields);
+        $findPlain       = $this->getField("plain", $fields);
+        $findAttachments = $this->getField("hasAttachments", $fields);
 
         $typeMap = $messageStructure->contentTypeMap();
         $bodyQuery = new Horde_Imap_Client_Fetch_Query();

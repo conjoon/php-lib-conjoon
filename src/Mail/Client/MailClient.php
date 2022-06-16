@@ -170,10 +170,9 @@ interface MailClient
      * @param FolderKey $folderKey
      * @param MessageItemListResourceQuery $query An additional set of options for querying the
      * MessageList, such as sort-direction, start/limit values and the ids of the messageItems to return.
-     * Options may include an "attributes" configuration specifying the attributes of a message
-     * that should be queried and returned, wheres the keys of this array are the attributes, and the
-     * values are further configuration options this client may implement. Clients need to return a
-     * set of attributes if no attributes are defined. See #getDefaultAttributes
+     * Options may include an "fields" configuration specifying the fields of a message (and/or) any related
+     * resource that should be queried and returned. Clients need to return a default set of fields if no fields
+     * are defined. See #getDefaultFields
      *
      * @return MessageItemList
      *
@@ -268,18 +267,22 @@ interface MailClient
 
 
     /**
-     * Returns an array with the attribute-names the client supports.
+     * Returns an array with the field-names the client supports.
+     *
+     * @param string $type The resource type (e.g. MessageItem, MailFolder) of the fields
      *
      * @return array
      */
-    public function getSupportedAttributes(): array;
+    public function getSupportedFields(string $type): array;
 
 
     /**
-     * Returns an array with the attributes the client guarantees to query if no attributes
+     * Returns an array with the fields the client guarantees to query if no fields
      * where specified for methods that require them.
+     *
+     * @param string $type The resource type (e.g. MessageItem, MailFolder) of the fields
      *
      * @return array
      */
-    public function getDefaultAttributes(): array;
+    public function getDefaultFields(string $type): array;
 }
