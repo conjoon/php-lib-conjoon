@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Copyable;
 use Conjoon\Core\Jsonable;
@@ -53,7 +54,7 @@ use Conjoon\Util\Stringable;
  *
  * @package Conjoon\Mail\Client\Data
  */
-class MailAddressList extends AbstractList implements JsonDecodable, Stringable, Copyable, Jsonable
+class MailAddressList extends AbstractList implements JsonDecodable, Stringable, Copyable, Arrayable, Jsonable
 {
 // --------------------------------
 //  Copyable interface
@@ -159,7 +160,7 @@ class MailAddressList extends AbstractList implements JsonDecodable, Stringable,
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
@@ -167,19 +168,31 @@ class MailAddressList extends AbstractList implements JsonDecodable, Stringable,
      *
      * @return array
      *
-     * @see MailAddress::toJson()
+     * @see MailAddress::toArray()
      */
-    public function toJson(JsonStrategy $jsonStrategy = null): array
+    public function toArray(): array
     {
 
         $d = [];
 
         foreach ($this->data as $address) {
-            $d[] = $address->toJson();
+            $d[] = $address->toArray();
         }
 
 
         return $d;
+    }
+
+// --------------------------------
+//  Jsonable interface
+// --------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $jsonStrategy = null): array
+    {
+        return $jsonStrategy ? $jsonStrategy->toJson($this) : $this->toArray();
     }
 
 

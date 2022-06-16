@@ -33,9 +33,9 @@ use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Util\AbstractList;
 use Conjoon\Util\Copyable;
-use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -44,6 +44,8 @@ use Tests\TestCase;
  */
 class MailAddressListTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -56,7 +58,6 @@ class MailAddressListTest extends TestCase
 
         $mailAddressList = new MailAddressList();
         $this->assertInstanceOf(AbstractList::class, $mailAddressList);
-        $this->assertInstanceOf(Jsonable::class, $mailAddressList);
         $this->assertInstanceOf(JsonDecodable::class, $mailAddressList);
         $this->assertInstanceOf(Copyable::class, $mailAddressList);
 
@@ -69,17 +70,14 @@ class MailAddressListTest extends TestCase
     /**
      * Tests toArray
      */
-    public function testToJson()
+    public function testToArray()
     {
-
-        $mailAddressList = new MailAddressList();
-        $mailAddressList[] = new MailAddress("name1@address.testcomdomaindev", "name1");
-        $mailAddressList[] = new MailAddress("name2@address.testcomdomaindev", "name2");
+        $mailAddressList = $this->createList();
 
         $this->assertEquals([
-            $mailAddressList[0]->toJson(),
-            $mailAddressList[1]->toJson()
-        ], $mailAddressList->toJson());
+            $mailAddressList[0]->toArray(),
+            $mailAddressList[1]->toArray()
+        ], $mailAddressList->toArray());
     }
 
 
@@ -88,12 +86,9 @@ class MailAddressListTest extends TestCase
      */
     public function testFromString()
     {
+        $mailAddressList = $this->createList();
 
-        $mailAddressList = new MailAddressList();
-        $mailAddressList[] = new MailAddress("name1@address.testcomdomaindev", "name1");
-        $mailAddressList[] = new MailAddress("name2@address.testcomdomaindev", "name2");
-
-        $jsonString = json_encode($mailAddressList->toJson());
+        $jsonString = json_encode($mailAddressList->toArray());
         $this->assertEquals($mailAddressList, MailAddressList::fromString($jsonString));
 
         $jsonString = "[{\"name\" : \"foo\"}]";
@@ -128,10 +123,7 @@ class MailAddressListTest extends TestCase
      */
     public function testToString()
     {
-
-        $mailAddressList = new MailAddressList();
-        $mailAddressList[] = new MailAddress("name1@address.testcomdomaindev", "name1");
-        $mailAddressList[] = new MailAddress("name2@address.testcomdomaindev", "name2");
+        $mailAddressList = $this->createList();
 
         $this->assertSame(
             $mailAddressList[0]->toString() . ", " . $mailAddressList[1]->toString(),
@@ -144,13 +136,36 @@ class MailAddressListTest extends TestCase
      */
     public function testCopy()
     {
-
-        $mailAddressList = new MailAddressList();
-        $mailAddressList[] = new MailAddress("name1@address.testcomdomaindev", "name1");
-        $mailAddressList[] = new MailAddress("name2@address.testcomdomaindev", "name2");
+        $mailAddressList = $this->createList();
 
         $copy = $mailAddressList->copy();
         $this->assertEquals($copy, $mailAddressList);
         $this->assertNotSame($copy, $mailAddressList);
+    }
+
+
+    /**
+     * tests toJson
+     */
+    public function testToJson()
+    {
+        $mailAddressList = $this->createList();
+        $this->runToJsonTest($mailAddressList);
+    }
+
+
+// +----------------------------------------
+// | Helper
+// +----------------------------------------
+    /**
+     * @return MailAddressList
+     */
+    protected function createList()
+    {
+        $mailAddressList = new MailAddressList();
+        $mailAddressList[] = new MailAddress("name1@address.testcomdomaindev", "name1");
+        $mailAddressList[] = new MailAddress("name2@address.testcomdomaindev", "name2");
+
+        return $mailAddressList;
     }
 }

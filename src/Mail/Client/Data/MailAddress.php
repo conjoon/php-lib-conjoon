@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Util\Copyable;
 use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
@@ -58,7 +59,7 @@ use InvalidArgumentException;
  *
  * @package Conjoon\Mail\Client\Data
  */
-class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
+class MailAddress implements Stringable, JsonDecodable, Copyable, Arrayable, Jsonable
 {
     /**
      * @var string
@@ -185,7 +186,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
@@ -198,12 +199,24 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
      *
      * @return array
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
 
         return [
             'address' => $this->getAddress(),
             'name' => $this->getName()
         ];
+    }
+
+// --------------------------------
+//  Jsonable interface
+// --------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $jsonStrategy = null): array
+    {
+        return $jsonStrategy ? $jsonStrategy->toJson($this) : $this->toArray();
     }
 }

@@ -29,14 +29,15 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Data;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Util\Copyable;
-use Conjoon\Core\Jsonable;
 use Conjoon\Util\JsonDecodable;
 use Conjoon\Util\JsonDecodeException;
 use Conjoon\Util\Stringable;
 use InvalidArgumentException;
 use Tests\TestCase;
+use Tests\JsonableTestTrait;
 
 /**
  * Class MailAddressTest
@@ -44,6 +45,8 @@ use Tests\TestCase;
  */
 class MailAddressTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -58,14 +61,13 @@ class MailAddressTest extends TestCase
         $address = "peter.parker@newyork.com";
         $mailAddress = new MailAddress($address, $name);
 
-        $this->assertInstanceOf(Jsonable::class, $mailAddress);
         $this->assertInstanceOf(Stringable::class, $mailAddress);
         $this->assertInstanceOf(JsonDecodable::class, $mailAddress);
         $this->assertInstanceOf(Copyable::class, $mailAddress);
         $this->assertSame($address, $mailAddress->getAddress());
         $this->assertSame($name, $mailAddress->getName());
 
-        $this->assertEquals(["name" => $name, "address" => $address], $mailAddress->toJson());
+        $this->assertEquals(["name" => $name, "address" => $address], $mailAddress->toArray());
     }
 
 
@@ -115,7 +117,7 @@ class MailAddressTest extends TestCase
         $address = "peter.parker@newyork.com";
         $mailAddress = new MailAddress($address, $name);
 
-        $jsonString = json_encode($mailAddress->toJson());
+        $jsonString = json_encode($mailAddress->toArray());
         $this->assertEquals($mailAddress, MailAddress::fromString($jsonString));
 
         $jsonString = json_encode(["address" => "foo"]);
@@ -163,5 +165,19 @@ class MailAddressTest extends TestCase
         $this->assertSame($address1->getAddress(), $mailAddress->getAddress());
         $this->assertSame($address1->getName(), $mailAddress->getName());
         $this->assertNotSame($address1, $mailAddress);
+    }
+
+
+    /**
+     * tests toJson()
+     */
+    public function testToJson()
+    {
+        $mailAddress = new MailAddress(
+            "peter.parker@newyork.com",
+            "Peter Parker"
+        );
+
+        $this->runToJsonTest($mailAddress);
     }
 }
