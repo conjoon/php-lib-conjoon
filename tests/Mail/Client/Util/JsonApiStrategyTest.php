@@ -59,7 +59,15 @@ class JsonApiStrategyTest extends TestCase
         $strategy = new JsonApiStrategy();
 
         $arrayMock = $this->getMockForAbstractClass(Arrayable::class);
-        $arrayMock->expects($this->exactly(4))->method("toArray")->willReturnOnConsecutiveCalls(
+        $arrayMock->expects($this->exactly(5))->method("toArray")->willReturnOnConsecutiveCalls(
+            [
+                // type missing
+                "id" => 1,
+                "mailFolderId" => 2,
+                "mailAccountId" => 4,
+                "attribute_one" => "value",
+                "attribute_two" => "value_2"
+            ],
             [
             "id" => 1,
             "type" => "Stub",
@@ -108,6 +116,14 @@ class JsonApiStrategyTest extends TestCase
         ];
 
         $results = [
+            [
+                // no type set
+                "id" => 1,
+                "mailFolderId" => 2,
+                "mailAccountId" => 4,
+                "attribute_one" => "value",
+                "attribute_two" => "value_2"
+            ],
             array_merge($base, [
                 "relationships" => [
                     "MailFolders" => [

@@ -33,6 +33,7 @@ use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Mail\Client\Folder\AbstractMailFolder;
 use Conjoon\Core\JsonStrategy;
 use Conjoon\Core\Arrayable;
+use UnexpectedValueException;
 
 /**
  * Class JsonApiStrategy
@@ -59,6 +60,10 @@ class JsonApiStrategy implements JsonStrategy
             return $this->transformFromError($data);
         }
 
+        if (!isset($data["type"])) {
+            return $data;
+        }
+
         return $this->transform($data);
     }
 
@@ -73,7 +78,6 @@ class JsonApiStrategy implements JsonStrategy
      */
     protected function transform(array $data, bool $recurse = false): array
     {
-
         $types = [
             "mailFolderId"  => "MailFolder",
             "mailAccountId" => "MailAccount",
