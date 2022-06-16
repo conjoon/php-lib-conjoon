@@ -74,62 +74,56 @@ class AbstractMailFolderTest extends TestCase
 
 
     /**
-     * Tests constructor with exception for missing unreadMessages
+     * Tests constructor with exception for missing unreadMessages never thrown
      */
-    public function testConstructorExceptionUnreadCount()
+    public function testConstructorExceptionUnreadCountNotThrown()
     {
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("unreadMessages");
-
         $folderKey = new FolderKey("dev", "TEST");
-        $this->createMailFolder(
+        $folder = $this->createMailFolder(
             $folderKey,
             [
             "name" => "TEST"
             ]
         );
+
+        $this->assertNull($folder->getUnreadMessages());
+        $this->assertNull($folder->getTotalMessages());
     }
 
 
     /**
-     * Tests constructor with exception for missing name
+     * Tests constructor with exception for missing name neevr thrown
      */
-    public function testConstructorExceptionName()
+    public function testConstructorExceptionNameNotThrown()
     {
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("name");
-
-
         $folderKey = new FolderKey("dev", "TEST");
-        $this->createMailFolder(
+        $folder = $this->createMailFolder(
             $folderKey,
             [
             "unreadMessages" => 0,
             "totalMessages" => 0
             ]
         );
+
+
+        $this->assertNull($folder->getName());
     }
 
     /**
-     * Tests constructor with exception for missing totalMessages
+     * Tests constructor with exception for missing totalMessages never thrown
      */
-    public function testConstructorExceptionTotalMessages()
+    public function testConstructorExceptionTotalMessagesNotThrown()
     {
-
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("totalMessages");
-
-
         $folderKey = new FolderKey("dev", "TEST");
-        $this->createMailFolder(
+        $folder = $this->createMailFolder(
             $folderKey,
             [
                 "unreadMessages" => 0,
                 "name" => "INBOX"
             ]
         );
+
+        $this->assertNull($folder->getTotalMessages());
     }
 
 

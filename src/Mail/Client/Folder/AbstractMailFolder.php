@@ -46,20 +46,20 @@ abstract class AbstractMailFolder
 
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $name;
+    protected ?string $name = null;
 
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected int $unreadMessages;
+    protected ?int $unreadMessages = null;
 
     /**
-     * @var int
+     * @var int|null
      */
-    protected int $totalMessages;
+    protected ?int $totalMessages = null;
 
 
     /**
@@ -67,29 +67,10 @@ abstract class AbstractMailFolder
      *
      * @param FolderKey $folderKey
      * @param array|null $data
-     *
-     * @throws InvalidArgumentException if the name, unreadMessages or totalMessages
-     * in $data is missing
      */
     public function __construct(FolderKey $folderKey, array $data)
     {
-
         $this->folderKey = $folderKey;
-
-        $missing = "";
-        if (!isset($data["unreadMessages"])) {
-            $missing = "unreadMessages";
-        } elseif (!isset($data["totalMessages"])) {
-            $missing = "totalMessages";
-        } elseif (!isset($data["name"])) {
-            $missing = "name";
-        }
-
-        if ($missing) {
-            throw new InvalidArgumentException(
-                "value for property \"" . $missing . "\" missing"
-            );
-        }
 
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
@@ -126,7 +107,7 @@ abstract class AbstractMailFolder
      * Returns the name for this ListMailFolder.
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -148,7 +129,7 @@ abstract class AbstractMailFolder
      *
      * @return int
      */
-    public function getUnreadMessages(): int
+    public function getUnreadMessages(): ?int
     {
         return $this->unreadMessages;
     }
@@ -170,7 +151,7 @@ abstract class AbstractMailFolder
      *
      * @return int
      */
-    public function getTotalMessages(): int
+    public function getTotalMessages(): ?int
     {
         return $this->totalMessages;
     }
