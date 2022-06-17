@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Service;
 
+use Conjoon\Core\ParameterBag;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\Mail\Client\MailClient;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 use Conjoon\Mail\Client\Service\DefaultMailFolderService;
 use Conjoon\Mail\Client\Service\MailFolderService;
 use Mockery;
@@ -77,9 +79,13 @@ class DefaultMailFolderServiceTest extends TestCase
 
         $mailFolderList = new MailFolderList();
 
+        $query = new MailFolderListResourceQuery(new ParameterBag());
+
+
+
         $service->getMailClient()
                 ->shouldReceive("getMailFolderList")
-                ->with($mailAccount)
+                ->with($mailAccount, $query)
                 ->andReturn($mailFolderList);
 
 
@@ -87,10 +93,10 @@ class DefaultMailFolderServiceTest extends TestCase
 
         $service->getMailFolderTreeBuilder()
                 ->shouldReceive("listToTree")
-                ->with($mailFolderList, ["INBOX"])
+                ->with($mailFolderList, ["INBOX"], $query)
                 ->andReturn($resultList);
 
-        $this->assertSame($resultList, $service->getMailFolderChildList($mailAccount));
+        $this->assertSame($resultList, $service->getMailFolderChildList($mailAccount, $query));
     }
 
 

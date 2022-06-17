@@ -32,6 +32,7 @@ namespace Conjoon\Mail\Client\Service;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\MailClient;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 interface MailFolderService
 {
@@ -40,6 +41,8 @@ interface MailFolderService
      * MailAccount.
      *
      * @param MailAccount $mailAccount
+     * @param MailFolderListResourceQuery $query An additional set of options to consider when
+     * querying the list
      *
      * @return MailFolderChildList An MailFolderChildList of the Mailbox-structure
      * found on the server.
@@ -55,7 +58,7 @@ interface MailFolderService
      *
      * @see \Horde_Imap_Client_Socket
      */
-    public function getMailFolderChildList(MailAccount $mailAccount): MailFolderChildList;
+    public function getMailFolderChildList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderChildList;
 
 
     /**
