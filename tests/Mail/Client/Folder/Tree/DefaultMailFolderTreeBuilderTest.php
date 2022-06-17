@@ -225,7 +225,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
         );
 
         $mailFolderChildList = $builder->listToTree($mailFolderList, [], $this->getResourceQuery(
-            ["fields" => ["totalMessages"]]
+            ["fields" => ["MailFolder" => ["totalMessages" => true]]]
         ));
 
         $this->assertSame(5, count($mailFolderChildList));

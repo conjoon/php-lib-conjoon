@@ -295,12 +295,14 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      */
     protected function getDefaultFields(MailFolderListResourceQuery $query)
     {
-        return $query->fields ?? [
-            "name",
-            "unreadMessages",
-            "totalMessages",
-            "folderType"
+        $fields = $query->fields["MailFolder"] ?? [
+            "name" => true,
+            "unreadMessages" => true,
+            "totalMessages" => true,
+            "folderType" => true
         ];
+
+        return array_keys($fields);
     }
 
 
