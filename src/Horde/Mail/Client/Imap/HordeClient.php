@@ -241,7 +241,7 @@ class HordeClient implements MailClient
     {
         $options = $query->toJson();
 
-        $fields = $options["fields"] ?? $this->computeDefaultFields("MailFolder");
+        $fields = $options["fields"]["MailFolder"] ?? $this->computeDefaultFields("MailFolder");
 
         try {
             $client = $this->connect($mailAccount->getId());
@@ -319,7 +319,7 @@ class HordeClient implements MailClient
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
-            $options["fields"] = $options["fields"] ?? $this->computeDefaultFields("MessageItem");
+            $options["fields"] = $options["fields"]["MessageItem"] ?? $this->computeDefaultFields("MessageItem");
 
             return $this->buildMessageItems(
                 $client,
