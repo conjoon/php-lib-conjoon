@@ -606,19 +606,24 @@ class HordeClientTest extends TestCase
         $return = [];
 
         if (isset($input["fields"]["MailFolder"])) {
-            if (in_array("unreadMessages", $input["fields"]["MailFolder"])) {
+
+            $getUnreadMessages = $input["fields"]["MailFolder"]["unreadMessages"] ?? false;
+            $getTotalMessages  = $input["fields"]["MailFolder"]["totalMessages"] ?? false;
+            $getName           = $input["fields"]["MailFolder"]["name"] ?? false;
+
+            if ($getUnreadMessages) {
                 $args[] = Horde_Imap_Client::STATUS_UNSEEN;
                 $return["unseen"] = 30;
                 $inline[0][] = fn($listMailFolder)
                 =>  $this->assertSame(30, $listMailFolder->getUnreadMessages());
             }
-            if (in_array("totalMessages", $input["fields"]["MailFolder"])) {
+            if ($getTotalMessages) {
                 $args[] = Horde_Imap_Client::STATUS_MESSAGES;
                 $return["messages"] = 100;
                 $inline[0][] = fn($listMailFolder)
                 =>  $this->assertSame(100, $listMailFolder->getTotalMessages());
             }
-            if (in_array("name", $input["fields"]["MailFolder"])) {
+            if ($getName) {
                 $inline[0][] = fn($listMailFolder)
                 =>  $this->assertSame("INBOX", $listMailFolder->getName());
 
@@ -626,7 +631,7 @@ class HordeClientTest extends TestCase
                 $this->assertSame("INBOX.Folder", $listMailFolder->getName());
             }
         } else {
-            // default behaviot is ALL fields (@see #getDefaultFields)
+            // default behavior is ALL fields (@see #getDefaultFields)
             $args[] = Horde_Imap_Client::STATUS_UNSEEN;
             $args[] = Horde_Imap_Client::STATUS_MESSAGES;
             $return["unseen"] = 30;
@@ -688,7 +693,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList1()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true]]]);
     }
 
 
@@ -698,7 +703,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList2()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages", "totalMessages"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true, "totalMessages" => true]]]);
     }
 
 
@@ -708,7 +713,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList3()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages", "totalMessages", "name"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true, "totalMessages" => true, "name" => true]]]);
     }
 
 
@@ -718,7 +723,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList4()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true]]]);
     }
 
 
@@ -728,7 +733,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList5()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name", "unreadMessages"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true, "unreadMessages" => true]]]);
     }
 
 
@@ -738,7 +743,7 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList6()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name", "totalmessages"]]]);
+        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true, "totalmessages" => true]]]);
     }
 
 

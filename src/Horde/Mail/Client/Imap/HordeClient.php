@@ -243,6 +243,9 @@ class HordeClient implements MailClient
 
         $fields = $options["fields"]["MailFolder"] ?? $this->computeDefaultFields("MailFolder");
 
+        $fields = array_keys(array_filter($fields, fn($value) => !!$value));
+
+
         try {
             $client = $this->connect($mailAccount->getId());
 
