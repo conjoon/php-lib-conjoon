@@ -83,15 +83,14 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      */
     public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListResourceQuery $query): MailFolderChildList
     {
-
         $folders = [];
 
         $fields = $this->getDefaultFields($query);
-
+        $includeChildNodes = in_array("data", $fields);
         $systemFolderTypes = [];
 
         foreach ($mailFolderList as $mailbox) {
-            if ($this->shouldSkipMailFolder($mailbox, $root)) {
+            if ($this->shouldSkipMailFolder($mailbox, $root, $includeChildNodes)) {
                 continue;
             }
 
@@ -101,6 +100,9 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             $fieldValueMap = [];
             $folderType = null;
             foreach ($fields as $field) {
+                if ($field === "data") {
+                    continue;
+                }
                 if ($field === "folderType") {
                     $folderType = $this->buildFolderType($mailbox, $systemFolderTypes);
                     $fieldValueMap[$field] = $folderType;
@@ -108,6 +110,11 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
                 }
 
                 $fieldValueMap[$field] = $this->getValueForField($mailbox, $field);
+            }
+
+            // nullify the date field since it should not be considered
+            if (!$includeChildNodes) {
+                $fieldValueMap["data"] = null;
             }
 
             $mailFolder = new MailFolder(
@@ -220,30 +227,38 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      *
      * @param ListMailFolder $listMailFolder
      * @param array $root
+     * @param bool $includeChildNodes if set to false, the mail folder will be skipped if
+     * it is not in the list of root folders
      *
      * @return boolean
      */
-    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $root): bool
+    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $root, $includeChildNodes = true): bool
     {
 
+        $delim = $listMailFolder->getDelimiter();
         $id = $listMailFolder->getFolderKey()->getId();
+        $idParts = explode($delim, $id);
+        $depthChild = count($idParts);
 
-        $idParts = explode($listMailFolder->getDelimiter(), $id);
+        if (!count($root) && !$includeChildNodes && $depthChild > 1) {
+            return true;
+        }
 
-        if (count($root)) {
-            $skip = 0;
-            foreach ($root as $globalIds) {
-                $rootParts = explode($listMailFolder->getDelimiter(), $globalIds);
-                foreach ($rootParts as $key => $rootId) {
-                    if (!isset($idParts[$key]) || $rootId !== $idParts[$key]) {
-                        $skip++;
-                    }
-                }
+        foreach ($root as $globalId) {
+            // the id of the folder is not found in the globalId, skip
+            // id: JUNK.Drafts   globalId: INBOX"
+            if (stripos($id, $globalId) === false) {
+                return true;
             }
-            if ($skip === count($root)) {
+
+            $depthRoot = count(explode($delim, $globalId));
+            // id is part of globalId - if no childNodes should be returned, skip
+            // this one.
+            if (!$includeChildNodes && $depthRoot < $depthChild) {
                 return true;
             }
         }
+
 
         return in_array("\\noselect", $listMailFolder->getAttributes()) ||
             in_array("\\nonexistent", $listMailFolder->getAttributes());
@@ -299,7 +314,8 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             "name" => true,
             "unreadMessages" => true,
             "totalMessages" => true,
-            "folderType" => true
+            "folderType" => true,
+            "data" => true
         ];
 
         return array_keys($fields);
@@ -326,7 +342,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
         if (!$this->valueCallbacks) {
             $this->valueCallbacks = [
-                "name"           => fn ($mailFolder) => $this->buildName($mailFolder),
+                "name"           => fn($mailFolder) => $this->buildName($mailFolder),
                 "unreadMessages" => fn($mailFolder) => $mailFolder->getUnreadMessages(),
                 "totalMessages"  => fn($mailFolder) => $mailFolder->getTotalMessages()
             ];

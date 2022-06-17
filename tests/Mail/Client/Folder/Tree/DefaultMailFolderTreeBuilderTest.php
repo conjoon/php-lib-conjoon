@@ -209,34 +209,69 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
      */
     public function testSparseFieldsets()
     {
+        $testFn = function ($count, $mailFolderChildList) {
+            $this->assertSame($count, count($mailFolderChildList));
+            foreach ($mailFolderChildList as $mailFolder) {
+                $this->assertNull($mailFolder->getData());
+                $this->assertNotNull($mailFolder->getName());
+                $this->assertNull($mailFolder->getUnreadMessages());
+                $this->assertNull($mailFolder->getFolderType());
+                $this->assertNotNull($mailFolder->getTotalMessages());
+            }
+        };
 
         $builder = $this->createBuilder();
 
-        $mailFolderList = $this->createMailFolderList(
+        $tests = [
             [
-                "Junk",
-                "INBOX",
-                "Drafts",
-                "INBOX.Sent",
-                "STUFF",
-                "TRASH",
-                "STUFF.Folder"
+                "input" => [
+                    "root" => ["MYBOX.Sent"],
+                    "folders" => [
+                        "Junk",
+                        "INBOX",
+                        "Drafts",
+                        "MYBOX.Sent",
+                        "MYBOX.Sent.Folder",
+                        "STUFF",
+                        "TRASH",
+                        "STUFF.Folder"
+                    ]
+                ],
+                "expected" => 1
+            ],
+            [
+                "input" => [
+                    "root" => [],
+                    "folders" => [
+                        "Junk",
+                        "INBOX",
+                        "Drafts",
+                        "STUFF",
+                        "TRASH",
+                        "STUFF.Folder"
+                    ]
+                ],
+                "expected" => 5
             ]
-        );
+        ];
 
-        $mailFolderChildList = $builder->listToTree($mailFolderList, [], $this->getResourceQuery(
-            ["fields" => ["MailFolder" => ["totalMessages" => true]]]
-        ));
+        foreach ($tests as $test) {
 
-        $this->assertSame(5, count($mailFolderChildList));
+            $mailFolderList = $this->createMailFolderList(
+                $test["input"]["folders"]
+            );
 
-        foreach ($mailFolderChildList as $mailFolder) {
-            $this->assertNull($mailFolder->getName());
-            $this->assertNull($mailFolder->getUnreadMessages());
-            $this->assertNull($mailFolder->getFolderType());
-            $this->assertNotNull($mailFolder->getTotalMessages());
+            $mailFolderChildList = $builder->listToTree($mailFolderList, $test["input"]["root"], $this->getResourceQuery(
+                ["fields" => ["MailFolder" => ["name" => true, "totalMessages" => true]]]
+            ));
+
+            $testFn($test["expected"], $mailFolderChildList);
         }
+
     }
+
+
+
 
 // -------------------------------
 //  Helper
