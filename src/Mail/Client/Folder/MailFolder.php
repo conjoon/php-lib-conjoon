@@ -33,6 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Core\Arrayable;
 use Conjoon\Core\Jsonable;
 use Conjoon\Core\JsonStrategy;
+use Illuminate\Support\Facades\Mail;
 use InvalidArgumentException;
 
 /**
@@ -86,6 +87,22 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
 
 
     /**
+     * Will initialize this MailFolderChildList except stated otherwise.
+     *
+     * @param FolderKey $folderKey
+     * @param array $data
+     */
+    public function __construct(FolderKey $folderKey, array $data)
+    {
+        parent::__construct($folderKey, $data);
+
+        if (!array_key_exists("data", $data)) {
+            $this->data = new MailFolderChildList();
+        }
+    }
+
+
+    /**
      * Sets the type of this folder.
      * @param string $folderType
      *
@@ -130,12 +147,29 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
      *
      * @return MailFolderChildList
      */
-    public function getData(): MailFolderChildList
+    public function getData(): ?MailFolderChildList
     {
-        if (!$this->data) {
-            $this->data = new MailFolderChildList();
-        }
         return $this->data;
+    }
+
+
+    /**
+     * Setter for data. Will allow for passing null to explicitely nullify
+     * this mail folders child list, so it may not be considered when transforming
+     * to a DTO.
+     *
+     * @param MailFolder|null $mailFolder
+     *
+     * @return void
+     */
+    public function setData(?MailFolder $mailFolder): ?MailFolder
+    {
+        if ($mailFolder === null) {
+            $this->data = null;
+            return null;
+        }
+
+        return $this->addMailFolder($mailFolder);
     }
 
 
@@ -148,7 +182,6 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
      */
     public function addMailFolder(MailFolder $mailFolder): MailFolder
     {
-
         if (!$this->data) {
             $this->data = new MailFolderChildList();
         }
@@ -177,7 +210,7 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
             "unreadMessages" => $this->getUnreadMessages(),
             "totalMessages" => $this->getTotalMessages(),
             "folderType" => $this->getFolderType(),
-            "data" => $this->getData() ? $this->getData()->toArray() : []
+            "data" => $this->getData() ? $this->getData()->toArray() : null
         ];
 
         return array_filter(

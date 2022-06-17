@@ -273,6 +273,34 @@ class MailFolderTest extends TestCase
     }
 
 
+    /**
+     * Tests behavior of MailFolder with data
+     */
+    public function testData()
+    {
+        $key = $this->createKey("dev", "INBOX");
+
+        $addFolder = new MailFolder(new FolderKey("dev", "INBOX.Drafts"), []);
+
+        $make = fn ($data) => new MailFolder($key, $data);
+
+        $this->assertInstanceOf(MailFolderChildList::class, $make([])->getData());
+
+        $mf = $make(["data" => $addFolder]);
+        $this->assertInstanceOf(MailFolderChildList::class, $mf->getData());
+        $this->assertSame($addFolder, $mf->getData()[0]);
+        $this->assertArrayHasKey("data", $mf->toArray());
+
+        $mf = $make(["data" => null]);
+        $this->assertNull($mf->getData());
+        $this->assertArrayNotHasKey("data", $mf->toArray());
+
+        $mf = $make([]);
+        $mf->setData(null);
+        $this->assertNull($mf->getData());
+        $this->assertArrayNotHasKey("data", $mf->toArray());
+    }
+
 
 // ---------------------
 //    Helper
