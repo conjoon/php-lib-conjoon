@@ -75,32 +75,14 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
 
 
     /**
-     * @var string
+     * @var string|null
      */
-    protected string $folderType;
+    protected ?string $folderType = null;
 
     /**
      * @var MailFolderChildList|null
      */
     protected ?MailFolderChildList $data = null;
-
-
-    /**
-     * @inheritdoc
-     *
-     * @throws InvalidArgumentException if folderType in $data is missing
-     */
-    public function __construct(FolderKey $folderKey, array $data)
-    {
-
-        if (!isset($data["folderType"])) {
-            throw new InvalidArgumentException(
-                "value for property \"folderType\" missing"
-            );
-        }
-
-        parent::__construct($folderKey, $data);
-    }
 
 
     /**
@@ -110,8 +92,13 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
      * @throws InvalidArgumentException if $type has not a valid
      * value
      */
-    public function setFolderType(string $folderType)
+    public function setFolderType(?string $folderType)
     {
+
+        if ($folderType === null) {
+            $this->folderType = $folderType;
+            return;
+        }
 
         $types = [
             self::TYPE_INBOX, self::TYPE_DRAFT, self::TYPE_JUNK,
@@ -130,9 +117,9 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
 
     /**
      * Returns the type of this folder.
-     * @return string
+     * @return string|null
      */
-    public function getFolderType(): string
+    public function getFolderType():? string
     {
         return $this->folderType;
     }
@@ -193,7 +180,10 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
             "data" => $this->getData() ? $this->getData()->toArray() : []
         ];
 
-        return array_merge($this->getFolderKey()->toArray(), $arr);
+        return array_filter(
+            array_merge($this->getFolderKey()->toArray(), $arr),
+            fn($value) => $value !== null
+        );
     }
 
 // +-------------------------------

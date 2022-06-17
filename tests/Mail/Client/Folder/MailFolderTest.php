@@ -97,20 +97,19 @@ class MailFolderTest extends TestCase
 
 
     /**
-     * Tests constructor with exception for missing folderType
+     * Tests constructor with exception for missing folderType never thrown
      */
-    public function testConstructorExceptionFolderType()
+    public function testConstructorExceptionFolderTypeNeverThrown()
     {
 
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("folderType");
-
         $folderKey = $this->createKey();
-        new MailFolder(
+        $folder = new MailFolder(
             $folderKey,
             [
             ]
         );
+
+        $this->assertNull($folder->getFolderType());
     }
 
 
@@ -132,8 +131,6 @@ class MailFolderTest extends TestCase
     {
 
         $data = [
-            "folderType" => MailFolder::TYPE_INBOX,
-            "name" => "INBOX",
             "unreadMessages" => 5,
             "totalMessages" => 8
         ];
@@ -174,7 +171,7 @@ class MailFolderTest extends TestCase
 
 
     /**
-     * Test for toArray
+     * Test for toJson
      */
     public function testToJson()
     {
