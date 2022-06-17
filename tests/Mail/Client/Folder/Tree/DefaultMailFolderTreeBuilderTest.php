@@ -256,7 +256,6 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
         ];
 
         foreach ($tests as $test) {
-
             $mailFolderList = $this->createMailFolderList(
                 $test["input"]["folders"]
             );
@@ -267,7 +266,6 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
 
             $testFn($test["expected"], $mailFolderChildList);
         }
-
     }
 
 

@@ -606,7 +606,6 @@ class HordeClientTest extends TestCase
         $return = [];
 
         if (isset($input["fields"]["MailFolder"])) {
-
             $getUnreadMessages = $input["fields"]["MailFolder"]["unreadMessages"] ?? false;
             $getTotalMessages  = $input["fields"]["MailFolder"]["totalMessages"] ?? false;
             $getName           = $input["fields"]["MailFolder"]["name"] ?? false;
