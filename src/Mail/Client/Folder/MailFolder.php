@@ -119,7 +119,7 @@ class MailFolder extends AbstractMailFolder implements Jsonable, Arrayable
      * Returns the type of this folder.
      * @return string|null
      */
-    public function getFolderType():? string
+    public function getFolderType(): ?string
     {
         return $this->folderType;
     }

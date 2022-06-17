@@ -101,7 +101,6 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             $fieldValueMap = [];
             $folderType = null;
             foreach ($fields as $field) {
-
                 if ($field === "folderType") {
                     $folderType = $this->buildFolderType($mailbox, $systemFolderTypes);
                     $fieldValueMap[$field] = $folderType;
@@ -130,7 +129,6 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         $mailFolderChildList = new MailFolderChildList();
 
         foreach ($folders as $parentKey => $mailFolders) {
-
             $mailFolders = in_array("folderType", $fields)
                             ? $this->sortMailFolders($mailFolders)
                             : $mailFolders;
@@ -330,11 +328,9 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
                 "unreadMessages" => fn($mailFolder) => $mailFolder->getUnreadMessages(),
                 "totalMessages"  => fn($mailFolder) => $mailFolder->getTotalMessages()
             ];
-
         }
 
 
         return $this->valueCallbacks[$field]($mailFolder);
     }
-
 }
