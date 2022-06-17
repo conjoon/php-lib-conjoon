@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Folder\Tree;
 
+use Conjoon\Core\ParameterBag;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Folder\ListMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolder;
@@ -36,6 +37,7 @@ use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Folder\Tree\DefaultMailFolderTreeBuilder;
 use Conjoon\Mail\Client\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\Mail\Client\Imap\Util\DefaultFolderIdToTypeMapper;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 use Tests\TestCase;
 
 /**
@@ -76,7 +78,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
                 "STUFF.Folder"]
         );
 
-        $mailFolderChildList = $builder->listToTree($mailFolderList, ["INBOX"]);
+        $mailFolderChildList = $builder->listToTree($mailFolderList, ["INBOX"], $this->getResourceQuery());
 
         $this->assertSame(3, count($mailFolderChildList));
 
@@ -145,7 +147,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
                 "STUFF.Folder"]
         );
 
-        $mailFolderChildList = $builder->listToTree($mailFolderList, ["STUFF"]);
+        $mailFolderChildList = $builder->listToTree($mailFolderList, ["STUFF"], $this->getResourceQuery());
 
         $this->assertSame(2, count($mailFolderChildList));
 
@@ -185,7 +187,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
             ]
         );
 
-        $mailFolderChildList = $builder->listToTree($mailFolderList, []);
+        $mailFolderChildList = $builder->listToTree($mailFolderList, [], $this->getResourceQuery());
 
         $this->assertSame(5, count($mailFolderChildList));
 
@@ -199,6 +201,41 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
         $this->assertSame("TRASH", $mailFolder->getName());
         $mailFolder = $mailFolderChildList[4];
         $this->assertSame("STUFF", $mailFolder->getName());
+    }
+
+
+    /**
+     * Tests sortMailFolders
+     */
+    public function testSparseFieldsets()
+    {
+
+        $builder = $this->createBuilder();
+
+        $mailFolderList = $this->createMailFolderList(
+            [
+                "Junk",
+                "INBOX",
+                "Drafts",
+                "INBOX.Sent",
+                "STUFF",
+                "TRASH",
+                "STUFF.Folder"
+            ]
+        );
+
+        $mailFolderChildList = $builder->listToTree($mailFolderList, [], $this->getResourceQuery(
+            ["fields" => ["totalMessages"]]
+        ));
+
+        $this->assertSame(5, count($mailFolderChildList));
+
+        foreach ($mailFolderChildList as $mailFolder) {
+            $this->assertNull($mailFolder->getName());
+            $this->assertNull($mailFolder->getUnreadMessages());
+            $this->assertNull($mailFolder->getFolderType());
+            $this->assertNotNull($mailFolder->getTotalMessages());
+        }
     }
 
 // -------------------------------
@@ -287,5 +324,15 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
     protected function createFolderKey($mid, $id): FolderKey
     {
         return new FolderKey($mid, $id);
+    }
+
+
+    /**
+     * @param array $parameters
+     * @return MailFolderListResourceQuery
+     */
+    protected function getResourceQuery($parameters = [])
+    {
+        return new MailFolderListResourceQuery(new ParameterBag($parameters));
     }
 }

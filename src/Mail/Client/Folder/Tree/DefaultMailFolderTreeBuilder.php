@@ -34,6 +34,7 @@ use Conjoon\Mail\Client\Folder\ListMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\MailFolderList;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 /**
  * Class DefaultMailFolderTreeBuilder.
@@ -49,6 +50,10 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      */
     protected FolderIdToTypeMapper $folderIdToTypeMapper;
 
+    /**
+     * @var array|null
+     */
+    protected ?array $valueCallbacks = null;
 
     /**
      * DefaultMailFolderTreeBuilder constructor.
@@ -76,10 +81,12 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
     /**
      * @inheritdoc
      */
-    public function listToTree(MailFolderList $mailFolderList, array $root): MailFolderChildList
+    public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListResourceQuery $query): MailFolderChildList
     {
 
         $folders = [];
+
+        $fields = $this->getDefaultFields($query);
 
         $systemFolderTypes = [];
 
@@ -90,27 +97,26 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
             $parts = explode($mailbox->getDelimiter(), $mailbox->getFolderKey()->getId());
             array_pop($parts);
-            $nameParts = explode($mailbox->getDelimiter(), $mailbox->getName());
-            $name = array_pop($nameParts);
 
+            $fieldValueMap = [];
+            $folderType = null;
+            foreach ($fields as $field) {
 
-            $folderType = $this->getFolderIdToTypeMapper()->getFolderType($mailbox);
+                if ($field === "folderType") {
+                    $folderType = $this->buildFolderType($mailbox, $systemFolderTypes);
+                    $fieldValueMap[$field] = $folderType;
+                    continue;
+                }
 
-            if (in_array($folderType, $systemFolderTypes)) {
-                $folderType = MailFolder::TYPE_FOLDER;
+                $fieldValueMap[$field] = $this->getValueForField($mailbox, $field);
             }
 
             $mailFolder = new MailFolder(
                 $mailbox->getFolderKey(),
-                [
-                "name" => $name,
-                "unreadMessages" => $mailbox->getUnreadMessages(),
-                "totalMessages" => $mailbox->getTotalMessages(),
-                "folderType" => $folderType
-                ]
+                $fieldValueMap
             );
 
-            if ($folderType !== MailFolder::TYPE_FOLDER) {
+            if ($folderType !== null && $folderType !== MailFolder::TYPE_FOLDER) {
                 $systemFolderTypes[] = $folderType;
             }
 
@@ -124,7 +130,10 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         $mailFolderChildList = new MailFolderChildList();
 
         foreach ($folders as $parentKey => $mailFolders) {
-            $mailFolders = $this->sortMailFolders($mailFolders);
+
+            $mailFolders = in_array("folderType", $fields)
+                            ? $this->sortMailFolders($mailFolders)
+                            : $mailFolders;
 
             $tmp = $this->getMailFolderWithId($parentKey, $folders);
             foreach ($mailFolders as $item) {
@@ -241,4 +250,91 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         return in_array("\\noselect", $listMailFolder->getAttributes()) ||
             in_array("\\nonexistent", $listMailFolder->getAttributes());
     }
+
+
+
+    /**
+     * Assembles the name representative for the specified mailfolder out of its id.
+     *
+     * @param ListMailFolder $mailFolder
+     *
+     * @return string
+     */
+    protected function buildName(ListMailFolder $mailFolder): string
+    {
+        $nameParts = explode($mailFolder->getDelimiter(), $mailFolder->getName());
+        return array_pop($nameParts);
+    }
+
+
+    /**
+     * Return sthe folder type for the specified $mailFolder.
+     * If the folder type was already registered in $systemFolderTypes, MailFolder::TYPE_FOLDER is used.
+     *
+     * @param ListMailFolder $mailFolder
+     * @param array $systemFolderTypes
+     *
+     * @see getFolderIdToTypeMapper()
+     */
+    protected function buildFolderType(ListMailFolder $mailFolder, array $systemFolderTypes): string
+    {
+        $folderType = $this->getFolderIdToTypeMapper()->getFolderType($mailFolder);
+        if (in_array($folderType, $systemFolderTypes)) {
+            $folderType = MailFolder::TYPE_FOLDER;
+        }
+
+        return $folderType;
+    }
+
+
+    /**
+     * Returns the fields requested by the client in $query, or the default fields for a MailFolder
+     * if the fields-property was not set in the $query.
+     *
+     * @param MailFolderListResourceQuery $query
+     *
+     * @return array
+     */
+    protected function getDefaultFields(MailFolderListResourceQuery $query)
+    {
+        return $query->fields ?? [
+            "name",
+            "unreadMessages",
+            "totalMessages",
+            "folderType"
+        ];
+    }
+
+
+    /**
+     * Returns the value for the field anme, unreadMessages or totalMessages.
+     *
+     * @param ListMailFolder $mailFolder
+     * @param string $field
+     *
+     * @throws \InvalidArgumentException if $field is not name, unreadMessages or totalMessages.
+     */
+    protected function getValueForField(ListMailFolder $mailFolder, string $field)
+    {
+        $fields = ["name", "unreadMessages", "totalMessages"];
+
+        if (!in_array($field, $fields)) {
+            throw new \InvalidArgumentException(
+                "\"$field\" must be one of " . implode(", ", $fields)
+            );
+        }
+
+        if (!$this->valueCallbacks) {
+            $this->valueCallbacks = [
+                "name"           => fn ($mailFolder) => $this->buildName($mailFolder),
+                "unreadMessages" => fn($mailFolder) => $mailFolder->getUnreadMessages(),
+                "totalMessages"  => fn($mailFolder) => $mailFolder->getTotalMessages()
+            ];
+
+        }
+
+
+        return $this->valueCallbacks[$field]($mailFolder);
+    }
+
 }
