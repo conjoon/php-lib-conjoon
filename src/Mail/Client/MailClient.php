@@ -56,7 +56,7 @@ interface MailClient
      * mailboxes available for the specified MailAccount.
      *
      * @param MailAccount $mailAccount
-     * @param MailFolderListResourceQuery $query An additional set of options for querying the
+     * @param MailFolderListResourceQuery|null $query An additional set of options for querying the
      * MailFolderIst, such as the fields to return with each entry.
      * Clients need to return a default set of fields if no fields are defined. See #getDefaultFields
      *
@@ -64,7 +64,7 @@ interface MailClient
      *
      * @throws MailClientException if any exception occurs
      */
-    public function getMailFolderList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderList;
+    public function getMailFolderList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderList;
 
 
     /**
@@ -180,7 +180,9 @@ interface MailClient
      *
      * @return MessageItemList
      *
-     * @throws MailClientException if any exception occurs
+     * @throws MailFolderNotFoundException|MailAccountNotFoundException|MailClientException if the specified
+     * MailFolder was not found, the mail account was not found or an exception thrown by the implementing API
+     * wrapped in a MailClientException
      */
     public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
 

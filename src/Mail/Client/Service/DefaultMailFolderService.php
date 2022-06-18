@@ -93,7 +93,7 @@ class DefaultMailFolderService implements MailFolderService
     /**
      * @inheritdoc
      */
-    public function getMailFolderChildList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderChildList
+    public function getMailFolderChildList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderChildList
     {
         $mailFolderList = $this->getMailClient()->getMailFolderList($mailAccount, $query);
 

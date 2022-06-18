@@ -41,7 +41,7 @@ interface MailFolderService
      * MailAccount.
      *
      * @param MailAccount $mailAccount
-     * @param MailFolderListResourceQuery $query An additional set of options to consider when
+     * @param MailFolderListResourceQuery|null $query An additional set of options to consider when
      * querying the list
      *
      * @return MailFolderChildList An MailFolderChildList of the Mailbox-structure
@@ -58,7 +58,7 @@ interface MailFolderService
      *
      * @see \Horde_Imap_Client_Socket
      */
-    public function getMailFolderChildList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderChildList;
+    public function getMailFolderChildList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderChildList;
 
 
     /**

@@ -237,9 +237,9 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function getMailFolderList(MailAccount $mailAccount, MailFolderListResourceQuery $query): MailFolderList
+    public function getMailFolderList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderList
     {
-        $options = $query->toJson();
+        $options = $query ? $query->toJson() : [];
 
         $fields = $options["fields"]["MailFolder"] ?? $this->computeDefaultFields("MailFolder");
 
