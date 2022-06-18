@@ -38,6 +38,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
+use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\Folder\ListMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Imap\ImapClientException;
@@ -64,6 +65,7 @@ use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
+use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
@@ -319,6 +321,12 @@ class HordeClient implements MailClient
         try {
             $client = $this->connect($folderKey);
 
+            if (!$this->doesMailboxExist($folderKey)) {
+                throw new MailFolderNotFoundException(
+                    "The mailbox \"{$folderKey->getId()}\" was not found for this account."
+                );
+            }
+
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
@@ -330,7 +338,7 @@ class HordeClient implements MailClient
                 $fetchedItems,
                 $options
             );
-        } catch (Exception $e) {
+        } catch (Horde_Imap_Client_Exception $e) {
             throw new ImapClientException($e->getMessage(), 0, $e);
         }
     }
@@ -1446,5 +1454,32 @@ class HordeClient implements MailClient
         $fetchResult = $client->fetch($mailFolderId, $fetchQuery, ['ids' => $rangeList]);
 
         return $fetchResult[$id]->getFullMsg(false);
+    }
+
+
+    /**
+     * Return true if the mailbox represented by $folderKey exists on the server, otehrwise false.
+     *
+     * @param FolderKey $key
+     *
+     * @return bool
+     */
+    protected function doesMailboxExist(FolderKey $folderKey)
+    {
+        $client = $this->connect($folderKey);
+
+        $mailboxes = $client->listMailboxes(
+            $folderKey->getId(),
+            Horde_Imap_Client::MBOX_ALL
+        );
+
+
+        $key = array_keys($mailboxes)[0] ?? null;
+
+        if (!$key) {
+            return false;
+        }
+
+        return strtolower($key) === strtolower($folderKey->getId());
     }
 }

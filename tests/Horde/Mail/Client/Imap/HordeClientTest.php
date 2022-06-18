@@ -38,6 +38,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
+use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Imap\ImapClientException;
 use Conjoon\Mail\Client\MailClient;
@@ -57,6 +58,7 @@ use DateTime;
 use Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Data_Fetch;
+use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Results;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Search_Query;
@@ -180,27 +182,55 @@ class HordeClientTest extends TestCase
 
 
     /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
+     * tests getMessageItemList with Horde_Imap_Client_Exception
      */
     public function testGetMessageItemListException()
     {
+        $folderKey = $this->createFolderKey(
+            $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
+            "INBOX"
+        );
 
         $this->expectException(ImapClientException::class);
 
-        $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
+        $client = $this->getMockBuilder(HordeClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["connect"])
+            ->getMock();
 
-        $imapStub->shouldReceive("query")
-            ->andThrow(new Exception("This exception should be caught properly by the test"));
+        $client->expects($this->once())
+            ->method("connect")
+            ->with($folderKey)
+        ->willThrowException(new Horde_Imap_Client_Exception());
 
-        $client = $this->createClient();
-        $client->getMessageItemList(
-            $this->createFolderKey(
-                $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
-                "INBOX"
-            ),
-            new MessageItemListResourceQuery(new ParameterBag(["start" => 0, "limit" => 25]))
+        $client->getMessageItemList($folderKey, new MessageItemListResourceQuery(new ParameterBag()));
+    }
+
+
+    /**
+     * tests getMessageItemList with MailFolderNotFoundException
+     */
+    public function testGetMessageItemListMailFolderNotFoundException()
+    {
+        $folderKey = $this->createFolderKey(
+            $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
+            "INBOX"
         );
+
+        $this->expectException(MailFolderNotFoundException::class);
+
+        $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $client = $this->getMockBuilder(HordeClient::class)
+                        ->disableOriginalConstructor()
+                        ->onlyMethods(["connect", "doesMailboxExist"])
+                        ->getMock();
+
+        $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
+        $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
+
+        $client->getMessageItemList($folderKey, new MessageItemListResourceQuery(new ParameterBag()));
     }
 
 
@@ -214,10 +244,18 @@ class HordeClientTest extends TestCase
     {
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        $folderKey = $this->createFolderKey(
+            $account->getId(),
+            "INBOX"
+        );
 
         $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
 
-        $imapStub->shouldReceive("search")->with("INBOX", Mockery::any(), [
+        $imapStub->shouldReceive("listMailboxes")
+            ->with($folderKey->getId(), Horde_Imap_Client::MBOX_ALL)
+            ->andReturn([$folderKey->getId() => ""]);
+
+        $imapStub->shouldReceive("search")->with($folderKey->getId(), Mockery::any(), [
             "sort" => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_DATE]
         ])->andReturn(["match" => new Horde_Imap_Client_Ids([111, 222, 333])]);
 
@@ -241,7 +279,7 @@ class HordeClientTest extends TestCase
         $fetchResults[222]->setHeaders("References", "References: " . $references[222]);
 
         $imapStub->shouldReceive("fetch")->with(
-            "INBOX",
+            $folderKey->getId(),
             Mockery::any(),
             Mockery::type("array")
         )->andReturn(
@@ -251,10 +289,7 @@ class HordeClientTest extends TestCase
         $client = $this->createClient();
 
         $messageItemList = $client->getMessageItemList(
-            $this->createFolderKey(
-                $account->getId(),
-                "INBOX"
-            ),
+            $folderKey,
             new MessageItemListResourceQuery(new ParameterBag(["start" => 0, "limit" => 2]))
         );
 
@@ -302,8 +337,15 @@ class HordeClientTest extends TestCase
     {
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        $folderKey = $this->createFolderKey(
+            $account->getId(),
+            "INBOX"
+        );
 
         $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
+        $imapStub->shouldReceive("listMailboxes")
+            ->with($folderKey->getId(), Horde_Imap_Client::MBOX_ALL)
+            ->andReturn([$folderKey->getId() => ""]);
 
         $imapStub->shouldReceive("search")->with("INBOX", Mockery::any(), [
             "sort" => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_DATE]
@@ -324,7 +366,7 @@ class HordeClientTest extends TestCase
         $fetchResults[111]->setHeaders("References", "References: " . $references[111]);
 
         $imapStub->shouldReceive("fetch")->with(
-            "INBOX",
+            $folderKey->getId(),
             Mockery::any(),
             Mockery::type("array")
         )->andReturn(
@@ -334,10 +376,7 @@ class HordeClientTest extends TestCase
         $client = $this->createClient();
 
         $messageItemList = $client->getMessageItemList(
-            $this->createFolderKey(
-                $account->getId(),
-                "INBOX"
-            ),
+            $folderKey,
             new MessageItemListResourceQuery(new ParameterBag(
                 ["start" => 0, "limit" => 1, "fields" => ["MessageItem" => ["from" => true, "references" => true]]]
             ))
@@ -361,13 +400,19 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItemListWidthIdSpecified()
     {
-
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        $folderKey = $this->createFolderKey(
+            $account->getId(),
+            "INBOX"
+        );
 
         $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
+        $imapStub->shouldReceive("listMailboxes")
+            ->with($folderKey->getId(), Horde_Imap_Client::MBOX_ALL)
+            ->andReturn([$folderKey->getId() => ""]);
 
         $imapStub->shouldReceive("search")->with(
-            "INBOX",
+            $folderKey->getId(),
             Mockery::on(function ($searchQuery) {
                 return $searchQuery instanceof Horde_Imap_Client_Search_Query &&
                     $searchQuery->__toString() === "UID 34";
@@ -386,7 +431,7 @@ class HordeClientTest extends TestCase
 
 
         $imapStub->shouldReceive("fetch")->with(
-            "INBOX",
+            $folderKey->getId(),
             Mockery::any(),
             Mockery::type("array")
         )->andReturn(
@@ -396,10 +441,7 @@ class HordeClientTest extends TestCase
         $client = $this->createClient();
 
         $messageItemList = $client->getMessageItemList(
-            $this->createFolderKey(
-                $account->getId(),
-                "INBOX"
-            ),
+            $folderKey,
             new MessageItemListResourceQuery(new ParameterBag(
                 ["filter" => [["property" => "id", "operator" => "in", "value" => [34]]]]
             ))
