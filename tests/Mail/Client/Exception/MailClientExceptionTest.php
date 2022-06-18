@@ -27,15 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Imap;
+namespace Tests\Conjoon\Mail\Client\Exception;
 
 use Conjoon\Mail\Client\Exception\MailClientException;
+use RuntimeException;
+use Tests\TestCase;
 
 /**
- * Class MailClientException
- *
- * @package Conjoon\Mail\Client
+ * Class MailClientExceptionTest
+ * @package Tests\Conjoon\Mail\Client\Exception
  */
-class ImapClientException extends MailClientException
+class MailClientExceptionTest extends TestCase
 {
+    public function testInstance()
+    {
+
+        $exception = new MailClientException();
+
+        $this->assertInstanceOf(RuntimeException::class, $exception);
+    }
 }

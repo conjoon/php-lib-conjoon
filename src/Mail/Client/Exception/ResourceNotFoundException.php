@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client;
-
-use RuntimeException;
+namespace Conjoon\Mail\Client\Exception;
 
 /**
- * Class MailClientException
+ * Indicates a resource was not found.
  *
- * @package Conjoon\Mail\Client
+ *
+ * @package Conjoon\Mail\Client\Exception
  */
-class MailClientException extends RuntimeException
+abstract class ResourceNotFoundException extends MailClientException
 {
 }

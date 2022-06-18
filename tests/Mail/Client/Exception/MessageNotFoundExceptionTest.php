@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,23 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Mail\Client;
+namespace Tests\Conjoon\Mail\Client\Exception;
 
-use Conjoon\Mail\Client\MailClientException;
-use RuntimeException;
+use Conjoon\Mail\Client\Exception\ResourceNotFoundException;
+use Conjoon\Mail\Client\Exception\MessageNotFoundException;
 use Tests\TestCase;
 
 /**
- * Class MailClientExceptionTest
- * @package Tests\Conjoon\Mail\Client
+ * Class MessageNotFoundExceptionTest
+ * @package Tests\Conjoon\Mail\Client\Exception
  */
-class MailClientExceptionTest extends TestCase
+class MessageNotFoundExceptionTest extends TestCase
 {
     public function testInstance()
     {
 
-        $exception = new MailClientException();
+        $exception = new MessageNotFoundException();
 
-        $this->assertInstanceOf(RuntimeException::class, $exception);
+        $this->assertInstanceOf(ResourceNotFoundException::class, $exception);
     }
 }

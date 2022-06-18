@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Message;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Core\JsonStrategy;
 
 /**

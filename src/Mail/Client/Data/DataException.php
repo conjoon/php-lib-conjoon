@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data;
 
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 
 /**
  * Class DataException

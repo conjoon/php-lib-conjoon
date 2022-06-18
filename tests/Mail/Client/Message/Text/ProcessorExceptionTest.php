@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message\Text;
 
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\Text\ProcessorException;
 use Tests\TestCase;
 

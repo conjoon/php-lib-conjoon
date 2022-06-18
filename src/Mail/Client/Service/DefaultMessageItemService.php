@@ -33,7 +33,7 @@ use Conjoon\Core\ParameterBag;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\MailClient;
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\AbstractMessageItem;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\ListMessageItem;

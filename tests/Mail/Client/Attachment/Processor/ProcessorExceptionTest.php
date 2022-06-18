@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Attachment\Processor;
 
 use Conjoon\Mail\Client\Attachment\Processor\ProcessorException;
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 use Tests\TestCase;
 
 /**

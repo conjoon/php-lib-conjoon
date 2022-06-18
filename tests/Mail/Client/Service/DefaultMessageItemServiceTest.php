@@ -36,7 +36,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Mail\Client\MailClient;
-use Conjoon\Mail\Client\MailClientException;
+use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\AbstractMessageItem;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;

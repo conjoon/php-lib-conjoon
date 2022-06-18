@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Imap;
+namespace Tests\Conjoon\Mail\Client\Exception;
 
-use Conjoon\Mail\Client\Exception\MailClientException;
+use Conjoon\Mail\Client\Exception\ResourceNotFoundException;
+use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
+use Tests\TestCase;
 
 /**
- * Class MailClientException
- *
- * @package Conjoon\Mail\Client
+ * Class MailFolderNotFoundTest
+ * @package Tests\Conjoon\Mail\Client\Exception
  */
-class ImapClientException extends MailClientException
+class MailFolderNotFoundExceptionTest extends TestCase
 {
+    public function testInstance()
+    {
+
+        $exception = new MailFolderNotFoundException();
+
+        $this->assertInstanceOf(ResourceNotFoundException::class, $exception);
+    }
 }

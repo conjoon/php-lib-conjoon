@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Imap;
-
-use Conjoon\Mail\Client\Exception\MailClientException;
+namespace Conjoon\Mail\Client\Exception;
 
 /**
- * Class MailClientException
+ * Indicates a message was not found.
  *
- * @package Conjoon\Mail\Client
+ *
+ * @package Conjoon\Mail\Client\Exception
  */
-class ImapClientException extends MailClientException
+class MessageNotFoundException extends ResourceNotFoundException
 {
 }
