@@ -63,6 +63,10 @@ interface MessageItemService
      * MessageItemLi
      *
      * @return MessageItemList
+     *
+     * @throws MailFolderNotFoundException|MailClientException if the mail folder
+     * was not found, or a generic MailClientException indicating an error while
+     * communicating with the underlying (mail)backend.
      */
     public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
 

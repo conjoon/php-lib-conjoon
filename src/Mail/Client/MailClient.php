@@ -180,9 +180,8 @@ interface MailClient
      *
      * @return MessageItemList
      *
-     * @throws MailFolderNotFoundException|MailAccountNotFoundException|MailClientException if the specified
-     * MailFolder was not found, the mail account was not found or an exception thrown by the implementing API
-     * wrapped in a MailClientException
+     * @throws MailFolderNotFoundException|MailClientException if the specified
+     * MailFolder was not found, or an exception thrown by the implementing API wrapped in a MailClientException
      */
     public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
 
