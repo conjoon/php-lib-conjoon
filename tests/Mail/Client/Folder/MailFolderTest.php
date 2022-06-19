@@ -213,7 +213,7 @@ class MailFolderTest extends TestCase
         $json = $mf->toJson($strategy);
 
         $relationships = [
-            "MailAccounts" => [
+            "MailAccount" => [
                 "data" => [
                     "id" => "dev",
                     "type" => "MailAccount"
@@ -248,7 +248,7 @@ class MailFolderTest extends TestCase
                         "data" => []
                     ],
                     "relationships" => [
-                        "MailAccounts" => [
+                        "MailAccount" => [
                             "data" => [
                                 "id" => "dev",
                                 "type" => "MailAccount"
@@ -259,7 +259,7 @@ class MailFolderTest extends TestCase
                 ]]
             ],
             "relationships" => [
-                "MailAccounts" => [
+                "MailAccount" => [
                     "data" => [
                         "id" => "dev",
                         "type" => "MailAccount"

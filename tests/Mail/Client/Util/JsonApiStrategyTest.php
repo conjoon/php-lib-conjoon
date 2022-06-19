@@ -135,7 +135,7 @@ class JsonApiStrategyTest extends TestCase
             ],
             array_merge($base, [
                 "relationships" => [
-                    "MailFolders" => [
+                    "MailFolder" => [
                         "data" => [
                             "id"   => 2,
                             "type" => "MailFolder"
@@ -145,7 +145,7 @@ class JsonApiStrategyTest extends TestCase
             ]),
             array_merge($base, [
                 "relationships" => [
-                    "MailAccounts" => [
+                    "MailAccount" => [
                         "data" => [
                             "id"   => 4,
                             "type" => "MailAccount"
@@ -183,7 +183,7 @@ class JsonApiStrategyTest extends TestCase
                 "id" => 1,
                 "type" => "MessageItem",
                 "relationships" => [
-                    "MailFolders" => [
+                    "MailFolder" => [
                         "data" => [
                             "type" => "MailFolder", "id" => "INBOX"
                         ]

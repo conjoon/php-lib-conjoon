@@ -100,7 +100,7 @@ class JsonApiStrategy implements JsonStrategy
             if (!isset($result["relationships"])) {
                 $result["relationships"] = [];
             }
-            $result["relationships"]["$types[$key]s"] = [
+            $result["relationships"]["$types[$key]"] = [
                 "data" => [
                     "id"   => $data[$key],
                     "type" => $types[$key]
