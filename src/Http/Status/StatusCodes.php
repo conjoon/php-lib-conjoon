@@ -48,6 +48,11 @@ class StatusCodes
     /**
      * @var int
      */
+    public const HTTP_403 = 403;
+
+    /**
+     * @var int
+     */
     public const HTTP_404 = 404;
 
     /**
@@ -66,6 +71,7 @@ class StatusCodes
     public const HTTP_STATUS = [
         400 => "Bad Request",
         401 => "Unauthorized",
+        403 => "Forbidden",
         404 => "Not Found",
         405 => "Method not allowed",
         500 => "Internal Server Error"
