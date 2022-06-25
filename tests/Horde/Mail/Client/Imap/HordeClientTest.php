@@ -42,6 +42,7 @@ use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Imap\ImapClientException;
 use Conjoon\Mail\Client\MailClient;
+use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
 use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
@@ -910,7 +911,7 @@ class HordeClientTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testCreateMessageBodyDraftHasNoMessageKey()
+    public function testUpdateMessageBodyDraftHasNoMessageKey()
     {
 
         $this->expectException(ImapClientException::class);
@@ -919,6 +920,110 @@ class HordeClientTest extends TestCase
         $client->updateMessageBodyDraft(new MessageBodyDraft());
     }
 
+
+    /**
+     * Tests createMessageItemDraft with a MessageItemDraft that already has a MessageKey
+     *
+     */
+    public function testCreateMessageItemDraftHasMessageKey()
+    {
+        $folderKey = $this->createFolderKey(
+            $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
+            "INBOX"
+        );
+
+        $this->expectException(ImapClientException::class);
+
+        $client = $this->getMockBuilder(HordeClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods([])
+             ->getMock();
+
+        $messageItemDraft = new MessageItemDraft(
+            new MessageKey("a", "b", "c")
+        );
+
+        $client->createMessageItemDraft($folderKey, $messageItemDraft);
+    }
+
+
+    /**
+     * Tests createMessageItemDraft with a folderKey representing a non existing folder.
+     */
+    public function testCreateMessageItemDraftFolderMissing()
+    {
+        $folderKey = $this->createFolderKey(
+            $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
+            "INBOX"
+        );
+
+        $this->expectException(MailFolderNotFoundException::class);
+
+        $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $client = $this->getMockBuilder(HordeClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["connect", "doesMailboxExist"])
+            ->getMock();
+
+        $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
+        $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
+
+        $client->createMessageItemDraft($folderKey, new MessageItemDraft());
+    }
+
+    /**
+     * Tests createMessageItemDraft
+     */
+    public function testCreateMessageItemDraft()
+    {
+
+        $messageItemDraft = new MessageItemDraft();
+
+        $folderKey = $this->createFolderKey(
+            $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
+            "INBOX"
+        );
+
+        $composer = $this->getMockForAbstractClass(HeaderComposer::class);
+
+        $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["append"])
+            ->getMock();
+        $client = $this->getMockBuilder(HordeClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["connect", "doesMailboxExist","getHeaderComposer"])
+            ->getMock();
+
+        $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
+        $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(true);
+
+        $composer->expects($this->once())->method("compose")->with("", $messageItemDraft)->willReturn("HEADER");
+        $client->expects($this->once())->method("getHeaderComposer")->willReturn($composer);
+
+        $ids = new \stdClass();
+        $ids->ids = [1];
+        $socket->expects($this->once())->method("append")->with(
+            $folderKey->getId(),
+            [[
+                "data" => "HEADER",
+                "flags" => $messageItemDraft->getFlagList()->resolveToFlags()
+            ]]
+        )->willReturn($ids);
+
+
+        $createdDraft = $client->createMessageItemDraft($folderKey, $messageItemDraft);
+
+        $this->assertNotSame($createdDraft, $messageItemDraft);
+
+        $this->assertEquals([
+          "mailAccountId" => $folderKey->getMailAccountId(),
+          "mailFolderId" => $folderKey->getId(),
+          "id" => (string)$ids->ids[0]
+        ], $createdDraft->getMessageKey()->toArray());
+    }
 
     /**
      * Tests updateMessageBodyDraft

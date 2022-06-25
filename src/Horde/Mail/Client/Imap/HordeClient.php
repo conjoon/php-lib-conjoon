@@ -545,6 +545,46 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
+    public function createMessageItemDraft(FolderKey $folderKey, MessageItemDraft $messageItemDraft): MessageItemDraft
+    {
+
+        if ($messageItemDraft->getMessageKey()) {
+            throw new ImapClientException(
+                "Cannot create a MessageItemDraft that already has a MessageKey"
+            );
+        }
+
+        try {
+            $client = $this->connect($folderKey);
+
+            if (!$this->doesMailboxExist($folderKey)) {
+                throw new MailFolderNotFoundException(
+                    "The mailbox \"{$folderKey->getId()}\" was not found for this account."
+                );
+            }
+
+            $fullText = $this->getHeaderComposer()->compose("", $messageItemDraft);
+
+            $ids = $client->append($folderKey->getId(), [[
+                "data" =>  $fullText,
+                "flags" => $messageItemDraft->getFlagList()->resolveToFlags()
+            ]]);
+
+            $newKey = new MessageKey(
+                $folderKey,
+                (string)$ids->ids[0]
+            );
+
+            return $messageItemDraft->setMessageKey($newKey);
+        } catch (Horde_Imap_Client_Exception $e) {
+            throw new ImapClientException($e->getMessage(), 0, $e);
+        }
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function createMessageBodyDraft(FolderKey $folderKey, MessageBodyDraft $messageBodyDraft): MessageBodyDraft
     {
 
