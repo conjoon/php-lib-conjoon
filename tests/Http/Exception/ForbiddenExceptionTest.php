@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,35 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Status;
+namespace Tests\Conjoon\Http\Exception;
 
+use Conjoon\Http\Exception\ForbiddenException;
+use Conjoon\Http\Exception\HttpException;
 use Conjoon\Http\Status\StatusCodes;
 use Tests\TestCase;
 
 /**
- * Class StatusCodesTest
- * @package Tests\Conjoon\Http\Status
+ * Class ForbiddenExceptionTest
+ * @package Tests\Conjoon\Mail\Client
  */
-class StatusCodesTest extends TestCase
+class ForbiddenExceptionTest extends TestCase
 {
     /**
-     * test class
+     * test instance
      */
-    public function testClass()
+    public function testInstance()
     {
 
-        $this->assertSame(400, StatusCodes::HTTP_400);
-        $this->assertSame(401, StatusCodes::HTTP_401);
-        $this->assertSame(403, StatusCodes::HTTP_403);
-        $this->assertSame(404, StatusCodes::HTTP_404);
-        $this->assertSame(405, StatusCodes::HTTP_405);
-        $this->assertSame(500, StatusCodes::HTTP_500);
+        $exception = new ForbiddenException();
 
-        $this->assertIsString(StatusCodes::HTTP_STATUS[400]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[401]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[403]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[404]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[405]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[500]);
+        $this->assertInstanceOf(HttpException::class, $exception);
+        $this->assertSame(StatusCodes::HTTP_403, $exception->getCode());
     }
 }
