@@ -86,7 +86,7 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
     /**
      * @var MessageKey
      */
-    protected MessageKey $messageKey;
+    protected ?MessageKey $messageKey = null;
 
     /**
      * @var MailAddress|null
@@ -169,22 +169,36 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
 
 
     /**
-     * MessageItem constructor.
+     * Allows for passing only the data for the AbstractMessageItemDraft w/o a MessageKey.
      *
-     * @param MessageKey $messageKey
+     *
+     * @param MessageKey|array|null $messageKey
      * @param array|null $data
-     *
-     *
      */
-    public function __construct(MessageKey $messageKey, array $data = null)
+    public function __construct($messageKey = null, $data = null)
     {
-
-        $this->messageKey = $messageKey;
-
-        if (!$data) {
-            return;
+        if (is_array($messageKey)) {
+            $data = $messageKey;
+            $messageKey = null;
         }
 
+        if ($messageKey instanceof MessageKey) {
+            $this->messageKey = $messageKey;
+        }
+
+        if (is_array($data)) {
+            $this->configure($data);
+        }
+    }
+
+
+    /**
+     * Configures an instance of this class with the passed data.
+     *
+     * @param array $data
+     */
+    protected function configure(array $data)
+    {
         $this->suspendModifiable();
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
@@ -433,7 +447,7 @@ abstract class AbstractMessageItem implements Arrayable, Jsonable, Modifiable
     {
         $mk = $this->getMessageKey();
 
-        $data = array_merge($mk->toArray(), [
+        $data = array_merge($mk ? $mk->toArray() : [], [
             'from' => $this->getFrom() ? $this->getFrom()->toArray() : null,
             'to' => $this->getTo() ? $this->getTo()->toArray() : null,
             'subject' => $this->getSubject(),

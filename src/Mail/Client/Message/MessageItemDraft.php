@@ -39,6 +39,10 @@ use Conjoon\Core\JsonStrategy;
  * Class MessageItemDraft models envelope information of a Message Draft.
  * A MessageDraft that was stored and exists physically provides also a MessageKey.
  *
+ * A message draft may actually be in "draft" state, i.e. physically not existing by omitting
+ * the MessageKey when creating an instance. Once a MessageDraft is about to get saved, setMessageKey
+ * can be used for creating the compound key for the draft.
+ *
  * @package Conjoon\Mail\Client\Message
  * @method getReplyTo()
  * @method getBcc()
@@ -65,13 +69,18 @@ class MessageItemDraft extends AbstractMessageItem
 
 
     /**
-     * @inheritdoc
+     * Allows for passing only the data for the AbstractMessageItemDraft w/o a MessageKey.
+     *
+     *
+     * @param MessageKey|array|null $messageKey
+     * @param array|null $data
      */
-    public function __construct(MessageKey $messageKey, array $data = null)
+    public function __construct($messageKey = null, $data = null)
     {
         $this->draft = true;
         parent::__construct($messageKey, $data);
     }
+
 
     /**
      * Sets the "messageKey" by creating a new MessageItemDraft with the specified

@@ -65,6 +65,7 @@ class MessageItemDraftTest extends TestCase
         $this->assertTrue($messageItem->getDraft());
     }
 
+
     /**
      * Tests setMessageKey
      */

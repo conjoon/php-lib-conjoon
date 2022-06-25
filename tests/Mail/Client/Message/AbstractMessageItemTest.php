@@ -41,6 +41,7 @@ use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
 use Conjoon\Core\Jsonable;
+use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Util\Modifiable;
 use DateTime;
 use Tests\JsonableTestTrait;
@@ -66,7 +67,7 @@ class AbstractMessageItemTest extends TestCase
     public function testConstructor()
     {
 
-        $messageItem = $this->createMessageItem();
+        $messageItem = $this->createMessageItem($this->createMessageKey());
         $this->assertInstanceOf(Modifiable::class, $messageItem);
 
         $this->assertNull($messageItem->getSeen());
@@ -80,6 +81,24 @@ class AbstractMessageItemTest extends TestCase
         $this->assertNull($messageItem->getinReplyTo());
     }
 
+    /**
+     * Tests instance
+     */
+    public function testConstructorNoMessageKey()
+    {
+        $messageItem = $this->createMessageItem();
+        $this->assertNull($messageItem->getMessageKey());
+    }
+
+    /**
+     * Tests instance
+     */
+    public function testConstructorNoMessageKeyButData()
+    {
+        $messageItem = $this->createMessageItem(null, ["subject" => "subject"]);
+        $this->assertNull($messageItem->getMessageKey());
+        $this->assertSame("subject", $messageItem->getSubject());
+    }
 
     /**
      * Test class.
@@ -410,9 +429,7 @@ class AbstractMessageItemTest extends TestCase
     protected function createMessageItem(MessageKey $key = null, array $data = null): AbstractMessageItem
     {
         // Create a new instance from the Abstract Class
-        if (!$key) {
-            $key = $this->createMessageKey();
-        }
+
         return new class ($key, $data) extends AbstractMessageItem {
         };
     }

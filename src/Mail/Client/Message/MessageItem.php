@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 
 /**
  * Class MessageItem models envelope information of a Message.
@@ -50,6 +50,27 @@ class MessageItem extends AbstractMessageItem
      * @var bool|null
      */
     protected ?bool $hasAttachments = null;
+
+
+    /**
+     * MessageItem constructor.
+     *
+     * @param MessageKey $messageKey
+     * @param array|null $data
+     *
+     * @see configure
+     */
+    public function __construct(MessageKey $messageKey, array $data = null)
+    {
+
+        $this->messageKey = $messageKey;
+
+        if (!$data) {
+            return;
+        }
+
+        $this->configure($data);
+    }
 
 
     /**
