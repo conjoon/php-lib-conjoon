@@ -34,6 +34,7 @@ use Conjoon\Mail\Client\Message\AbstractMessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Core\Jsonable;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -42,6 +43,9 @@ use Tests\TestCase;
  */
 class MessageBodyDraftTest extends TestCase
 {
+    use JsonableTestTrait;
+
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -60,23 +64,26 @@ class MessageBodyDraftTest extends TestCase
         $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", "text/html");
 
         $this->assertEquals([
+            "type" => "MessageBody",
             "textPlain" => "",
             "textHtml" => ""
-        ], $body->toJson());
+        ], $body->toArray());
 
         $body->setTextPlain($plainPart);
 
         $this->assertEquals([
+            "type" => "MessageBody",
             "textPlain" => "foo",
             "textHtml" => ""
-        ], $body->toJson());
+        ], $body->toArray());
 
         $body->setTextHtml($htmlPart);
 
         $this->assertEquals([
+            "type" => "MessageBody",
             "textPlain" => "foo",
             "textHtml" => "<b>bar</b>"
-        ], $body->toJson());
+        ], $body->toArray());
 
         $this->assertSame($plainPart, $body->getTextPlain());
         $this->assertSame($htmlPart, $body->getTextHtml());
@@ -85,12 +92,23 @@ class MessageBodyDraftTest extends TestCase
         $body = new MessageBodyDraft(new MessageKey("a", "b", "c"));
 
         $this->assertEquals([
+            "type" => "MessageBody",
             "mailAccountId" => "a",
             "mailFolderId" => "b",
             "id" => "c",
             "textPlain" => "",
             "textHtml" => ""
-        ], $body->toJson());
+        ], $body->toArray());
+    }
+
+
+    /**
+     * Test toJson
+     */
+    public function testToJson()
+    {
+        $body = new MessageBodyDraft();
+        $this->runToJsonTest($body);
     }
 
 

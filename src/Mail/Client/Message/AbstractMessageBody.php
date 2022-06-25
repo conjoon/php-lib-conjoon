@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Core\Jsonable;
 use Conjoon\Core\JsonStrategy;
@@ -39,7 +40,7 @@ use Conjoon\Core\JsonStrategy;
  *
  * @package Conjoon\Mail\Client\Message
  */
-abstract class AbstractMessageBody implements Jsonable
+abstract class AbstractMessageBody implements Arrayable, Jsonable
 {
     /**
      * @var MessagePart|null
@@ -126,7 +127,7 @@ abstract class AbstractMessageBody implements Jsonable
 
 
 // --------------------------------
-//  Jsonable interface
+//  Arrayable interface
 // --------------------------------
 
     /**
@@ -144,14 +145,27 @@ abstract class AbstractMessageBody implements Jsonable
      * @return array
      *
      */
-    public function toJson(JsonStrategy $strategy = null): array
+    public function toArray(): array
     {
+        $key = $this->getMessageKey() ? $this->getMessageKey()->toArray() : null;
 
-        $keyJson = $this->getMessageKey() ? $this->getMessageKey()->toJson() : null;
-
-        return array_merge($keyJson ?? [], [
+        return array_merge($key ?? [], [
+            "type" => "MessageBody",
             "textHtml" => $this->getTextHtml() ? $this->getTextHtml()->getContents() : "",
             "textPlain" => $this->getTextPlain() ? $this->getTextPlain()->getContents() : ""
         ]);
+    }
+
+
+// --------------------------------
+//  Jsonable interface
+// --------------------------------
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
 }

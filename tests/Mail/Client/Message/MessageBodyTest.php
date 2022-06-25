@@ -33,6 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\AbstractMessageBody;
 use Conjoon\Mail\Client\Message\MessageBody;
 use Conjoon\Mail\Client\Message\MessagePart;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -41,6 +42,8 @@ use Tests\TestCase;
  */
 class MessageBodyTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -49,12 +52,45 @@ class MessageBodyTest extends TestCase
      */
     public function testClass()
     {
-
         $messageKey = new MessageKey("dev", "INBOX", "232");
-
-        $body = new MessageBody($messageKey);
+        $body = $this->createMessageBody($messageKey);
 
         $this->assertInstanceOf(AbstractMessageBody::class, $body);
+
+        $this->assertSame($messageKey, $body->getMessageKey());
+
+        $this->assertEquals([
+            "type" => "MessageBody",
+            "mailAccountId" => "dev",
+            "mailFolderId" => "INBOX",
+            "id" => "232",
+            "textPlain" => "foo",
+            "textHtml" => "<b>bar</b>"
+        ], $body->toArray());
+    }
+
+
+    /**
+     * Test toJson
+     */
+    public function testToJson()
+    {
+        $body = $this->createMessageBody();
+
+        $this->runToJsonTest($body);
+    }
+
+
+    /**
+     * @return void
+     */
+    protected function createMessageBody($messageKey = null)
+    {
+        if ($messageKey === null) {
+            $messageKey = new MessageKey("dev", "INBOX", "232");
+        }
+
+        $body = new MessageBody($messageKey);
 
         $plainPart = new MessagePart("foo", "ISO-8859-1", "text/plain");
         $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", "text/html");
@@ -62,14 +98,6 @@ class MessageBodyTest extends TestCase
         $body->setTextPlain($plainPart);
         $body->setTextHtml($htmlPart);
 
-        $this->assertSame($messageKey, $body->getMessageKey());
-
-        $this->assertEquals([
-            "mailAccountId" => "dev",
-            "mailFolderId" => "INBOX",
-            "id" => "232",
-            "textPlain" => "foo",
-            "textHtml" => "<b>bar</b>"
-        ], $body->toJson());
+        return $body;
     }
 }
