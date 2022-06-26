@@ -405,7 +405,7 @@ class DefaultMessageItemServiceTest extends TestCase
             ->onlyMethods(["getMessageCount"])->getMock();
 
         $service->expects($this->exactly(2))->method("getMailClient")->willReturn($client);
-        
+
         $client->expects($this->exactly(2))
             ->method("getMessageCount")
             ->with($folderKey)
