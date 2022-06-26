@@ -922,10 +922,10 @@ class HordeClientTest extends TestCase
 
 
     /**
-     * Tests createMessageItemDraft with a MessageItemDraft that already has a MessageKey
+     * Tests createMessageDraft with a MessageItemDraft that already has a MessageKey
      *
      */
-    public function testCreateMessageItemDraftHasMessageKey()
+    public function testCreateMessageDraftHasMessageKey()
     {
         $folderKey = $this->createFolderKey(
             $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
@@ -943,14 +943,14 @@ class HordeClientTest extends TestCase
             new MessageKey("a", "b", "c")
         );
 
-        $client->createMessageItemDraft($folderKey, $messageItemDraft);
+        $client->createMessageDraft($folderKey, $messageItemDraft);
     }
 
 
     /**
-     * Tests createMessageItemDraft with a folderKey representing a non existing folder.
+     * Tests createMessageDraft with a folderKey representing a non existing folder.
      */
-    public function testCreateMessageItemDraftFolderMissing()
+    public function testCreateMessageDraftFolderMissing()
     {
         $folderKey = $this->createFolderKey(
             $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
@@ -970,13 +970,13 @@ class HordeClientTest extends TestCase
         $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
         $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
 
-        $client->createMessageItemDraft($folderKey, new MessageItemDraft());
+        $client->createMessageDraft($folderKey, new MessageItemDraft());
     }
 
     /**
-     * Tests createMessageItemDraft
+     * Tests createMessageDraft
      */
-    public function testCreateMessageItemDraft()
+    public function testCreateMessageDraft()
     {
 
         $messageItemDraft = new MessageItemDraft();
@@ -1014,7 +1014,7 @@ class HordeClientTest extends TestCase
         )->willReturn($ids);
 
 
-        $createdDraft = $client->createMessageItemDraft($folderKey, $messageItemDraft);
+        $createdDraft = $client->createMessageDraft($folderKey, $messageItemDraft);
 
         $this->assertNotSame($createdDraft, $messageItemDraft);
 

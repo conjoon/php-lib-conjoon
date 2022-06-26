@@ -139,7 +139,7 @@ interface MailClient
      * @throws MailClientException if any exception occurs, or of the MessageItemDraft already has
      * a MessageKey
      */
-    public function createMessageItemDraft(FolderKey $folderKey, MessageItemDraft $messageItemDraft): MessageItemDraft;
+    public function createMessageDraft(FolderKey $folderKey, MessageItemDraft $messageItemDraft): MessageItemDraft;
 
 
     /**

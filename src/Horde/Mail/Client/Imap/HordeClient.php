@@ -545,7 +545,7 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function createMessageItemDraft(FolderKey $folderKey, MessageItemDraft $messageItemDraft): MessageItemDraft
+    public function createMessageDraft(FolderKey $folderKey, MessageItemDraft $messageItemDraft): MessageItemDraft
     {
 
         if ($messageItemDraft->getMessageKey()) {
