@@ -304,6 +304,22 @@ class DefaultMessageItemService implements MessageItemService
     /**
      * @inheritdoc
      */
+    public function createMessageDraft(FolderKey $folderKey, MessageItemDraft $draft): ?MessageItemDraft
+    {
+
+        if ($draft->getMessageKey()) {
+            throw new ServiceException(
+                "Cannot create a MessageItemDraft that has a MessageKey"
+            );
+        }
+
+        return $this->getMailClient()->createMessageDraft($folderKey, $draft);
+    }
+
+
+    /**
+     * @inheritdoc
+     */
     public function createMessageBodyDraft(FolderKey $folderKey, MessageBodyDraft $draft): ?MessageBodyDraft
     {
 

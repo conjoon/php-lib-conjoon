@@ -117,6 +117,23 @@ interface MessageItemService
 
 
     /**
+     * Creates a single MessageItemDraft and returns it along with the generated MessageKey.
+     * Returns null if the MessageItemDraft could not be created.
+     * The created message will be marked as a draft.
+     *
+     * @param FolderKey $folderKey
+     * @param MessageItemDraft $draft The draft to create
+     *
+     * @return MessageItemDraft
+     *
+     * @throws ServiceException|MailFolderNotFoundException|MailClientException if the draft cannot be used
+     * with this service, if the mail folder was not found, or a generic MailClientException indicating an error while
+     * communicating with the underlying (mail)backend.
+     */
+    public function createMessageDraft(FolderKey $folderKey, MessageItemDraft $draft): ?MessageItemDraft;
+
+
+    /**
      * Creates a single MessageBodyDraft and returns it along with the generated MessageKey.
      * Returns null if the MessageBodyDraft could not be created.
      * The created message will be marked as a draft.

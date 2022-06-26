@@ -388,55 +388,34 @@ class DefaultMessageItemServiceTest extends TestCase
 
 
     /**
-     * Tests getTotalMessageCount()
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @noinspection PhpUndefinedMethodInspection
+     * Tests getTotalMessageCount() and getUnreadMessageCount()
      */
-    public function testGetTotalMessageCount()
+    public function testGetTotalMessageCountAndGetUnreadMessageCount()
     {
 
-        $service = $this->createService();
+        $folderKey = new FolderKey("a", "b");
 
-        $mailFolderId = "INBOX";
-        $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        $service = $this->getMockBuilder(DefaultMessageItemService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["getMailClient"])
+            ->getMock();
 
-        $folderKey = $this->createFolderKey($account, $mailFolderId);
+        $client = $this->getMockBuilder(HordeClient::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["getMessageCount"])->getMock();
 
-        $clientStub = $service->getMailClient();
-        $clientStub->method("getMessageCount")
+        $service->expects($this->exactly(2))->method("getMailClient")->willReturn($client);
+        
+        $client->expects($this->exactly(2))
+            ->method("getMessageCount")
             ->with($folderKey)
-            ->willReturn(
-                ["unreadMessages" => 5, "totalMessages" => 300]
-            );
+            ->willReturn([
+                "unreadMessages" => 5,
+                "totalMessages" => 311
+            ]);
 
-        $this->assertSame(300, $service->getTotalMessageCount($folderKey));
-    }
-
-
-    /**
-     * Tests getUnreadMessageCount()
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @noinspection PhpUndefinedMethodInspection
-     */
-    public function testUnreadMessageCount()
-    {
-        $service = $this->createService();
-
-        $mailFolderId = "INBOX";
-        $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
-
-        $folderKey = $this->createFolderKey($account, $mailFolderId);
-
-        $clientStub = $service->getMailClient();
-        $clientStub->method("getUnreadMessageCount")
-            ->with($folderKey)
-            ->willReturn(311);
-
-        $this->assertSame(311, $service->getUnreadMessageCount($folderKey));
+        $this->assertSame(5, $service->getUnreadMessageCount($folderKey));
+        $this->assertSame(311, $service->getTotalMessageCount($folderKey));
     }
 
 
@@ -593,6 +572,55 @@ class DefaultMessageItemServiceTest extends TestCase
         $result = $service->createMessageBodyDraft($folderKey, $messageBodyDraft);
         $this->assertNull($result);
     }
+
+
+    /**
+     * Tests testCreateMessageDraft with draft having key
+     */
+    public function testCreateMessageDraftWithServiceException()
+    {
+        $folderKey = new FolderKey("a", "b");
+        $messageItemDraft = new MessageItemDraft(new MessageKey($folderKey, "c"));
+
+        $service = $this->getMockBuilder(DefaultMessageItemService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["getMailClient"])
+            ->getMock();
+
+        $this->expectException(ServiceException::class);
+
+        $service->createMessageDraft($folderKey, $messageItemDraft);
+    }
+
+    /**
+     * Tests testCreateMessageDraft with draft having key
+     */
+    public function testCreateMessageDraft()
+    {
+        $folderKey = new FolderKey("a", "b");
+        $messageItemDraft = new MessageItemDraft();
+
+        $service = $this->getMockBuilder(DefaultMessageItemService::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["getMailClient"])
+            ->getMock();
+
+        $client = $this->getMockBuilder(HordeClient::class)
+                ->disableOriginalConstructor()
+                ->onlyMethods(["createMessageDraft"])->getMock();
+
+        $service->expects($this->once())->method("getMailClient")->willReturn($client);
+
+        $createdDraft = new MessageItemDraft();
+        $client->expects($this->once())
+            ->method("createMessageDraft")
+            ->with($folderKey, $messageItemDraft)
+            ->willReturn($createdDraft);
+
+
+        $this->assertSame($createdDraft, $service->createMessageDraft($folderKey, $messageItemDraft));
+    }
+
 
     /**
      * Tests updateMessageDraft()
@@ -1198,6 +1226,7 @@ class DefaultMessageItemServiceTest extends TestCase
                 "getFileAttachmentList",
                 "setFlags",
                 "createMessageBodyDraft",
+                "createMessageDraft",
                 "updateMessageDraft",
                 "updateMessageBodyDraft",
                 "sendMessageDraft",
@@ -1205,8 +1234,8 @@ class DefaultMessageItemServiceTest extends TestCase
                 "deleteMessage",
                 "createAttachments",
                 "deleteAttachment",
-                "getSupportedAttributes",
-                "getDefaultAttributes"
+                "getSupportedFields",
+                "getDefaultFields"
             ])
             ->addMethods([
                 "getListMessageItem",
