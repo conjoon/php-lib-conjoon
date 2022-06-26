@@ -32,7 +32,7 @@ namespace Conjoon\Http\Json\Problem;
 use Conjoon\Http\Status\StatusCodes as Status;
 
 /**
- * Class BadRequesUnauthorizedProblemtProblem
+ * Class UnauthorizedProblem
  * @package Conjoon\Http\Json\Problem
  */
 final class UnauthorizedProblem extends AbstractProblem
