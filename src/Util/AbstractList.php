@@ -65,6 +65,19 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     abstract public function getEntityType(): string;
 
 
+    /**
+     * Applies the map function to this data and returns it.
+     *
+     * @param callable $mapFn The callable to pass to the callback submitted to
+     * array_map()
+     *
+     * @return array
+     */
+    public function map(callable $mapFn): array
+    {
+        return array_map($mapFn, $this->data);
+    }
+
 // -------------------------
 //  ArrayAccess Interface
 // -------------------------
@@ -79,9 +92,12 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 
         $entityType = $this->getEntityType();
 
-        if (!$value instanceof $entityType) {
+        // instanceof has higher precedence, do
+        // (!$value instanceof $entityType)
+        // would also be a valid expression
+        if (!($value instanceof $entityType)) {
             throw new TypeError(
-                "Expected type \"" . $entityType . "\" for value-argument"
+                "Expected type \"$entityType\" for value-argument"
             );
         }
 

@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Util;
 
 use ArrayAccess;
 use Conjoon\Util\AbstractList;
+use Conjoon\Util\ArrayUtil;
 use Countable;
 use Iterator;
 use stdClass;
@@ -118,6 +119,44 @@ class AbstractListTest extends TestCase
             $abstractList[0],
             $abstractList[1]
         ], $abstractList->toArray());
+    }
+
+
+    /**
+     * Tests map()
+     * @return void
+     */
+    public function testMap()
+    {
+        $abstractList = $this->getMockForAbstractList();
+
+        $cmpList = [
+            new stdClass(),
+            new stdClass()
+        ];
+
+        $cmpList[0]->foo = 1;
+        $cmpList[0]->bar = 2;
+        $cmpList[1]->foo = 3;
+        $cmpList[1]->bar = 4;
+
+        $abstractList[] = $cmpList[0];
+        $abstractList[] = $cmpList[1];
+
+        $foo = new class () {
+        };
+
+        $mock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(["mapCallback"])->getMock();
+
+        $mock->expects($this->exactly(2))
+            ->method("mapCallback")->withConsecutive([$cmpList[0]], [$cmpList[1]])
+            ->willReturnOnConsecutiveCalls($cmpList[0]->foo * 2, $cmpList[1]->foo * 2);
+
+        $this->assertEquals(
+            [2, 6],
+            $abstractList->map(array($mock, "mapCallback"))
+        );
     }
 
 
