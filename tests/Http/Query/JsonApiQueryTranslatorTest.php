@@ -40,6 +40,7 @@ use Conjoon\Http\Resource\ResourceObjectDescriptionList;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -59,10 +60,48 @@ class JsonApiQueryTranslatorTest extends TestCase
 
 
     /**
+     * Tests mapConfigToFields()
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testMapConfigToFields(): void
+    {
+        $translator = $this->getQueryTranslator(["getDefaultFields"]);
+        $reflection = new ReflectionClass($translator);
+
+        $translator->expects($this->once())->method("getDefaultFields")->with("entity")->willReturn(["fields"]);
+
+
+        $mapConfigToFields = $reflection->getMethod("mapConfigToFields");
+        $mapConfigToFields->setAccessible(true);
+
+        $this->assertEquals(["fields"], $mapConfigToFields->invokeArgs($translator, [[], [], "entity"]));
+    }
+
+
+    /**
+     * Tests extractFieldOptions()
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testExtractFieldOptions(): void
+    {
+        $translator = $this->getQueryTranslator(["extractFieldOptions"]);
+        $reflection = new ReflectionClass($translator);
+
+        $mapConfigToFields = $reflection->getMethod("extractFieldOptions");
+        $mapConfigToFields->setAccessible(true);
+
+        $this->assertEquals([], $mapConfigToFields->invokeArgs($translator, [new ParameterBag(), "entity"]));
+    }
+
+
+    /**
      * Tests getRelatedResourceTargets
      * @return void
+     * @throws ReflectionException
      */
-    public function testGetRelatedResourceTargets()
+    public function testGetRelatedResourceTargets(): void
     {
         $translator = $this->getQueryTranslator(["getResourceTarget"]);
         $reflection = new ReflectionClass($translator);
@@ -129,6 +168,7 @@ class JsonApiQueryTranslatorTest extends TestCase
     /**
      * tests getRelatedResourceTargetTypes()
      * @return void
+     * @throws ReflectionException
      */
     public function testGetRelatedResourceTargetTypes()
     {
@@ -177,6 +217,7 @@ class JsonApiQueryTranslatorTest extends TestCase
     /**
      * Tests getExpectedParameters
      * @return void
+     * @throws ReflectionException
      */
     public function testGetExpectedParameters()
     {
@@ -422,22 +463,29 @@ class JsonApiQueryTranslatorTest extends TestCase
      */
     public function testGetFieldsets()
     {
+        $fields = [
+            "entity" => ["date"],
+            "entity_2" => ["subject"]
+        ];
+
+        $defaultFields = [
+            "entity" => ["date" => true],
+            "entity_2" => ["subject" => true]
+        ];
+
         $bag = new ParameterBag();
-        $bag->include = "entity_2";
         $bag->{"fields[entity]"} = "";
+        $bag->include = "entity_2";
         $bag->{"fields[entity_2]"} = "";
+
 
         $bag2 = new ParameterBag();
         $bag2->include = "entity_2";
-        $bag2->{"fields[entity]"} = "";
         $bag2->{"fields[entity_2]"} = "subject,date,to";
 
-        $fields = ["subject", "date"];
-        $defaultFields = ["text" => true];
-        $fieldOptions = ["html" => ["length" => 200]];
 
         $translator = $this->getQueryTranslator([
-            "parseFields", "parseFieldOptions",
+            "parseFields", "extractFieldOptions",
             "mapConfigToFields", "getDefaultFields",
             "getIncludes", "getResourceTarget"
         ]);
@@ -448,6 +496,48 @@ class JsonApiQueryTranslatorTest extends TestCase
 
         $translator->expects($this->exactly(2))->method("getResourceTarget")->willReturn($resourceTarget);
         $translator->expects($this->exactly(2))->method("getIncludes")->willReturnOnConsecutiveCalls($bag, $bag2);
+
+        $translator->expects($this->exactly(4))->method("parseFields")->withConsecutive(
+            [$bag->{"fields[entity]"}, "entity"],
+            [$bag->{"fields[entity_2]"}, "entity_2"],
+            [$bag2->{"fields[entity]"}, "entity"],
+            [$bag2->{"fields[entity_2]"}, "entity_2"],
+        )->willReturnOnConsecutiveCalls(
+            [],
+            [],
+            $fields["entity"],
+            $fields["entity_2"]
+        );
+        $translator->expects($this->exactly(4))->method("extractFieldOptions")->withConsecutive(
+            [$bag, "entity"],
+            [$bag, "entity_2"],
+            [$bag2, "entity"],
+            [$bag2, "entity_2"]
+        );
+
+        $translator->expects($this->exactly(4))->method("mapConfigToFields")->withConsecutive(
+            [
+                [],
+                [],
+                "entity"
+            ],
+            [
+                [],
+                [],
+                "entity_2"
+            ],
+            [
+                $fields["entity"],
+                [],
+                "entity"
+            ],
+            [
+                $fields["entity_2"],
+                [],
+                "entity_2"
+            ]
+        )->willReturnOnConsecutiveCalls([], [], $defaultFields["entity"], $defaultFields["entity_2"]);
+
 
         $getFieldsetsReflection = $reflection->getMethod("getFieldsets");
         $getFieldsetsReflection->setAccessible(true);
@@ -463,27 +553,137 @@ class JsonApiQueryTranslatorTest extends TestCase
 
 
         // test No 2, fieldset entity_2 set
-        // new reference for tests, see willReturnOnConsecutiveCalls for getIncludes
-        $bag = $bag2;
+        $this->assertSame($bag2, $getFieldsetsReflection->invokeArgs($translator, [$bag2]));
+        $this->assertNull($bag2->{"fields[entity]"});
+        $this->assertNull($bag2->{"fields[entity_2]"});
 
-        $translator->expects($this->once())->method("parseFields")->with($bag, "entity_2")->willReturn($fields);
-        $translator->expects($this->once())->method("parseFieldOptions")->with($bag, "entity_2")->willReturn($fieldOptions);
-        $translator->expects($this->once())->method("getDefaultFields")->with("entity_2")->willReturn($defaultFields);
-        $translator->expects($this->once())->method("mapConfigToFields")->with(
-            $fields,
-            $fieldOptions,
-            $defaultFields,
-            "entity_2"
-        )->willReturn($fields);
-
-        $this->assertSame($bag, $getFieldsetsReflection->invokeArgs($translator, [$bag]));
-        $this->assertNull($bag->{"fields[entity]"});
-        $this->assertNull($bag->{"fields[entity_2]"});
-
-        $this->assertEquals([], $bag->fields["entity"]);
-        $this->assertEquals($fields, $bag->fields["entity_2"]);
+        $this->assertEquals($defaultFields["entity"], $bag2->fields["entity"]);
+        $this->assertEquals($defaultFields["entity_2"], $bag2->fields["entity_2"]);
     }
 
+
+    /**
+     * tests parseFields() with [null, $type]
+     */
+    public function testParseFieldsQueryParamaterNotSet()
+    {
+        $type = "entity";
+        $fields = ["subject", "date"];
+        $bag = new ParameterBag();
+
+        list(
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+            ) = $this->setupParseFieldTest();
+
+        $translator->expects($this->once())->method("getFields")->with($type)->willReturn($fields);
+        $translator->expects($this->never())->method("hasOnlyAllowedFields");
+
+        $this->assertEquals($fields, $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]));
+    }
+
+
+    /**
+     * tests parseFields() with ["", $type]
+     */
+    public function testParseFieldsQueryParamaterSetToEmptyString()
+    {
+        $type = "entity";
+        $bag = new ParameterBag();
+        $bag->{"fields[entity]"} = "";
+
+        list(
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+            ) = $this->setupParseFieldTest();
+
+        $translator->expects($this->never())->method("getFields");
+        $translator->expects($this->never())->method("hasOnlyAllowedFields");
+
+        $this->assertEquals([], $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]));
+    }
+
+
+    /**
+     * tests parseFields() with ["subject", $type]
+     */
+    public function testParseFieldsWithAllowedField()
+    {
+        $type = "entity";
+        $bag = new ParameterBag();
+        $bag->{"fields[entity]"} = "subject";
+
+        list(
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+            ) = $this->setupParseFieldTest();
+
+        $translator->expects($this->never())->method("getFields");
+        $translator->expects($this->once())->method("hasOnlyAllowedFields")->with(["subject"], "entity")->willReturn([]);
+
+        $this->assertEquals(["subject"], $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]));
+    }
+
+
+    /**
+     * tests parseFields() with ["*,subject", $type]
+     */
+    public function testParseFieldsWithWildcard()
+    {
+        $type = "entity";
+        $fields = ["subject", "date"];
+        $bag = new ParameterBag();
+        $bag->{"fields[entity]"} = "*,subject";
+
+        list(
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+            ) = $this->setupParseFieldTest();
+
+        $translator->expects($this->once())->method("getFields")->with("entity")->willReturn($fields);
+        $translator->expects($this->never())->method("hasOnlyAllowedFields");
+
+        $this->assertEquals(["date"], $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]));
+    }
+
+
+    /**
+     * tests parseFields() with exception
+     */
+    public function testParseFieldsWithException()
+    {
+        $type = "entity";
+        $bag = new ParameterBag();
+        $bag->{"fields[entity]"} = "textHtml,subject";
+
+        list(
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+            ) = $this->setupParseFieldTest();
+
+        $translator->expects($this->never())->method("getFields");
+        $translator->expects($this->once())->method("hasOnlyAllowedFields")->with(["textHtml", "subject"], "entity")->willReturn(["textHtml"]);
+
+        $this->expectException(InvalidQueryException::class);
+        $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]);
+    }
+
+    /**
+     * @return array
+     */
+    protected function setupParseFieldTest(): array
+    {
+        $translator = $this->getQueryTranslator(["getFields", "hasOnlyAllowedFields"]);
+        $reflection = new ReflectionClass($translator);
+
+        $parseFieldsReflection = $reflection->getMethod("parseFields");
+        $parseFieldsReflection->setAccessible(true);
+
+        return [
+            "translator"            => $translator,
+            "parseFieldsReflection" => $parseFieldsReflection
+        ];
+    }
 
     /**
      * @param ParameterBag $bag

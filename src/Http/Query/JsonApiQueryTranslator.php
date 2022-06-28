@@ -78,28 +78,21 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
         $bag->fields = [];
 
         foreach ($types as $type) {
-            if ($bag->getString("fields[$type]") === "") {
-                $bag->fields = array_merge(
-                    $bag->fields,
-                    [
-                        $type => []
-                    ]
-                );
-            } else {
-                $fields = $this->parseFields($bag, $type);
-                $fieldOptions = $this->parseFieldOptions($bag, $type);
+            $fieldsetQueryValue = $bag->getString("fields[$type]");
 
-                $bag->fields = array_merge(
-                    $bag->fields,
-                    [
-                        $type => $this->mapConfigToFields(
-                            $fields,
-                            $fieldOptions,
-                            $this->getDefaultFields($type),
-                            $type
-                        )]
-                );
-            }
+            $fields = $this->parseFields($fieldsetQueryValue, $type);
+            $fieldOptions = $this->extractFieldOptions($bag, $type);
+
+            $bag->fields = array_merge(
+                $bag->fields,
+                [
+                    $type => $this->mapConfigToFields(
+                        $fields,
+                        $fieldOptions,
+                        $type
+                    )]
+            );
+
 
             unset($bag->{"fields[$type]"});
         }
@@ -214,7 +207,6 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      */
     protected function extractParameters($parameterResource): array
     {
-
         if (!($parameterResource instanceof Request)) {
             throw new InvalidParameterResourceException(
                 "Expected \"parameterResource\" to be instance of {Illuminate::class}"
@@ -292,5 +284,87 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
         $traverse($this->getResourceTarget());
 
         return $list;
+    }
+
+
+    /**
+     * Parses and builds up the field list. Returns the fields defined with getFields()
+     * if the passed $queryValue was NULL.
+     * Returns an empty array for an empty string passed to the query parameter (i.e.
+     * ?fields[TYPE]=&someOtherParam=2
+     *
+     * @param string|null $queryValue
+     * @param string $type
+     *
+     * @return string[]
+     *
+     * @throws InvalidQueryException if any field was specified with the query paramater
+     * that is not in the list of allowed fields for the resource object with the type $type..
+     */
+    protected function parseFields(?string $queryValue, string $type): array
+    {
+        // must be set before parseFields is called to make sure it does not fall back to default
+        if ($queryValue === null) {
+            return $this->getFields($type);
+        }
+        $queryFields = $queryValue === "" ? [] : explode(",", $queryValue);
+        $fields = $queryFields;
+
+        if (count($queryFields) === 0) {
+            return $fields;
+        }
+
+        if (in_array("*", $queryFields) !== false) {
+            $excludes  = array_filter($queryFields, fn ($item) => $item !== "*");
+            // re-index
+            $fields = array_values(
+                array_filter($this->getFields($type), fn ($item) => !in_array($item, $excludes))
+            );
+        } else {
+            $notAllowed = $this->hasOnlyAllowedFields($queryFields ?? [], $type);
+            if (!empty($notAllowed)) {
+                throw new InvalidQueryException(
+                    "parameter \"fields[$type]\" has unknown entries: " . implode(",", $notAllowed)
+                );
+            }
+        }
+
+        return $fields;
+    }
+
+
+    /**
+     * Extracts additional options for fields configured with the query and available
+     * in the ParameterBag, if any.
+     * This is a template method that simply returns an empty array. Any QueryTranslator that
+     * requires options with fieldsets passed with the query should implement the method.
+     *
+     * @param ParameterBag $bag
+     * @param string $type The resource object for which the method was called.
+     *
+     * @return array
+     */
+    protected function extractFieldOptions(ParameterBag $bag, string $type): array
+    {
+        return [];
+    }
+
+
+    /**
+     * Maps required configurations to passed fields not available in the target
+     * entity.
+     * This is a template method that simply returns the value of getDefaultFields()
+     * for the resource object with the specified $type.
+     *
+     * @param array $fields
+     * @param array $fieldOptions
+     * @param string $type
+     *
+
+     * @return array
+     */
+    protected function mapConfigToFields(array $fields, array $fieldOptions, string $type): array
+    {
+        return $this->getDefaultFields($type);
     }
 }
