@@ -73,7 +73,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
 
         $types = array_merge(
             [$this->getResourceTarget()->getType()],
-            $bag->include
+            $bag->include ?? []
         );
 
         $bag->fields = [];
@@ -97,7 +97,9 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
             unset($bag->{"fields[$type]"});
         }
 
-        // sanitize remaining fields[(.*)]
+        // this check does not go into validateParameters since
+        // fieldsets rely on include, so we have to process these.
+        // validateParameters gets called before we sanitize the fieldsets...
         $keys = $bag->keys();
         foreach ($keys as $property) {
             if (preg_match("/fields\[(.*)\]/m", $property) === 1) {
@@ -126,7 +128,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
     protected function extractIncludes(ParameterBag $bag): ParameterBag
     {
         $relList = $this->getRelatedResourceTargetTypes();
-        $includes = [];
+
         if ($bag->include) {
             $includes = explode(",", $bag->getString("include"));
 
@@ -136,9 +138,10 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
                     implode(", ", $relList) . ", was: " . $bag->getString("include")
                 );
             }
+            $bag->include = $includes;
         }
 
-        $bag->include = $includes;
+
         return $bag;
     }
 
