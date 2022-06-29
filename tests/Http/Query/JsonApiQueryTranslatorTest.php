@@ -234,6 +234,7 @@ class JsonApiQueryTranslatorTest extends TestCase
         $expected = $getExpectedParametersReflection->invokeArgs($translator, []);
 
         $this->assertEquals([
+            "include",
             "fields[entity_1]",
             "fields[entity_2]",
             "fields[entity_3]"
@@ -387,10 +388,10 @@ class JsonApiQueryTranslatorTest extends TestCase
 
 
     /**
-     * tests getIncludes()
+     * tests extractIncludes()
      * @return void
      */
-    public function testGetIncludes()
+    public function testExtractIncludes()
     {
         $bag = new ParameterBag();
 
@@ -399,24 +400,26 @@ class JsonApiQueryTranslatorTest extends TestCase
 
         $translator->expects($this->any())->method("getRelatedResourceTargetTypes")->willReturn(["entity_1", "entity_2"]);
 
-        $getIncludesReflection = $reflection->getMethod("getIncludes");
-        $getIncludesReflection->setAccessible(true);
+        $extractIncludesReflection = $reflection->getMethod("extractIncludes");
+        $extractIncludesReflection->setAccessible(true);
 
-        $this->assertSame($bag, $getIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertSame($bag, $extractIncludesReflection->invokeArgs($translator, [$bag]));
 
         $bag->include = "entity_2,entity_1";
-        $this->assertSame($bag, $getIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertSame($bag, $extractIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertEquals(["entity_2", "entity_1"], $bag->include);
 
         $bag->include = "entity_2";
-        $this->assertSame($bag, $getIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertSame($bag, $extractIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertEquals(["entity_2"], $bag->include);
     }
 
 
     /**
-     * tests testGetIncludes() with Exception
+     * tests testExtractIncludes() with Exception
      * @return void
      */
-    public function testGetIncludesWithException()
+    public function testExtractIncludesWithException()
     {
         $bag = new ParameterBag();
 
@@ -425,13 +428,13 @@ class JsonApiQueryTranslatorTest extends TestCase
 
         $translator->expects($this->any())->method("getRelatedResourceTargetTypes")->willReturn(["entity_1", "entity_2"]);
 
-        $getIncludesReflection = $reflection->getMethod("getIncludes");
-        $getIncludesReflection->setAccessible(true);
+        $extractIncludesReflection = $reflection->getMethod("extractIncludes");
+        $extractIncludesReflection->setAccessible(true);
 
         $this->expectException(InvalidQueryException::class);
 
         $bag->include = "entity_INVALID";
-        $getIncludesReflection->invokeArgs($translator, [$bag]);
+        $extractIncludesReflection->invokeArgs($translator, [$bag]);
     }
 
 
@@ -443,10 +446,10 @@ class JsonApiQueryTranslatorTest extends TestCase
     {
         $bag = new ParameterBag();
 
-        $translator = $this->getQueryTranslator(["getIncludes"]);
+        $translator = $this->getQueryTranslator(["extractIncludes"]);
         $reflection = new ReflectionClass($translator);
 
-        $translator->expects($this->once())->method("getIncludes")->willThrowException(new InvalidQueryException());
+        $translator->expects($this->once())->method("extractIncludes")->willThrowException(new InvalidQueryException());
 
         $getFieldsetsReflection = $reflection->getMethod("getFieldsets");
         $getFieldsetsReflection->setAccessible(true);
@@ -456,6 +459,27 @@ class JsonApiQueryTranslatorTest extends TestCase
         $getFieldsetsReflection->invokeArgs($translator, [$bag]);
     }
 
+
+    /**
+     * tests testGetFieldsets() with exception because of fields[TYPE] with TYPE not
+     * recognized as relationship
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testGetFieldsetsWithExceptionBecauseOfTypes()
+    {
+        $bag = new ParameterBag();
+        $bag->{"fields[Unknown]"} = "";
+
+        $translator = $this->getQueryTranslator([]);
+        $reflection = new ReflectionClass($translator);
+
+        $getFieldsetsReflection = $reflection->getMethod("getFieldsets");
+        $getFieldsetsReflection->setAccessible(true);
+
+        $this->expectExceptionMessage("\"fields[Unknown]\" was not recognized as a valid fieldset");
+        $getFieldsetsReflection->invokeArgs($translator, [$bag]);
+    }
 
     /**
      * tests testGetFieldsets()
@@ -487,7 +511,7 @@ class JsonApiQueryTranslatorTest extends TestCase
         $translator = $this->getQueryTranslator([
             "parseFields", "extractFieldOptions",
             "mapConfigToFields", "getDefaultFields",
-            "getIncludes", "getResourceTarget"
+            "extractIncludes", "getResourceTarget"
         ]);
         $reflection = new ReflectionClass($translator);
 
@@ -495,7 +519,16 @@ class JsonApiQueryTranslatorTest extends TestCase
         $resourceTarget->expects($this->exactly(2))->method("getType")->willReturn("entity");
 
         $translator->expects($this->exactly(2))->method("getResourceTarget")->willReturn($resourceTarget);
-        $translator->expects($this->exactly(2))->method("getIncludes")->willReturnOnConsecutiveCalls($bag, $bag2);
+        $translator->expects($this->exactly(2))->method("extractIncludes")->willReturnOnConsecutiveCalls(
+            $this->returnCallback(function () use ($bag) {
+                $bag->include = explode(",", $bag->include);
+                return $bag;
+            }),
+            $this->returnCallback(function () use ($bag2) {
+                $bag2->include = explode(",", $bag2->include);
+                return $bag2;
+            }),
+        );
 
         $translator->expects($this->exactly(4))->method("parseFields")->withConsecutive(
             [$bag->{"fields[entity]"}, "entity"],

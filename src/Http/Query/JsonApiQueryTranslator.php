@@ -62,17 +62,18 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      * @return ParameterBag
      *
      * @throws InvalidQueryException if the value of "include" lists relationships that
-     * are not available
+     * are not available, or if any fields[TYPE] is found where TYPE is not in the list
+     * of relationships
      *
      * @see getIncludes()
      */
     protected function getFieldsets(ParameterBag $bag): ParameterBag
     {
-        $bag = $this->getIncludes($bag);
+        $bag = $this->extractIncludes($bag);
 
         $types = array_merge(
             [$this->getResourceTarget()->getType()],
-            $bag->getString("include") ? explode(",", $bag->getString("include")) : []
+            $bag->include
         );
 
         $bag->fields = [];
@@ -93,8 +94,17 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
                     )]
             );
 
-
             unset($bag->{"fields[$type]"});
+        }
+
+        // sanitize remaining fields[(.*)]
+        $keys = $bag->keys();
+        foreach ($keys as $property) {
+            if (preg_match("/fields\[(.*)\]/m", $property) === 1) {
+                throw new InvalidQueryException(
+                    "\"$property\" was not recognized as a valid fieldset"
+                );
+            }
         }
 
         return $bag;
@@ -104,6 +114,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
     /**
      * Fills the bag with all possible includes represented by the relationships of the
      * resource object targeted by this query.
+     * Converts the comma-separated string into a list and stores it in bag->include.
      *
      * @param ParameterBag $bag
      *
@@ -112,14 +123,14 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      * @throws InvalidQueryException if the value of "include" lists relationships that
      * are not available
      */
-    protected function getIncludes(ParameterBag $bag): ParameterBag
+    protected function extractIncludes(ParameterBag $bag): ParameterBag
     {
         $relList = $this->getRelatedResourceTargetTypes();
-
+        $includes = [];
         if ($bag->include) {
-            $includes = array_flip(explode(",", $bag->getString("include")));
+            $includes = explode(",", $bag->getString("include"));
 
-            if (!ArrayUtil::hasOnly($includes, $relList)) {
+            if (!ArrayUtil::hasOnly(array_flip($includes), $relList)) {
                 throw new InvalidQueryException(
                     "parameter \"include\" must only contain one of " .
                     implode(", ", $relList) . ", was: " . $bag->getString("include")
@@ -127,6 +138,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
             }
         }
 
+        $bag->include = $includes;
         return $bag;
     }
 
@@ -224,7 +236,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      */
     protected function getExpectedParameters(): array
     {
-        $exp = [];
+        $exp = ["include"];
         $list = $this->getRelatedResourceTargetTypes(true);
         foreach ($list as $type) {
             $exp[] = "fields[$type]";
