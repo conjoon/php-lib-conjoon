@@ -61,7 +61,7 @@ abstract class QueryTranslator
      *
      * @return ResourceQuery
      *
-     * @throws InvalidQueryException
+     * @throws InvalidQueryException|InvalidQueryParameterValueException
      */
     abstract protected function translateParameters(ParameterBag $source): ResourceQuery;
 
