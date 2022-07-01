@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Http\Query;
 
 use Conjoon\Core\ParameterBag;
-use Conjoon\Http\Query\InvalidQueryParameterException;
+use Conjoon\Http\Query\InvalidQueryParameterValueException;
 use Conjoon\Http\Query\QueryTranslator;
 use Conjoon\Core\ResourceQuery;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -53,7 +53,7 @@ class QueryTranslatorTest extends TestCase
         $resourceQuery     = $this->getResourceQuery($paramBag);
 
         $translator->expects($this->once())
-                   ->method("extractParameters")
+                   ->method("getParameters")
                    ->with($parameterResource)
                    ->willReturn($parameterResource->getParameters());
 
@@ -83,13 +83,13 @@ class QueryTranslatorTest extends TestCase
      */
     public function testValidateParametersThrows()
     {
-        $this->expectException(InvalidQueryParameterException::class);
+        $this->expectException(InvalidQueryParameterValueException::class);
 
         $translator        = $this->getQueryTranslator();
         $parameterResource = $this->getParameterResource();
 
         $translator->expects($this->once())
-            ->method("extractParameters")
+            ->method("getParameters")
             ->with($parameterResource)
             ->willReturn($parameterResource->getParameters());
 

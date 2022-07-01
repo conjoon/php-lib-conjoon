@@ -32,9 +32,11 @@ namespace Tests\Conjoon\Http\Query;
 use Conjoon\Core\ParameterBag;
 use Conjoon\Http\Query\InvalidParameterResourceException;
 use Conjoon\Http\Query\InvalidQueryException;
+use Conjoon\Http\Query\InvalidQueryParameterValueException;
 use Conjoon\Http\Query\JsonApiQueryTranslator;
 use Conjoon\Http\Query\QueryTranslator;
 use Conjoon\Core\ResourceQuery;
+use Conjoon\Http\Query\UnexpectedQueryParameterException;
 use Conjoon\Http\Resource\ResourceObjectDescription;
 use Conjoon\Http\Resource\ResourceObjectDescriptionList;
 use Illuminate\Http\Request;
@@ -241,21 +243,136 @@ class JsonApiQueryTranslatorTest extends TestCase
         ], $expected);
     }
 
+
     /**
-     * Extract parameters not Request
-     * @throws ReflectionException
+     * tests validateParameters() with unexpected parameters
+     *
+     * @param array $parameters
+     * @return void
      */
-    public function testExtractParametersException()
+    public function testValidateParametersUnexpectedQueryParameterException()
     {
-        $this->expectException(InvalidParameterResourceException::class);
+        $expected = ["fields[MessageItem]", "include", "options"];
+        $parameters = ["opt" => "field.1", "fields" => "field.1"];
 
-        $translator = $this->getMockForAbstractClass(JsonApiQueryTranslator::class);
+        $translator = $this->getQueryTranslator(["getExpectedParameters", "getRelatedResourceTargetTypes"]);
         $reflection = new ReflectionClass($translator);
+        $validateParametersRefl = $reflection->getMethod("validateParameters");
+        $validateParametersRefl->setAccessible(true);
 
-        $extractParametersReflection = $reflection->getMethod("extractParameters");
-        $extractParametersReflection->setAccessible(true);
+        $translator->expects($this->once())->method("getExpectedParameters")->willReturn($expected);
 
-        $extractParametersReflection->invokeArgs($translator, ["foo"]);
+        $this->expectException(UnexpectedQueryParameterException::class);
+        $this->expectExceptionMessage("unexpected parameters \"opt\", \"fields\"");
+
+        $validateParametersRefl->invokeArgs($translator, [$parameters]);
+    }
+
+
+    /**
+     * tests validateParameters() InvalidQueryParameterValueException due to include
+     * containing unknown related resources
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function testValidateParametersInvalidQueryParameterValueExceptionInclude()
+    {
+        $expected = ["fields[MessageItem]", "include", "options"];
+        $parameters = ["include" => "Mail"];
+
+        $translator = $this->getQueryTranslator(["getExpectedParameters", "getRelatedResourceTargetTypes"]);
+        $reflection = new ReflectionClass($translator);
+        $validateParametersRefl = $reflection->getMethod("validateParameters");
+        $validateParametersRefl->setAccessible(true);
+
+        $translator->expects($this->once())->method("getExpectedParameters")->willReturn($expected);
+        $translator->expects($this->once())->method("getRelatedResourceTargetTypes")->willReturn(["MailFolder"]);
+
+        $this->expectException(InvalidQueryParameterValueException::class);
+        $this->expectExceptionMessage("parameter \"include\" must only contain one of MailFolder");
+
+        $validateParametersRefl->invokeArgs($translator, [$parameters]);
+    }
+
+
+    /**
+     * tests validateParameters() InvalidQueryParameterValueException due to fieldset specified
+     * with UNKNOWN type
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function testValidateParametersInvalidQueryParameterValueExceptionFieldset()
+    {
+        $expected = ["include", "options"];
+        $parameters = ["include" => "MailAccount", "fields[MailFolder]" => "field1,field2"];
+
+        $translator = $this->getQueryTranslator(["getExpectedParameters", "getRelatedResourceTargetTypes"]);
+        $reflection = new ReflectionClass($translator);
+        $validateParametersRefl = $reflection->getMethod("validateParameters");
+        $validateParametersRefl->setAccessible(true);
+
+        $translator->expects($this->once())->method("getExpectedParameters")->willReturn($expected);
+        $translator->expects($this->once())->method("getRelatedResourceTargetTypes")->willReturn(["MailAccount"]);
+
+        $this->expectException(InvalidQueryParameterValueException::class);
+        $this->expectExceptionMessage("\"MailFolder\" was not recognized as");
+
+        $validateParametersRefl->invokeArgs($translator, [$parameters]);
+    }
+
+
+    /**
+     * tests validateParameters() InvalidQueryParameterValueException due to fieldset specified
+     * with NOT INCLUDED type
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function testValidateParametersInvalidQueryParameterValueExceptionFieldsetNotIncludedType()
+    {
+        $expected = ["fields[MailAccount]", "include", "options"];
+        $parameters = ["fields[MailAccount]" => "field1,field2"];
+
+        $translator = $this->getQueryTranslator(["getExpectedParameters", "getRelatedResourceTargetTypes"]);
+        $reflection = new ReflectionClass($translator);
+        $validateParametersRefl = $reflection->getMethod("validateParameters");
+        $validateParametersRefl->setAccessible(true);
+
+        $translator->expects($this->once())->method("getExpectedParameters")->willReturn($expected);
+        $translator->expects($this->once())->method("getRelatedResourceTargetTypes")->willReturn(["MailAccount"]);
+
+        $this->expectException(InvalidQueryParameterValueException::class);
+        $this->expectExceptionMessage("\"MailAccount\" was not mentioned in");
+
+        $validateParametersRefl->invokeArgs($translator, [$parameters]);
+    }
+
+
+    /**
+     * tests validateParameters()
+     *
+     * @param array $parameters
+     * @return void
+     */
+    public function testValidateParameters()
+    {
+        $expected = ["fields[MailAccount]", "include", "options"];
+        $parameters = ["include" => "MailAccount", "options" => "hidePassword", "fields[MailAccount]" => "field1,field2"];
+
+        $translator = $this->getQueryTranslator(["getExpectedParameters", "getRelatedResourceTargetTypes"]);
+        $reflection = new ReflectionClass($translator);
+        $validateParametersRefl = $reflection->getMethod("validateParameters");
+        $validateParametersRefl->setAccessible(true);
+
+        $translator->expects($this->once())->method("getExpectedParameters")->willReturn($expected);
+        $translator->expects($this->once())->method("getRelatedResourceTargetTypes")->willReturn(["MailAccount"]);
+
+        $this->assertSame(
+            $parameters,
+            $validateParametersRefl->invokeArgs($translator, [$parameters])
+        );
     }
 
 
@@ -263,30 +380,51 @@ class JsonApiQueryTranslatorTest extends TestCase
      * Extract parameters not Request
      * @throws ReflectionException
      */
-    public function testExtractParameters()
+    public function testGetParametersException()
+    {
+        $this->expectException(InvalidParameterResourceException::class);
+
+        $translator = $this->getMockForAbstractClass(JsonApiQueryTranslator::class);
+        $reflection = new ReflectionClass($translator);
+
+        $getParametersReflection = $reflection->getMethod("getParameters");
+        $getParametersReflection->setAccessible(true);
+
+        $getParametersReflection->invokeArgs($translator, ["foo"]);
+    }
+
+
+    /**
+     * Extract parameters not Request
+     * @throws ReflectionException
+     */
+    public function testGetParameters()
     {
         $translator = $this->getQueryTranslator(["getExpectedParameters"]);
         $reflection = new ReflectionClass($translator);
 
-        $translator->expects($this->once())->method("getExpectedParameters")->willReturn(
-            ["limit", "filter", "start"]
-        );
-
-        $extractParametersReflection = $reflection->getMethod("extractParameters");
-        $extractParametersReflection->setAccessible(true);
+        $getParametersReflection = $reflection->getMethod("getParameters");
+        $getParametersReflection->setAccessible(true);
 
         $request = new Request([
+            "fields" => [
+                "MessageItem" => "subject"
+            ],
+            "fields[MailFolder]" => "unreadMessages",
             "limit" => 0,
             "filter" => json_encode([["property" => "id", "operator" => "in", "value" => ["1", "2", "3"]]]),
             "start" => 3,
             "foo" => "bar"]);
 
-        $extracted = $extractParametersReflection->invokeArgs($translator, [$request]);
+        $extracted = $getParametersReflection->invokeArgs($translator, [$request]);
 
         $this->assertEquals([
+            "fields[MessageItem]" => "subject",
+            "fields[MailFolder]" => "unreadMessages",
             "limit" => 0,
             "filter" => json_encode([["property" => "id", "operator" => "in", "value" => ["1", "2", "3"]]]),
-            "start" => 3
+            "start" => 3,
+            "foo" => "bar",
         ], $extracted);
     }
 
@@ -412,29 +550,9 @@ class JsonApiQueryTranslatorTest extends TestCase
         $bag->include = "entity_2";
         $this->assertSame($bag, $extractIncludesReflection->invokeArgs($translator, [$bag]));
         $this->assertEquals(["entity_2"], $bag->include);
-    }
 
-
-    /**
-     * tests testExtractIncludes() with Exception
-     * @return void
-     */
-    public function testExtractIncludesWithException()
-    {
-        $bag = new ParameterBag();
-
-        $translator = $this->getQueryTranslator(["getRelatedResourceTargetTypes"]);
-        $reflection = new ReflectionClass($translator);
-
-        $translator->expects($this->any())->method("getRelatedResourceTargetTypes")->willReturn(["entity_1", "entity_2"]);
-
-        $extractIncludesReflection = $reflection->getMethod("extractIncludes");
-        $extractIncludesReflection->setAccessible(true);
-
-        $this->expectException(InvalidQueryException::class);
-
-        $bag->include = "entity_INVALID";
-        $extractIncludesReflection->invokeArgs($translator, [$bag]);
+        $this->assertSame($bag, $extractIncludesReflection->invokeArgs($translator, [$bag]));
+        $this->assertEquals(["entity_2"], $bag->include);
     }
 
 
@@ -459,27 +577,6 @@ class JsonApiQueryTranslatorTest extends TestCase
         $getFieldsetsReflection->invokeArgs($translator, [$bag]);
     }
 
-
-    /**
-     * tests testGetFieldsets() with exception because of fields[TYPE] with TYPE not
-     * recognized as relationship
-     * @return void
-     * @throws ReflectionException
-     */
-    public function testGetFieldsetsWithExceptionBecauseOfTypes()
-    {
-        $bag = new ParameterBag();
-        $bag->{"fields[Unknown]"} = "";
-
-        $translator = $this->getQueryTranslator([]);
-        $reflection = new ReflectionClass($translator);
-
-        $getFieldsetsReflection = $reflection->getMethod("getFieldsets");
-        $getFieldsetsReflection->setAccessible(true);
-
-        $this->expectExceptionMessage("\"fields[Unknown]\" was not recognized as a valid fieldset");
-        $getFieldsetsReflection->invokeArgs($translator, [$bag]);
-    }
 
     /**
      * tests testGetFieldsets()
@@ -697,7 +794,7 @@ class JsonApiQueryTranslatorTest extends TestCase
         $translator->expects($this->never())->method("getFields");
         $translator->expects($this->once())->method("hasOnlyAllowedFields")->with(["textHtml", "subject"], "entity")->willReturn(["textHtml"]);
 
-        $this->expectException(InvalidQueryException::class);
+        $this->expectException(InvalidQueryParameterValueException::class);
         $parseFieldsReflection->invokeArgs($translator, [$bag->{"fields[entity]"}, $type]);
     }
 

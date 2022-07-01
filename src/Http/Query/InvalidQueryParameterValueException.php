@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,12 +29,14 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Http\Exception\InternalServerErrorException;
+use Conjoon\Http\Exception\BadRequestException;
 
 /**
+ * Error indicating that the value for a query parameter is not valid.
+ *
  * Class InvalidQueryParameterValueException
  * @package Conjoon\Http\Query
  */
-class InvalidParameterResourceException extends InternalServerErrorException
+class InvalidQueryParameterValueException extends BadRequestException
 {
 }

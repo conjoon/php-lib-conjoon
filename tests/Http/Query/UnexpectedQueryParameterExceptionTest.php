@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,14 +27,26 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query;
 
 use Conjoon\Http\Exception\BadRequestException;
+use Conjoon\Http\Query\UnexpectedQueryParameterException;
+use Tests\TestCase;
 
 /**
- * Class InvalidQueryParameterException
- * @package Conjoon\Http\Query
+ * Class UnexpectedQueryParameterException
+ * @package Tests\Conjoon\Mail\Client
  */
-class InvalidQueryParameterException extends BadRequestException
+class UnexpectedQueryParameterExceptionTest extends TestCase
 {
+    /**
+     * test instance
+     */
+    public function testInstance()
+    {
+
+        $exception = new UnexpectedQueryParameterException();
+
+        $this->assertInstanceOf(BadRequestException::class, $exception);
+    }
 }

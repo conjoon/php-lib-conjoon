@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -29,12 +29,13 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Http\Exception\InternalServerErrorException;
+use Conjoon\Http\Exception\BadRequestException;
 
 /**
- * Class InvalidQueryParameterValueException
+ * Error when a parameter appears in the query path that was not expected.
+ * Class UnexpectedQueryParameterException
  * @package Conjoon\Http\Query
  */
-class InvalidParameterResourceException extends InternalServerErrorException
+class UnexpectedQueryParameterException extends BadRequestException
 {
 }

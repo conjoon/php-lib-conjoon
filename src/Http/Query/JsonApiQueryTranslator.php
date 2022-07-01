@@ -60,11 +60,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      * @param ParameterBag $bag
      *
      * @return ParameterBag
-     *
-     * @throws InvalidQueryException if the value of "include" lists relationships that
-     * are not available, or if any fields[TYPE] is found where TYPE is not in the list
-     * of relationships
-     *
+     **
      * @see getIncludes()
      */
     protected function getFieldsets(ParameterBag $bag): ParameterBag
@@ -97,18 +93,6 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
             unset($bag->{"fields[$type]"});
         }
 
-        // this check does not go into validateParameters since
-        // fieldsets rely on include, so we have to process these.
-        // validateParameters gets called before we sanitize the fieldsets...
-        $keys = $bag->keys();
-        foreach ($keys as $property) {
-            if (preg_match("/fields\[(.*)\]/m", $property) === 1) {
-                throw new InvalidQueryException(
-                    "\"$property\" was not recognized as a valid fieldset"
-                );
-            }
-        }
-
         return $bag;
     }
 
@@ -116,28 +100,18 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
     /**
      * Fills the bag with all possible includes represented by the relationships of the
      * resource object targeted by this query.
-     * Converts the comma-separated string into a list and stores it in bag->include.
+     * Converts the comma-separated string into an array and stores it in bag->include.
      *
      * @param ParameterBag $bag
      *
      * @return ParameterBag
-     *
-     * @throws InvalidQueryException if the value of "include" lists relationships that
-     * are not available
      */
     protected function extractIncludes(ParameterBag $bag): ParameterBag
     {
-        $relList = $this->getRelatedResourceTargetTypes();
-
-        if ($bag->include) {
+        // check if include was already set
+        if ($bag->include && !is_array($bag->include)) {
             $includes = explode(",", $bag->getString("include"));
 
-            if (!ArrayUtil::hasOnly(array_flip($includes), $relList)) {
-                throw new InvalidQueryException(
-                    "parameter \"include\" must only contain one of " .
-                    implode(", ", $relList) . ", was: " . $bag->getString("include")
-                );
-            }
             $bag->include = $includes;
         }
 
@@ -217,17 +191,115 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
         return [];
     }
 
+
+    /**
+     * Validates the specified list of parameters against the list of
+     * expected Parameters. If there are parameters in the submitted list
+     * this translator does not expect, an exception is thrown.
+     * Will also check that fieldset specified with fields[TYPE] are checked against
+     * the list of compound resources specified with "include", which in turn
+     * is check against the list of related resource targets.
+     *
+     * @param array $parameters
+     * @return array
+     *
+     * @see #getExpectedParameters
+     *
+     * @throws InvalidQueryParameterValueException|UnexpectedQueryParameterException
+     */
+    protected function validateParameters(array $parameters): array
+    {
+        $allowed = $this->getExpectedParameters();
+
+        $regex = "/fields\[(.{1,})\]/m";
+        $spill = array_diff(array_keys($parameters), $allowed);
+
+        // process any parameters not understood first
+        $rem = array_filter($spill, fn ($val) => !preg_match($regex, $val));
+
+        if (count($rem)) {
+            throw new UnexpectedQueryParameterException(
+                "found unexpected parameters " .
+                "\"" . implode("\", \"", $rem) . "\""
+            );
+        }
+
+        // make sure includes is a subset of related resources
+        $relList = $this->getRelatedResourceTargetTypes();
+
+        $includes = $parameters["include"] ?? null;
+        $includes = $includes ? explode(",", $includes) : [];
+
+        if (!ArrayUtil::hasOnly(array_flip($includes), $relList)) {
+            throw new InvalidQueryParameterValueException(
+                "parameter \"include\" must only contain one of " .
+                implode(", ", $relList) . ", was: " . implode(",", $includes)
+            );
+        }
+
+        // finally, check the fieldsets for any TYPE not considered with include
+        foreach ($spill as $property) {
+            if (
+                preg_match_all(
+                    $regex,
+                    $property,
+                    $matches,
+                    PREG_SET_ORDER,
+                    0
+                )
+            ) {
+                throw new InvalidQueryParameterValueException(
+                    "\"{$matches[0][1]}\" was not recognized as a valid fieldset"
+                );
+            }
+        }
+
+        // ... and check if any fieldset is missing an include
+        foreach ($parameters as $property => $value) {
+            if (
+                preg_match_all(
+                    $regex,
+                    $property,
+                    $matches,
+                    PREG_SET_ORDER,
+                    0
+                )
+            ) {
+                if (!in_array($matches[0][1], $includes)) {
+                    throw new InvalidQueryParameterValueException(
+                        "fieldset type \"{$matches[0][1]}\" was not mentioned in \"include\""
+                    );
+                }
+            }
+        }
+
+        return $parameters;
+    }
+
+
     /**
      * @inheritdocs
      */
-    protected function extractParameters($parameterResource): array
+    protected function getParameters($parameterResource): array
     {
         if (!($parameterResource instanceof Request)) {
             throw new InvalidParameterResourceException(
-                "Expected \"parameterResource\" to be instance of {Illuminate::class}"
+                "Expected \"parameterResource\" to be instance of " . Request::class
             );
         }
-        return $parameterResource->only($this->getExpectedParameters());
+
+        $onlys = $parameterResource->query();
+        $fields = [];
+        // if the "fields" query parameter was already parsed as an array, this method
+        // considers it
+        if (is_array($parameterResource->get("fields"))) {
+            foreach ($parameterResource->get("fields") as $name => $value) {
+                $fields["fields[$name]"] = $value;
+            }
+        }
+        unset($onlys["fields"]);
+
+        return array_merge($onlys, $fields);
     }
 
 
@@ -313,7 +385,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
      *
      * @return string[]
      *
-     * @throws InvalidQueryException if any field was specified with the query paramater
+     * @throws InvalidQueryParameterValueException if any field was specified with the query parameter
      * that is not in the list of allowed fields for the resource object with the type $type..
      */
     protected function parseFields(?string $queryValue, string $type): array
@@ -338,7 +410,7 @@ abstract class JsonApiQueryTranslator extends QueryTranslator
         } else {
             $notAllowed = $this->hasOnlyAllowedFields($queryFields ?? [], $type);
             if (!empty($notAllowed)) {
-                throw new InvalidQueryException(
+                throw new InvalidQueryParameterValueException(
                     "parameter \"fields[$type]\" has unknown entries: " . implode(",", $notAllowed)
                 );
             }

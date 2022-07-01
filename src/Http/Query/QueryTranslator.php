@@ -67,8 +67,8 @@ abstract class QueryTranslator
 
 
     /**
-     * Extracts parameters from the specified resource and returns it as an array.
-     * This method is called internally to make sure an arbitrary resource type can be
+     * Gets the parameters from the specified resource and returns it as an array.
+     * This method is called internally and makes sure an arbitrary resource type can be
      * used for applying translation rules.
      *
      * @param $parameterResource
@@ -76,7 +76,7 @@ abstract class QueryTranslator
      *
      * @throws InvalidParameterResourceException
      */
-    abstract protected function extractParameters($parameterResource): array;
+    abstract protected function getParameters($parameterResource): array;
 
 
     /**
@@ -90,7 +90,7 @@ abstract class QueryTranslator
     public function translate($parameterResource): ResourceQuery
     {
         $parameters = $this->validateParameters(
-            $this->extractParameters($parameterResource)
+            $this->getParameters($parameterResource)
         );
 
         return $this->translateParameters(new ParameterBag($parameters));
@@ -107,7 +107,7 @@ abstract class QueryTranslator
      *
      * @see #getExpectedParameters
      *
-     * @throws InvalidQueryParameterException
+     * @throws InvalidQueryParameterValueException|UnexpectedQueryParameterException
      */
     protected function validateParameters(array $parameters): array
     {
@@ -115,7 +115,7 @@ abstract class QueryTranslator
 
         $spill = array_diff(array_keys($parameters), $allowed);
         if (count($spill) > 0) {
-            throw new InvalidQueryParameterException(
+            throw new InvalidQueryParameterValueException(
                 "found additional parameters " .
                 "\"" . implode("\", \"", $spill) . "\""
             );
