@@ -36,7 +36,7 @@ use Tests\TestCase;
 
 /**
  * Class ResourceObjectDescriptionListTest
- * @package Tests\Conjoon\ResourceObject
+ * @package Tests\Conjoon\Resource
  */
 class ResourceObjectDescriptionListTest extends TestCase
 {
