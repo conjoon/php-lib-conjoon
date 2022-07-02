@@ -81,4 +81,110 @@ abstract class ResourceObjectDescription
      * @see ResourceQuery
      */
     abstract public function getDefaultFields(): array;
+
+
+
+    /**
+     * Returns the getType() value of all of the relationships available for this
+     * resource description, along with all children of the resource object represented by
+     * an relationship.
+     *
+     * @param bool $withResourceTarget If true, returns the list including the resource
+     * target of *this* QueryTranslator
+     *
+     * @return array
+     */
+    public function getAllRelationshipTypes(
+        bool $withResourceTarget = false
+    ): array {
+        $list = $this->getAllRelationshipResourceDescriptions($withResourceTarget);
+
+        return $list->map(fn($rel) => $rel->getType());
+    }
+
+
+    /**
+     * Returns the getType() value of all the relationships available for this
+     * resource and its child relationships, in dot-notation.
+     * If this resource is A, and it has the relationships to B, which has a
+     * relationship to C and D, the following values are returned for
+     * $withResourceTarget = true
+     * <pre>
+     * A
+     * AB
+     * ABC
+     * ABD
+     * </pre>
+     * if $withResourceTarget is set to false, the following values are returned:
+     * <pre>
+     * B
+     * BC
+     * BD
+     * </pre>
+     *
+     * @param bool $withResourceTarget If true, returns the list including *this*
+     *
+     * @return array
+     */
+    public function getAllRelationshipPaths(bool $withResourceTarget = false): array
+    {
+        $tree = [];
+        $traverse = function ($resourceTarget, array $path = []) use (&$traverse, $withResourceTarget, &$tree) {
+
+            $path[] = $resourceTarget->getType();
+
+            $relationships = $resourceTarget->getRelationships();
+
+            $tree[] = $path;
+            foreach ($relationships as $child) {
+                $traverse($child, $path);
+            }
+        };
+
+        if ($withResourceTarget) {
+            $traverse($this);
+        } else {
+            foreach ($this->getRelationships() as $node) {
+                $traverse($node);
+            }
+        }
+
+        return array_map(fn ($path) => implode(".", $path), $tree);
+    }
+
+
+    /**
+     * Returns all resource object description available with all relationships spawning
+     * from the resource object target for thisinstance its related resources.
+     *
+     * @param bool $withResourceTarget If true, returns the list including the resource
+     * target of *this* QueryTranslator
+     *
+     *
+     * @return ResourceObjectDescriptionList
+     */
+    protected function getAllRelationshipResourceDescriptions(
+        $withResourceTarget = false
+    ): ResourceObjectDescriptionList {
+
+        $list = new ResourceObjectDescriptionList();
+
+        if ($withResourceTarget === true) {
+            $list[] = $this;
+        }
+
+        $traverse = function ($resourceObject) use ($list, &$traverse) {
+
+            $t = $resourceObject->getRelationships();
+
+            foreach ($t as $rel) {
+                $list[] = $rel;
+                $traverse($rel);
+            }
+        };
+
+        $traverse($this);
+
+        return $list;
+    }
 }
