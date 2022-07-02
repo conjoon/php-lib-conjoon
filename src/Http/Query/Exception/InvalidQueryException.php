@@ -27,14 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\BadRequestException;
 
 /**
  * Class InvalidQueryException
- * @package Conjoon\Http\Query
+ * @package Conjoon\Http\Query\Exception
  */
-class InvalidQueryException extends BadRequestException
+class InvalidQueryException extends QueryException
 {
 }

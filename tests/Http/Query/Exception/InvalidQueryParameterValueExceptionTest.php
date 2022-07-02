@@ -27,15 +27,26 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\BadRequestException;
+use Conjoon\Http\Query\Exception\QueryException;
+use Conjoon\Http\Query\Exception\InvalidQueryParameterValueException;
+use Tests\TestCase;
 
 /**
- * Error when a parameter appears in the query path that was not expected.
- * Class UnexpectedQueryParameterException
- * @package Conjoon\Http\Query
+ * Class InvalidQueryParameterValueExceptionTest
+ * @package Tests\Conjoon\Mail\Client
  */
-class UnexpectedQueryParameterException extends BadRequestException
+class InvalidQueryParameterValueExceptionTest extends TestCase
 {
+    /**
+     * test instance
+     */
+    public function testInstance()
+    {
+
+        $exception = new InvalidQueryParameterValueException();
+
+        $this->assertInstanceOf(QueryException::class, $exception);
+    }
 }

@@ -27,17 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\BadRequestException;
-use Conjoon\Http\Query\InvalidQueryException;
+use Conjoon\Http\Query\Exception\QueryException;
+use Conjoon\Http\Query\Exception\InvalidQueryParameterException;
 use Tests\TestCase;
 
 /**
- * Class MailClientExceptionTest
- * @package Tests\Conjoon\Mail\Client
+ * Class InvalidQueryParameterExceptionTest
+ * @package Tests\Conjoon\Http\Query\Exception
  */
-class InvalidQueryExceptionTest extends TestCase
+class InvalidQueryParameterExceptionTest extends TestCase
 {
     /**
      * test instance
@@ -45,8 +45,8 @@ class InvalidQueryExceptionTest extends TestCase
     public function testInstance()
     {
 
-        $exception = new InvalidQueryException();
+        $exception = new InvalidQueryParameterException();
 
-        $this->assertInstanceOf(BadRequestException::class, $exception);
+        $this->assertInstanceOf(QueryException::class, $exception);
     }
 }

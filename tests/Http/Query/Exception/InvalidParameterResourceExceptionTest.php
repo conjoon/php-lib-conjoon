@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,17 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\BadRequestException;
-use Conjoon\Http\Query\InvalidQueryParameterValueException;
+use Conjoon\Http\Query\Exception\QueryException;
+use Conjoon\Http\Query\Exception\InvalidParameterResourceException;
 use Tests\TestCase;
 
 /**
- * Class MailClientExceptionTest
- * @package Tests\Conjoon\Mail\Client
+ * Class InvalidParameterResourceExceptionTest
+ * @package Tests\Conjoon\Http\Query\Exception
  */
-class InvalidQueryParameterValueExceptionTest extends TestCase
+class InvalidParameterResourceExceptionTest extends TestCase
 {
     /**
      * test instance
@@ -45,8 +45,8 @@ class InvalidQueryParameterValueExceptionTest extends TestCase
     public function testInstance()
     {
 
-        $exception = new InvalidQueryParameterValueException();
+        $exception = new InvalidParameterResourceException();
 
-        $this->assertInstanceOf(BadRequestException::class, $exception);
+        $this->assertInstanceOf(QueryException::class, $exception);
     }
 }

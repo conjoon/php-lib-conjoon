@@ -27,17 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\BadRequestException;
-use Conjoon\Http\Query\UnexpectedQueryParameterException;
+use Conjoon\Http\Query\Exception\QueryException;
+use RuntimeException;
 use Tests\TestCase;
 
 /**
- * Class UnexpectedQueryParameterException
- * @package Tests\Conjoon\Mail\Client
+ * Class QueryExceptionTest
+ * @package Tests\Conjoon\Http\Query\Exception
  */
-class UnexpectedQueryParameterExceptionTest extends TestCase
+class QueryExceptionTest extends TestCase
 {
     /**
      * test instance
@@ -45,8 +45,8 @@ class UnexpectedQueryParameterExceptionTest extends TestCase
     public function testInstance()
     {
 
-        $exception = new UnexpectedQueryParameterException();
+        $exception = $this->getMockForAbstractClass(QueryException::class);
 
-        $this->assertInstanceOf(BadRequestException::class, $exception);
+        $this->assertInstanceOf(RuntimeException::class, $exception);
     }
 }

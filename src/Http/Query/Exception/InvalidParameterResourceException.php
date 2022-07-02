@@ -27,26 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Conjoon\Http\Query\Exception;
 
-use Conjoon\Http\Exception\InternalServerErrorException;
-use Conjoon\Http\Query\InvalidParameterResourceException;
-use Tests\TestCase;
 
 /**
- * Class InvalidParameterResourceExceptionTest
- * @package Tests\Conjoon\Http\Query
+ * Class InvalidQueryParameterValueException
+ * @package Conjoon\Http\Query\Exception
  */
-class InvalidParameterResourceExceptionTest extends TestCase
+class InvalidParameterResourceException extends QueryException
 {
-    /**
-     * test instance
-     */
-    public function testInstance()
-    {
-
-        $exception = new InvalidParameterResourceException();
-
-        $this->assertInstanceOf(InternalServerErrorException::class, $exception);
-    }
 }

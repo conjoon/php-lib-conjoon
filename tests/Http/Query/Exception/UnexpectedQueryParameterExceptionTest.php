@@ -27,16 +27,26 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Http\Exception\BadRequestException;
+use Conjoon\Http\Query\Exception\QueryException;
+use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
+use Tests\TestCase;
 
 /**
- * Error indicating that the value for a query parameter is not valid.
- *
- * Class InvalidQueryParameterValueException
- * @package Conjoon\Http\Query
+ * Class UnexpectedQueryParameterExceptionTest
+ * @package Tests\Conjoon\Http\Query\Exception
  */
-class InvalidQueryParameterValueException extends BadRequestException
+class UnexpectedQueryParameterExceptionTest extends TestCase
 {
+    /**
+     * test instance
+     */
+    public function testInstance()
+    {
+
+        $exception = new UnexpectedQueryParameterException();
+
+        $this->assertInstanceOf(QueryException::class, $exception);
+    }
 }
