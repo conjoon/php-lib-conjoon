@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Exception;
 
-
 /**
  * Error indicating that the value for a query parameter is not valid.
  *

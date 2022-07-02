@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Exception;
 
-
 /**
  * Class InvalidQueryException
  * @package Conjoon\Http\Query\Exception
