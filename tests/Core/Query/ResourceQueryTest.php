@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Data\ParameterBag;
 use BadMethodCallException;
-use Conjoon\Core\ResourceQuery;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Query\ResourceQuery;
+use Conjoon\Core\Contract\Jsonable;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 

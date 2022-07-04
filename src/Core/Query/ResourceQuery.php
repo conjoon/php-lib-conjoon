@@ -27,11 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core;
+namespace Conjoon\Core\Query;
 
 use BadMethodCallException;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\ParameterBag;
 
 /**
  * A ResourceQuery provides an interface for a validated and certified collection
