@@ -27,18 +27,52 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Tests\Conjoon\Core\Contract;
+
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Data\JsonStrategy;
+use Tests\TestCase;
 
 /**
- * Interface Stringable
- * @package Conjoon\Util
+ * Class JsonDecodableTest
+ * @package Tests\Conjoon\Util
  */
-interface Stringable
+class JsonDecodableTest extends TestCase
 {
+// ---------------------
+//    Tests
+// ---------------------
+
     /**
-     * Returns a string representation of this instance.
-     *
-     * @return string
+     * Tests constructor
      */
-    public function toString(): string;
+    public function testInterface()
+    {
+        $c = new class implements JsonDecodable {
+            public static function fromString(string $value): Jsonable
+            {
+                $t = new class implements Jsonable {
+                    public function toJson(JsonStrategy $strategy = null): array
+                    {
+                        return[];
+                    }
+                };
+                return new $t();
+            }
+
+            public static function fromArray(array $arr): Jsonable
+            {
+                $t = new class implements Jsonable {
+                    public function toJson(JsonStrategy $strategy = null): array
+                    {
+                        return[];
+                    }
+                };
+                return new $t();
+            }
+        };
+
+        $this->assertInstanceOf(JsonDecodable::class, $c);
+    }
 }

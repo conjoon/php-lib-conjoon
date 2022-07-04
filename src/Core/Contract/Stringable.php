@@ -27,23 +27,22 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core;
+namespace Conjoon\Core\Contract;
 
 /**
- * Interface Jsonable
- * @package Conjoon\Util
+ * @PHP8
+ * use Stringable as PHP8Stringable
  */
-interface Jsonable
+
+/**
+ * Interface Stringable.
+ */
+interface Stringable /*@PHP8 extends PHP8Stringable*/
 {
     /**
-     * Returns a JSON representation of this instance.
-     * Implementing APIs are advised to process associations related to this
-     * instance accordingly to return a proper and valid JSONed data structure.
+     * Returns a string representation of this instance.
      *
-     * @param JsonStrategy|null $strategy Allows to pass the strategy used for
-     * transforming **this** into JSON
-     *
-     * @return array
+     * @return string
      */
-    public function toJson(JsonStrategy $strategy = null): array;
+    public function toString(): string;
 }

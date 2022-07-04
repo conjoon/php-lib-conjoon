@@ -27,47 +27,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Util;
-
-use Conjoon\Core\Jsonable;
-use Tests\TestCase;
+namespace Conjoon\Core\Contract;
 
 /**
- * Class JsonableTest
- * @package Tests\Conjoon\Util
+ * Interface Copyable.
  */
-class JsonableTest extends TestCase
+interface Copyable
 {
-    protected static array $myJson = ["foo" => "bar"];
-
-// ---------------------
-//    Tests
-// ---------------------
-
     /**
-     * Tests constructor
+     * Returns a copy of this instance with no references to
+     * the origin.
+     *
+     * @return Copyable
      */
-    public function testConstructor()
-    {
-
-        $jsonable = $this->getMockForJsonable();
-        $this->assertSame(self::$myJson, $jsonable->toJson());
-    }
-
-
-
-// ---------------------
-//    Helper Functions
-// ---------------------
-
-    protected function getMockForJsonable()
-    {
-
-        $mock = $this->getMockForAbstractClass(Jsonable::class);
-        $mock->expects($this->any())
-             ->method("toJson")
-             ->will($this->returnValue(self::$myJson));
-
-        return $mock;
-    }
+    public function copy(): Copyable;
 }

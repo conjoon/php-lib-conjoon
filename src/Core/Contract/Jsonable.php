@@ -27,19 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core\Contract;
+
+use Conjoon\Core\Data\JsonStrategy;
 
 /**
- * Interface Copyable
- * @package Conjoon\Util
+ * Interface Jsonable.
  */
-interface Copyable
+interface Jsonable
 {
     /**
-     * Returns a copy of this instance with no references to
-     * the origin.
+     * Returns a JSON representation of this instance.
+     * Implementing APIs are advised to process associations related to this
+     * instance accordingly to return a proper and valid JSONed data structure.
      *
-     * @return Copyable
+     * @param JsonStrategy|null $strategy Allows to pass the strategy used for
+     * transforming **this** into JSON
+     *
+     * @return array
      */
-    public function copy(): Copyable;
+    public function toJson(JsonStrategy $strategy = null): array;
 }

@@ -27,11 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core;
+namespace Conjoon\Core\Contract;
 
 /**
- * Interface Arrayable
- * @package Conjoon\Util
+ * Interface Arrayable.
  */
 interface Arrayable
 {

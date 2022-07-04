@@ -27,13 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core\Contract;
 
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Exception\JsonDecodeException;
 
 /**
- * Interface JsonDecodable
- * @package Conjoon\Util
+ * Interface JsonDecodable.
  */
 interface JsonDecodable
 {

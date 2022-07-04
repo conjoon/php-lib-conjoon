@@ -27,19 +27,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Util;
+namespace Tests\Conjoon\Core\Contract;
 
-use Conjoon\Core\Jsonable;
-use Conjoon\Util\JsonDecodable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Jsonable;
 use Tests\TestCase;
 
 /**
- * Class JsonDecodableTest
+ * Class JsonableTest
  * @package Tests\Conjoon\Util
  */
-class JsonDecodableTest extends TestCase
+class JsonableTest extends TestCase
 {
+    protected static array $myJson = ["foo" => "bar"];
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -47,32 +47,25 @@ class JsonDecodableTest extends TestCase
     /**
      * Tests constructor
      */
-    public function testInterface()
+    public function testConstructor()
     {
-        $c = new class implements JsonDecodable {
-            public static function fromString(string $value): Jsonable
-            {
-                $t = new class implements Jsonable {
-                    public function toJson(JsonStrategy $strategy = null): array
-                    {
-                        return[];
-                    }
-                };
-                return new $t();
-            }
+        $jsonable = $this->getMockForJsonable();
+        $this->assertSame(self::$myJson, $jsonable->toJson());
+    }
 
-            public static function fromArray(array $arr): Jsonable
-            {
-                $t = new class implements Jsonable {
-                    public function toJson(JsonStrategy $strategy = null): array
-                    {
-                        return[];
-                    }
-                };
-                return new $t();
-            }
-        };
 
-        $this->assertInstanceOf(JsonDecodable::class, $c);
+
+// ---------------------
+//    Helper Functions
+// ---------------------
+
+    protected function getMockForJsonable()
+    {
+        $mock = $this->getMockForAbstractClass(Jsonable::class);
+        $mock->expects($this->any())
+             ->method("toJson")
+             ->will($this->returnValue(self::$myJson));
+
+        return $mock;
     }
 }
