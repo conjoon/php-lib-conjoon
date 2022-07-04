@@ -27,23 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Util;
+namespace Conjoon\Core\Exception;
 
-use Conjoon\Util\JsonDecodeException;
 use RuntimeException;
-use Tests\TestCase;
 
 /**
- * Class JsonDecodeExceptionTest
- * @package Tests\Conjoon\Util
+ * Error indicating that a source was not json-decodable.
  */
-class JsonDecodeExceptionTest extends TestCase
+class JsonDecodeException extends RuntimeException
 {
-    public function testInstance()
-    {
-
-        $exception = new JsonDecodeException();
-
-        $this->assertInstanceOf(RuntimeException::class, $exception);
-    }
 }

@@ -27,15 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Tests\Conjoon\Core\Exception;
 
+use Conjoon\Core\Exception\JsonDecodeException;
 use RuntimeException;
+use Tests\TestCase;
 
 /**
- * Class JsonDecodeException
- *
- * @package  Conjoon\Util
+ * Class JsonDecodeExceptionTest
+ * @package Tests\Conjoon\Util
  */
-class JsonDecodeException extends RuntimeException
+class JsonDecodeExceptionTest extends TestCase
 {
+    public function testInstance()
+    {
+
+        $exception = new JsonDecodeException();
+
+        $this->assertInstanceOf(RuntimeException::class, $exception);
+    }
 }
