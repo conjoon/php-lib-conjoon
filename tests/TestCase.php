@@ -29,12 +29,8 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use App\Exceptions\Handler;
-use Exception;
-use Illuminate\Support\Facades\Config;
-use Laravel\Lumen\Application;
-use RuntimeException;
-use Illuminate\Http\Response;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionClass;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
 
 /**
@@ -43,4 +39,34 @@ use PHPUnit\Framework\TestCase as PHPUnitTestCase;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
+    protected function createMockForAbstract(string $originalClassName, array $mockedMethods = [], array $args = []): MockObject
+    {
+        return parent::getMockForAbstractClass(
+            $originalClassName,
+            $args,
+            '',
+            true,
+            true,
+            true,
+            $mockedMethods
+        );
+    }
+
+
+    /**
+     * @param mixed $inst
+     * @param string $method
+     *
+     * @return \ReflectionMethod
+     *
+     * @throws \ReflectionException
+     */
+    protected function makeAccessible($inst, $method)
+    {
+        $refl = new ReflectionClass($inst);
+        $method = $refl->getMethod($method);
+        $method->setAccessible(true);
+
+        return $method;
+    }
 }
