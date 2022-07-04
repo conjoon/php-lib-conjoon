@@ -36,18 +36,17 @@ use Conjoon\Core\Data\ParameterBag;
 
 /**
  * A ResourceQuery provides an interface for a validated and certified collection
- * of parameters that can safely be used in the low level API.
- * The origin of the parameters is arbitrary, as long as they are available as an
- * associative array, providing key-/value pairs.
- * Any query parameters that need validation and translation should be translated by
- * a QueryTranslator which encapsulates the logic for validation and translation.
- * It then returns an instance of this class that guarantees the validity, mutually exclusivity
- * and key-/value-pair-correctness of the wrapped ParameterBag.
+ * of parameters that can safely be passed to the low level API.
+ * The origin of the parameters is arbitrary and not of interest to this class,
+ * as they are validated and sanitized before they end up with a ParameterBag in an instance
+ * of this class.
+ * Any class working with a ResourceQuery can rely on the validity, mutually exclusivity
+ * and key-/value-pair-correctness of the wrapped ParameterBag this class guarantees.
+ * Note:
  * This ResourceQuery delegates all method calls involving getters to the ParameterBag
  * using __call, including querying the properties using __get.
  *
  * Class ResourceQuery
- * @package Conjoon\Core
  */
 abstract class ResourceQuery implements Jsonable
 {
@@ -111,6 +110,6 @@ abstract class ResourceQuery implements Jsonable
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
-        return $this->parameters->toJson();
+        return $this->parameters->toJson($strategy);
     }
 }

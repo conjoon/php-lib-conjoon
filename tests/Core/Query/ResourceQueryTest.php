@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Data;
 
+use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Data\ParameterBag;
 use BadMethodCallException;
 use Conjoon\Core\Query\ResourceQuery;
@@ -37,8 +38,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 /**
- * Class ResourceQueryTest
- * @package Tests\Conjoon\Core
+ * Tests ResourceQuery
  */
 class ResourceQueryTest extends TestCase
 {
@@ -111,6 +111,29 @@ class ResourceQueryTest extends TestCase
         $this->getResourceQuery(new ParameterBag())->getSomeThing("d");
     }
 
+
+    /**
+     * tests toJson()
+     */
+    public function testToJsonWithStrategy()
+    {
+        $json = [];
+        $bag = $this
+            ->getMockBuilder(ParameterBag::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(["toJson"])->getMock();
+
+        $strategy = $this->createMockForAbstract(JsonStrategy::class);
+
+        $query = $this->getResourceQuery($bag);
+
+        $bag->expects($this->exactly(2))
+            ->method("toJson")
+            ->withConsecutive([$strategy], [null])->willReturnOnConsecutiveCalls($json, []);
+
+        $this->assertSame($json, $query->toJson($strategy));
+        $this->assertSame([], $query->toJson());
+    }
 
     /**
      * @param ParameterBag $bag
