@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 
 /**
  * Class ToJsonToArrayTestTrait.php
