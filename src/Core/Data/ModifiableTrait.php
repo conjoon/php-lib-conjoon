@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core\Data;
 
 /**
  * Trait ModifiableTrait.
@@ -62,8 +62,6 @@ namespace Conjoon\Util;
  *   $user = new User();
  *   $user->setUsername("admin"); // ;)
  *   $user->getModifiedFields();  // ["userName"]
- *
- * @package Conjoon\Util
  */
 trait ModifiableTrait
 {

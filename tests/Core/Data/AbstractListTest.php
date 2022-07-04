@@ -27,11 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Util;
+namespace Tests\Conjoon\Core\Data;
 
 use ArrayAccess;
-use Conjoon\Util\AbstractList;
-use Conjoon\Util\ArrayUtil;
+use Conjoon\Core\Data\AbstractList;
 use Countable;
 use Iterator;
 use stdClass;

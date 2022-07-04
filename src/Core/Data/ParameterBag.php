@@ -27,12 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core;
+namespace Conjoon\Core\Data;
 
-use Conjoon\Util\ArrayUtil;
 use BadMethodCallException;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Jsonable;
 
 /**
  * A ParameterBag providing object syntax for accessing array arguments and

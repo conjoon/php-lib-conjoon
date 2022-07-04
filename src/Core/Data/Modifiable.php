@@ -27,11 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core\Data;
 
 /**
- * Interface Modifiable
- * @package Conjoon\Util
+ * Interface Modifiable.
  */
 interface Modifiable
 {

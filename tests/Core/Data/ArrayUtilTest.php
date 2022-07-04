@@ -27,9 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Util;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\Util\ArrayUtil;
+use Conjoon\Core\Data\ArrayUtil;
 use InvalidArgumentException;
 use Tests\TestCase;
 

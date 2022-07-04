@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\Core\ParameterBag;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Core\Contract\Jsonable;
 use BadMethodCallException;
 use InvalidArgumentException;
 use Tests\TestCase;

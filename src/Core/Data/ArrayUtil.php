@@ -27,14 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Util;
+namespace Conjoon\Core\Data;
 
 use InvalidArgumentException;
 
 /**
- * Class ArrayUtil
- *
- * @package Conjoon\Util
+ * Class ArrayUtil.
  */
 class ArrayUtil
 {
