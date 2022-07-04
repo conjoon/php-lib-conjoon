@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,29 +27,33 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
-
-use Conjoon\Http\Json\Problem\AbstractProblem;
-use Conjoon\Http\Json\Problem\UnauthorizedProblem;
-use Conjoon\Http\Status\StatusCodes as Status;
-use Tests\TestCase;
+namespace Conjoon\JsonProblem;
 
 /**
- * Class UnauthorizedProblemTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Generic Problem representative.
+ *
+ * Class Problem
+ * @package Conjoon\Http\Json\Problem
  */
-class UnauthorizedProblemTest extends TestCase
+final class Problem extends AbstractProblem
 {
     /**
-     * test instance
+     * Problem constructor.
+     *
+     * @param int|null $status
+     * @param string|null $title
+     * @param string|null $detail
+     * @param string|null $instance
+     * @param string|null $type
      */
-    public function testInstance()
-    {
-        $problem = new UnauthorizedProblem();
-
-        $this->assertInstanceOf(AbstractProblem::class, $problem);
-
-        $this->assertSame(401, $problem->getStatus());
-        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_401], $problem->getTitle());
+    public function __construct(
+        int $status = null,
+        string $title = null,
+        string $detail = null,
+        string $instance = null,
+        string $type = null
+    ) {
+        $this->status = $status ?? $this->status;
+        parent::__construct($title, $detail, $instance, $type);
     }
 }

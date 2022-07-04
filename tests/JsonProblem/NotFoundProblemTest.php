@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,35 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
+namespace Tests\Conjoon\JsonProblem;
 
-use Conjoon\Http\Json\Problem\AbstractProblem;
-use Conjoon\Http\Json\Problem\Problem;
+use Conjoon\JsonProblem\AbstractProblem;
+use Conjoon\JsonProblem\NotFoundProblem;
+use Conjoon\Http\Status\StatusCodes as Status;
 use Tests\TestCase;
 
 /**
- * Class ProblemTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Class NotFoundProblemTest.
  */
-class ProblemTest extends TestCase
+class NotFoundProblemTest extends TestCase
 {
     /**
      * test instance
      */
     public function testInstance()
     {
-        $problem = new Problem(
-            500,
-            "title",
-            "detail",
-            "instance",
-            "type"
-        );
+        $problem = new NotFoundProblem();
+
         $this->assertInstanceOf(AbstractProblem::class, $problem);
-        $this->assertSame(500, $problem->getStatus());
-        $this->assertSame("title", $problem->getTitle());
-        $this->assertSame("detail", $problem->getDetail());
-        $this->assertSame("type", $problem->getType());
-        $this->assertSame("instance", $problem->getInstance());
+
+        $this->assertSame(404, $problem->getStatus());
+        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_404], $problem->getTitle());
     }
 }

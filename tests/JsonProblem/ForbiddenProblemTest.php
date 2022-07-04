@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,24 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Tests\Conjoon\JsonProblem;
 
+use Conjoon\JsonProblem\AbstractProblem;
+use Conjoon\JsonProblem\ForbiddenProblem;
 use Conjoon\Http\Status\StatusCodes as Status;
+use Tests\TestCase;
 
 /**
- * Class MethodNotAllowedProblem
- * @package Conjoon\Http\Json\Problem
+ * Class ForbiddenProblemTest.
  */
-final class MethodNotAllowedProblem extends AbstractProblem
+class ForbiddenProblemTest extends TestCase
 {
     /**
-     * @var int|null
+     * test instance
      */
-    protected ?int $status = Status::HTTP_405;
+    public function testInstance()
+    {
+        $problem = new ForbiddenProblem();
 
+        $this->assertInstanceOf(AbstractProblem::class, $problem);
 
-    /**
-     * @var string|mixed
-     */
-    protected string $title = Status::HTTP_STATUS[Status::HTTP_405];
+        $this->assertSame(403, $problem->getStatus());
+        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_403], $problem->getTitle());
+    }
 }

@@ -27,29 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
+namespace Tests\Conjoon\JsonProblem;
 
-use Conjoon\Http\Json\Problem\MethodNotAllowedProblem;
-use Conjoon\Http\Json\Problem\AbstractProblem;
+use Conjoon\JsonProblem\InternalServerErrorProblem;
+use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Http\Status\StatusCodes as Status;
 use Tests\TestCase;
 
 /**
- * Class MethodNotAllowedProblemTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Class InternalServerErrorProblem.
  */
-class MethodNotAllowedProblemTest extends TestCase
+class InternalServerErrorProblemTest extends TestCase
 {
     /**
      * test instance
      */
     public function testInstance()
     {
-        $problem = new MethodNotAllowedProblem();
+        $problem = new InternalServerErrorProblem();
 
         $this->assertInstanceOf(AbstractProblem::class, $problem);
 
-        $this->assertSame(405, $problem->getStatus());
-        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_405], $problem->getTitle());
+        $this->assertSame(500, $problem->getStatus());
+        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_500], $problem->getTitle());
     }
 }

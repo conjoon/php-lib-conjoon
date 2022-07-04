@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,29 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
 
-use Conjoon\Http\Json\Problem\BadRequestProblem;
-use Conjoon\Http\Json\Problem\AbstractProblem;
 use Conjoon\Http\Status\StatusCodes as Status;
-use Tests\TestCase;
 
 /**
- * Class BadRequestProblemTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Class BadRequestProblem
+ * @package Conjoon\Http\Json\Problem
  */
-class BadRequestProblemTest extends TestCase
+final class NotFoundProblem extends AbstractProblem
 {
     /**
-     * test instance
+     * @var int|null
      */
-    public function testInstance()
-    {
-        $problem = new BadRequestProblem();
+    protected ?int $status = Status::HTTP_404;
 
-        $this->assertInstanceOf(AbstractProblem::class, $problem);
 
-        $this->assertSame(400, $problem->getStatus());
-        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_400], $problem->getTitle());
-    }
+    /**
+     * @var string|mixed
+     */
+    protected string $title = Status::HTTP_STATUS[Status::HTTP_404];
 }

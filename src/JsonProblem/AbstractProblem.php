@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
 
 use BadMethodCallException;
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 
 /**
  * Abstract base class for representatives according to rfc7807.

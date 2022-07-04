@@ -27,24 +27,34 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Tests\Conjoon\JsonProblem;
 
-use Conjoon\Http\Status\StatusCodes as Status;
+use Conjoon\JsonProblem\AbstractProblem;
+use Conjoon\JsonProblem\Problem;
+use Tests\TestCase;
 
 /**
- * Class BadRequestProblem
- * @package Conjoon\Http\Json\Problem
+ * Class ProblemTest.
  */
-final class BadRequestProblem extends AbstractProblem
+class ProblemTest extends TestCase
 {
     /**
-     * @var int|null
+     * test instance
      */
-    protected ?int $status = Status::HTTP_400;
-
-
-    /**
-     * @var string|mixed
-     */
-    protected string $title = Status::HTTP_STATUS[Status::HTTP_400];
+    public function testInstance()
+    {
+        $problem = new Problem(
+            500,
+            "title",
+            "detail",
+            "instance",
+            "type"
+        );
+        $this->assertInstanceOf(AbstractProblem::class, $problem);
+        $this->assertSame(500, $problem->getStatus());
+        $this->assertSame("title", $problem->getTitle());
+        $this->assertSame("detail", $problem->getDetail());
+        $this->assertSame("type", $problem->getType());
+        $this->assertSame("instance", $problem->getInstance());
+    }
 }

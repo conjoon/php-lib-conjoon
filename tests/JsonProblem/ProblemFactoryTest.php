@@ -27,21 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
+namespace Tests\Conjoon\JsonProblem;
 
-use Conjoon\Http\Json\Problem\ForbiddenProblem;
-use Conjoon\Http\Json\Problem\InternalServerErrorProblem;
-use Conjoon\Http\Json\Problem\NotFoundProblem;
-use Conjoon\Http\Json\Problem\Problem;
-use Conjoon\Http\Json\Problem\BadRequestProblem;
-use Conjoon\Http\Json\Problem\MethodNotAllowedProblem;
-use Conjoon\Http\Json\Problem\ProblemFactory;
-use Conjoon\Http\Json\Problem\UnauthorizedProblem;
+use Conjoon\JsonProblem\ForbiddenProblem;
+use Conjoon\JsonProblem\InternalServerErrorProblem;
+use Conjoon\JsonProblem\NotFoundProblem;
+use Conjoon\JsonProblem\Problem;
+use Conjoon\JsonProblem\BadRequestProblem;
+use Conjoon\JsonProblem\MethodNotAllowedProblem;
+use Conjoon\JsonProblem\ProblemFactory;
+use Conjoon\JsonProblem\UnauthorizedProblem;
 use Tests\TestCase;
 
 /**
- * Class ProblemFactoryTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Class ProblemFactoryTest.
  */
 class ProblemFactoryTest extends TestCase
 {

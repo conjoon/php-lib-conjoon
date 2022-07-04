@@ -27,33 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
+
+use Conjoon\Http\Status\StatusCodes as Status;
 
 /**
- * Generic Problem representative.
- *
- * Class Problem
+ * Class MethodNotAllowedProblem
  * @package Conjoon\Http\Json\Problem
  */
-final class Problem extends AbstractProblem
+final class MethodNotAllowedProblem extends AbstractProblem
 {
     /**
-     * Problem constructor.
-     *
-     * @param int|null $status
-     * @param string|null $title
-     * @param string|null $detail
-     * @param string|null $instance
-     * @param string|null $type
+     * @var int|null
      */
-    public function __construct(
-        int $status = null,
-        string $title = null,
-        string $detail = null,
-        string $instance = null,
-        string $type = null
-    ) {
-        $this->status = $status ?? $this->status;
-        parent::__construct($title, $detail, $instance, $type);
-    }
+    protected ?int $status = Status::HTTP_405;
+
+
+    /**
+     * @var string|mixed
+     */
+    protected string $title = Status::HTTP_STATUS[Status::HTTP_405];
 }

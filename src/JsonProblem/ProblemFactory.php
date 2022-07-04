@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
 
 use Conjoon\Http\Status\StatusCodes as Status;
 

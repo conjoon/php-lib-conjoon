@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,24 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
 
 use Conjoon\Http\Status\StatusCodes as Status;
 
 /**
- * Class InternalServerErrorProblem
+ * Class UnauthorizedProblem
  * @package Conjoon\Http\Json\Problem
  */
-final class InternalServerErrorProblem extends AbstractProblem
+final class UnauthorizedProblem extends AbstractProblem
 {
     /**
      * @var int|null
      */
-    protected ?int $status = Status::HTTP_500;
+    protected ?int $status = Status::HTTP_401;
 
 
     /**
      * @var string|mixed
      */
-    protected string $title = Status::HTTP_STATUS[Status::HTTP_500];
+    protected string $title = Status::HTTP_STATUS[Status::HTTP_401];
 }

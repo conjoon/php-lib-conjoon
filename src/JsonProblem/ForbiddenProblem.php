@@ -27,29 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Json\Problem;
+namespace Conjoon\JsonProblem;
 
-use Conjoon\Http\Json\Problem\AbstractProblem;
-use Conjoon\Http\Json\Problem\NotFoundProblem;
 use Conjoon\Http\Status\StatusCodes as Status;
-use Tests\TestCase;
 
 /**
- * Class NotFoundProblemTest
- * @package Tests\Conjoon\Http\Json\Problem
+ * Class ForbiddenProblem
+ * @package Conjoon\Http\Json\Problem
  */
-class NotFoundProblemTest extends TestCase
+final class ForbiddenProblem extends AbstractProblem
 {
     /**
-     * test instance
+     * @var int|null
      */
-    public function testInstance()
-    {
-        $problem = new NotFoundProblem();
+    protected ?int $status = Status::HTTP_403;
 
-        $this->assertInstanceOf(AbstractProblem::class, $problem);
 
-        $this->assertSame(404, $problem->getStatus());
-        $this->assertSame(Status::HTTP_STATUS[Status::HTTP_404], $problem->getTitle());
-    }
+    /**
+     * @var string|mixed
+     */
+    protected string $title = Status::HTTP_STATUS[Status::HTTP_403];
 }
