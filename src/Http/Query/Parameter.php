@@ -29,47 +29,36 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Http\Query\Exception\QueryException;
+use Conjoon\Core\Error\ErrorSource;
 
 /**
- * Class QueryParameter
- * @package Conjoon\Http\Query
+ * Class QueryParameter represents the Parameter of a Query.
  */
-abstract class QueryParameter
+final class Parameter implements ErrorSource
 {
     /**
-     * @var string|null
+     * @var string
      */
-    protected ?string $rawValue;
+    private string $value;
 
     /**
-     * @var string|null
+     * @var string
      */
-    protected $value;
+    private string $name;
 
 
     /**
      * @param string|null $value
      */
-    public function __construct(?string $value)
+    public function __construct(string $name, string $value)
     {
-        $this->rawValue = $value;
-        $this->value    = $value;
+        $this->name  = $name;
+        $this->value = $value;
     }
 
-    /**
-     * Returns the original parameters value with which this instance was created.
-     *
-     * @return string|null
-     */
-    public function getRawValue()
-    {
-        return $this->rawValue;
-    }
 
     /**
-     * Returns the value of this Parameter, which might be different than the
-     * original value for which this instance was created. (@see #rawValue)
+     * Returns the value this Parameter was created with.
      *
      * @return string|null
      */
@@ -78,26 +67,29 @@ abstract class QueryParameter
         return $this->value;
     }
 
+
     /**
      * Textual representation of this parameter's name.
      * @return string
      */
-    abstract public function getName(): string;
-
+    public function getName(): string
+    {
+        return $this->name;
+    }
 
     /**
-     * Processes this parameter's value and assigns the $processor's return value
-     * to #value.
-     *
-     * @param QueryParameterProcessor $processor
-     * @return void
-     *
-     * @throws QueryException
+     * @inheritdoc
      */
-    public function validate(QueryParameterProcessor $processor): QueryParameter
+    public function getSource(): object
     {
-        $this->value = $processor->process($this);
-
         return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(): string
+    {
+        return $this->getName() . "=" . $this->getValue();
     }
 }
