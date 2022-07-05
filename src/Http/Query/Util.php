@@ -34,7 +34,6 @@ namespace Conjoon\Http\Query;
  */
 final class Util
 {
-
     /**
      * @const GROUP_REGEX
      */
