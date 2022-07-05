@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Exception;
 
-use Conjoon\Core\Exception\ UnexpectedTypeException;
+use Conjoon\Core\Exception\UnexpectedTypeException;
 use RuntimeException;
 use Tests\TestCase;
 
