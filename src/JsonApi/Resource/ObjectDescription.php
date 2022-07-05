@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Resource;
+namespace Conjoon\JsonApi\Resource;
 
 /**
  * Description for a Resource Object that can be used by servers and clients
@@ -35,7 +35,7 @@ namespace Conjoon\Http\Resource;
  * are request from the server.
  *
  */
-abstract class ResourceObjectDescription
+abstract class ObjectDescription
 {
     /**
      * Returns the type of this entity used as an identifier with clients and
@@ -49,9 +49,9 @@ abstract class ResourceObjectDescription
     /**
      * Returns all relationships of the resource object described by this class.
      *
-     * @return ResourceObjectDescriptionList
+     * @return ObjectDescriptionList
      */
-    abstract public function getRelationships(): ResourceObjectDescriptionList;
+    abstract public function getRelationships(): ObjectDescriptionList;
 
 
     /**
@@ -83,14 +83,13 @@ abstract class ResourceObjectDescription
     abstract public function getDefaultFields(): array;
 
 
-
     /**
      * Returns the getType() value of all of the relationships available for this
      * resource description, along with all children of the resource object represented by
      * an relationship.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
-     * target of *this* QueryTranslator
+     * *this* ObjectDescription describes
      *
      * @return array
      */
@@ -158,16 +157,16 @@ abstract class ResourceObjectDescription
      * from the resource object target for thisinstance its related resources.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
-     * target of *this* QueryTranslator
+     * *this* ObjectDescription describes
      *
      *
-     * @return ResourceObjectDescriptionList
+     * @return ObjectDescriptionList
      */
     protected function getAllRelationshipResourceDescriptions(
         $withResourceTarget = false
-    ): ResourceObjectDescriptionList {
+    ): ObjectDescriptionList {
 
-        $list = new ResourceObjectDescriptionList();
+        $list = new ObjectDescriptionList();
 
         if ($withResourceTarget === true) {
             $list[] = $this;

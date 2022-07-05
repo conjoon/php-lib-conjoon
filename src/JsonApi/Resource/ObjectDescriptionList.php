@@ -27,27 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Resource;
+namespace Conjoon\JsonApi\Resource;
 
-use Conjoon\Http\Resource\ResourceObjectDescription;
-use Conjoon\Http\Resource\ResourceObjectDescriptionList;
-use Conjoon\Util\AbstractList;
-use Tests\TestCase;
+use Conjoon\Core\Data\AbstractList;
 
 /**
- * Class ResourceObjectDescriptionListTest
- * @package Tests\Conjoon\Resource
+ * An abstract list maintaining entities of the type ObjectDescription.
  */
-class ResourceObjectDescriptionListTest extends TestCase
+class ObjectDescriptionList extends AbstractList
 {
     /**
-     * Class functionality
+     * @return string
      */
-    public function testClass()
+    public function getEntityType(): string
     {
-        $list = new ResourceObjectDescriptionList();
-
-        $this->assertInstanceOf(AbstractList::class, $list);
-        $this->assertSame(ResourceObjectDescription::class, $list->getEntityType());
+        return ObjectDescription::class;
     }
 }

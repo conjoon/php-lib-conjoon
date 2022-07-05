@@ -27,28 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Resource;
+namespace Tests\Conjoon\JsonApi\Resource;
 
-use Conjoon\Http\Resource\ResourceObjectDescription;
-use Conjoon\Http\Resource\ResourceObjectDescriptionList;
+use Conjoon\JsonApi\Resource\ObjectDescription;
+use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
- * Class ResourceObjectDescriptionTest
- * @package Tests\Conjoon\Resource
+ * Tests ObjectDescription
  */
-class ResourceObjectDescriptionTest extends TestCase
+class ObjectDescriptionTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $resource = $this->getResourceObjectDescriptionMock();
+        $resource = $this->getObjectDescriptionMock();
 
-        $this->assertInstanceOf(ResourceObjectDescription::class, $resource);
+        $this->assertInstanceOf(ObjectDescription::class, $resource);
     }
 
 
@@ -59,21 +59,21 @@ class ResourceObjectDescriptionTest extends TestCase
      */
     public function testGetAllRelationshipTypes()
     {
-        $translator = $this->getResourceObjectDescriptionMock(["getAllRelationshipResourceDescriptions"]);
+        $translator = $this->getObjectDescriptionMock(["getAllRelationshipResourceDescriptions"]);
         $reflection = new ReflectionClass($translator);
 
-        $resourceTarget = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget->expects($this->exactly(1))->method("getType")->willReturn("entity");
-        $resourceTarget_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1->expects($this->exactly(2))->method("getType")->willReturn("entity_1");
-        $resourceTarget_2 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_2 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_2->expects($this->exactly(2))->method("getType")->willReturn("entity_2");
 
-        $relationships1 = new ResourceObjectDescriptionList();
+        $relationships1 = new ObjectDescriptionList();
         $relationships1[] = $resourceTarget_1;
         $relationships1[] = $resourceTarget_2;
 
-        $relationships2 = new ResourceObjectDescriptionList();
+        $relationships2 = new ObjectDescriptionList();
         $relationships2[] = $resourceTarget;
         $relationships2[] = $resourceTarget_1;
         $relationships2[] = $resourceTarget_2;
@@ -108,9 +108,9 @@ class ResourceObjectDescriptionTest extends TestCase
      */
     public function testGetAllRelationshipPaths()
     {
-        $relationships = new ResourceObjectDescriptionList();
+        $relationships = new ObjectDescriptionList();
 
-        $resourceTarget = $this->getResourceObjectDescriptionMock([
+        $resourceTarget = $this->getObjectDescriptionMock([
             "getRelationships",
             "getAllRelationshipResourceDescriptions"
         ]);
@@ -119,27 +119,27 @@ class ResourceObjectDescriptionTest extends TestCase
         $reflection = new ReflectionClass($resourceTarget);
 
 
-        $relationships_1 = new ResourceObjectDescriptionList();
-        $relationships_1_1 = new ResourceObjectDescriptionList();
-        $relationships_1_2 = new ResourceObjectDescriptionList();
+        $relationships_1 = new ObjectDescriptionList();
+        $relationships_1_1 = new ObjectDescriptionList();
+        $relationships_1_2 = new ObjectDescriptionList();
 
 
-        $resourceTarget_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1->expects($this->any())->method("getType")->willReturn("entity_1");
         $resourceTarget_1->expects($this->any())->method("getRelationships")->willReturn($relationships_1);
 
-        $resourceTarget_1_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_1 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1_1->expects($this->any())->method("getType")->willReturn("entity_1_1");
         $resourceTarget_1_1->expects($this->any())->method("getRelationships")->willReturn($relationships_1_1);
 
-        $resourceTarget_1_2 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_2 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1_2->expects($this->any())->method("getType")->willReturn("entity_1_2");
         $resourceTarget_1_2->expects($this->any())->method("getRelationships")->willReturn($relationships_1_2);
 
-        $resourceTarget_1_1_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_1_1 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1_1_1->expects($this->any())->method("getType")->willReturn("entity_1_1_1");
 
-        $resourceTarget_1_2_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_2_1 = $this->getObjectDescriptionMock(["getRelationships"]);
         $resourceTarget_1_2_1->expects($this->any())->method("getType")->willReturn("entity_1_2_1");
 
         $relationships[] = $resourceTarget_1;
@@ -190,22 +190,22 @@ class ResourceObjectDescriptionTest extends TestCase
      */
     public function testGetAllRelationshipResourceDescriptions(): void
     {
-        $resourceTarget = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget = $this->getObjectDescriptionMock(["getRelationships"]);
         $reflection = new ReflectionClass($resourceTarget);
 
-        $resourceTarget_1_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
-        $resourceTarget_1_2 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
-        $resourceTarget_2_1 = $this->getResourceObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_1 = $this->getObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_2 = $this->getObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_2_1 = $this->getObjectDescriptionMock(["getRelationships"]);
 
-        $relationships = new ResourceObjectDescriptionList();
+        $relationships = new ObjectDescriptionList();
         $relationships[] = $resourceTarget_1_1;
         $relationships[] = $resourceTarget_1_2;
 
-        $relationships_1_1 = new ResourceObjectDescriptionList();
+        $relationships_1_1 = new ObjectDescriptionList();
         $relationships_1_1[] = $resourceTarget_2_1;
 
-        $relationships_1_2 = new ResourceObjectDescriptionList();
-        $relationships_2_1 = new ResourceObjectDescriptionList();
+        $relationships_1_2 = new ObjectDescriptionList();
+        $relationships_2_1 = new ObjectDescriptionList();
 
         $callTimes = 2;
 
@@ -251,15 +251,10 @@ class ResourceObjectDescriptionTest extends TestCase
      * @param array $methods
      * @return MockObject
      */
-    protected function getResourceObjectDescriptionMock(array $methods = []): MockObject
+    protected function getObjectDescriptionMock(array $methods = []): MockObject
     {
-        return $this->getMockForAbstractClass(
-            ResourceObjectDescription::class,
-            [],
-            '',
-            true,
-            true,
-            true,
+        return $this->createMockForAbstract(
+            ObjectDescription::class,
             $methods
         );
     }
