@@ -42,12 +42,12 @@ interface Validator
      * Validates the specified Object
      *
      * @param Object $obj
-     * @param Errors $errors
+     * @param ValidationErrors $errors
      *
      * @return void
      *
      * @throws UnexpectedTypeException if the concrete validator expected another
      * type with $obj for validating
      */
-    public function validate(object $obj, Errors $errors): void;
+    public function validate(object $obj, ValidationErrors $errors): void;
 }
