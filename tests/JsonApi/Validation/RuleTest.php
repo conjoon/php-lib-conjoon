@@ -65,7 +65,7 @@ class RuleTest extends TestCase
     /**
      * test isValid() delegating to validate
      */
-    public function testisValid()
+    public function testIsValid()
     {
         $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
         $errors = new ValidationErrors();

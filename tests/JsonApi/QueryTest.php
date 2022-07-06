@@ -37,7 +37,7 @@ use Conjoon\Http\Query\Parameter;
 use Tests\TestCase;
 
 /**
- * Tests JsonApi's Query implemetation.
+ * Tests JsonApi's Query implementation.
  */
 class QueryTest extends TestCase
 {
