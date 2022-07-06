@@ -39,7 +39,7 @@ use Conjoon\JsonApi\Resource\ObjectDescription;
  * described by  ObjectDescription.
  *
  */
-final class Query implements HttpQuery
+class Query implements HttpQuery
 {
     /**
      * @var HttpQuery $query
