@@ -43,7 +43,7 @@ class IncludeParameterRule extends Rule
     /**
      * @inheritdoc
      */
-    public function validate(Query $query, ValidationErrors $errors): bool
+    protected function validate(Query $query, ValidationErrors $errors): bool
     {
         $parameter = $query->getParameter("include");
 
