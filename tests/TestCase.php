@@ -65,7 +65,7 @@ abstract class TestCase extends PHPUnitTestCase
      *
      * @throws ReflectionException
      */
-    protected function makeAccessible($inst, $name, bool $isProperty)
+    protected function makeAccessible($inst, $name, bool $isProperty = false)
     {
         $refl = new ReflectionClass($inst);
 
