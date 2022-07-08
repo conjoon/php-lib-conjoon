@@ -1,7 +1,6 @@
 <?php
 
 /**
- * conjoon
  * php-lib-conjoon
  * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
@@ -27,52 +26,29 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi;
+namespace Conjoon\JsonApi\Validation;
 
 use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\Rule as ValidationRule;
+use Conjoon\Http\Query\Validation\QueryRule as HttpQueryRule;
 use Conjoon\Core\Validation\ValidationErrors;
-use Conjoon\JsonApi\Query as JsonApiQuery;
-use Conjoon\JsonApi\Validation\Rule;
-use stdClass;
-use Tests\TestCase;
+use Conjoon\JsonApi\Query;
 
 /**
- * Tests JsonApi's Rule implementation.
+ * Rule specific for JsonApi.
  */
-class RuleTest extends TestCase
+abstract class QueryRule extends HttpQueryRule
 {
     /**
-     * Class functionality
+     * @inheritdoc
+     *
+     * @see validate()
      */
-    public function testClass()
+    final public function isValid(object $obj, ValidationErrors $errors): bool
     {
-        $rule = $this->createMockForAbstract(Rule::class);
-        $this->assertInstanceOf(ValidationRule::class, $rule);
-    }
+        if (!$obj instanceof Query) {
+            throw new UnexpectedTypeException();
+        }
 
-    /**
-     * test isValid() throwing UnexpectedTypeException
-     */
-    public function testisValidWithUnexpectedTypeException()
-    {
-        $rule = $this->createMockForAbstract(Rule::class);
-        $this->expectException(UnexpectedTypeException::class);
-
-        $rule->isValid(new stdClass(), new ValidationErrors());
-    }
-
-    /**
-     * test isValid() delegating to validate
-     */
-    public function testIsValid()
-    {
-        $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
-        $errors = new ValidationErrors();
-
-        $rule = $this->createMockForAbstract(Rule::class, ["validate"]);
-        $rule->expects($this->once())->method("validate")->with($query, $errors)->willReturn(true);
-
-        $this->assertSame(true, $rule->isValid($query, $errors));
+        return $this->validate($obj, $errors);
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * conjoon
  * php-lib-conjoon
  * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
@@ -26,40 +27,52 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Validation;
+namespace Tests\Conjoon\Http\Query\Validation;
 
 use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\Rule as ValidationRule;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query;
+use Conjoon\Http\Query\Validation\QueryRule as HttpQueryRule;
+use Conjoon\JsonApi\Validation\QueryRule;
+use stdClass;
+use Tests\TestCase;
 
 /**
- * Rule specific for JsonApi.
+ * Tests JsonApi's QueryRule implementation.
  */
-abstract class Rule implements ValidationRule
+class QueryRuleTest extends TestCase
 {
     /**
-     * @inheritdoc
-     *
-     * @see validate()
+     * Class functionality
      */
-    final public function isValid(object $obj, ValidationErrors $errors): bool
+    public function testClass()
     {
-        if (!$obj instanceof Query) {
-            throw new UnexpectedTypeException();
-        }
-
-        return $this->validate($obj, $errors);
+        $rule = $this->createMockForAbstract(QueryRule::class);
+        $this->assertInstanceOf(HttpQueryRule::class, $rule);
     }
 
     /**
-     * Contract for validating the passed JsonApiQuery or parts of it.
-     * Delegated from isValid.
-     *
-     * @param Query $query
-     * @param ValidationErrors $errors
-     *
-     * @return bool true if validation succeeded, otherwise false
+     * test isValid() throwing UnexpectedTypeException
      */
-    abstract protected function validate(Query $query, ValidationErrors $errors): bool;
+    public function testisValidWithUnexpectedTypeException()
+    {
+        $rule = $this->createMockForAbstract(QueryRule::class);
+        $this->expectException(UnexpectedTypeException::class);
+
+        $rule->isValid(new stdClass(), new ValidationErrors());
+    }
+
+    /**
+     * test isValid() delegating to validate
+     */
+    public function testIsValid()
+    {
+        $query = $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock();
+        $errors = new ValidationErrors();
+
+        $rule = $this->createMockForAbstract(QueryRule::class, ["validate"]);
+        $rule->expects($this->once())->method("validate")->with($query, $errors)->willReturn(true);
+
+        $this->assertSame(true, $rule->isValid($query, $errors));
+    }
 }
