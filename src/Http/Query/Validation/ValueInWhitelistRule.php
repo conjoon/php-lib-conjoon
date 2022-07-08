@@ -41,12 +41,12 @@ class ValueInWhitelistRule extends ParameterRule
     /**
      * @var array
      */
-    private array $whitelist;
+    protected array $whitelist;
 
     /**
      * @var string
      */
-    private string $parameterName;
+    protected string $parameterName;
 
 
     /**
