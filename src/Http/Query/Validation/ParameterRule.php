@@ -78,5 +78,5 @@ abstract class ParameterRule implements ValidationRule
      *
      * @return bool
      */
-    abstract protected function shouldValidateParameter(Parameter $parameter): bool;
+    abstract public function shouldValidateParameter(Parameter $parameter): bool;
 }
