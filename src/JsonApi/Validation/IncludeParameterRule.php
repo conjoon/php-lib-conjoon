@@ -39,7 +39,7 @@ use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
  *
  * Validates include-parameter values in the form of Resource[.RelationShipResource]
  */
-class IncludeParameterQueryRule extends ValueInWhitelistRule
+class IncludeParameterRule extends ValueInWhitelistRule
 {
     /**
      * @inheritdoc

@@ -34,20 +34,20 @@ use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
 use Conjoon\JsonApi\Query as JsonApiQuery;
 use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Validation\IncludeParameterQueryRule;
+use Conjoon\JsonApi\Validation\IncludeParameterRule;
 use Tests\TestCase;
 
 /**
- * Tests IncludeParameterQueryRule
+ * Tests IncludeParameterRule
  */
-class IncludeParameterQueryRuleTest extends TestCase
+class IncludeParameterRuleTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $this->assertInstanceOf(ValueInWhitelistRule::class, $rule);
     }
 
@@ -57,7 +57,7 @@ class IncludeParameterQueryRuleTest extends TestCase
      */
     public function testMerge()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $merge = $this->makeAccessible($rule, "merge");
 
         $tests = [
@@ -117,7 +117,7 @@ class IncludeParameterQueryRuleTest extends TestCase
      */
     public function testParameterName()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $parameterName = $this->makeAccessible($rule, "parameterName", true);
         $this->assertSame("include", $parameterName->getValue($rule));
     }
@@ -128,7 +128,7 @@ class IncludeParameterQueryRuleTest extends TestCase
      */
     public function testParse()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $merge = $this->makeAccessible($rule, "parse");
 
         $this->assertEquals(
@@ -148,7 +148,7 @@ class IncludeParameterQueryRuleTest extends TestCase
      */
     public function testUnfold()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $unfold = $this->makeAccessible($rule, "unfold");
 
         $includes = [
@@ -169,7 +169,7 @@ class IncludeParameterQueryRuleTest extends TestCase
      */
     public function testIsParameterValueValid()
     {
-        $rule = new IncludeParameterQueryRule([]);
+        $rule = new IncludeParameterRule([]);
         $isParameterValueValid = $this->makeAccessible($rule, "isParameterValueValid");
 
         $parameter = new Parameter("include", "MailFolder,MailFolder.MailAccount");
