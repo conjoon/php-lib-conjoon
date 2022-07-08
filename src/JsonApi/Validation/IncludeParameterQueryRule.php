@@ -29,37 +29,34 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Validation;
 
 use Conjoon\Core\Data\ArrayUtil;
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\JsonApi\Query;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
 
 /**
  * Class providing functionality for making sure a query's include parameter contains only valid
  * resource objects according to the relationships available with the resource target
  * of the query.
+ *
+ * Validates include-parameter values in the form of Resource[.RelationShipResource]
  */
-class IncludeParameterRule extends Rule
+class IncludeParameterQueryRule extends ValueInWhitelistRule
 {
     /**
      * @inheritdoc
      */
-    protected function validate(Query $query, ValidationErrors $errors): bool
+    public function __construct(array $whitelist)
     {
-        $parameter = $query->getParameter("include");
+        parent::__construct("include", $whitelist);
+    }
 
-        $includes = $this->merge($this->parse($parameter->getValue()));
-        $relList = $query->getResourceTarget()->getAllRelationshipPaths();
-        if (!ArrayUtil::hasOnly(array_flip($includes), $relList)) {
-            $errors[] = new ValidationError(
-                $parameter,
-                "parameter \"include\" must only contain one of " .
-                implode(", ", $relList) . ", was: " . implode(",", $includes),
-                400
-            );
-            return false;
-        }
 
-        return true;
+    /**
+     * @inheritdoc
+     */
+    protected function isParameterValueValid(Parameter $parameter, $whitelist): bool
+    {
+        $source = $this->merge($this->parse($parameter->getValue()));
+        return ArrayUtil::hasOnly(array_flip($source), $whitelist);
     }
 
 

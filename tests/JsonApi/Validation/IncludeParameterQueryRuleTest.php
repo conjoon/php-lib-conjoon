@@ -31,24 +31,24 @@ namespace Tests\Conjoon\JsonApi\Validation;
 
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
 use Conjoon\JsonApi\Query as JsonApiQuery;
 use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Validation\IncludeParameterRule;
-use Conjoon\JsonApi\Validation\Rule;
+use Conjoon\JsonApi\Validation\IncludeParameterQueryRule;
 use Tests\TestCase;
 
 /**
- * Tests IncludeParameterRule
+ * Tests IncludeParameterQueryRule
  */
-class IncludeParameterRuleTest extends TestCase
+class IncludeParameterQueryRuleTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $rule = new IncludeParameterRule();
-        $this->assertInstanceOf(Rule::class, $rule);
+        $rule = new IncludeParameterQueryRule([]);
+        $this->assertInstanceOf(ValueInWhitelistRule::class, $rule);
     }
 
 
@@ -57,7 +57,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testMerge()
     {
-        $rule = new IncludeParameterRule();
+        $rule = new IncludeParameterQueryRule([]);
         $merge = $this->makeAccessible($rule, "merge");
 
         $tests = [
@@ -113,11 +113,22 @@ class IncludeParameterRuleTest extends TestCase
 
 
     /**
+     * tests name for parameter for shouldValidateParameter()
+     */
+    public function testParameterName()
+    {
+        $rule = new IncludeParameterQueryRule([]);
+        $parameterName = $this->makeAccessible($rule, "parameterName", true);
+        $this->assertSame("include", $parameterName->getValue($rule));
+    }
+
+
+    /**
      * tests parse()
      */
     public function testParse()
     {
-        $rule = new IncludeParameterRule();
+        $rule = new IncludeParameterQueryRule([]);
         $merge = $this->makeAccessible($rule, "parse");
 
         $this->assertEquals(
@@ -137,7 +148,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testUnfold()
     {
-        $rule = new IncludeParameterRule();
+        $rule = new IncludeParameterQueryRule([]);
         $unfold = $this->makeAccessible($rule, "unfold");
 
         $includes = [
@@ -154,48 +165,27 @@ class IncludeParameterRuleTest extends TestCase
 
 
     /**
-     * tests validate
+     * tests isParameterValueValid
      */
-    public function testValidate()
+    public function testIsParameterValueValid()
     {
-        $rule = new IncludeParameterRule();
-        $validate = $this->makeAccessible($rule, "validate");
+        $rule = new IncludeParameterQueryRule([]);
+        $isParameterValueValid = $this->makeAccessible($rule, "isParameterValueValid");
 
-        $errors = new ValidationErrors();
-
-        $query = $this->getMockBuilder(JsonApiQuery::class)
-                      ->disableOriginalConstructor()
-                      ->onlyMethods(["getParameter", "getResourceTarget"])->getMock();
-
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class, ["getAllRelationshipPaths"]);
-        $resourceTarget->expects($this->exactly(2))->method("getAllRelationshipPaths")->willReturn(
-            [
-                "MessageItem",
-                "MailFolder",
-                "MailFolder.MailAccount",
-                "MailFolder.MailAccount.ServerSettings"
-            ]
-        );
-
-        $validIncludeParameter = new Parameter("include", "MessageItem,MailFolder.MailAccount.ServerSettings");
-        $invalidIncludeParameter = new Parameter("include", "ServerSettings,MailFolder");
-
-        $query->expects($this->exactly(2))->method("getParameter")->with("include")->willReturnOnConsecutiveCalls(
-            $validIncludeParameter,
-            $invalidIncludeParameter
-        );
-        $query->expects($this->exactly(2))->method("getResourceTarget")->willReturn($resourceTarget);
+        $parameter = new Parameter("include", "MailFolder,MailFolder.MailAccount");
 
         $this->assertTrue(
-            $validate->invokeArgs($rule, [$query, $errors])
+            $isParameterValueValid->invokeArgs(
+                $rule,
+                [$parameter, ["MailFolder.MailAccount"]]
+            )
         );
-        $this->assertFalse($errors->hasError());
+
         $this->assertFalse(
-            $validate->invokeArgs($rule, [$query, $errors])
+            $isParameterValueValid->invokeArgs(
+                $rule,
+                [$parameter, ["MessageItem"]]
+            )
         );
-        $this->assertTrue($errors->hasError());
-        $this->assertStringContainsString("parameter \"include\" must only contain one of ", $errors[0]->getDetails());
-        $this->assertSame(400, $errors[0]->getCode());
-        $this->assertSame($invalidIncludeParameter, $errors[0]->getSource());
     }
 }
