@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query\Exception;
 
 use Conjoon\Http\Query\Exception\QueryException;
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
