@@ -36,29 +36,70 @@ use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
 use Conjoon\Http\Query\Validation\ParameterRule;
 use Conjoon\Http\Query\Validation\QueryRule;
 use Conjoon\Http\Query\Validation\ValueInListParameterRule;
+use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
 use Tests\TestCase;
 
 /**
  * Tests ValueInListParameterRule.
  */
-class ValueInListParameterRuleTest extends TestCase
+class ValueInWhitelistRuleTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $rule = new ValueInListParameterRule([]);
+        $rule = new ValueInWhitelistRule("name", []);
         $this->assertInstanceOf(ParameterRule::class, $rule);
     }
 
-    public function testGetWhiteList()
+
+    /**
+     * tests shouldValidateParameter()
+     */
+    public function testShouldValidateParameter()
+    {
+        $rule = new ValueInWhitelistRule("name", []);
+
+        $this->assertTrue(
+            $rule->shouldValidateParameter(new Parameter("name", "value"))
+        );
+        $this->assertFalse(
+            $rule->shouldValidateParameter(new Parameter("unknown", "value"))
+        );
+    }
+
+
+    /**
+     * tests getWhitelist
+     */
+    public function testGetWhitelist()
     {
         $whitelist = [-1, "all"];
 
-        $rule = new ValueInListParameterRule($whitelist);
+        $rule = new ValueInWhitelistRule("name", $whitelist);
         $this->assertEquals($whitelist, $rule->getWhitelist());
     }
+
+    /**
+     * tests isParameterValueValid()
+     */
+    public function testIsParameterValueValid()
+    {
+        $rule = new ValueInWhitelistRule("name", []);
+        $isParameterValueValid = $this->makeAccessible($rule, "isParameterValueValid");
+
+        $this->assertTrue($isParameterValueValid->invokeArgs(
+            $rule,
+            [new Parameter("valid", "value"), ["value"]]
+        ));
+
+        $this->assertFalse($isParameterValueValid->invokeArgs(
+            $rule,
+            [new Parameter("valid", "invalid"), ["value"]]
+        ));
+    }
+
 
 
     /**
@@ -66,9 +107,9 @@ class ValueInListParameterRuleTest extends TestCase
      */
     public function testValidate()
     {
-        $rule = $this->getMockBuilder(ValueInListParameterRule::class)
+        $rule = $this->getMockBuilder(ValueInWhitelistRule::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getWhiteList"])
+            ->onlyMethods(["getWhitelist", "isParameterValueValid"])
             ->getMock();
         $validate = $this->makeAccessible($rule, "validate");
 
@@ -88,7 +129,12 @@ class ValueInListParameterRuleTest extends TestCase
             ->method("getWhitelist")
             ->willReturnOnConsecutiveCalls($validValues, $invalidValues);
 
-        $parameter->expects($this->exactly(2))
+        $rule->expects($this->exactly(2))
+             ->method("isParameterValueValid")
+             ->withConsecutive([$parameter, $validValues], [$parameter, $invalidValues])
+             ->willReturnOnConsecutiveCalls(true, false);
+
+        $parameter->expects($this->exactly(1))
             ->method("getValue")
             ->willReturn(
                 $value
@@ -106,7 +152,7 @@ class ValueInListParameterRuleTest extends TestCase
         );
         $this->assertTrue($errors->hasError());
         $this->assertStringContainsString(
-            "parameter \"parameter\" must be one of",
+            "parameter \"parameter\"'s value must validate against",
             $errors[0]->getDetails()
         );
         $this->assertSame(400, $errors[0]->getCode());

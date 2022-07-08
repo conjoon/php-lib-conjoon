@@ -28,30 +28,36 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Validation;
 
-use Conjoon\Core\Data\ArrayUtil;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Core\Validation\ValidationErrors;
 
 /**
  * Class providing functionality for making sure a query's parameter contains only valid
- * values.
+ * values. Validation is done against a list of values specified with the constructor.
  */
-class ValueInListParameterRule extends ParameterRule
+class ValueInWhitelistRule extends ParameterRule
 {
     /**
      * @var array
      */
     private array $whitelist;
 
+    /**
+     * @var string
+     */
+    private string $parameterName;
+
 
     /**
      * Constructor.
      *
+     * @param string $parameterName The name of the parameter for which this rule should be applied
      * @param array $whitelist The list of allowed values that may appear with the value of the QueryParameter
      */
-    public function __construct(array $whitelist)
+    public function __construct(string $parameterName, array $whitelist)
     {
+        $this->parameterName = $parameterName;
         $this->whitelist = $whitelist;
     }
 
@@ -60,13 +66,12 @@ class ValueInListParameterRule extends ParameterRule
      */
     protected function validate(Parameter $parameter, ValidationErrors $errors): bool
     {
-        $allowedValues = $this->getWhitelist();
-        $value = $parameter->getValue();
-        if (!in_array($value, $allowedValues)) {
+        $whitelist = $this->getWhitelist();
+        if (!$this->isParameterValueValid($parameter, $whitelist)) {
             $errors[] = new ValidationError(
                 $parameter,
-                "parameter \"" . $parameter->getName() . "\" must be one of \"" .
-                implode("\", \"", $allowedValues) . "\", was: \"" . $value . "\"",
+                "parameter \"" . $parameter->getName() . "\"'s value must validate against \"" .
+                implode("\", \"", $whitelist) . "\", was: \"" . $parameter->getValue() . "\"",
                 400
             );
             return false;
@@ -76,6 +81,20 @@ class ValueInListParameterRule extends ParameterRule
     }
 
 
+    /**
+     * Compares $parameter with $whitelist.
+     * $whitelist is the array of allowed values for the parameter's value.
+     * Implementing APIs can use this method to transform the passed $parameter's value, if required.
+     *
+     * @param Parameter $parameter
+     * @param array $whitelist
+     *
+     * @return bool
+     */
+    protected function isParameterValueValid(Parameter $parameter, array $whitelist): bool
+    {
+        return in_array($parameter->getValue(), $whitelist);
+    }
 
     /**
      * @return array
@@ -83,5 +102,13 @@ class ValueInListParameterRule extends ParameterRule
     public function getWhitelist(): array
     {
         return $this->whitelist;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function shouldValidateParameter(Parameter $parameter): bool
+    {
+        return $parameter->getName() === $this->parameterName;
     }
 }
