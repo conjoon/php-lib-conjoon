@@ -34,7 +34,7 @@ use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Http\Query\Query;
 
 /**
- * Interface used for validating Obects.
+ * Interface used for validating Objects.
  */
 interface Validator
 {
