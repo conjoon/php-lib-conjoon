@@ -38,7 +38,7 @@ use stdClass;
 use Tests\TestCase;
 
 /**
- * Tests JsonApi's Rule implementation.
+ * Tests ParameterRule.
  */
 class ParameterRuleTest extends TestCase
 {
