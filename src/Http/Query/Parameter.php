@@ -34,7 +34,7 @@ use Conjoon\Core\Error\ErrorSource;
 /**
  * Class QueryParameter represents the Parameter of a Query.
  */
-final class Parameter implements ErrorSource
+class Parameter implements ErrorSource
 {
     /**
      * @var string
