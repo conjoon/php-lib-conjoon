@@ -31,8 +31,8 @@ namespace Conjoon\Http\Query\Validation;
 use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Core\Validation\Rule as ValidationRule;
 use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Query;
 
 /**
  * Rule specific for QueryParameters
@@ -42,12 +42,18 @@ abstract class ParameterRule implements ValidationRule
     /**
      * @inheritdoc
      *
+     * @throws UnexpectedQueryParameterException if shouldValidateParameter() returns false for the
+     *                                           Parameter passed to this method
      * @see validate()
      */
     final public function isValid(object $obj, ValidationErrors $errors): bool
     {
         if (!$obj instanceof Parameter) {
             throw new UnexpectedTypeException();
+        }
+
+        if (!$this->shouldValidateParameter($obj)) {
+            throw new UnexpectedQueryParameterException();
         }
 
         return $this->validate($obj, $errors);
@@ -63,4 +69,14 @@ abstract class ParameterRule implements ValidationRule
      * @return bool true if validation succeeded, otherwise false
      */
     abstract protected function validate(Parameter $parameter, ValidationErrors $errors): bool;
+
+
+    /**
+     * Check whether the given parameter should be validated given this rule.
+     *
+     * @param Parameter $parameter
+     *
+     * @return bool
+     */
+    abstract protected function shouldValidateParameter(Parameter $parameter): bool;
 }

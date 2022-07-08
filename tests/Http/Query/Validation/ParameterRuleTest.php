@@ -32,6 +32,7 @@ namespace Tests\Conjoon\Http\Query\Validation;
 use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Core\Validation\Rule as ValidationRule;
 use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\ParameterRule;
 use stdClass;
@@ -47,19 +48,39 @@ class ParameterRuleTest extends TestCase
      */
     public function testClass()
     {
-        $rule = $this->createMockForAbstract(ValidationRule::class);
+        $rule = $this->createMockForAbstract(ParameterRule::class);
         $this->assertInstanceOf(ValidationRule::class, $rule);
     }
 
     /**
      * test isValid() throwing UnexpectedTypeException
      */
-    public function testisValidWithUnexpectedTypeException()
+    public function testIsValidWithUnexpectedTypeException()
     {
         $rule = $this->createMockForAbstract(ParameterRule::class);
         $this->expectException(UnexpectedTypeException::class);
 
         $rule->isValid(new stdClass(), new ValidationErrors());
+    }
+
+
+    /**
+     * test isValid() throwing UnexpectedQueryParameterException
+     */
+    public function testIsValidWithUnexpectedQueryParameterException()
+    {
+        $parameter = new Parameter("include", "none");
+
+        $rule = $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter"]);
+        $rule->expects($this->once())
+             ->method("shouldValidateParameter")
+             ->with($parameter)
+             ->willReturn(false);
+
+        $this->expectException(UnexpectedQueryParameterException::class);
+
+
+        $rule->isValid($parameter, new ValidationErrors());
     }
 
     /**
@@ -70,8 +91,16 @@ class ParameterRuleTest extends TestCase
         $parameter = $this->getMockBuilder(Parameter::class)->disableOriginalConstructor()->getMock();
         $errors = new ValidationErrors();
 
-        $rule = $this->createMockForAbstract(ParameterRule::class, ["validate"]);
-        $rule->expects($this->once())->method("validate")->with($parameter, $errors)->willReturn(true);
+        $rule = $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter", "validate"]);
+        $rule->expects($this->once())
+             ->method("validate")
+             ->with($parameter, $errors)
+             ->willReturn(true);
+
+        $rule->expects($this->once())
+             ->method("shouldValidateParameter")
+             ->with($parameter)
+             ->willReturn(true);
 
         $this->assertSame(true, $rule->isValid($parameter, $errors));
     }
