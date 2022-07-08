@@ -46,7 +46,7 @@ abstract class ParameterRule implements ValidationRule
      *                                           Parameter passed to this method
      * @see validate()
      */
-    final public function isValid(object $obj, ValidationErrors $errors): bool
+    public function isValid(object $obj, ValidationErrors $errors): bool
     {
         if (!$obj instanceof Parameter) {
             throw new UnexpectedTypeException();
