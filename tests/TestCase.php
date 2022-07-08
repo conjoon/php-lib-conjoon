@@ -32,6 +32,9 @@ namespace Tests;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionProperty;
 
 /**
  * Class TestCase
@@ -55,18 +58,24 @@ abstract class TestCase extends PHPUnitTestCase
 
     /**
      * @param mixed $inst
-     * @param string $method
+     * @param $name
+     * @param bool $isProperty
      *
-     * @return \ReflectionMethod
+     * @return ReflectionMethod|ReflectionProperty
      *
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
-    protected function makeAccessible($inst, $method)
+    protected function makeAccessible($inst, $name, bool $isProperty)
     {
         $refl = new ReflectionClass($inst);
-        $method = $refl->getMethod($method);
-        $method->setAccessible(true);
 
-        return $method;
+        $name = match ($isProperty) {
+            true => $refl->getProperty($name),
+            default => $refl->getMethod($name),
+        };
+
+        $name->setAccessible(true);
+
+        return $name;
     }
 }
