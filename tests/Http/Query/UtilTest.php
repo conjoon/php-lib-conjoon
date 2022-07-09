@@ -70,4 +70,22 @@ class UtilTest extends TestCase
             $this->assertSame($expected, Util::getGroupName($input));
         }
     }
+
+
+    /**
+     * tests getGroupKey()
+     */
+    public function testGetGroupKey()
+    {
+        $tests = [
+            "fields[MailFolder]" => "MailFolder",
+            "fields" => null,
+            "parameter" => null,
+            "A[MailFolder.MailAccount]" => "MailFolder.MailAccount"
+        ];
+
+        foreach ($tests as $input => $expected) {
+            $this->assertSame($expected, Util::getGroupKey($input));
+        }
+    }
 }

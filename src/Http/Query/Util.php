@@ -83,4 +83,33 @@ final class Util
 
         return null;
     }
+
+
+    /**
+     * Returns the name of the key of the group if the passed string matches the grouped query parameters pattern.
+     * Returns null if not matching the grouped query parameter pattern.
+     *
+     * @example
+     *    Util::getGroupName("fields[TYPE]"); // "TYPE"
+     *    Util::getGroupName("fields"); // null
+     *
+     * @param string $name
+     * @return string|null
+     */
+    public static function getGroupKey(string $name): ?string
+    {
+        $found = preg_match_all(
+            self::GROUP_REGEX,
+            $name,
+            $matches,
+            PREG_SET_ORDER,
+            0
+        );
+
+        if ($found) {
+            return $matches[0][2];
+        }
+
+        return null;
+    }
 }
