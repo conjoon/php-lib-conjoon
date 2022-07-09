@@ -122,10 +122,10 @@ class ValidatorTest extends TestCase
 
         $parameterRules = [
             $this->createMockForAbstract(ParameterRule::class, [
-                "supports", "shouldValidateParameter", "validate"
+                "supports", "validate"
             ]),
             $this->createMockForAbstract(ParameterRule::class, [
-                "supports", "shouldValidateParameter", "validate"
+                "supports", "validate"
             ])
         ];
 
@@ -143,15 +143,9 @@ class ValidatorTest extends TestCase
 
         foreach ($parameterRules as $parameterRule) {
                $parameterRule->expects($this->exactly(3))
-                             ->method("shouldValidateParameter")
-                             // is called in QueryValidator, then in isValid in ParameterRule
-                             ->withConsecutive([$parameters[0]], [$parameters[0]], [$parameters[1]])
-                             ->willReturnOnConsecutiveCalls(true, true, false);
-
-               $parameterRule->expects($this->exactly(1))
                               ->method("supports")
-                              ->withConsecutive([$parameters[0]])
-                              ->willReturnOnConsecutiveCalls(true);
+                              ->withConsecutive([$parameters[0]], [$parameters[0]], [$parameters[1]])
+                              ->willReturnOnConsecutiveCalls(true, true, false);
 
                 $parameterRule->expects($this->exactly(1))
                               ->method("validate")

@@ -113,7 +113,7 @@ class IncludeParameterRuleTest extends TestCase
 
 
     /**
-     * tests name for parameter for shouldValidateParameter()
+     * tests name for parameter for supports()
      */
     public function testParameterName()
     {

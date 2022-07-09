@@ -104,11 +104,13 @@ class ValueInWhitelistRule extends ParameterRule
         return $this->whitelist;
     }
 
+
     /**
      * @inheritdoc
      */
-    public function shouldValidateParameter(Parameter $parameter): bool
+    public function supports(object $obj): bool
     {
-        return $parameter->getName() === $this->parameterName;
+        return parent::supports($obj) &&
+            $obj->getName() === $this->parameterName;
     }
 }

@@ -40,7 +40,9 @@ use Conjoon\Http\Query\Parameter;
 abstract class ParameterRule implements ValidationRule
 {
     /**
-     * True if this rule supports the passed object for validation
+     * Check whether the given parameter should be validated given this rule.
+     * True if this rule supports the passed object for validation.
+     *
      * @param Object $obj
      *
      * @return bool
@@ -53,17 +55,14 @@ abstract class ParameterRule implements ValidationRule
     /**
      * @inheritdoc
      *
-     * @throws UnexpectedQueryParameterException if shouldValidateParameter() returns false for the
-     *                                           Parameter passed to this method
+     * @throws UnexpectedQueryParameterException if this validator does not
+     * support validation of the specified Parameter
+     *
      * @see validate()
      */
     final public function isValid(object $obj, ValidationErrors $errors): bool
     {
         if (!$this->supports($obj)) {
-            throw new UnexpectedTypeException();
-        }
-
-        if (!$this->shouldValidateParameter($obj)) {
             throw new UnexpectedQueryParameterException();
         }
 
@@ -80,14 +79,4 @@ abstract class ParameterRule implements ValidationRule
      * @return bool true if validation succeeded, otherwise false
      */
     abstract protected function validate(Parameter $parameter, ValidationErrors $errors): bool;
-
-
-    /**
-     * Check whether the given parameter should be validated given this rule.
-     *
-     * @param Parameter $parameter
-     *
-     * @return bool
-     */
-    abstract public function shouldValidateParameter(Parameter $parameter): bool;
 }

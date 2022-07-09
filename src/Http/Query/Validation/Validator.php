@@ -80,7 +80,7 @@ abstract class Validator implements BaseValidator
 
         foreach ($this->getParameterRules($obj) as $parameterRule) {
             $parameters->map(
-                fn ($parameter) => $parameterRule->shouldValidateParameter($parameter)
+                fn ($parameter) => $parameterRule->supports($parameter)
                                    ? $parameterRule->isValid($parameter, $errors)
                                    : null
             );

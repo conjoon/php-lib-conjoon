@@ -52,19 +52,6 @@ class ParameterRuleTest extends TestCase
         $this->assertInstanceOf(ValidationRule::class, $rule);
     }
 
-    /**
-     * test isValid() throwing UnexpectedTypeException
-     */
-    public function testIsValidWithUnexpectedTypeException()
-    {
-        $obj = new stdClass();
-        $rule = $this->createMockForAbstract(ParameterRule::class, ["supports"]);
-        $rule->expects($this->once())->method("supports")->with($obj)->willReturn(false);
-        $this->expectException(UnexpectedTypeException::class);
-
-        $rule->isValid($obj, new ValidationErrors());
-    }
-
 
     /**
      * test supports()
@@ -85,9 +72,9 @@ class ParameterRuleTest extends TestCase
     {
         $parameter = new Parameter("include", "none");
 
-        $rule = $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter"]);
+        $rule = $this->createMockForAbstract(ParameterRule::class, ["supports"]);
         $rule->expects($this->once())
-             ->method("shouldValidateParameter")
+             ->method("supports")
              ->with($parameter)
              ->willReturn(false);
 
@@ -105,14 +92,14 @@ class ParameterRuleTest extends TestCase
         $parameter = $this->getMockBuilder(Parameter::class)->disableOriginalConstructor()->getMock();
         $errors = new ValidationErrors();
 
-        $rule = $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter", "validate"]);
+        $rule = $this->createMockForAbstract(ParameterRule::class, ["supports", "validate"]);
         $rule->expects($this->once())
              ->method("validate")
              ->with($parameter, $errors)
              ->willReturn(true);
 
         $rule->expects($this->once())
-             ->method("shouldValidateParameter")
+             ->method("supports")
              ->with($parameter)
              ->willReturn(true);
 

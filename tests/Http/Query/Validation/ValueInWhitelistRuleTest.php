@@ -37,6 +37,7 @@ use Conjoon\Http\Query\Validation\ParameterRule;
 use Conjoon\Http\Query\Validation\QueryRule;
 use Conjoon\Http\Query\Validation\ValueInListParameterRule;
 use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
+use stdClass;
 use Tests\TestCase;
 
 /**
@@ -55,17 +56,20 @@ class ValueInWhitelistRuleTest extends TestCase
 
 
     /**
-     * tests shouldValidateParameter()
+     * tests supports()
      */
-    public function testShouldValidateParameter()
+    public function testSupports()
     {
         $rule = new ValueInWhitelistRule("name", []);
 
         $this->assertTrue(
-            $rule->shouldValidateParameter(new Parameter("name", "value"))
+            $rule->supports(new Parameter("name", "value"))
         );
         $this->assertFalse(
-            $rule->shouldValidateParameter(new Parameter("unknown", "value"))
+            $rule->supports(new Parameter("unknown", "value"))
+        );
+        $this->assertFalse(
+            $rule->supports(new stdClass())
         );
     }
 
@@ -99,7 +103,6 @@ class ValueInWhitelistRuleTest extends TestCase
             [new Parameter("valid", "invalid"), ["value"]]
         ));
     }
-
 
 
     /**
