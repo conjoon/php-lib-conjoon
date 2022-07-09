@@ -28,9 +28,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Validation;
 
-use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Http\Query\Validation\QueryRule as HttpQueryRule;
-use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query;
 
 /**
@@ -40,15 +38,9 @@ abstract class QueryRule extends HttpQueryRule
 {
     /**
      * @inheritdoc
-     *
-     * @see validate()
      */
-    final public function isValid(object $obj, ValidationErrors $errors): bool
+    public function supports(object $obj): bool
     {
-        if (!$obj instanceof Query) {
-            throw new UnexpectedTypeException();
-        }
-
-        return $this->validate($obj, $errors);
+        return $obj instanceof Query;
     }
 }

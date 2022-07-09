@@ -40,15 +40,26 @@ use Conjoon\Http\Query\Parameter;
 abstract class ParameterRule implements ValidationRule
 {
     /**
+     * True if this rule supports the passed object for validation
+     * @param Object $obj
+     *
+     * @return bool
+     */
+    public function supports(object $obj): bool
+    {
+        return ($obj instanceof Parameter);
+    }
+
+    /**
      * @inheritdoc
      *
      * @throws UnexpectedQueryParameterException if shouldValidateParameter() returns false for the
      *                                           Parameter passed to this method
      * @see validate()
      */
-    public function isValid(object $obj, ValidationErrors $errors): bool
+    final public function isValid(object $obj, ValidationErrors $errors): bool
     {
-        if (!$obj instanceof Parameter) {
+        if (!$this->supports($obj)) {
             throw new UnexpectedTypeException();
         }
 

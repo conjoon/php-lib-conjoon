@@ -51,15 +51,30 @@ class QueryRuleTest extends TestCase
         $this->assertInstanceOf(ValidationRule::class, $rule);
     }
 
+
+    /**
+     * test supports()
+     */
+    public function testSupports()
+    {
+        $rule = $this->createMockForAbstract(QueryRule::class);
+
+        $this->assertTrue($rule->supports($this->createMockForAbstract(Query::class)));
+        $this->assertFalse($rule->supports(new stdClass()));
+    }
+
+
     /**
      * test isValid() throwing UnexpectedTypeException
      */
     public function testisValidWithUnexpectedTypeException()
     {
-        $rule = $this->createMockForAbstract(QueryRule::class);
+        $obj = new stdClass();
+        $rule = $this->createMockForAbstract(QueryRule::class, ["supports"]);
+        $rule->expects($this->once())->method("supports")->with($obj)->willReturn(false);
         $this->expectException(UnexpectedTypeException::class);
 
-        $rule->isValid(new stdClass(), new ValidationErrors());
+        $rule->isValid($obj, new ValidationErrors());
     }
 
     /**

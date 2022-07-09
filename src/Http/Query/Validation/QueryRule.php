@@ -39,13 +39,25 @@ use Conjoon\Http\Query\Query;
 abstract class QueryRule implements ValidationRule
 {
     /**
+     * True if this rule supports the passed object for validation
+     * @param Object $obj
+     *
+     * @return bool
+     */
+    public function supports(object $obj): bool
+    {
+        return $obj instanceof Query;
+    }
+
+
+    /**
      * @inheritdoc
      *
      * @see validate()
      */
-    public function isValid(object $obj, ValidationErrors $errors): bool
+    final public function isValid(object $obj, ValidationErrors $errors): bool
     {
-        if (!$obj instanceof Query) {
+        if (!$this->supports($obj)) {
             throw new UnexpectedTypeException();
         }
 

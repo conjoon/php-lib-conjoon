@@ -29,8 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query\Validation;
 
-use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query;
 use Conjoon\Http\Query\Validation\QueryRule as HttpQueryRule;
 use Conjoon\JsonApi\Validation\QueryRule;
@@ -52,27 +50,17 @@ class QueryRuleTest extends TestCase
     }
 
     /**
-     * test isValid() throwing UnexpectedTypeException
+     * test supports()
      */
-    public function testisValidWithUnexpectedTypeException()
+    public function testSupports()
     {
         $rule = $this->createMockForAbstract(QueryRule::class);
-        $this->expectException(UnexpectedTypeException::class);
 
-        $rule->isValid(new stdClass(), new ValidationErrors());
-    }
-
-    /**
-     * test isValid() delegating to validate
-     */
-    public function testIsValid()
-    {
-        $query = $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock();
-        $errors = new ValidationErrors();
-
-        $rule = $this->createMockForAbstract(QueryRule::class, ["validate"]);
-        $rule->expects($this->once())->method("validate")->with($query, $errors)->willReturn(true);
-
-        $this->assertSame(true, $rule->isValid($query, $errors));
+        $this->assertFalse($rule->supports(new stdClass()));
+        $this->assertTrue(
+            $rule->supports(
+                $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock()
+            )
+        );
     }
 }

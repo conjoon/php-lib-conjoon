@@ -116,13 +116,17 @@ class ValidatorTest extends TestCase
               ->willReturn($parameters);
 
         $queryRules = [
-            $this->createMockForAbstract(QueryRule::class, ["isValid"]),
-            $this->createMockForAbstract(QueryRule::class, ["isValid"])
+            $this->createMockForAbstract(QueryRule::class, ["supports", "validate"]),
+            $this->createMockForAbstract(QueryRule::class, ["supports", "validate"])
         ];
 
         $parameterRules = [
-            $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter", "isValid"]),
-            $this->createMockForAbstract(ParameterRule::class, ["shouldValidateParameter", "isValid"])
+            $this->createMockForAbstract(ParameterRule::class, [
+                "supports", "shouldValidateParameter", "validate"
+            ]),
+            $this->createMockForAbstract(ParameterRule::class, [
+                "supports", "shouldValidateParameter", "validate"
+            ])
         ];
 
         $validator = $this->getMockBuilder(Validator::class)
@@ -133,17 +137,24 @@ class ValidatorTest extends TestCase
         $validator->expects($this->once())->method("getParameterRules")->with($query)->willReturn($parameterRules);
 
         foreach ($queryRules as $queryRule) {
-            $queryRule->expects($this->once())->method("isValid")->with($query, $errors)->willReturn(true);
+            $queryRule->expects($this->once())->method("validate")->with($query, $errors)->willReturn(true);
+            $queryRule->expects($this->once())->method("supports")->with($query)->willReturn(true);
         }
 
         foreach ($parameterRules as $parameterRule) {
-                $parameterRule->expects($this->exactly(2))
-                              ->method("shouldValidateParameter")
-                              ->withConsecutive([$parameters[0]], [$parameters[1]])
-                              ->willReturnOnConsecutiveCalls(true, false);
+               $parameterRule->expects($this->exactly(3))
+                             ->method("shouldValidateParameter")
+                             // is called in QueryValidator, then in isValid in ParameterRule
+                             ->withConsecutive([$parameters[0]], [$parameters[0]], [$parameters[1]])
+                             ->willReturnOnConsecutiveCalls(true, true, false);
+
+               $parameterRule->expects($this->exactly(1))
+                              ->method("supports")
+                              ->withConsecutive([$parameters[0]])
+                              ->willReturnOnConsecutiveCalls(true);
 
                 $parameterRule->expects($this->exactly(1))
-                              ->method("isValid")
+                              ->method("validate")
                               ->with($parameters[0], $errors)
                               ->willReturn(true);
         }
