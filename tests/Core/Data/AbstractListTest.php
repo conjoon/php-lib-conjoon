@@ -159,6 +159,43 @@ class AbstractListTest extends TestCase
     }
 
 
+    /**
+     * Tests findBy()
+     * @return void
+     */
+    public function testFindBy()
+    {
+        $abstractList = $this->getMockForAbstractList();
+
+        $cmpList = [
+            new stdClass(),
+            new stdClass()
+        ];
+
+        $cmpList[0]->foo = 1;
+        $cmpList[0]->bar = 2;
+        $cmpList[1]->foo = 3;
+        $cmpList[1]->bar = 4;
+
+        $abstractList[] = $cmpList[0];
+        $abstractList[] = $cmpList[1];
+
+        $foo = new class () {
+        };
+
+        $mock = $this->getMockBuilder(stdClass::class)
+            ->addMethods(["findCallback"])->getMock();
+
+        $mock->expects($this->exactly(2))
+            ->method("findCallback")->withConsecutive([$cmpList[0]], [$cmpList[1]])
+            ->willReturnOnConsecutiveCalls(false, true);
+
+        $this->assertSame(
+            $cmpList[1],
+            $abstractList->findBy(array($mock, "findCallback"))
+        );
+    }
+
 
 // ---------------------
 //    Helper Functions

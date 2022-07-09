@@ -75,6 +75,28 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
         return array_map($mapFn, $this->data);
     }
 
+
+    /**
+     * Returns the entry in this list given the callback function.
+     *
+     * @param callable $findFn A callback. Return true in the function to indicate a match. First match will
+     * be returned. The callback is passed the current entry.
+     *
+     * @return mixed
+     */
+    public function findBy(callable $findFn): mixed
+    {
+        foreach ($this->data as $resource) {
+            if ($findFn($resource) === true) {
+                return $resource;
+            }
+        }
+
+        return null;
+    }
+
+
+
 // -------------------------
 //  ArrayAccess Interface
 // -------------------------
