@@ -28,7 +28,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Validation;
 
-use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Core\Validation\Rule as ValidationRule;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
