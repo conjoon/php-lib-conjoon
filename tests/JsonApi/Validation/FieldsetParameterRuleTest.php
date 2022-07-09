@@ -49,8 +49,11 @@ class FieldsetParameterRuleTest extends TestCase
      */
     public function testClass()
     {
-        $rule = new FieldsetParameterRule($this->getResourceObjectDescriptionList());
+        $list = $this->getResourceObjectDescriptionList();
+        $rule = new FieldsetParameterRule($list);
         $this->assertInstanceOf(ParameterRule::class, $rule);
+
+        $this->assertSame($list, $rule->getResourceObjectDescriptions());
     }
 
 

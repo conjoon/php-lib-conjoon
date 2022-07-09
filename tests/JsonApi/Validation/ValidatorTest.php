@@ -32,6 +32,8 @@ namespace Tests\Conjoon\JsonApi\Validation;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
+use Conjoon\JsonApi\Resource\ObjectDescriptionList;
+use Conjoon\JsonApi\Validation\FieldsetParameterRule;
 use Conjoon\JsonApi\Validation\IncludeParameterRule;
 use Conjoon\JsonApi\Validation\Validator;
 use Conjoon\JsonApi\Query;
@@ -137,6 +139,7 @@ class ValidatorTest extends TestCase
     public function testGetParameterRules()
     {
         $whitelist = ["fields[MessageItem]"];
+        $objectDescriptionList = new ObjectDescriptionList();
 
         $query = $this->getMockBuilder(Query::class)
                       ->disableOriginalConstructor()
@@ -145,7 +148,7 @@ class ValidatorTest extends TestCase
 
         $resourceTarget = $this->createMockForAbstract(
             ObjectDescription::class,
-            ["getAllRelationshipPaths"]
+            ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
         $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
 
@@ -153,12 +156,19 @@ class ValidatorTest extends TestCase
             $whitelist
         );
 
+        $resourceTarget->expects($this->once())
+                       ->method("getAllRelationshipResourceDescriptions")
+                       ->with(true)
+                       ->willReturn($objectDescriptionList);
+
         $validator = new Validator();
 
         $rules = $validator->getParameterRules($query);
 
-        $this->assertSame(1, count($rules));
+        $this->assertSame(2, count($rules));
         $this->assertInstanceOf(IncludeParameterRule::class, $rules[0]);
+        $this->assertInstanceOf(FieldsetParameterRule::class, $rules[1]);
         $this->assertSame($whitelist, $rules[0]->getWhitelist());
+        $this->assertSame($objectDescriptionList, $rules[1]->getResourceObjectDescriptions());
     }
 }

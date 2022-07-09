@@ -29,8 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Validation;
 
-use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
@@ -60,8 +58,10 @@ class Validator extends HttpQueryValidator
      */
     public function getParameterRules(HttpQuery $query): array
     {
+        $resourceTarget = $query->getResourceTarget();
         return [
-            new IncludeParameterRule($query->getResourceTarget()->getAllRelationshipPaths())
+            new IncludeParameterRule($resourceTarget->getAllRelationshipPaths()),
+            new FieldsetParameterRule($resourceTarget->getAllRelationshipResourceDescriptions(true)),
         ];
     }
 

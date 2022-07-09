@@ -67,6 +67,17 @@ class FieldsetParameterRule extends ParameterRule
 
 
     /**
+     * Returns the ObjectDescriptionList this rule uses.
+     *
+     * @return ObjectDescriptionList
+     */
+    public function getResourceObjectDescriptions(): ObjectDescriptionList
+    {
+        return $this->resourceDescriptionList;
+    }
+
+
+    /**
      * @inheritdoc
      */
     public function supports(object $obj): bool
@@ -135,6 +146,7 @@ class FieldsetParameterRule extends ParameterRule
      */
     protected function getFields(string $type): ?array
     {
-        return $this->resourceDescriptionList->findBy(fn ($resource) => $resource->getType() === $type)?->getFields();
+        return $this->getResourceObjectDescriptions()
+                    ->findBy(fn ($resource) => $resource->getType() === $type)?->getFields();
     }
 }
