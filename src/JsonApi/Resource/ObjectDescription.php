@@ -154,7 +154,7 @@ abstract class ObjectDescription
 
     /**
      * Returns all resource object description available with all relationships spawning
-     * from the resource object target for thisinstance its related resources.
+     * from the resource object target for this instance and its related resources.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
      * *this* ObjectDescription describes
@@ -162,7 +162,7 @@ abstract class ObjectDescription
      *
      * @return ObjectDescriptionList
      */
-    protected function getAllRelationshipResourceDescriptions(
+    public function getAllRelationshipResourceDescriptions(
         $withResourceTarget = false
     ): ObjectDescriptionList {
 

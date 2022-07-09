@@ -224,10 +224,8 @@ class ObjectDescriptionTest extends TestCase
             $relationships_2_1
         );
 
-        $getRelatedResourceTargetsReflection = $reflection->getMethod("getAllRelationshipResourceDescriptions");
-        $getRelatedResourceTargetsReflection->setAccessible(true);
 
-        $list = $getRelatedResourceTargetsReflection->invokeArgs($resourceTarget, []);
+        $list = $resourceTarget->getAllRelationshipResourceDescriptions();
         foreach (
             [
                 $resourceTarget_1_1, $resourceTarget_1_2, $resourceTarget_2_1
@@ -236,7 +234,7 @@ class ObjectDescriptionTest extends TestCase
             $this->assertContains($resourceObject, $list);
         }
 
-        $list = $getRelatedResourceTargetsReflection->invokeArgs($resourceTarget, [true]);
+        $list = $resourceTarget->getAllRelationshipResourceDescriptions(true);
         foreach (
             [
                 $resourceTarget, $resourceTarget_1_1, $resourceTarget_1_2, $resourceTarget_2_1
