@@ -39,12 +39,16 @@ use Conjoon\JsonApi\Resource\ObjectDescriptionList;
  * Validates fieldset parameters of the type "fields[TYPE]=field,field2,field3" given the
  * ObjectDescriptionList containing ObjectDesciptions that can be identified with TYPE.
  * The fields found as values for "fields[TYPE]" are compared against the list of fields
- * defined with the ObjectDescriptions.
+ * defined with the ObjectDescriptions. TYPE itself must be found in any of the $includes this class was configured
+ * with.
  *
  * This validator supports all parameters given the name "fields[TYPE]", whereas "TYPE" represents
  * an ObjectDescription's getType().
- * Validating will fail if the fields specified with "fields[TYPE]" contain entries that do not exist
- * in the list of fields defined with the ObjectDescription.
+ * Validating will fail
+ *   - if the fields specified with "fields[TYPE]" contain entries that do not exist
+ *      in the list of fields defined with the ObjectDescription
+ *   - if TYPE is not found in the list of $includes this class was configured with
+ *
  * Wildcards in the form of "*" will be considered.
  * Empty fieldsets in the form of "fields[TYPE]=" are treated as valid.
  *
@@ -56,13 +60,24 @@ class FieldsetParameterRule extends ParameterRule
      */
     protected ObjectDescriptionList $resourceDescriptionList;
 
+    /**
+     * @var array $includes
+     */
+    protected array $includes;
 
     /**
-     * @inheritdoc
+     * Constructor.
+     * Creates a new instance of this rule configured with the available resource object descriptions
+     * and the includes the rule should consider.
+     *
+     * @param ObjectDescriptionList $resourceDescriptionList
+     * @param array $includes An array with all resource object types requested, against which a parameter's
+     * fieldset must be validated
      */
-    public function __construct(ObjectDescriptionList $resourceDescriptionList)
+    public function __construct(ObjectDescriptionList $resourceDescriptionList, array $includes)
     {
         $this->resourceDescriptionList = $resourceDescriptionList;
+        $this->includes                = $includes;
     }
 
 
@@ -74,6 +89,17 @@ class FieldsetParameterRule extends ParameterRule
     public function getResourceObjectDescriptions(): ObjectDescriptionList
     {
         return $this->resourceDescriptionList;
+    }
+
+
+    /**
+     * Returns the list of includes this rule was configures with
+     *
+     * @return array
+     */
+    public function getIncludes(): array
+    {
+        return $this->includes;
     }
 
 
@@ -94,9 +120,22 @@ class FieldsetParameterRule extends ParameterRule
      */
     protected function validate(Parameter $parameter, ValidationErrors $errors): bool
     {
+        $includes = $this->getIncludes();
         $name = $parameter->getName();
         $type = Util::getGroupKey($name);
         $value = $parameter->getValue();
+
+        if (!in_array($type, $includes)) {
+            $errors[] = new ValidationError(
+                $parameter,
+                "The requested type \"$type\" cannot be found in the list of includes, which was \"" .
+                implode("\", \"", $includes) .
+                "\"",
+                400
+            );
+            return false;
+        }
+
 
         $resourceFields = $this->getFields($type);
 

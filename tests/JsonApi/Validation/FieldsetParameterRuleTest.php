@@ -50,10 +50,12 @@ class FieldsetParameterRuleTest extends TestCase
     public function testClass()
     {
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list);
+        $includes = $this->getIncludes();
+        $rule = new FieldsetParameterRule($list, $includes);
         $this->assertInstanceOf(ParameterRule::class, $rule);
 
         $this->assertSame($list, $rule->getResourceObjectDescriptions());
+        $this->assertSame($includes, $rule->getIncludes());
     }
 
 
@@ -62,7 +64,8 @@ class FieldsetParameterRuleTest extends TestCase
      */
     public function testSupports()
     {
-        $rule = new FieldsetParameterRule($this->getResourceObjectDescriptionList());
+        $includes = $this->getIncludes();
+        $rule = new FieldsetParameterRule($this->getResourceObjectDescriptionList(), $includes);
 
         $this->assertTrue($rule->supports(new Parameter("fields[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("field[MessageItem]", "")));
@@ -75,8 +78,9 @@ class FieldsetParameterRuleTest extends TestCase
      */
     public function testGetFields()
     {
+        $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list);
+        $rule = new FieldsetParameterRule($list, $includes);
         $getFields = $this->makeAccessible($rule, "getFields");
 
         $this->assertEquals(
@@ -89,13 +93,33 @@ class FieldsetParameterRuleTest extends TestCase
         );
     }
 
-
     /**
-     * tests validate() with key for fieldset that is not available  "fields[unknown]=field1,field2"
+     * tests validate() with missing include "fields[unknown]=field1,field2"
+     */
+    public function testValidateWithMissingInclude()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+
+        $parameter = new Parameter("fields[unknown]", "field1,field2");
+        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+        $this->assertInstanceOf(ValidationError::class, $errors[0]);
+        $this->assertStringContainsString(
+            "The requested type \"unknown\" cannot be found in the list of includes",
+            $errors[0]->getDetails()
+        );
+        $this->assertSame(400, $errors[0]->getCode());
+        $this->assertSame($parameter, $errors[0]->getSource());
+    }
+    /**
+     * tests validate() with key for fieldset that is not available in relationships "fields[unknown]=field1,field2"
      */
     public function testValidateWithUnknownType()
     {
-        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+        $errors = new ValidationErrors();
+        $includes = array_merge(["unknown"], $this->getIncludes());
+        $list = $this->getResourceObjectDescriptionList();
+        $rule = new FieldsetParameterRule($list, $includes);
+        $validate = $this->makeAccessible($rule, "validate");
 
         $parameter = new Parameter("fields[unknown]", "field1,field2");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
@@ -223,17 +247,28 @@ class FieldsetParameterRuleTest extends TestCase
 
 
     /**
+     * @return string[]
+     */
+    protected function getIncludes()
+    {
+        return ["MailFolder", "MessageItem"];
+    }
+
+
+    /**
      * @return array
      * @throws ReflectionException
      */
     protected function getValidateTestSetup(): array
     {
         $errors = new ValidationErrors();
+        $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list);
+        $rule = new FieldsetParameterRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 
         return [
+            "includes" => $includes,
             "errors" => $errors,
             "list" => $list,
             "rule" => $rule,
