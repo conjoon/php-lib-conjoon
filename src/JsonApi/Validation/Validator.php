@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Validation;
 
+use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
+use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
@@ -61,7 +63,7 @@ class Validator extends HttpQueryValidator
     {
         $include  = $query->getParameter("include");
         $includes = $include
-                    ? Util::unfoldInclude($include)
+                    ? $this->unfoldInclude($include)
                     : [];
 
         $resourceTarget = $query->getResourceTarget();
@@ -107,5 +109,45 @@ class Validator extends HttpQueryValidator
         }
 
         return $exp;
+    }
+
+
+    /**
+     * Unfolds possible dot notated types available with includes and returns it as
+     * an array with all resource types as unique values in the resulting array.
+     *
+     * @example
+     *    Util::unfoldInclude(
+     *        new Parameter("include",
+     *        "MailFolder.MailAccount,MailFolder"));  // ["MailAccount", "MailFolder"]
+     *
+     *
+     * @param Parameter $parameter
+     *
+     * @return array
+     *
+     * @throws UnexpectedQueryParameterException
+     */
+    protected function unfoldInclude(Parameter $parameter): array
+    {
+        if ($parameter->getName() !== "include") {
+            throw new UnexpectedQueryParameterException(
+                "parameter passed does not seem to be the \"include\" parameter"
+            );
+        }
+
+        $includes = $parameter->getValue() ? explode(",", $parameter->getValue()) : null;
+
+        if (!$includes) {
+            return [];
+        }
+
+
+        $res = [];
+        foreach ($includes as $include) {
+            $res = array_merge($res, explode(".", $include));
+        }
+
+        return array_values(array_unique($res));
     }
 }

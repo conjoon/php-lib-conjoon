@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Validation;
 
+use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
@@ -39,6 +40,7 @@ use Conjoon\JsonApi\Validation\IncludeParameterRule;
 use Conjoon\JsonApi\Validation\Validator;
 use Conjoon\JsonApi\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -54,6 +56,44 @@ class ValidatorTest extends TestCase
         $validator = new Validator();
         $this->assertInstanceOf(HttpQueryValidator::class, $validator);
     }
+
+    /**
+     * tests unfold()
+     * @throws ReflectionException
+     */
+    public function testUnfoldWithUnexpectedQueryParameterException()
+    {
+        $validator = new Validator();
+        $unfold = $this->makeAccessible($validator, "unfoldInclude");
+        $this->expectException(UnexpectedQueryParameterException::class);
+
+        $parameter = new Parameter("parameter", "");
+        $unfold->invokeArgs($validator, [$parameter]);
+    }
+
+
+    /**
+     * tests unfold()
+     */
+    public function testUnfold()
+    {
+        $validator = new Validator();
+        $unfold = $this->makeAccessible($validator, "unfoldInclude");
+        $parameter = new Parameter("include", "MailFolder.MailAccount,MailFolder.MailAccount.Server,MailFolder");
+
+        $this->assertEquals(
+            ["MailFolder", "MailAccount", "Server"],
+            $unfold->invokeArgs($validator, [$parameter])
+        );
+
+        $parameter = new Parameter("include", "");
+
+        $this->assertEquals(
+            [],
+            $unfold->invokeArgs($validator, [$parameter])
+        );
+    }
+
 
     /**
      * test getValidParameterNamesForQuery()
