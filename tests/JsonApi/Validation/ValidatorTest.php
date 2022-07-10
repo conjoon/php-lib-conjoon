@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Validation;
 
+use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
@@ -138,12 +139,14 @@ class ValidatorTest extends TestCase
      */
     public function testGetParameterRules()
     {
+        $includes = ["MessageItem", "MailFolder"];
+        $includeParameter = new Parameter("include", "MessageItem,MailFolder");
         $whitelist = ["fields[MessageItem]"];
         $objectDescriptionList = new ObjectDescriptionList();
 
         $query = $this->getMockBuilder(Query::class)
                       ->disableOriginalConstructor()
-                      ->onlyMethods(["getResourceTarget"])
+                      ->onlyMethods(["getParameter", "getResourceTarget"])
                       ->getMock();
 
         $resourceTarget = $this->createMockForAbstract(
@@ -151,6 +154,10 @@ class ValidatorTest extends TestCase
             ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
         $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
+        $query->expects($this->once())
+              ->method("getParameter")
+              ->with("include")
+              ->willReturn($includeParameter);
 
         $resourceTarget->expects($this->once())->method("getAllRelationshipPaths")->willReturn(
             $whitelist
@@ -161,6 +168,7 @@ class ValidatorTest extends TestCase
                        ->with(true)
                        ->willReturn($objectDescriptionList);
 
+
         $validator = new Validator();
 
         $rules = $validator->getParameterRules($query);
@@ -170,5 +178,6 @@ class ValidatorTest extends TestCase
         $this->assertInstanceOf(FieldsetParameterRule::class, $rules[1]);
         $this->assertSame($whitelist, $rules[0]->getWhitelist());
         $this->assertSame($objectDescriptionList, $rules[1]->getResourceObjectDescriptions());
+        $this->assertSame($includes, $rules[1]->getIncludes());
     }
 }

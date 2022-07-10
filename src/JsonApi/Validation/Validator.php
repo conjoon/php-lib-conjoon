@@ -33,6 +33,7 @@ use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
 use Conjoon\JsonApi\Query;
+use Conjoon\JsonApi\Util;
 
 /**
  * Class for validating queries that must be checked for validity according to JSON:API
@@ -58,10 +59,18 @@ class Validator extends HttpQueryValidator
      */
     public function getParameterRules(HttpQuery $query): array
     {
+        $include  = $query->getParameter("include");
+        $includes = $include
+                    ? Util::unfoldInclude($include)
+                    : [];
+
         $resourceTarget = $query->getResourceTarget();
         return [
             new IncludeParameterRule($resourceTarget->getAllRelationshipPaths()),
-            new FieldsetParameterRule($resourceTarget->getAllRelationshipResourceDescriptions(true)),
+            new FieldsetParameterRule(
+                $resourceTarget->getAllRelationshipResourceDescriptions(true),
+                $includes
+            ),
         ];
     }
 
