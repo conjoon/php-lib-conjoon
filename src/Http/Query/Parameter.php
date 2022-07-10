@@ -77,6 +77,7 @@ class Parameter implements ErrorSource
         return $this->name;
     }
 
+
     /**
      * @inheritdoc
      */
@@ -84,6 +85,7 @@ class Parameter implements ErrorSource
     {
         return $this;
     }
+
 
     /**
      * @inheritdoc

@@ -30,29 +30,31 @@ declare(strict_types=1);
 namespace Conjoon\Http\Query;
 
 /**
- * Utility class.
+ * Trait for parameter utilities.
  */
-final class Util
+trait ParameterTrait
 {
     /**
      * @const GROUP_REGEX
      */
-    public const GROUP_REGEX = "/(.*)\[(.{1,})\]/m";
+    protected string $GROUP_REGEX = "/(.*)\[(.{1,})\]/m";
 
 
     /**
      * Returns true if the the passed string matches the grouped query parameters pattern, otherwise false.
      *
      * @example
-     *    Util::isGroupParameter("fields[TYPE]"); // true
-     *    Util::isGroupParameter("fields"); // false
+     *    $this->isGroupParameter(new Parameter("fields[TYPE]", ""); // true
+     *    $this->isGroupParameter(new Parameter("fields", ""); // false
      *
-     * @param string $name
+     * @param string|Parameter $parameter
+     *
      * @return bool
      */
-    public static function isGroupParameter(string $name): bool
+    public function isGroupParameter(string|Parameter $parameter): bool
     {
-        return !!preg_match(self::GROUP_REGEX, $name);
+        $name = is_string($parameter) ? $parameter : $parameter->getName();
+        return !!preg_match($this->GROUP_REGEX, $name);
     }
 
 
@@ -61,16 +63,18 @@ final class Util
      * Returns null if not matching the grouped query parameter pattern.
      *
      * @example
-     *    Util::getGroupName("fields[TYPE]"); // "fields"
-     *    Util::getGroupName("fields"); // null
+     *    $this->getGroupName(new Parameter("fields[TYPE]", ""); // "fields"
+     *    $this->getGroupName(new Parameter("fields", ""); // null
      *
-     * @param string $name
+     * @param string|Parameter $name
      * @return string|null
      */
-    public static function getGroupName(string $name): ?string
+    public function getGroupName(string|Parameter $parameter): ?string
     {
+        $name = is_string($parameter) ? $parameter : $parameter->getName();
+
         $found = preg_match_all(
-            self::GROUP_REGEX,
+            $this->GROUP_REGEX,
             $name,
             $matches,
             PREG_SET_ORDER,
@@ -90,16 +94,19 @@ final class Util
      * Returns null if not matching the grouped query parameter pattern.
      *
      * @example
-     *    Util::getGroupName("fields[TYPE]"); // "TYPE"
-     *    Util::getGroupName("fields"); // null
+     *    $this->getGroupName(new Parameter("fields[TYPE]", ""); // "TYPE"
+     *    $this->getGroupName(new Parameter("fields", ""); // null
      *
-     * @param string $name
+     * @param string|Parameter $name
+     *
      * @return string|null
      */
-    public static function getGroupKey(string $name): ?string
+    public function getGroupKey(string|Parameter $parameter): ?string
     {
+        $name = is_string($parameter) ? $parameter : $parameter->getName();
+
         $found = preg_match_all(
-            self::GROUP_REGEX,
+            $this->GROUP_REGEX,
             $name,
             $matches,
             PREG_SET_ORDER,

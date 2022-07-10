@@ -29,13 +29,14 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Http\Query\Util;
+use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\ParameterTrait;
 use Tests\TestCase;
 
 /**
  * Tests Util.
  */
-class UtilTest extends TestCase
+class ParameterTraitTest extends TestCase
 {
     /**
      * tests isGroupParameter()
@@ -50,7 +51,8 @@ class UtilTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
-            $this->assertSame($expected, Util::isGroupParameter($input));
+            $this->assertSame($expected, $this->getTrait()->isGroupParameter($input));
+            $this->assertSame($expected, $this->getTrait()->isGroupParameter(new Parameter($input, "")));
         }
     }
 
@@ -67,7 +69,8 @@ class UtilTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
-            $this->assertSame($expected, Util::getGroupName($input));
+            $this->assertSame($expected, $this->getTrait()->getGroupName($input));
+            $this->assertSame($expected, $this->getTrait()->getGroupName(new Parameter($input, "")));
         }
     }
 
@@ -85,7 +88,19 @@ class UtilTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
-            $this->assertSame($expected, Util::getGroupKey($input));
+            $this->assertSame($expected, $this->getTrait()->getGroupKey($input));
+            $this->assertSame($expected, $this->getTrait()->getGroupKey(new Parameter($input, "")));
         }
+    }
+
+
+    /**
+     * @return __anonymous@2784
+     */
+    protected function getTrait()
+    {
+        return new class () {
+            use ParameterTrait;
+        };
     }
 }

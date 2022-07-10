@@ -31,7 +31,7 @@ namespace Conjoon\Illuminate\Http\Query;
 
 use Conjoon\Http\Query\Exception\InvalidParameterResourceException;
 use Conjoon\Http\Query\ParameterList;
-use Conjoon\Http\Query\Util;
+use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Parameter;
 use Illuminate\Http\Request;
@@ -44,6 +44,9 @@ use Illuminate\Http\Request;
  */
 final class LaravelQuery implements Query
 {
+    use ParameterTrait;
+
+
     /**
      * @var array
      */
@@ -102,8 +105,8 @@ final class LaravelQuery implements Query
             return $this->parameterList[$name];
         }
 
-        if (Util::isGroupParameter($name)) {
-            $groupName = Util::getGroupName($name);
+        if ($this->isGroupParameter($name)) {
+            $groupName = $this->getGroupName($name);
 
             if ($groupName) {
                 $groups = $this->rawParameters[$groupName];

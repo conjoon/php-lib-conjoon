@@ -31,7 +31,7 @@ namespace Conjoon\JsonApi\Validation;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Util;
+use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Validation\ParameterRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 
@@ -55,6 +55,8 @@ use Conjoon\JsonApi\Resource\ObjectDescriptionList;
  */
 class FieldsetParameterRule extends ParameterRule
 {
+    use ParameterTrait;
+
     /**
      * @var ObjectDescriptionList
      */
@@ -108,10 +110,9 @@ class FieldsetParameterRule extends ParameterRule
      */
     public function supports(object $obj): bool
     {
-        $name = $obj->getName();
         return parent::supports($obj) &&
-               Util::isGroupParameter($name) &&
-               Util::getGroupName($name) === "fields";
+               $this->isGroupParameter($obj) &&
+               $this->getGroupName($obj) === "fields";
     }
 
 
@@ -122,7 +123,7 @@ class FieldsetParameterRule extends ParameterRule
     {
         $includes = $this->getIncludes();
         $name = $parameter->getName();
-        $type = Util::getGroupKey($name);
+        $type = $this->getGroupKey($parameter);
         $value = $parameter->getValue();
 
         if (!in_array($type, $includes)) {

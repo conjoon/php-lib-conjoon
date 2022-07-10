@@ -32,6 +32,7 @@ namespace Tests\Conjoon\JsonApi\Validation;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Validation\ParameterRule;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
@@ -53,6 +54,9 @@ class FieldsetParameterRuleTest extends TestCase
         $includes = $this->getIncludes();
         $rule = new FieldsetParameterRule($list, $includes);
         $this->assertInstanceOf(ParameterRule::class, $rule);
+
+        $uses = class_uses(FieldsetParameterRule::class);
+        $this->assertContains(ParameterTrait::class, $uses);
 
         $this->assertSame($list, $rule->getResourceObjectDescriptions());
         $this->assertSame($includes, $rule->getIncludes());

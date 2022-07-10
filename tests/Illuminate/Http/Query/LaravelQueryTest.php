@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Http\Query;
 
 use Conjoon\Http\Query\Exception\InvalidParameterResourceException;
+use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Illuminate\Http\Query\LaravelQuery;
 use Conjoon\Http\Query\Query;
 use Illuminate\Http\Request;
@@ -46,6 +47,9 @@ class LaravelQueryTest extends TestCase
     public function testClass()
     {
         $query = new LaravelQuery(new Request());
+
+        $uses = class_uses(LaravelQuery::class);
+        $this->assertContains(ParameterTrait::class, $uses);
 
         $this->assertInstanceOf(Query::class, $query);
     }
