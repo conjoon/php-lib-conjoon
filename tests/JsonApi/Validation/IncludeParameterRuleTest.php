@@ -144,27 +144,6 @@ class IncludeParameterRuleTest extends TestCase
 
 
     /**
-     * tests unfold()
-     */
-    public function testUnfold()
-    {
-        $rule = new IncludeParameterRule([]);
-        $unfold = $this->makeAccessible($rule, "unfold");
-
-        $includes = [
-            "MailFolder.MailAccount",
-            "MailFolder.MailAccount.Server",
-            "MailFolder"
-        ];
-
-        $this->assertEquals(
-            ["MailFolder", "MailAccount", "Server"],
-            $unfold->invokeArgs($rule, [$includes])
-        );
-    }
-
-
-    /**
      * tests isParameterValueValid
      */
     public function testIsParameterValueValid()

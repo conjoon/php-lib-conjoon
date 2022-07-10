@@ -104,26 +104,4 @@ class IncludeParameterRule extends ValueInWhitelistRule
 
         return array_values($result);
     }
-
-
-    /**
-     * Unfolds possible dot notated types available with includes and returns it as
-     * an array.
-     *
-     * @example
-     *    $this->unfold(["MailFolder.MailAccount", "MailFolder"]); // ["MailAccount", "MailFolder"]
-     *
-     * @param array $includes
-     *
-     * @return array
-     */
-    protected function unfold(array $includes): array
-    {
-        $res = [];
-        foreach ($includes as $include) {
-            $res = array_merge($res, explode(".", $include));
-        }
-
-        return array_values(array_unique($res));
-    }
 }
