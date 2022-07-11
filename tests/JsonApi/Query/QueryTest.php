@@ -55,7 +55,7 @@ class QueryTest extends TestCase
         $query = $this->createMockForAbstract(HttpQuery::class, [
             "getParameter", "getAllParameters", "getAllParameterNames", "toString", "getSource", "getName"
         ]);
-        $jsonApiQuery = new Query($resourceDescription, $query);
+        $jsonApiQuery = new Query($query, $resourceDescription);
 
         $query->expects($this->once())->method("getParameter")->with("parameter_name")->willReturn($parameter);
         $query->expects($this->once())->method("getAllParameters")->willReturn($parameterList);

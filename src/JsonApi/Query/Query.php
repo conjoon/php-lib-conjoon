@@ -54,11 +54,10 @@ class Query implements HttpQuery
     /**
      * Constructor.
      *
-     * @param ObjectDescription $resourceTarget The resource object description this query is interested in
      * @param HttpQuery $query The original query decorated by this class.
-     *
+     * @param ObjectDescription $resourceTarget The resource object description this query is interested in
      */
-    public function __construct(ObjectDescription $resourceTarget, HttpQuery $query)
+    public function __construct(HttpQuery $query, ObjectDescription $resourceTarget)
     {
         $this->query          = $query;
         $this->resourceTarget = $resourceTarget;
