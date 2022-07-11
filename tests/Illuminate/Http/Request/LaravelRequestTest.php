@@ -27,36 +27,39 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Request;
+namespace Tests\Conjoon\Illuminate\Http\Request;
 
-use Conjoon\Http\Query\Query;
+use Conjoon\Http\Request\Request;
+use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Conjoon\Illuminate\Http\Request\LaravelRequest;
+use Tests\TestCase;
+use Illuminate\Http\Request as IlluminateRequest;
 
 /**
- * Represents an Http Request.
- *
+ * Tests LaravelQuery.
  */
-interface Request
+class LaravelRequestTest extends TestCase
 {
     /**
-     * Returns the Query available with this request, if any.
-     *
-     * @return Query
+     * Class functionality
      */
-    public function getQuery(): ?Query;
+    public function testClass()
+    {
+        $url = "http://www.localhost.com:8080/index.php";
+        $queryString = "query=string";
 
+        $request = new LaravelRequest(
+            IlluminateRequest::create("$url?$queryString")
+        );
 
-    /**
-     * Returns the HTTP method this request was used with.
-     *
-     * @return string
-     */
-    public function getMethod(): string;
+        $this->assertInstanceOf(Request::class, $request);
 
+        $this->assertSame("GET", $request->getMethod());
+        $this->assertSame($url, $request->getUrl());
 
-    /**
-     * Get the URL w/o the query string for the request.
-     *
-     * @return string
-     */
-    public function getUrl(): string;
+        $this->assertInstanceOf(LaravelQuery::class, $request->getQuery());
+        $this->assertSame($queryString, $request->getQuery()->toString());
+        $this->assertSame("string", $request->getQuery()->getParameter("query")->getValue());
+
+    }
 }

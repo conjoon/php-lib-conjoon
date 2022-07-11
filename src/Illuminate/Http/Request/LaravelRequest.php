@@ -27,36 +27,69 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Request;
+namespace Conjoon\Illuminate\Http\Request;
 
 use Conjoon\Http\Query\Query;
+use Conjoon\Http\Request\Request;
+use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Illuminate\Http\Request as IlluminateRequest;
 
 /**
- * Represents an Http Request.
+ * Adapter for Illuminate\Http\Request providing Request interface.
  *
  */
-interface Request
+class LaravelRequest implements Request
 {
     /**
-     * Returns the Query available with this request, if any.
-     *
-     * @return Query
+     * @var IlluminateRequest
      */
-    public function getQuery(): ?Query;
+    protected IlluminateRequest $request;
 
 
     /**
-     * Returns the HTTP method this request was used with.
-     *
-     * @return string
+     * @var LaravelQuery
      */
-    public function getMethod(): string;
+    protected ?LaravelQuery $query = null;
 
 
     /**
-     * Get the URL w/o the query string for the request.
+     * Constructor.
      *
-     * @return string
+     * @param IlluminateRequest $request
      */
-    public function getUrl(): string;
+    public function __construct(IlluminateRequest $request)
+    {
+        $this->request = $request;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getQuery(): ?Query
+    {
+        if (!$this->query) {
+            $this->query = new LaravelQuery($this->request);
+        }
+
+        return $this->query;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getMethod(): string
+    {
+        return $this->request->getMethod();
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getUrl(): string
+    {
+        return $this->request->url();
+    }
 }
