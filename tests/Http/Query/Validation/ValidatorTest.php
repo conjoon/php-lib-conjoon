@@ -73,7 +73,7 @@ class ValidatorTest extends TestCase
 
 
     /**
-     * tests validate() with parameter not of type JsonApi\Query
+     * tests validate() with parameter not of type JsonApi\Query\Query
      */
     public function testValidateWithUnexpectedTypeException()
     {

@@ -34,7 +34,7 @@ use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
-use Conjoon\JsonApi\Query;
+use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Util;
 
 /**

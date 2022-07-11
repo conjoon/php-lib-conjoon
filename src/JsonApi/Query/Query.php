@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi;
+namespace Conjoon\JsonApi\Query;
 
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;

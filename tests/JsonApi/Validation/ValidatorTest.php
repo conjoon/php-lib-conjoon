@@ -38,7 +38,7 @@ use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 use Conjoon\JsonApi\Validation\FieldsetParameterRule;
 use Conjoon\JsonApi\Validation\IncludeParameterRule;
 use Conjoon\JsonApi\Validation\Validator;
-use Conjoon\JsonApi\Query;
+use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use ReflectionException;
 use Tests\TestCase;

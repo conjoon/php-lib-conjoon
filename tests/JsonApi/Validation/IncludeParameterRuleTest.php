@@ -32,7 +32,7 @@ namespace Tests\Conjoon\JsonApi\Validation;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
-use Conjoon\JsonApi\Query as JsonApiQuery;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Validation\IncludeParameterRule;
 use Tests\TestCase;

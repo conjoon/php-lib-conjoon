@@ -29,7 +29,7 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Validation;
 
 use Conjoon\Http\Query\Validation\QueryRule as HttpQueryRule;
-use Conjoon\JsonApi\Query;
+use Conjoon\JsonApi\Query\Query;
 
 /**
  * Rule specific for JsonApi.
