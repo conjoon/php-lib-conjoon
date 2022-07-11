@@ -66,7 +66,8 @@ trait ParameterTrait
      *    $this->getGroupName(new Parameter("fields[TYPE]", ""); // "fields"
      *    $this->getGroupName(new Parameter("fields", ""); // null
      *
-     * @param string|Parameter $name
+     * @param string|Parameter $parameter
+     *
      * @return string|null
      */
     public function getGroupName(string|Parameter $parameter): ?string
@@ -97,7 +98,7 @@ trait ParameterTrait
      *    $this->getGroupName(new Parameter("fields[TYPE]", ""); // "TYPE"
      *    $this->getGroupName(new Parameter("fields", ""); // null
      *
-     * @param string|Parameter $name
+     * @param string|Parameter $parameter
      *
      * @return string|null
      */
