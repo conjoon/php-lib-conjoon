@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Message;
 
 use BadMethodCallException;
-use Conjoon\Core\Arrayable;
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
@@ -39,10 +39,10 @@ use Conjoon\Mail\Client\Message\Flag\DraftFlag;
 use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Util\Modifiable;
-use Conjoon\Util\ModifiableTrait;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\Modifiable;
+use Conjoon\Core\Data\ModifiableTrait;
 use DateTime;
 use TypeError;
 

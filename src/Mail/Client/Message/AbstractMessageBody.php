@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
-use Conjoon\Core\Arrayable;
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 
 /**
  * Class AbstractMessageBody models a simplified representation of mail message

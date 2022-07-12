@@ -30,9 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
 use Conjoon\Mail\Client\Data\MailAccount;
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Stringable;
 
 /**
  * Class MessageKey models base class for compound keys for identifying (IMAP) Messages.

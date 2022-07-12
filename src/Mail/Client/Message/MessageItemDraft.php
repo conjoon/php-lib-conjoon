@@ -30,10 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Message;
 
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Data\MailAddress;
-use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Mail\Client\Exception\MailClientException;
-use Conjoon\Core\JsonStrategy;
 
 /**
  * Class MessageItemDraft models envelope information of a Message Draft.

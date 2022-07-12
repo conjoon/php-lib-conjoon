@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Request\Message\Transformer;
 
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Util\JsonDecodable;
+use Conjoon\Core\Contract\JsonDecodable;
 
 /**
  * Interface provides contract for processing data to a MessageItemDraft.
