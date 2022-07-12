@@ -29,12 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Util;
 
-use Conjoon\Http\Json\Problem\AbstractProblem;
-use Conjoon\Mail\Client\Folder\AbstractMailFolder;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Core\Arrayable;
-use Conjoon\Util\AbstractList;
-use UnexpectedValueException;
+use Conjoon\JsonProblem\AbstractProblem;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\AbstractList;
 
 /**
  * Class JsonApiStrategy

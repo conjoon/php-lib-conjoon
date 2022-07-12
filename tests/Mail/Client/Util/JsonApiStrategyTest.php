@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Util;
 
-use Conjoon\Core\Jsonable;
-use Conjoon\Http\Json\Problem\AbstractProblem;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Util\AbstractList;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\AbstractList;
 use Tests\TestCase;
 
 /**
