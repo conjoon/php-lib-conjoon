@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Request;
 
+use Conjoon\Http\Query\Exception\UnexpectedQueryException;
 use Conjoon\Http\Query\Query;
 
 /**
