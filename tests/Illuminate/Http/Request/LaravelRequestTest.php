@@ -60,6 +60,5 @@ class LaravelRequestTest extends TestCase
         $this->assertInstanceOf(LaravelQuery::class, $request->getQuery());
         $this->assertSame($queryString, $request->getQuery()->toString());
         $this->assertSame("string", $request->getQuery()->getParameter("query")->getValue());
-
     }
 }
