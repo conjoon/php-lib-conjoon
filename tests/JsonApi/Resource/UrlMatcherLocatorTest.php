@@ -172,8 +172,6 @@ class UrlMatcherLocatorTest extends TestCase
      */
     public function testGetResourceTarget()
     {
-        $this->expectException(InvalidTypeException::class);
-
         $url = "localurl";
 
         $request = $this->createMockForAbstract(Request::class, ["getUrl"]);

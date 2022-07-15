@@ -119,9 +119,9 @@ class UrlMatcherLocator implements Locator
             );
         }
 
-        if (!is_a($fqn, ObjectDescription::class)) {
+        if (!is_a($fqn, ObjectDescription::class, true)) {
             throw new InvalidTypeException(
-                "$fqn must be an instance of " . ObjectDescription::class
+                "$fqn must be an instance of " . ObjectDescription::class . ", was " . get_parent_class($fqn)
             );
         }
 
