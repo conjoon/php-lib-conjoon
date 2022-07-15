@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Request\Attachment\Transformer;
 
 use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Util\JsonDecodable;
+use Conjoon\Core\Contract\JsonDecodable;
 
 /**
  * Interface AttachmentListJsonTransformer
