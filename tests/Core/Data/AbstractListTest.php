@@ -206,8 +206,8 @@ class AbstractListTest extends TestCase
         $one = new stdClass();
         $two = new stdClass();
 
-        $abstractList[]= $one;
-        $abstractList[]= $two;
+        $abstractList[] = $one;
+        $abstractList[] = $two;
 
         $this->assertSame($two, $abstractList->peek());
     }

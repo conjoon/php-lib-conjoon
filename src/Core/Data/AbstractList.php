@@ -104,7 +104,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     public function peek(): mixed
     {
         $count = count($this->data);
-        return !$count ? null : $this->data[$count-1];
+        return !$count ? null : $this->data[$count - 1];
     }
 
 
