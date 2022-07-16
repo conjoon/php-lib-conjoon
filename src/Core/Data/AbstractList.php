@@ -96,6 +96,17 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     }
 
 
+    /**
+     * Returns the element at the head of the AbstractList, or null if the list is empty.
+     *
+     * @return mixed
+     */
+    public function peek(): mixed
+    {
+        $count = count($this->data);
+        return !$count ? null : $this->data[$count-1];
+    }
+
 
 // -------------------------
 //  ArrayAccess Interface

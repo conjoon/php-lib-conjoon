@@ -66,7 +66,6 @@ class AbstractListTest extends TestCase
      */
     public function testArrayAccessException()
     {
-
         $this->expectException(TypeError::class);
 
         $abstractList = $this->getMockForAbstractList();
@@ -79,7 +78,6 @@ class AbstractListTest extends TestCase
      */
     public function testArrayAccessAndCountable()
     {
-
         $abstractList = $this->getMockForAbstractList();
 
         $cmpList = [
@@ -103,7 +101,6 @@ class AbstractListTest extends TestCase
      */
     public function testToArray()
     {
-
         $abstractList = $this->getMockForAbstractList();
 
         $cmpList = [
@@ -196,6 +193,24 @@ class AbstractListTest extends TestCase
         );
     }
 
+    /**
+     * Tests peek()
+     * @return void
+     */
+    public function testPeek()
+    {
+        $abstractList = $this->getMockForAbstractList();
+
+        $this->assertNull($abstractList->peek());
+
+        $one = new stdClass();
+        $two = new stdClass();
+
+        $abstractList[]= $one;
+        $abstractList[]= $two;
+
+        $this->assertSame($two, $abstractList->peek());
+    }
 
 // ---------------------
 //    Helper Functions
