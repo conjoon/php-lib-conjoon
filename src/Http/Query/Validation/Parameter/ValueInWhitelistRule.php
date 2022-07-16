@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query\Validation;
+namespace Conjoon\Http\Query\Validation\Parameter;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Http\Query\Parameter;
@@ -35,18 +35,24 @@ use Conjoon\Core\Validation\ValidationErrors;
 /**
  * Class providing functionality for making sure a query's parameter contains only valid
  * values. Validation is done against a list of values specified with the constructor.
+ *
+ * @example
+ *   $rule = new ValueInWhiteListRule("dir", ["ASC", "DESC]);
+ *   $errors = new ValidationErrors();
+ *
+ *   $invalid = new Parameter("dir", "down");
+ *   $rule->isValid($invalid, $errors); // false
+ *
+ *   $valid = new Parameter("dir", "ASC");
+ *   $rule->isValid($valid, $errors); // true
+ *
  */
-class ValueInWhitelistRule extends ParameterRule
+class ValueInWhitelistRule extends NamedParameterRule
 {
     /**
      * @var array
      */
     protected array $whitelist;
-
-    /**
-     * @var string
-     */
-    protected string $parameterName;
 
 
     /**
@@ -57,7 +63,7 @@ class ValueInWhitelistRule extends ParameterRule
      */
     public function __construct(string $parameterName, array $whitelist)
     {
-        $this->parameterName = $parameterName;
+        parent::__construct($parameterName);
         $this->whitelist = $whitelist;
     }
 
@@ -102,15 +108,5 @@ class ValueInWhitelistRule extends ParameterRule
     public function getWhitelist(): array
     {
         return $this->whitelist;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function supports(object $obj): bool
-    {
-        return parent::supports($obj) &&
-            $obj->getName() === $this->parameterName;
     }
 }

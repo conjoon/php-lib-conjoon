@@ -27,21 +27,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query\Validation;
+namespace Tests\Conjoon\Http\Query\Validation\Parameter;
 
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Query;
-use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
-use Conjoon\Http\Query\Validation\ParameterRule;
-use Conjoon\Http\Query\Validation\QueryRule;
-use Conjoon\Http\Query\Validation\ValueInListParameterRule;
-use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
+use Conjoon\Http\Query\Validation\Parameter\NamedParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
 use stdClass;
 use Tests\TestCase;
 
 /**
- * Tests ValueInListParameterRule.
+ * Tests ValueInWhitelistRule.
  */
 class ValueInWhitelistRuleTest extends TestCase
 {
@@ -51,26 +48,7 @@ class ValueInWhitelistRuleTest extends TestCase
     public function testClass()
     {
         $rule = new ValueInWhitelistRule("name", []);
-        $this->assertInstanceOf(ParameterRule::class, $rule);
-    }
-
-
-    /**
-     * tests supports()
-     */
-    public function testSupports()
-    {
-        $rule = new ValueInWhitelistRule("name", []);
-
-        $this->assertTrue(
-            $rule->supports(new Parameter("name", "value"))
-        );
-        $this->assertFalse(
-            $rule->supports(new Parameter("unknown", "value"))
-        );
-        $this->assertFalse(
-            $rule->supports(new stdClass())
-        );
+        $this->assertInstanceOf(NamedParameterRule::class, $rule);
     }
 
 
