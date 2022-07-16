@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query\Validation;
+namespace Tests\Conjoon\Http\Query\Validation\Query;
 
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
-use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
-use Conjoon\Http\Query\Validation\QueryRule;
+use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\QueryRule;
 use Tests\TestCase;
 
 /**

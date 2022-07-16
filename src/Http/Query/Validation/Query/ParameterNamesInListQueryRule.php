@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query\Validation;
+namespace Conjoon\Http\Query\Validation\Query;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
