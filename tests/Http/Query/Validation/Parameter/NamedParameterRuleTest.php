@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * conjoon
  * php-lib-conjoon
  * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
@@ -26,56 +27,47 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query\Validation;
+namespace Tests\Conjoon\Http\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\Rule as ValidationRule;
 use Conjoon\Core\Validation\ValidationErrors;
-use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\Validation\Parameter\NamedParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
+use stdClass;
+use Tests\TestCase;
 
 /**
- * Rule specific for QueryParameters
+ * Tests NamedParameterRule.
  */
-abstract class ParameterRule implements ValidationRule
+class NamedParameterRuleTest extends TestCase
 {
     /**
-     * Check whether the given parameter should be validated given this rule.
-     * True if this rule supports the passed object for validation.
-     *
-     * @param Object $obj
-     *
-     * @return bool
+     * Class functionality
      */
-    public function supports(object $obj): bool
+    public function testClass()
     {
-        return ($obj instanceof Parameter);
+        $rule = $this->createMockForAbstract(NamedParameterRule::class, [], ["parameter_name"]);
+        $parameterName = $this->makeAccessible($rule, "parameterName", true);
+        $this->assertSame("parameter_name", $parameterName->getValue($rule));
+        $this->assertInstanceOf(ParameterRule::class, $rule);
     }
 
+
     /**
-     * @inheritdoc
-     *
-     * @throws UnexpectedQueryParameterException if this validator does not
-     * support validation of the specified Parameter
-     *
-     * @see validate()
+     * tests supports()
      */
-    final public function isValid(object $obj, ValidationErrors $errors): bool
+    public function testSupports()
     {
-        if (!$this->supports($obj)) {
-            throw new UnexpectedQueryParameterException();
-        }
+        $rule = $this->createMockForAbstract(NamedParameterRule::class, [], ["name"]);
 
-        return $this->validate($obj, $errors);
+        $this->assertTrue(
+            $rule->supports(new Parameter("name", "value"))
+        );
+        $this->assertFalse(
+            $rule->supports(new Parameter("unknown", "value"))
+        );
+        $this->assertFalse(
+            $rule->supports(new stdClass())
+        );
     }
-
-    /**
-     * Contract for validating the passed QueryParameter.
-     * Delegated from isValid.
-     *
-     * @param Parameter $parameter
-     * @param ValidationErrors $errors
-     *
-     * @return bool true if validation succeeded, otherwise false
-     */
-    abstract protected function validate(Parameter $parameter, ValidationErrors $errors): bool;
 }
