@@ -30,23 +30,24 @@ namespace Conjoon\Http\Query\Validation\Parameter;
 
 /**
  * NamedParameterRule provides extended functionality for supports() base implementation
- * by returning true if, and only if ParameterRule's supports() returns true and the name of the
- * parameter being validated equals to the $paremeterName this rule was configured with.
+ * by returning true if, and only if ParameterRule's supports() returns true and if the name of
+ * the parameter being validated is in the list of parameter names this rule was configured with.
  *
  */
 abstract class NamedParameterRule extends ParameterRule
 {
     /**
-     * @var string
+     * @var string|array
      */
-    protected string $parameterName;
+    protected string|array $parameterName;
 
     /**
      * Constructor.
      *
-     * @param string $parameterName The name of the parameter for which this rule should be applied
+     * @param string|array $parameterName The name of the parameter for which this rule should be
+     * applied, or an array of names so the rule can be re-used with multiple parameters
      */
-    public function __construct(string $parameterName)
+    public function __construct(string|array $parameterName)
     {
         $this->parameterName = $parameterName;
     }
@@ -57,7 +58,9 @@ abstract class NamedParameterRule extends ParameterRule
      */
     public function supports(object $obj): bool
     {
+        $names = is_array($this->parameterName) ? $this->parameterName : [$this->parameterName];
+
         return parent::supports($obj) &&
-            $obj->getName() === $this->parameterName;
+            in_array($obj->getName(), $names);
     }
 }

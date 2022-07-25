@@ -99,14 +99,14 @@ class IntegerValueRule extends NamedParameterRule
      * Constructor.
      * If either the operator or the value is omitted, this validator will simply validate the type.
      *
-     * @param string $parameterName The name of the parameter for which this rule should be applied
+     * @param array|string $parameterName The name of the parameter for which this rule should be applied
      * @param string|null $operator Any of =, !=, <, >, <= or >=
      * @param int|null $value The value that should be considered with the operator
      *
      * @throws InvalidArgumentException if operator is not null and not in the list of valid operators,
      * or if $value is not null and not an integer
      */
-    public function __construct(string $parameterName, string $operator = null, int $value = null)
+    public function __construct(array|string $parameterName, string $operator = null, int $value = null)
     {
         parent::__construct($parameterName);
 

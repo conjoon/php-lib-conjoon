@@ -51,6 +51,11 @@ class IntegerValueRuleTest extends TestCase
         $parameterName = $this->makeAccessible($rule, "parameterName", true);
         $this->assertSame("name", $parameterName->getValue($rule));
         $this->assertInstanceOf(NamedParameterRule::class, $rule);
+
+        // make sure passing array is okay
+        $rule = new IntegerValueRule(["name"]);
+        $parameterName = $this->makeAccessible($rule, "parameterName", true);
+        $this->assertSame(["name"], $parameterName->getValue($rule));
     }
 
     /**

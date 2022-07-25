@@ -58,10 +58,10 @@ class ValueInWhitelistRule extends NamedParameterRule
     /**
      * Constructor.
      *
-     * @param string $parameterName The name of the parameter for which this rule should be applied
+     * @param array|string $parameterName The name of the parameter for which this rule should be applied
      * @param array $whitelist The list of allowed values that may appear with the value of the QueryParameter
      */
-    public function __construct(string $parameterName, array $whitelist)
+    public function __construct(array|string $parameterName, array $whitelist)
     {
         parent::__construct($parameterName);
         $this->whitelist = $whitelist;

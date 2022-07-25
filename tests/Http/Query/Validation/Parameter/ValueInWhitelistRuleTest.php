@@ -51,6 +51,11 @@ class ValueInWhitelistRuleTest extends TestCase
         $parameterName = $this->makeAccessible($rule, "parameterName", true);
         $this->assertSame("name", $parameterName->getValue($rule));
         $this->assertInstanceOf(NamedParameterRule::class, $rule);
+
+        // make sure passing array is okay
+        $rule = new ValueInWhitelistRule(["name"], []);
+        $parameterName = $this->makeAccessible($rule, "parameterName", true);
+        $this->assertSame(["name"], $parameterName->getValue($rule));
     }
 
 

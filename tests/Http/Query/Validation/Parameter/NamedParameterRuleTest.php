@@ -50,6 +50,10 @@ class NamedParameterRuleTest extends TestCase
         $parameterName = $this->makeAccessible($rule, "parameterName", true);
         $this->assertSame("parameter_name", $parameterName->getValue($rule));
         $this->assertInstanceOf(ParameterRule::class, $rule);
+
+        $rule = $this->createMockForAbstract(NamedParameterRule::class, [], [["parameter_name"]]);
+        $parameterName = $this->makeAccessible($rule, "parameterName", true);
+        $this->assertSame(["parameter_name"], $parameterName->getValue($rule));
     }
 
 
@@ -68,6 +72,15 @@ class NamedParameterRuleTest extends TestCase
         );
         $this->assertFalse(
             $rule->supports(new stdClass())
+        );
+
+        $rule = $this->createMockForAbstract(NamedParameterRule::class, [], [["name", "second_name"]]);
+
+        $this->assertTrue(
+            $rule->supports(new Parameter("name", "value"))
+        );
+        $this->assertTrue(
+            $rule->supports(new Parameter("second_name", "value"))
         );
     }
 }
