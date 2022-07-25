@@ -33,10 +33,10 @@ use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
-use Conjoon\Http\Query\Validation\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Validation\FieldsetParameterRule;
-use Conjoon\JsonApi\Validation\IncludeParameterRule;
+use Conjoon\JsonApi\Validation\Parameter\FieldsetRule;
+use Conjoon\JsonApi\Validation\Parameter\IncludeRule;
 use Conjoon\JsonApi\Validation\Validator;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
@@ -214,8 +214,8 @@ class ValidatorTest extends TestCase
         $rules = $validator->getParameterRules($query);
 
         $this->assertSame(2, count($rules));
-        $this->assertInstanceOf(IncludeParameterRule::class, $rules[0]);
-        $this->assertInstanceOf(FieldsetParameterRule::class, $rules[1]);
+        $this->assertInstanceOf(IncludeRule::class, $rules[0]);
+        $this->assertInstanceOf(FieldsetRule::class, $rules[1]);
         $this->assertSame($whitelist, $rules[0]->getWhitelist());
         $this->assertSame($objectDescriptionList, $rules[1]->getResourceObjectDescriptions());
         $this->assertSame($includes, $rules[1]->getIncludes());

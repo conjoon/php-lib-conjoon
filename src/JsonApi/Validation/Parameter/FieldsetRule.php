@@ -26,13 +26,13 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Validation;
+namespace Conjoon\JsonApi\Validation\Parameter;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Validation\ParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 
 /**
@@ -53,7 +53,7 @@ use Conjoon\JsonApi\Resource\ObjectDescriptionList;
  * Empty fieldsets in the form of "fields[TYPE]=" are treated as valid.
  *
  */
-class FieldsetParameterRule extends ParameterRule
+class FieldsetRule extends ParameterRule
 {
     use ParameterTrait;
 

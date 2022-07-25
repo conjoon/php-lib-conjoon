@@ -27,23 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Validation;
+namespace Tests\Conjoon\JsonApi\ValidationParameter;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Validation\ParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Validation\FieldsetParameterRule;
+use Conjoon\JsonApi\Validation\Parameter\FieldsetRule;
 use ReflectionException;
 use Tests\TestCase;
 
 /**
  * Tests IncludeParameterRule
  */
-class FieldsetParameterRuleTest extends TestCase
+class FieldsetRuleTest extends TestCase
 {
     /**
      * Class functionality
@@ -52,10 +52,10 @@ class FieldsetParameterRuleTest extends TestCase
     {
         $list = $this->getResourceObjectDescriptionList();
         $includes = $this->getIncludes();
-        $rule = new FieldsetParameterRule($list, $includes);
+        $rule = new FieldsetRule($list, $includes);
         $this->assertInstanceOf(ParameterRule::class, $rule);
 
-        $uses = class_uses(FieldsetParameterRule::class);
+        $uses = class_uses(FieldsetRule::class);
         $this->assertContains(ParameterTrait::class, $uses);
 
         $this->assertSame($list, $rule->getResourceObjectDescriptions());
@@ -69,7 +69,7 @@ class FieldsetParameterRuleTest extends TestCase
     public function testSupports()
     {
         $includes = $this->getIncludes();
-        $rule = new FieldsetParameterRule($this->getResourceObjectDescriptionList(), $includes);
+        $rule = new FieldsetRule($this->getResourceObjectDescriptionList(), $includes);
 
         $this->assertTrue($rule->supports(new Parameter("fields[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("field[MessageItem]", "")));
@@ -84,7 +84,7 @@ class FieldsetParameterRuleTest extends TestCase
     {
         $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list, $includes);
+        $rule = new FieldsetRule($list, $includes);
         $getFields = $this->makeAccessible($rule, "getFields");
 
         $this->assertEquals(
@@ -122,7 +122,7 @@ class FieldsetParameterRuleTest extends TestCase
         $errors = new ValidationErrors();
         $includes = array_merge(["unknown"], $this->getIncludes());
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list, $includes);
+        $rule = new FieldsetRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 
         $parameter = new Parameter("fields[unknown]", "field1,field2");
@@ -268,7 +268,7 @@ class FieldsetParameterRuleTest extends TestCase
         $errors = new ValidationErrors();
         $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetParameterRule($list, $includes);
+        $rule = new FieldsetRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 
         return [

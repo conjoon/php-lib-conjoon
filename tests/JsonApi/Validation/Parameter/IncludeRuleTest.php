@@ -27,27 +27,27 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Validation;
+namespace Tests\Conjoon\JsonApi\Parameter\Validation;
 
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
+use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Validation\IncludeParameterRule;
+use Conjoon\JsonApi\Validation\Parameter\IncludeRule;
 use Tests\TestCase;
 
 /**
- * Tests IncludeParameterRule
+ * Tests IncludeRule
  */
-class IncludeParameterRuleTest extends TestCase
+class IncludeRuleTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $rule = new IncludeParameterRule([]);
+        $rule = new IncludeRule([]);
         $this->assertInstanceOf(ValueInWhitelistRule::class, $rule);
     }
 
@@ -57,7 +57,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testMerge()
     {
-        $rule = new IncludeParameterRule([]);
+        $rule = new IncludeRule([]);
         $merge = $this->makeAccessible($rule, "merge");
 
         $tests = [
@@ -117,7 +117,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testParameterName()
     {
-        $rule = new IncludeParameterRule([]);
+        $rule = new IncludeRule([]);
         $parameterName = $this->makeAccessible($rule, "parameterName", true);
         $this->assertSame("include", $parameterName->getValue($rule));
     }
@@ -128,7 +128,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testParse()
     {
-        $rule = new IncludeParameterRule([]);
+        $rule = new IncludeRule([]);
         $merge = $this->makeAccessible($rule, "parse");
 
         $this->assertEquals(
@@ -148,7 +148,7 @@ class IncludeParameterRuleTest extends TestCase
      */
     public function testIsParameterValueValid()
     {
-        $rule = new IncludeParameterRule([]);
+        $rule = new IncludeRule([]);
         $isParameterValueValid = $this->makeAccessible($rule, "isParameterValueValid");
 
         $parameter = new Parameter("include", "MailFolder,MailFolder.MailAccount");

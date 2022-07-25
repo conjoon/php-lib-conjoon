@@ -26,11 +26,11 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Validation;
+namespace Conjoon\JsonApi\Validation\Parameter;
 
 use Conjoon\Core\Data\ArrayUtil;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
+use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
 
 /**
  * Class providing functionality for making sure a query's include parameter contains only valid
@@ -39,7 +39,7 @@ use Conjoon\Http\Query\Validation\ValueInWhitelistRule;
  *
  * Validates include-parameter values in the form of Resource[.RelationShipResource]
  */
-class IncludeParameterRule extends ValueInWhitelistRule
+class IncludeRule extends ValueInWhitelistRule
 {
     /**
      * @inheritdoc
