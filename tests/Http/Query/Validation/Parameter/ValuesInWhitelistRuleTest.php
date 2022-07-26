@@ -68,7 +68,5 @@ class ValuesInWhitelistRuleTest extends TestCase
             $rule,
             [new Parameter("name", "b,c,d"), $whitelist]
         ));
-
     }
-
 }

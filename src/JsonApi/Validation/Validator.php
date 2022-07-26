@@ -185,5 +185,4 @@ class Validator extends HttpQueryValidator
 
         return array_merge($res, array_map(fn ($field) => "-$field", $res));
     }
-
 }

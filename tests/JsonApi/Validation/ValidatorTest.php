@@ -81,13 +81,15 @@ class ValidatorTest extends TestCase
         $validator = new Validator();
         $getAvailableSortFields = $this->makeAccessible($validator, "getAvailableSortFields");
         $resourceTarget = $this->createMockForAbstract(
-            ObjectDescription::class, [
+            ObjectDescription::class,
+            [
                 "getType", "getFields", "getAllRelationshipResourceDescriptions"
             ]
         );
 
         $resourceTargetChild = $this->createMockForAbstract(
-            ObjectDescription::class, ["getFields", "getType"]
+            ObjectDescription::class,
+            ["getFields", "getType"]
         );
         $resourceTarget->expects($this->once())->method("getType")->willReturn("MessageItem");
         $resourceTarget->expects($this->exactly(2))->method("getFields")->willReturn(

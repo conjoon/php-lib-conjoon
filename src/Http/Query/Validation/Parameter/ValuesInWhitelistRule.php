@@ -38,13 +38,11 @@ use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
  */
 class ValuesInWhitelistRule extends ValueInWhitelistRule
 {
-
     /**
      * @inheritdoc
      */
     protected function isParameterValueValid(Parameter $parameter, array $whitelist): bool
     {
-        return count(array_values(array_diff(explode(",",$parameter->getValue()), $whitelist))) === 0;
+        return count(array_values(array_diff(explode(",", $parameter->getValue()), $whitelist))) === 0;
     }
-
 }
