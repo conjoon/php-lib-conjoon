@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message;
 
-use Conjoon\Util\Copyable;
+use Conjoon\Core\Contract\Copyable;
 
 /**
  * Class MessagePart models a simplified representation of a Mail Message Part,

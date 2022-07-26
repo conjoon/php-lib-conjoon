@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Util\AbstractList;
+use Conjoon\Core\Data\AbstractList;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
@@ -58,7 +58,7 @@ class MessageItemListTest extends TestCase
 
         $messageItemList = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $messageItemList);
-
+        $this->assertInstanceOf(Arrayable::class, $messageItemList);
         $this->assertSame(ListMessageItem::class, $messageItemList->getEntityType());
 
         $this->assertSame([

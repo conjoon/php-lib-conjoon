@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Message;
 
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Util\Copyable;
+use Conjoon\Core\Contract\Copyable;
 use Tests\TestCase;
 
 /**
