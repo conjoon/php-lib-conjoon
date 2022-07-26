@@ -31,12 +31,15 @@ namespace Conjoon\JsonApi\Validation;
 
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
 use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Validation\Parameter\IncludeRule;
+use Conjoon\JsonApi\Validation\Parameter\SortRule;
 
 /**
  * Class for validating queries that must be checked for validity according to JSON:API
@@ -62,13 +65,20 @@ class Validator extends HttpQueryValidator
      */
     public function getParameterRules(HttpQuery $query): array
     {
+        $resourceTarget = $query->getResourceTarget();
+
         $include  = $query->getParameter("include");
         $includes = $include
                     ? $this->unfoldInclude($include)
                     : [];
 
-        $resourceTarget = $query->getResourceTarget();
+        $sort = $query->getParameter("sort");
+        $sort = $sort
+                ? $this->getAvailableSortFields($resourceTarget)
+                : [];
+
         return [
+            new ValuesInWhitelistRule("sort", $sort),
             new IncludeRule($resourceTarget->getAllRelationshipPaths()),
             new FieldsetRule(
                 $resourceTarget->getAllRelationshipResourceDescriptions(true),
@@ -118,7 +128,7 @@ class Validator extends HttpQueryValidator
      * an array with all resource types as unique values in the resulting array.
      *
      * @example
-     *    Util::unfoldInclude(
+     *   $this->unfoldInclude(
      *        new Parameter("include",
      *        "MailFolder.MailAccount,MailFolder"));  // ["MailAccount", "MailFolder"]
      *
@@ -151,4 +161,29 @@ class Validator extends HttpQueryValidator
 
         return array_values(array_unique($res));
     }
+
+
+    /**
+     * Returns all available fields for the specified $resourceTarget to be used with the sort query parameter.
+     * The list returned will be an array containing the field names, and dot-separated field names where the
+     * first part of the name is the type of the resource target.
+     *
+     * @param ObjectDescription $resourceTarget
+     * @return array
+     */
+    protected function getAvailableSortFields(ObjectDescription $resourceTarget): array
+    {
+        $res = $resourceTarget->getFields();
+
+        $descriptions = $resourceTarget->getAllRelationshipResourceDescriptions(true);
+
+        foreach ($descriptions as $entity) {
+            $fields = $entity->getFields();
+            $type   = $entity->getType();
+            $res = array_merge($res, array_map(fn ($field) => "$type.$field", $fields));
+        }
+
+        return array_merge($res, array_map(fn ($field) => "-$field", $res));
+    }
+
 }
