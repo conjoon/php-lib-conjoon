@@ -32,7 +32,6 @@ namespace Tests\Conjoon\JsonApi\Validation;
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
@@ -72,58 +71,6 @@ class ValidatorTest extends TestCase
         $unfold->invokeArgs($validator, [$parameter]);
     }
 
-
-    /**
-     * tests getAvailableSortFields
-     */
-    public function testGetAvailableSortFields()
-    {
-        $validator = new Validator();
-        $getAvailableSortFields = $this->makeAccessible($validator, "getAvailableSortFields");
-        $resourceTarget = $this->createMockForAbstract(
-            ObjectDescription::class,
-            [
-                "getType", "getFields", "getAllRelationshipResourceDescriptions"
-            ]
-        );
-
-        $resourceTargetChild = $this->createMockForAbstract(
-            ObjectDescription::class,
-            ["getFields", "getType"]
-        );
-        $resourceTarget->expects($this->once())->method("getType")->willReturn("MessageItem");
-        $resourceTarget->expects($this->exactly(2))->method("getFields")->willReturn(
-            ["subject", "date", "size"]
-        );
-
-        $resourceTargetChild->expects($this->once())->method("getType")->willReturn("MailFolder");
-        $resourceTargetChild->expects($this->once())->method("getFields")->willReturn(
-            ["unreadMessages", "totalMessages"]
-        );
-
-        $resourceTargetList = new ObjectDescriptionList();
-        $resourceTargetList[] = $resourceTarget;
-        $resourceTargetList[] = $resourceTargetChild;
-
-        $resourceTarget->expects($this->once())
-            ->method("getAllRelationshipResourceDescriptions")
-            ->with(true)
-            ->willReturn($resourceTargetList);
-
-
-        $sortFields = [
-            "subject", "date", "size", "-subject", "-date", "-size",
-            "MessageItem.subject", "MessageItem.date", "MessageItem.size",
-            "-MessageItem.subject", "-MessageItem.date", "-MessageItem.size",
-            "MailFolder.unreadMessages", "MailFolder.totalMessages", "-MailFolder.unreadMessages",
-            "-MailFolder.totalMessages"
-        ];
-
-        $this->assertEqualsCanonicalizing(
-            $sortFields,
-            $getAvailableSortFields->invokeArgs($validator, [$resourceTarget])
-        );
-    }
 
     /**
      * tests unfold()
@@ -234,8 +181,6 @@ class ValidatorTest extends TestCase
     {
         $includes = ["MessageItem", "MailFolder"];
         $includeParameter = new Parameter("include", "MessageItem,MailFolder");
-        $sort = ["date", "subject", "size"];
-        $sortParameter = new Parameter("sort", "-date,subject");
         $whitelist = ["fields[MessageItem]"];
         $objectDescriptionList = new ObjectDescriptionList();
 
@@ -250,10 +195,10 @@ class ValidatorTest extends TestCase
         );
 
         $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
-        $query->expects($this->exactly(2))
+        $query->expects($this->exactly(1))
               ->method("getParameter")
-              ->withConsecutive(["include"], ["sort"])
-              ->willReturnOnConsecutiveCalls($includeParameter, $sortParameter);
+              ->withConsecutive(["include"])
+              ->willReturnOnConsecutiveCalls($includeParameter);
 
         $resourceTarget->expects($this->once())->method("getAllRelationshipPaths")->willReturn(
             $whitelist
@@ -265,17 +210,14 @@ class ValidatorTest extends TestCase
                        ->willReturn($objectDescriptionList);
 
         $validator = $this->createMockForAbstract(Validator::class, ["getAvailableSortFields"]);
-        $validator->expects($this->once())->method("getAvailableSortFields")->willReturn($sort);
 
         $rules = $validator->getParameterRules($query);
 
-        $this->assertSame(3, count($rules));
-        $this->assertInstanceOf(ValuesInWhitelistRule::class, $rules[0]);
-        $this->assertInstanceOf(IncludeRule::class, $rules[1]);
-        $this->assertInstanceOf(FieldsetRule::class, $rules[2]);
-        $this->assertSame($sort, $rules[0]->getWhitelist());
-        $this->assertSame($whitelist, $rules[1]->getWhitelist());
-        $this->assertSame($objectDescriptionList, $rules[2]->getResourceObjectDescriptions());
-        $this->assertSame($includes, $rules[2]->getIncludes());
+        $this->assertSame(2, count($rules));
+        $this->assertInstanceOf(IncludeRule::class, $rules[0]);
+        $this->assertInstanceOf(FieldsetRule::class, $rules[1]);
+        $this->assertSame($whitelist, $rules[0]->getWhitelist());
+        $this->assertSame($objectDescriptionList, $rules[1]->getResourceObjectDescriptions());
+        $this->assertSame($includes, $rules[1]->getIncludes());
     }
 }
