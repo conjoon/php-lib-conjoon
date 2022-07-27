@@ -159,7 +159,7 @@ class CollectionValidatorTest extends TestCase
 
         $rules = $validator->getParameterRules($query);
 
-        $this->assertInstanceOf(ValuesInWhitelistRule::class, $rules[0]);
-        $this->assertSame($sort, $rules[0]->getWhitelist());
+        $this->assertInstanceOf(ValuesInWhitelistRule::class, $rules->peek());
+        $this->assertSame($sort, $rules->peek()->getWhitelist());
     }
 }

@@ -31,7 +31,9 @@ namespace Conjoon\JsonApi\Query\Validation;
 
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
 use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\QueryRuleList;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
@@ -60,7 +62,7 @@ class Validator extends HttpQueryValidator
      *
      * @return array
      */
-    public function getParameterRules(HttpQuery $query): array
+    public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
         $resourceTarget = $query->getResourceTarget();
 
@@ -69,13 +71,14 @@ class Validator extends HttpQueryValidator
             ? $this->unfoldInclude($include)
             : [];
 
-        return [
-            new IncludeRule($resourceTarget->getAllRelationshipPaths()),
-            new FieldsetRule(
-                $resourceTarget->getAllRelationshipResourceDescriptions(true),
-                $includes
-            ),
-        ];
+        $list = new ParameterRuleList();
+        $list[] = new IncludeRule($resourceTarget->getAllRelationshipPaths());
+        $list[] = new FieldsetRule(
+            $resourceTarget->getAllRelationshipResourceDescriptions(true),
+            $includes
+        );
+
+        return $list;
     }
 
 
@@ -86,11 +89,12 @@ class Validator extends HttpQueryValidator
      *
      * @return array
      */
-    public function getQueryRules(HttpQuery $query): array
+    public function getQueryRules(HttpQuery $query): QueryRuleList
     {
-        return [
-            new ParameterNamesInListQueryRule($this->getValidParameterNamesForQuery($query))
-        ];
+        $list = new QueryRuleList();
+        $list[] = new ParameterNamesInListQueryRule($this->getValidParameterNamesForQuery($query));
+
+        return $list;
     }
 
 

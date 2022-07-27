@@ -34,6 +34,8 @@ use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Core\Validation\Validator as BaseValidator;
 use Conjoon\Http\Query\Exception\UnexpectedQueryException;
 use Conjoon\Http\Query\Query;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
+use Conjoon\Http\Query\Validation\Query\QueryRuleList;
 
 /**
  * Class for validating queries that must be checked for validity with QueryRules and ParameterRules.
@@ -95,7 +97,7 @@ abstract class Validator implements BaseValidator
      *
      * @return array
      */
-    abstract public function getParameterRules(Query $query): array;
+    abstract public function getParameterRules(Query $query): ParameterRuleList;
 
 
     /**
@@ -105,5 +107,5 @@ abstract class Validator implements BaseValidator
      *
      * @return array
      */
-    abstract public function getQueryRules(Query $query): array;
+    abstract public function getQueryRules(Query $query): QueryRuleList;
 }

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation;
 
-
+use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
 use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
@@ -51,7 +51,7 @@ class CollectionValidator extends Validator
      *
      * @return array
      */
-    public function getParameterRules(HttpQuery $query): array
+    public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
         $resourceTarget = $query->getResourceTarget();
 
@@ -60,12 +60,10 @@ class CollectionValidator extends Validator
             ? $this->getAvailableSortFields($resourceTarget)
             : [];
 
-        return array_merge(
-            [
-                new ValuesInWhitelistRule("sort", $sort)
-            ],
-            parent::getParameterRules($query)
-        );
+        $list = parent::getParameterRules($query);
+        $list[] = new ValuesInWhitelistRule("sort", $sort);
+
+        return $list;
     }
 
 

@@ -36,8 +36,10 @@ use Conjoon\Http\Query\Exception\UnexpectedQueryException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;
 use Conjoon\Http\Query\Query;
-use Conjoon\Http\Query\Validation\ParameterRule;
-use Conjoon\Http\Query\Validation\QueryRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
+use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
+use Conjoon\Http\Query\Validation\Query\QueryRule;
+use Conjoon\Http\Query\Validation\Query\QueryRuleList;
 use Conjoon\Http\Query\Validation\Validator;
 use stdClass;
 use Tests\TestCase;
@@ -115,19 +117,18 @@ class ValidatorTest extends TestCase
               ->method("getAllParameters")
               ->willReturn($parameters);
 
-        $queryRules = [
-            $this->createMockForAbstract(QueryRule::class, ["supports", "validate"]),
-            $this->createMockForAbstract(QueryRule::class, ["supports", "validate"])
-        ];
+        $queryRules = new QueryRuleList();
+        $queryRules[] = $this->createMockForAbstract(QueryRule::class, ["supports", "validate"]);
+        $queryRules[] = $this->createMockForAbstract(QueryRule::class, ["supports", "validate"]);
 
-        $parameterRules = [
-            $this->createMockForAbstract(ParameterRule::class, [
-                "supports", "validate"
-            ]),
-            $this->createMockForAbstract(ParameterRule::class, [
-                "supports", "validate"
-            ])
-        ];
+        $parameterRules = new ParameterRuleList();
+        $parameterRules[] = $this->createMockForAbstract(ParameterRule::class, [
+            "supports", "validate"
+        ]);
+
+        $parameterRules[] = $this->createMockForAbstract(ParameterRule::class, [
+            "supports", "validate"
+        ]);
 
         $validator = $this->getMockBuilder(Validator::class)
                           ->onlyMethods(["getQueryRules", "getParameterRules"])
