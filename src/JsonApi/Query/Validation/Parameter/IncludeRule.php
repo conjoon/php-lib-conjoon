@@ -26,7 +26,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Validation\Parameter;
+namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Core\Data\ArrayUtil;
 use Conjoon\Http\Query\Parameter;

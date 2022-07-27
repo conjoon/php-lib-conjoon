@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\ValidationParameter;
+namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
@@ -36,7 +36,7 @@ use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Validation\Parameter\FieldsetRule;
+use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use ReflectionException;
 use Tests\TestCase;
 

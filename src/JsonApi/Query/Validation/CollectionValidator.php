@@ -27,14 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Validation;
+namespace Conjoon\JsonApi\Query\Validation;
 
 
 use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Validation\Parameter\SortRule;
 
 /**
  * Class for validating queries that target resource collections according to JSON:API

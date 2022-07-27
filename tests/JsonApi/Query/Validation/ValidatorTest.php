@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Validation;
+namespace Tests\Conjoon\JsonApi\Query\Validation;
 
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
@@ -35,9 +35,9 @@ use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Validation\Parameter\FieldsetRule;
-use Conjoon\JsonApi\Validation\Parameter\IncludeRule;
-use Conjoon\JsonApi\Validation\Validator;
+use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
+use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
+use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use ReflectionException;

@@ -1,7 +1,6 @@
 <?php
 
 /**
- * conjoon
  * php-lib-conjoon
  * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
@@ -27,40 +26,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query\Validation\Query;
+namespace Conjoon\JsonApi\Query\Validation\Query;
 
-use Conjoon\JsonApi\Query\Query;
 use Conjoon\Http\Query\Validation\Query\QueryRule as HttpQueryRule;
-use Conjoon\JsonApi\Validation\Query\QueryRule;
-use stdClass;
-use Tests\TestCase;
+use Conjoon\JsonApi\Query\Query;
 
 /**
- * Tests JsonApi's QueryRule implementation.
+ * Rule specific for JsonApi.
  */
-class QueryRuleTest extends TestCase
+abstract class QueryRule extends HttpQueryRule
 {
     /**
-     * Class functionality
+     * @inheritdoc
      */
-    public function testClass()
+    public function supports(object $obj): bool
     {
-        $rule = $this->createMockForAbstract(QueryRule::class);
-        $this->assertInstanceOf(HttpQueryRule::class, $rule);
-    }
-
-    /**
-     * test supports()
-     */
-    public function testSupports()
-    {
-        $rule = $this->createMockForAbstract(QueryRule::class);
-
-        $this->assertFalse($rule->supports(new stdClass()));
-        $this->assertTrue(
-            $rule->supports(
-                $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock()
-            )
-        );
+        return $obj instanceof Query;
     }
 }

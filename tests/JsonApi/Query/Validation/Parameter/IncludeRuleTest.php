@@ -27,14 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Parameter\Validation;
+namespace Tests\Conjoon\JsonApi\Query\Parameter\Validation;
 
-use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
-use Conjoon\JsonApi\Query\Query as JsonApiQuery;
-use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Validation\Parameter\IncludeRule;
+use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
 use Tests\TestCase;
 
 /**
