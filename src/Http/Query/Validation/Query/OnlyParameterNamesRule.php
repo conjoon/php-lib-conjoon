@@ -37,7 +37,7 @@ use Conjoon\Http\Query\Query;
  * named after entries specified in a list. The list of allowed entries should be
  * returned by getWhitelist.
  */
-class ParameterNamesInListQueryRule extends QueryRule
+class OnlyParameterNamesRule extends QueryRule
 {
     /**
      * @var array

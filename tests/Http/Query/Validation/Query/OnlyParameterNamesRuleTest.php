@@ -31,21 +31,21 @@ namespace Tests\Conjoon\Http\Query\Validation\Query;
 
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
-use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
 use Conjoon\Http\Query\Validation\Query\QueryRule;
 use Tests\TestCase;
 
 /**
- * Tests ParameterNamesInListQueryRule.
+ * Tests OnlyParameterNamesRule.
  */
-class ParameterNamesInListQueryRuleTest extends TestCase
+class OnlyParameterNamesRuleTest extends TestCase
 {
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $rule = new ParameterNamesInListQueryRule([]);
+        $rule = new OnlyParameterNamesRule([]);
         $this->assertInstanceOf(QueryRule::class, $rule);
     }
 
@@ -53,7 +53,7 @@ class ParameterNamesInListQueryRuleTest extends TestCase
     {
         $whitelist = ["include", "filter"];
 
-        $rule = new ParameterNamesInListQueryRule($whitelist);
+        $rule = new OnlyParameterNamesRule($whitelist);
         $this->assertEquals($whitelist, $rule->getWhitelist());
     }
 
@@ -63,7 +63,7 @@ class ParameterNamesInListQueryRuleTest extends TestCase
      */
     public function testValidate()
     {
-        $rule = $this->getMockBuilder(ParameterNamesInListQueryRule::class)
+        $rule = $this->getMockBuilder(OnlyParameterNamesRule::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getWhiteList"])
             ->getMock();
