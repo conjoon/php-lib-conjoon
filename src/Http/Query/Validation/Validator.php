@@ -108,4 +108,21 @@ abstract class Validator implements BaseValidator
      * @return array
      */
     abstract public function getQueryRules(Query $query): QueryRuleList;
+
+
+    /**
+     * Returns a list of parameter names that must be available with the Query.
+     *
+     * @return array
+     */
+    abstract public function getRequiredParameterNames(Query $query): array;
+
+
+    /**
+     * Returns a list of allowed parameter names that must appear exclusively with the
+     * query.
+     *
+     * @return array
+     */
+    abstract public function getAllowedParameterNames(Query $query): array;
 }

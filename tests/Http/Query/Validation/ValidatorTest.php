@@ -130,9 +130,10 @@ class ValidatorTest extends TestCase
             "supports", "validate"
         ]);
 
-        $validator = $this->getMockBuilder(Validator::class)
-                          ->onlyMethods(["getQueryRules", "getParameterRules"])
-                          ->getMock();
+        $validator = $this->createMockForAbstract(Validator::class, [
+              "getQueryRules",
+              "getParameterRules"
+          ]);
 
         $validator->expects($this->once())->method("getQueryRules")->with($query)->willReturn($queryRules);
         $validator->expects($this->once())->method("getParameterRules")->with($query)->willReturn($parameterRules);

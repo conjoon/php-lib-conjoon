@@ -33,7 +33,7 @@ use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
-use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
@@ -41,6 +41,7 @@ use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use ReflectionException;
+use Conjoon\Http\Query\Validation\Query\RequiredParameterNamesRule;
 use Tests\TestCase;
 
 /**
@@ -96,9 +97,9 @@ class ValidatorTest extends TestCase
 
 
     /**
-     * test getValidParameterNamesForQuery()
+     * test getAllowedParameterNames()
      */
-    public function testGetValidParameterNamesForQuery()
+    public function testGetAllowedParameterNames()
     {
         $validator = new Validator();
 
@@ -121,7 +122,25 @@ class ValidatorTest extends TestCase
             "fields[entity]",
             "fields[path]",
             "fields[path.entity2]"
-        ], $validator->getValidParameterNamesForQuery($query));
+        ], $validator->getAllowedParameterNames($query));
+    }
+
+
+    /**
+     * test getRequiredParameterNames()
+     */
+    public function testGetRequiredParameterNames()
+    {
+        $validator = new Validator();
+
+        $query = $this->getMockBuilder(Query::class)
+                      ->disableOriginalConstructor()
+                      ->getMock();
+
+        $this->assertEquals(
+            [],
+            $validator->getRequiredParameterNames($query)
+        );
     }
 
 
@@ -152,25 +171,34 @@ class ValidatorTest extends TestCase
      */
     public function testGetQueryRules()
     {
-        $parameterNames = ["include"];
+        $allowedParameterNames = ["include"];
+        $requiredParameterNames = ["include"];
 
         $validator = $this->getMockBuilder(Validator::class)
-                          ->onlyMethods(["getValidParameterNamesForQuery"])
+                          ->onlyMethods(["getAllowedParameterNames", "getRequiredParameterNames"])
                           ->getMock();
 
         $query = $this->getMockBuilder(Query::class)
                       ->disableOriginalConstructor()->getMock();
 
-        $validator->expects($this->once())->method("getValidParameterNamesForQuery")
+        $validator->expects($this->once())->method("getAllowedParameterNames")
                   ->with($query)
-                  ->willReturn($parameterNames);
+                  ->willReturn($allowedParameterNames);
+
+        $validator->expects($this->once())->method("getRequiredParameterNames")
+            ->with($query)
+            ->willReturn($requiredParameterNames);
 
 
         $rules = $validator->getQueryRules($query);
 
-        $this->assertSame(1, count($rules));
-        $this->assertInstanceOf(ParameterNamesInListQueryRule::class, $rules[0]);
-        $this->assertSame($parameterNames, $rules[0]->getWhitelist());
+        $this->assertSame(2, count($rules));
+
+        $this->assertInstanceOf(OnlyParameterNamesRule::class, $rules[0]);
+        $this->assertSame($allowedParameterNames, $rules[0]->getWhitelist());
+
+        $this->assertInstanceOf(RequiredParameterNamesRule::class, $rules[1]);
+        $this->assertSame($requiredParameterNames, $rules[1]->getRequired());
     }
 
 

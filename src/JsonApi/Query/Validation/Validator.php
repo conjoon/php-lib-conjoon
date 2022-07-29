@@ -32,8 +32,9 @@ namespace Conjoon\JsonApi\Query\Validation;
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
-use Conjoon\Http\Query\Validation\Query\ParameterNamesInListQueryRule;
+use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
 use Conjoon\Http\Query\Validation\Query\QueryRuleList;
+use Conjoon\Http\Query\Validation\Query\RequiredParameterNamesRule;
 use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
@@ -92,7 +93,8 @@ class Validator extends HttpQueryValidator
     public function getQueryRules(HttpQuery $query): QueryRuleList
     {
         $list = new QueryRuleList();
-        $list[] = new ParameterNamesInListQueryRule($this->getValidParameterNamesForQuery($query));
+        $list[] = new OnlyParameterNamesRule($this->getAllowedParameterNames($query));
+        $list[] = new RequiredParameterNamesRule($this->getRequiredParameterNames($query));
 
         return $list;
     }
@@ -105,7 +107,7 @@ class Validator extends HttpQueryValidator
      *
      * @return array
      */
-    public function getValidParameterNamesForQuery(Query $query): array
+    public function getAllowedParameterNames(HttpQuery $query): array
     {
         $resourceTarget = $query->getResourceTarget();
         $exp = ["include", "fields[{$resourceTarget->getType()}]"];
@@ -116,6 +118,16 @@ class Validator extends HttpQueryValidator
 
         return $exp;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getRequiredParameterNames(HttpQuery $query): array
+    {
+        return [];
+    }
+
 
 
     /**
