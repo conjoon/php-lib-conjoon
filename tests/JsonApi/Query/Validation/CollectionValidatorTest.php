@@ -52,14 +52,13 @@ class CollectionValidatorTest extends TestCase
         $this->assertInstanceOf(Validator::class, $validator);
     }
 
-
     /**
-     * tests getAvailableSortFields
+     * tests getAvailableFields
      */
-    public function testGetAvailableSortFields()
+    public function testGetAvailableFields()
     {
         $validator = new CollectionValidator();
-        $getAvailableSortFields = $this->makeAccessible($validator, "getAvailableSortFields");
+        $getAvailableFields = $this->makeAccessible($validator, "getAvailableFields");
         $resourceTarget = $this->createMockForAbstract(
             ObjectDescription::class,
             [
@@ -91,13 +90,43 @@ class CollectionValidatorTest extends TestCase
             ->willReturn($resourceTargetList);
 
 
-        $sortFields = [
-            "subject", "date", "size", "-subject", "-date", "-size",
+        $fields = [
+            "subject", "date", "size",
             "MessageItem.subject", "MessageItem.date", "MessageItem.size",
-            "-MessageItem.subject", "-MessageItem.date", "-MessageItem.size",
-            "MailFolder.unreadMessages", "MailFolder.totalMessages", "-MailFolder.unreadMessages",
-            "-MailFolder.totalMessages"
+            "MailFolder.unreadMessages", "MailFolder.totalMessages"
         ];
+
+        $this->assertEqualsCanonicalizing(
+            $fields,
+            $getAvailableFields->invokeArgs($validator, [$resourceTarget])
+        );
+    }
+
+
+    /**
+     * tests getAvailableSortFields
+     */
+    public function testGetAvailableSortFields()
+    {
+        $fields = [
+            "subject", "date", "size",
+            "MessageItem.subject", "MessageItem.date", "MessageItem.size",
+           "MailFolder.unreadMessages", "MailFolder.totalMessages"
+        ];
+
+        $sortFields = array_merge($fields, array_map(fn ($field) => "-" . $field, $fields));
+
+        $validator = $this->getMockBuilder(CollectionValidator::class)
+                          ->disableOriginalConstructor()
+                          ->onlyMethods(["getAvailableFields"])
+                          ->getMock();
+
+        $getAvailableSortFields = $this->makeAccessible($validator, "getAvailableSortFields");
+        $validator->expects($this->once())->method("getAvailableFields")->willReturn(
+            $fields
+        );
+
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
 
         $this->assertEqualsCanonicalizing(
             $sortFields,
@@ -107,9 +136,9 @@ class CollectionValidatorTest extends TestCase
 
 
     /**
-     * test getValidParameterNamesForQuery()
+     * test getAllowedParameterNames()
      */
-    public function testGetValidParameterNamesForQuery()
+    public function getAllowedParameterNames()
     {
         $validator = new CollectionValidator();
 
@@ -124,7 +153,7 @@ class CollectionValidatorTest extends TestCase
 
         $this->assertContains(
             "sort",
-            $validator->getValidParameterNamesForQuery($query)
+            $validator->getAllowedParameterNames($query)
         );
     }
 

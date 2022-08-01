@@ -70,14 +70,14 @@ class CollectionValidator extends Validator
     /**
      * Returns all the parameter names for a collection query, including paging and sorting parameter options.
      *
-     * @param Query $query
+     * @param HttpQuery $query
      *
      * @return array
      */
-    public function getValidParameterNamesForQuery(Query $query): array
+    public function getAllowedParameterNames(HttpQuery $query): array
     {
         return array_merge(
-            parent::getValidParameterNamesForQuery($query),
+            parent::getAllowedParameterNames($query),
             ["sort"]
         );
     }
@@ -93,6 +93,22 @@ class CollectionValidator extends Validator
      */
     protected function getAvailableSortFields(ObjectDescription $resourceTarget): array
     {
+        $res = $this->getAvailableFields($resourceTarget);
+
+        return array_merge($res, array_map(fn ($field) => "-$field", $res));
+    }
+
+
+    /**
+     * Returns all available fields for the specified $resourceTarget, along with its relationships.
+     * The list returned will be an array containing the field names, and dot-separated field names where the
+     * first part of the name is the type of the resource target, or the related resource target.
+     *
+     * @param ObjectDescription $resourceTarget
+     * @return array
+     */
+    protected function getAvailableFields(ObjectDescription $resourceTarget): array
+    {
         $res = $resourceTarget->getFields();
 
         $descriptions = $resourceTarget->getAllRelationshipResourceDescriptions(true);
@@ -103,6 +119,6 @@ class CollectionValidator extends Validator
             $res = array_merge($res, array_map(fn ($field) => "$type.$field", $fields));
         }
 
-        return array_merge($res, array_map(fn ($field) => "-$field", $res));
+        return $res;
     }
 }
