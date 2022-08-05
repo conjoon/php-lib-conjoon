@@ -156,21 +156,34 @@ class PnFilterRuleTest extends TestCase
                 "result" => "is not a valid operator"
             ],
             [
-                "filter" => ["AND" => [ "=" => ["size" => 1000], ">" => ["date" => 127000000]]],
+                "filter" => ["AND" => [[ "=" => ["size" => 1000]], [">" => ["date" => 127000000]]]],
                 "result" => true
             ],
             [
-                "filter" => ["AND" => [ "=" => ["size" => 1000]]],
+                "filter" => ["AND" => [[ "=" => ["size" => 1000]]]],
                 "result" => "expects at least 2 operands"
             ],
             [
-                "filter" => ["OR" => [ "=" => ["size" => 1000], "IN" => ["subject" => ["Hello World"]]]],
+                "filter" => ["OR" => [ ["=" => ["size" => 1000]], ["IN" => ["subject" => ["Hello World"]]]]],
                 "result" => true
             ],
             [
-                "filter" => ["OR" => [ "=" => ["size" => 1000], ">" => ["IN" => ["subject" => ["Hello World"]]]]],
+                "filter" => ["OR" => [ ["=" => ["size" => 1000]], [">" => ["IN" => ["subject" => ["Hello World"]]]]]],
                 "result" => "needs a valid attribute"
+            ],
+            [
+                "filter" => [
+                    "OR" => [
+                        ["=" => ["id" => 4]],
+                        ["AND" => [
+                            ["="  => ["subject"  => "Hello World"]],
+                            [">=" => ["size"     => 1657]]
+                        ]]
+                    ]
+                ],
+                "result" => true
             ]
+
         ];
 
 

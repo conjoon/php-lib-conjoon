@@ -43,7 +43,7 @@ use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
  * ?filter={"=": {"id": 1]}
  *
  * The following requests data marked as "recent", or data marked as "unseen" and with an id >= 1657:
- * ?filter={"OR":{"=":{"recent":true}, "AND": {"=": "unseen": true}, ">=": {"id":1657}}
+ * ?filter={"OR":[{"=":{"recent":true}}, "AND": [{"=": {"unseen": true}}, {">=": {"id":1657}}]}
  *
  * This rule applies for parameters named "filter"
  */
@@ -96,17 +96,21 @@ class PnFilterRule extends JsonEncodedRule
                     continue;
                 }
 
-                //{"AND" : {"=": ..., ">=" : ...}}
+                //{"AND" : [{"=": ...}, {">=" : ...}}]
                 if ($this->isLogicalOperator($operator)) {
-                    $rules = array_keys($filter);
-
-                    if (count($rules) <= 1) {
+                    if (count($filter) <= 1) {
                         return "Logical operator \"$operator\" " .
-                            "expects at least 2 operands, " . count($rules) . " given";
+                            "expects at least 2 operands, " . count($filter) . " given";
                     }
                 }
 
-                return $parse($filter);
+                foreach($filter as $operand) {
+                    $res = $parse($operand);
+                    if (is_string($res)) {
+                        return $res;
+                    }
+                }
+
             }
 
             return true;
