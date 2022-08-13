@@ -32,18 +32,17 @@ namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
+use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
+use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use ReflectionException;
 use Tests\TestCase;
 
 /**
  * Tests IncludeParameterRule
  */
-class FieldsetRuleTest extends TestCase
+class RelfieldRuleTest extends TestCase
 {
     /**
      * Class functionality
@@ -52,14 +51,8 @@ class FieldsetRuleTest extends TestCase
     {
         $list = $this->getResourceObjectDescriptionList();
         $includes = $this->getIncludes();
-        $rule = new FieldsetRule($list, $includes);
-        $this->assertInstanceOf(ParameterRule::class, $rule);
-
-        $uses = class_uses(FieldsetRule::class);
-        $this->assertContains(ParameterTrait::class, $uses);
-
-        $this->assertSame($list, $rule->getResourceObjectDescriptions());
-        $this->assertSame($includes, $rule->getIncludes());
+        $rule = new RelfieldRule($list, $includes);
+        $this->assertInstanceOf(FieldsetRule::class, $rule);
     }
 
 
@@ -69,124 +62,63 @@ class FieldsetRuleTest extends TestCase
     public function testSupports()
     {
         $includes = $this->getIncludes();
-        $rule = new FieldsetRule($this->getResourceObjectDescriptionList(), $includes);
+        $rule = new RelfieldRule($this->getResourceObjectDescriptionList(), $includes);
 
-        $this->assertTrue($rule->supports(new Parameter("fields[MessageItem]", "")));
+        $this->assertTrue($rule->supports(new Parameter("relfield:fields[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("field[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("fields", "")));
     }
 
 
-    /**
-     * tests getFields()
-     */
-    public function testGetFields()
-    {
-        $includes = $this->getIncludes();
-        $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetRule($list, $includes);
-        $getFields = $this->makeAccessible($rule, "getFields");
-
-        $this->assertEquals(
-            ["subject", "date", "from", "to", "previewText"],
-            $getFields->invokeArgs($rule, ["MessageItem"])
-        );
-
-        $this->assertNull(
-            $getFields->invokeArgs($rule, ["NotAvailabe"])
-        );
-    }
 
     /**
-     * tests validate() with missing include "fields[unknown]=field1,field2"
+     * tests validate() with empty fieldset "relfield:fields[MessageItem]="
      */
-    public function testValidateWithMissingInclude()
+    public function testValidateWithEmptyRelfield()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[unknown]", "field1,field2");
-        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
-        $this->assertInstanceOf(ValidationError::class, $errors[0]);
-        $this->assertStringContainsString(
-            "The requested type \"unknown\" cannot be found in the list of includes",
-            $errors[0]->getDetails()
-        );
-        $this->assertSame(400, $errors[0]->getCode());
-        $this->assertSame($parameter, $errors[0]->getSource());
-    }
-    /**
-     * tests validate() with key for fieldset that is not available in relationships "fields[unknown]=field1,field2"
-     */
-    public function testValidateWithUnknownType()
-    {
-        $errors = new ValidationErrors();
-        $includes = array_merge(["unknown"], $this->getIncludes());
-        $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetRule($list, $includes);
-        $validate = $this->makeAccessible($rule, "validate");
-
-        $parameter = new Parameter("fields[unknown]", "field1,field2");
-        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
-        $this->assertInstanceOf(ValidationError::class, $errors[0]);
-        $this->assertStringContainsString(
-            "Cannot find fields for parameter \"fields[unknown]\"",
-            $errors[0]->getDetails()
-        );
-        $this->assertSame(400, $errors[0]->getCode());
-        $this->assertSame($parameter, $errors[0]->getSource());
-    }
-
-
-    /**
-     * tests validate() with empty fieldset "fields[MessageItem]="
-     */
-    public function testValidateWithEmptyFieldset()
-    {
-        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
-
-        $parameter = new Parameter("fields[MessageItem]", "");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "");
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
     /**
-     * tests validate() with wildcard only "fields[MessageItem]=*"
-     * @note Wildcard moved to relfield-extension
+     * tests validate() with wildcard only "relfield:fields[MessageItem]=*"
      */
     public function testValidateWithWildcardOnly()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
         $parameter = new Parameter("fields[MessageItem]", "*");
-        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+        $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
 
     /**
-     * tests validate() with wildcard and valid fields "fields[MessageItem]=*,previewText,date"
-     * @note Wildcard moved to relfield-extension
+     * tests validate() with wildcard and valid fields "relfield:fields[MessageItem]=*,+previewText,+date"
      */
     public function testValidateWithWildcardAndValidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[MessageItem]", "*,previewText,date");
-        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+previewText,+date");
+        $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
 
     /**
-     * tests validate() with wildcard and invalid fields "fields[MessageItem]=MailFolder,date"
+     * tests validate() with wildcard and invalid fields "relfield:fields[MessageItem]=+MailFolder,*,-date"
      */
     public function testValidateWithWildcardAndInvalidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[MessageItem]", "MailFolder,date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+MailFolder,-date");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
 
         $this->assertInstanceOf(ValidationError::class, $errors[0]);
         $this->assertStringContainsString(
-            "The following fields for \"fields[MessageItem]\" cannot be found",
+            "The following fields for \"relfield:fields[MessageItem]\" cannot be found",
             $errors[0]->getDetails()
         );
         $this->assertSame(400, $errors[0]->getCode());
@@ -195,18 +127,18 @@ class FieldsetRuleTest extends TestCase
 
 
     /**
-     * tests validate() with invalid fields "fields[MessageItem]=MailFolder,date"
+     * tests validate() with invalid fields "relfield:fields[MessageItem]=+MailFolder,-date"
      */
     public function testValidateWithInvalidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[MessageItem]", "MailFolder,date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "+MailFolder,-date");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
 
         $this->assertInstanceOf(ValidationError::class, $errors[0]);
         $this->assertStringContainsString(
-            "The following fields for \"fields[MessageItem]\" cannot be found",
+            "The following fields for \"relfield:fields[MessageItem]\" cannot be found",
             $errors[0]->getDetails()
         );
         $this->assertSame(400, $errors[0]->getCode());
@@ -215,14 +147,48 @@ class FieldsetRuleTest extends TestCase
 
 
     /**
-     * tests validate() with invalid fields "fields[MessageItem]=subject,date"
+     * tests validate() with valid fields "relfield:fields[MessageItem]=+subject,+date"
      */
     public function testValidateWithValidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[MessageItem]", "subject,date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "+subject,+date");
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
+    }
+
+
+    /**
+     * tests validate() with missing prefix "relfield:fields[MessageItem]=+subject,date"
+     */
+    public function testValidateWithValidFieldsButMissingPrefix()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+
+        $parameter = new Parameter("relfield:fields[MessageItem]", "+subject,date");
+        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+
+        $this->assertStringContainsString(
+            "expects each field to be prefixed",
+            $errors[0]->getDetails()
+        );
+    }
+
+
+    /**
+     * tests validate() with multiple wildcards "relfield:fields[MessageItem]=*,+subject,*,-date"
+     */
+    public function testValidateWithMultipleWildcards()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+subject,*,-date");
+        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+
+        $this->assertStringContainsString(
+            "does not allow more than one wildcard for \"relfield:fields[MessageItem]\"",
+            $errors[0]->getDetails()
+        );
     }
 
 
@@ -270,7 +236,7 @@ class FieldsetRuleTest extends TestCase
         $errors = new ValidationErrors();
         $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new FieldsetRule($list, $includes);
+        $rule = new RelfieldRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 
         return [

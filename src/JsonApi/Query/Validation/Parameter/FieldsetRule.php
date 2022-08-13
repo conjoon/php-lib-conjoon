@@ -48,8 +48,7 @@ use Conjoon\JsonApi\Resource\ObjectDescriptionList;
  *   - if the fields specified with "fields[TYPE]" contain entries that do not exist
  *      in the list of fields defined with the ObjectDescription
  *   - if TYPE is not found in the list of $includes this class was configured with
- *
- * Wildcards in the form of "*" will be considered.
+
  * Empty fieldsets in the form of "fields[TYPE]=" are treated as valid.
  *
  */
@@ -121,22 +120,12 @@ class FieldsetRule extends ParameterRule
      */
     protected function validate(Parameter $parameter, ValidationErrors $errors): bool
     {
-        $includes = $this->getIncludes();
         $name = $parameter->getName();
         $type = $this->getGroupKey($parameter);
-        $value = $parameter->getValue();
 
-        if (!in_array($type, $includes)) {
-            $errors[] = new ValidationError(
-                $parameter,
-                "The requested type \"$type\" cannot be found in the list of includes, which was \"" .
-                implode("\", \"", $includes) .
-                "\"",
-                400
-            );
+        if (!$this->validateIncludes($parameter, $errors)) {
             return false;
         }
-
 
         $resourceFields = $this->getFields($type);
 
@@ -149,31 +138,12 @@ class FieldsetRule extends ParameterRule
             return false;
         }
 
-        if ($value === "" || $value === null) {
-            return true;
+
+        if (!$this->validateValue($parameter, $errors)) {
+            return false;
         }
 
-        $fields = explode(",", $value);
-
-        $spill = array_diff($fields, $resourceFields);
-
-        if (count($spill) === 0) {
-            return true;
-        }
-
-        if (count($spill) === 1 && $spill[0] === "*") {
-            return true;
-        }
-
-        $errors[] = new ValidationError(
-            $parameter,
-            "The following fields for \"$name\" cannot be found " .
-            "in the resource object: \"" .
-            implode("\", \"", array_filter($spill, fn($it) => $it !== "*")) .
-            "\"",
-            400
-        );
-        return false;
+        return true;
     }
 
 
@@ -188,5 +158,92 @@ class FieldsetRule extends ParameterRule
     {
         return $this->getResourceObjectDescriptions()
                     ->findBy(fn ($resource) => $resource->getType() === $type)?->getFields();
+    }
+
+
+    /**
+     * Validates the key for the specified fieldset group parameter.
+     *
+     * @param $parameter
+     * @param ValidationErrors $errors
+     *
+     * @return bool
+     */
+    protected function validateIncludes(Parameter $parameter, ValidationErrors $errors): bool
+    {
+        $includes = $this->getIncludes();
+        $type = $this->getGroupKey($parameter);
+
+        if (!in_array($type, $includes)) {
+            $errors[] = new ValidationError(
+                $parameter,
+                "The requested type \"$type\" cannot be found in the list of includes, which was \"" .
+                implode("\", \"", $includes) .
+                "\"",
+                400
+            );
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
+     * Validates the value of the fieldset parameter.
+     *
+     * @param Parameter $parameter
+     * @param ValidationErrors $errors
+     *
+     * @return bool
+     */
+    protected function validateValue(Parameter $parameter, ValidationErrors $errors): bool
+    {
+        $value = $parameter->getValue();
+        $type = $this->getGroupKey($parameter);
+        $resourceFields = $this->getFields($type);
+
+        if ($value === "" || $value === null) {
+            return true;
+        }
+
+        $fields = explode(",", $value);
+
+        return $this->checkFieldList($fields, $resourceFields, $parameter, $errors);
+    }
+
+
+    /**
+     * Helper function for validating that the $actualFields appear in $allowedFields.
+     *
+     * @param array $actualFields
+     * @param array $allowedFields
+     * @param Parameter $parameter
+     * @param ValidationErrors $errors
+     *
+     * @return array
+     */
+    protected function checkFieldList(
+        array $actualFields,
+        array $allowedFields,
+        Parameter $parameter,
+        ValidationErrors $errors
+    ): bool {
+        $spill = array_diff($actualFields, $allowedFields);
+
+        if (count($spill) === 0) {
+            return true;
+        }
+
+        $errors[] = new ValidationError(
+            $parameter,
+            "The following fields for \"" . $parameter->getName() . "\" cannot be found " .
+            "in the resource object: \"" .
+            implode("\", \"", $spill) .
+            "\"",
+            400
+        );
+
+        return false;
     }
 }
