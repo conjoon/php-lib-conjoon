@@ -104,13 +104,12 @@ class PnFilterRule extends JsonEncodedRule
                     }
                 }
 
-                foreach($filter as $operand) {
+                foreach ($filter as $operand) {
                     $res = $parse($operand);
                     if (is_string($res)) {
                         return $res;
                     }
                 }
-
             }
 
             return true;
