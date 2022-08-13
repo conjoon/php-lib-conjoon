@@ -42,8 +42,8 @@ use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
 
 /**
- * Class for validating queries that must be checked for validity according to JSON:API
- * specifications.
+ * Class for validating queries that target resource objects. Queries are checked for
+ * validity according to JSON:API specifications.
  */
 class Validator extends HttpQueryValidator
 {

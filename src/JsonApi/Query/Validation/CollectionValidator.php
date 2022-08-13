@@ -36,10 +36,10 @@ use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 
 /**
- * Class for validating queries that target resource collections according to JSON:API
+ * Class for validating queries that target resource collections(!) according to JSON:API
  * specifications.
  * A collectionValidator validates queries based on the Validator class.
- * Additionally, the "sort"-query parameter and the "page"-query parameter will be
+ * Additionally, the "sort"-query parameter will be
  * considered for validation.
  */
 class CollectionValidator extends Validator
