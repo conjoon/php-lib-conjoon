@@ -53,6 +53,10 @@ class RelfieldRuleTest extends TestCase
         $includes = $this->getIncludes();
         $rule = new RelfieldRule($list, $includes);
         $this->assertInstanceOf(FieldsetRule::class, $rule);
+
+        $wildcardEnabled = $this->makeAccessible($rule, "wildcardEnabled", true);
+
+        $this->assertFalse($wildcardEnabled->getValue($rule));
     }
 
 
@@ -70,7 +74,6 @@ class RelfieldRuleTest extends TestCase
     }
 
 
-
     /**
      * tests validate() with empty fieldset "relfield:fields[MessageItem]="
      */
@@ -82,6 +85,7 @@ class RelfieldRuleTest extends TestCase
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
+
     /**
      * tests validate() with wildcard only "relfield:fields[MessageItem]=*"
      */
@@ -89,8 +93,24 @@ class RelfieldRuleTest extends TestCase
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("fields[MessageItem]", "*");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*");
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
+    }
+
+
+    /**
+     * tests validate() with enableWildcard=false, wildcard only "relfield:fields[MessageItem]=*"
+     */
+    public function testValidateWithWildcardNotEnabled()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup(false);
+
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*");
+        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+        $this->assertStringContainsString(
+            "does not support wildcards",
+            $errors[0]->getDetails()
+        );
     }
 
 
@@ -176,6 +196,40 @@ class RelfieldRuleTest extends TestCase
 
 
     /**
+     * tests validate() with missing prefixes for all fields, which
+     * should fall back to default sparse fieldset behavior "relfield:fields[MessageItem]=subject,date"
+     */
+    public function testValidateWithValidFieldsAndAllMissingPrefixes()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+
+        $parameter = new Parameter("relfield:fields[MessageItem]", "subject,date");
+        $this->assertTrue(
+            $validate->invokeArgs($rule, [$parameter, $errors])
+        );
+    }
+
+
+    /**
+     * tests validate() with missing prefixes for all fields, but with wildcard
+     * "relfield:fields[MessageItem]=*,subject,date"
+     */
+    public function testValidateWithValidFieldsAndAllMissingPrefixesAndWildcard()
+    {
+        list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
+
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,subject,date");
+        $this->assertFalse(
+            $validate->invokeArgs($rule, [$parameter, $errors])
+        );
+        $this->assertStringContainsString(
+            "if a wildcard is used",
+            $errors[0]->getDetails()
+        );
+    }
+
+
+    /**
      * tests validate() with multiple wildcards "relfield:fields[MessageItem]=*,+subject,*,-date"
      */
     public function testValidateWithMultipleWildcards()
@@ -231,12 +285,12 @@ class RelfieldRuleTest extends TestCase
      * @return array
      * @throws ReflectionException
      */
-    protected function getValidateTestSetup(): array
+    protected function getValidateTestSetup(bool $enableWildcard = true): array
     {
         $errors = new ValidationErrors();
         $includes = $this->getIncludes();
         $list = $this->getResourceObjectDescriptionList();
-        $rule = new RelfieldRule($list, $includes);
+        $rule = new RelfieldRule($list, $includes, $enableWildcard);
         $validate = $this->makeAccessible($rule, "validate");
 
         return [

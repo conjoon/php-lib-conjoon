@@ -32,6 +32,7 @@ use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
+use Conjoon\JsonApi\Resource\ObjectDescriptionList;
 
 /**
  * An extension on sparse fieldset as specified with https://conjoon.org/json-api/ext/relfield.
@@ -42,6 +43,30 @@ use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
  */
 class RelfieldRule extends FieldsetRule
 {
+    /**
+     * @var bool
+     */
+    protected bool $wildcardEnabled;
+
+    /**
+     * Constructor.
+     * Overrides parent constructor by allowing for passing a boolean $wildcardEnabled for indicating
+     * this server supports wildcards.
+     *
+     * @param ObjectDescriptionList $resourceDescriptionList
+     * @param array $includes
+     * @param bool $wildcardEnabled
+     */
+    public function __construct(
+        ObjectDescriptionList $resourceDescriptionList,
+        array $includes,
+        bool $wildcardEnabled = false
+    ) {
+        parent::__construct($resourceDescriptionList, $includes);
+        $this->wildcardEnabled = $wildcardEnabled;
+    }
+
+
     /**
      * @inheritdoc
      */
@@ -79,22 +104,53 @@ class RelfieldRule extends FieldsetRule
             return false;
         }
 
-        // remove wildcards
-        $fields = array_filter($fields, fn ($field) => $field !== "*");
-
-
-        // check if any field is not prefixed with a +/-
-        $invalidFields = array_filter($fields, fn ($field) => !in_array(substr($field, 0, 1), ["+", "-"]));
-        if (count($invalidFields)) {
+        $wildcardFound = in_array("*", $fields);
+        if ($wildcardFound && !$this->wildcardEnabled) {
             $errors[] = new ValidationError(
                 $parameter,
-                "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\""
+                "This server does not support wildcards with the relfield-extension",
+                400
             );
             return false;
         }
 
 
-        $fields = array_map(fn ($field) => substr($field, 1), $fields);
+        // remove wildcards
+        $fields = array_filter($fields, fn ($field) => $field !== "*");
+
+
+        // check if any field is not prefixed with a +/-
+        // if all fields are NOT prefixed, the extension is expected to behave in accordance with
+        // the sparse fieldset specifications
+        $invalidFields = array_filter($fields, fn ($field) => !in_array(substr($field, 0, 1), ["+", "-"]));
+        if (count($invalidFields) !== 0) {
+            if (count($invalidFields) !== count($fields)) {
+                $errors[] = new ValidationError(
+                    $parameter,
+                    "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\", " .
+                    "or no prefixes at all"
+                );
+                return false;
+            }
+
+            if ($wildcardFound && count($invalidFields) === count($fields)) {
+                $errors[] = new ValidationError(
+                    $parameter,
+                    "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\" " .
+                    "if a wildcard is used"
+                );
+                return false;
+            }
+        }
+
+        // sanitize fields and strip prefixes where applicable
+        $fields = array_map(
+            fn ($field) =>
+                in_array(substr($field, 0, 1), ["+", "-"])
+                    ? substr($field, 1)
+                    : $field,
+            $fields
+        );
 
         return $this->checkFieldList($fields, $resourceFields, $parameter, $errors);
     }
