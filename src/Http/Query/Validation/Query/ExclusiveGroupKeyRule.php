@@ -35,7 +35,7 @@ use Conjoon\Http\Query\Query;
 
 /**
  * Rule for validating that a group key is exclusive with parameter groups.
- * Validates that any keyis not appearing more than one time as the group key
+ * Validates that any key is not appearing more than one time as the group key
  * for a specific group parameter.
  *
  * @example
