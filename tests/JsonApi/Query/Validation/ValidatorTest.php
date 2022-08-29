@@ -111,17 +111,17 @@ class ValidatorTest extends TestCase
             "getType", "getAllRelationshipPaths"]);
         $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
 
-        $resourceTarget->expects($this->once())->method("getType")->willReturn("entity");
-        $resourceTarget->expects($this->once())->method("getAllRelationshipPaths")->willReturn([
-            "path", "path.entity2"
+        $resourceTarget->expects($this->once())->method("getAllRelationshipPaths")->with(true)->willReturn([
+            "path", "entity", "path.entity2", "path.entity2.entity3"
         ]);
 
 
-        $this->assertEquals([
+        $this->assertEqualsCanonicalizing([
             "include",
             "fields[entity]",
             "fields[path]",
-            "fields[path.entity2]"
+            "fields[entity2]",
+            "fields[entity3]"
         ], $validator->getAllowedParameterNames($query));
     }
 

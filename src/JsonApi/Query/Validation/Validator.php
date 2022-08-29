@@ -61,7 +61,7 @@ class Validator extends HttpQueryValidator
      *
      * @param Query $query
      *
-     * @return array
+     * @return ParameterRuleList
      */
     public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
@@ -88,7 +88,7 @@ class Validator extends HttpQueryValidator
      *
      * @param Query $query
      *
-     * @return array
+     * @return QueryRuleList
      */
     public function getQueryRules(HttpQuery $query): QueryRuleList
     {
@@ -101,7 +101,7 @@ class Validator extends HttpQueryValidator
 
 
     /**
-     * Returns all the parameter names including possible fieldsets based on the Reource Target of the Query.
+     * Returns all the parameter names including possible fieldsets based on the Resource Target of the Query.
      *
      * @param Query $query
      *
@@ -110,13 +110,14 @@ class Validator extends HttpQueryValidator
     public function getAllowedParameterNames(HttpQuery $query): array
     {
         $resourceTarget = $query->getResourceTarget();
-        $exp = ["include", "fields[{$resourceTarget->getType()}]"];
-        $list = $resourceTarget->getAllRelationshipPaths(false);
+
+        $exp = [];
+        $list = $this->unfoldRelationships($resourceTarget->getAllRelationshipPaths(true));
+
         foreach ($list as $type) {
             $exp[] = "fields[$type]";
         }
-
-        return $exp;
+        return array_merge(["include"], $exp);
     }
 
 
@@ -160,10 +161,27 @@ class Validator extends HttpQueryValidator
             return [];
         }
 
+        return $this->unfoldRelationships($includes);
+    }
 
+
+    /**
+     * Returns an array with all the entries in $relationships reduced to their TYPE-names.
+     *
+     * @examnple
+     *    $res = $this->unfoldRelationships(["MailFolder", "MessageItem.MailFolder"]);
+     *    // $res: ["MailFolder", "MessageItem"]
+     *
+     *
+     * @param $relationships
+     * @return array
+     */
+    protected function unfoldRelationships($relationships): array
+    {
         $res = [];
-        foreach ($includes as $include) {
-            $res = array_merge($res, explode(".", $include));
+
+        foreach ($relationships as $relationship) {
+            $res = array_merge($res, explode(".", $relationship));
         }
 
         return array_values(array_unique($res));
