@@ -77,7 +77,6 @@ class PnFilterRule extends JsonEncodedRule
         }
 
         $value = json_decode($parameter->getValue(), true);
-        $error = "";
 
         $parse = function ($value) use (&$parse) {
 
@@ -156,20 +155,6 @@ class PnFilterRule extends JsonEncodedRule
     {
         return in_array($value, $this->getLogicalOperators());
     }
-
-
-    /**
-     * Returns true if the passed argument is a valid attribute
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    public function isAttribute(string $value): bool
-    {
-        return in_array($value, $this->getAttributes());
-    }
-
 
 
     /**

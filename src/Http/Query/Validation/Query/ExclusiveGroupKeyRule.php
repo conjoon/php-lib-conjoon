@@ -40,7 +40,7 @@ use Conjoon\Http\Query\Query;
  *
  * @example
  *    // query: ?fields[MessageItem]=subject&relfield:fields[MessageItem]=+previewText
- *    $rule = new ExclusiveGroupNameRule(["fields", "relfield:fields"]);
+ *    $rule = new ExclusiveGroupKeyRule(["fields", "relfield:fields"]);
  *
  */
 class ExclusiveGroupKeyRule extends QueryRule

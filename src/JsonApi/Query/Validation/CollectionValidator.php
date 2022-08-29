@@ -49,7 +49,7 @@ class CollectionValidator extends Validator
      *
      * @param Query $query
      *
-     * @return array
+     * @return ParameterRuleList
      */
     public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
@@ -68,7 +68,7 @@ class CollectionValidator extends Validator
 
 
     /**
-     * Returns all the parameter names for a collection query, including paging and sorting parameter options.
+     * Returns all the parameter names for a collection query, including sorting parameter options.
      *
      * @param HttpQuery $query
      *
@@ -100,7 +100,7 @@ class CollectionValidator extends Validator
 
 
     /**
-     * Returns all available fields for the specified $resourceTarget, along with its relationships.
+     * Returns all available fields for the specified $resourceTarget, along(!) with its relationships.
      * The list returned will be an array containing the field names, and dot-separated field names where the
      * first part of the name is the type of the resource target, or the related resource target.
      *
