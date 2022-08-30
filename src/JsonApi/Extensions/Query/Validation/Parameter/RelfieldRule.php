@@ -120,27 +120,13 @@ class RelfieldRule extends FieldsetRule
 
 
         // check if any field is not prefixed with a +/-
-        // if all fields are NOT prefixed, the extension is expected to behave in accordance with
-        // the sparse fieldset specifications
         $invalidFields = array_filter($fields, fn ($field) => !in_array(substr($field, 0, 1), ["+", "-"]));
         if (count($invalidFields) !== 0) {
-            if (count($invalidFields) !== count($fields)) {
-                $errors[] = new ValidationError(
-                    $parameter,
-                    "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\", " .
-                    "or no prefixes at all"
-                );
-                return false;
-            }
-
-            if ($wildcardFound && count($invalidFields) === count($fields)) {
-                $errors[] = new ValidationError(
-                    $parameter,
-                    "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\" " .
-                    "if a wildcard is used"
-                );
-                return false;
-            }
+            $errors[] = new ValidationError(
+                $parameter,
+                "The relfield-specification expects each field to be prefixed with a \"+\" or a \"-\""
+            );
+            return false;
         }
 
         // sanitize fields and strip prefixes where applicable

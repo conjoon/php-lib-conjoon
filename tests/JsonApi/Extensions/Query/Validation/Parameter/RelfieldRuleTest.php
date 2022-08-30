@@ -204,7 +204,7 @@ class RelfieldRuleTest extends TestCase
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
         $parameter = new Parameter("relfield:fields[MessageItem]", "subject,date");
-        $this->assertTrue(
+        $this->assertFalse(
             $validate->invokeArgs($rule, [$parameter, $errors])
         );
     }
@@ -223,7 +223,7 @@ class RelfieldRuleTest extends TestCase
             $validate->invokeArgs($rule, [$parameter, $errors])
         );
         $this->assertStringContainsString(
-            "if a wildcard is used",
+            "each field to be prefixed",
             $errors[0]->getDetails()
         );
     }
