@@ -34,7 +34,7 @@ namespace Conjoon\JsonApi\Request;
  * targeted resource of a request.
  *
  * @example
- *    $regex = new UrlRegex("/MailAccounts\/.+\/MailFolders\/.*\/(MessageItems)(\/)*$/m", 1, 2);
+ *    $regex = new ResourceUrlRegex("/MailAccounts\/.+\/MailFolders\/.*\/(MessageItems)(\/)*$/m", 1, 2);
  *
  *    $regex->isSingleRequest("http://localhost/MailAccounts/dev/MailFolders/INBOX/MessageItems/123"); // true
  *    $regex->getResourceName("http://localhost/MailAccounts/dev/MailFolders/INBOX/MessageItems/123"); // "MessageItem"
@@ -46,7 +46,7 @@ namespace Conjoon\JsonApi\Request;
  *   $locator = new UrlMatcherLocator("App\\Query\\Validation", $matchers);
  *
  */
-class UrlRegex
+class ResourceUrlRegex
 {
     /**
      * @var int

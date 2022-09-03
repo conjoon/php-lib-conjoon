@@ -29,14 +29,14 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
-use Conjoon\JsonApi\Request\UrlRegex;
+use Conjoon\JsonApi\Request\ResourceUrlRegex;
 use ReflectionException;
 use Tests\TestCase;
 
 /**
- * tests UrlRegexList
+ * tests ResourceUrlRegexList
  */
-class UrlRegexTest extends TestCase
+class ResourceUrlRegexTest extends TestCase
 {
     /**
      * Tests functionality
@@ -44,29 +44,29 @@ class UrlRegexTest extends TestCase
     public function testClass()
     {
         $regex = "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m";
-        $urlRegex = $this->getMockBuilder(UrlRegex::class)
+        $ResourceUrlRegex = $this->getMockBuilder(ResourceUrlRegex::class)
                          ->enableOriginalConstructor()
                          ->setConstructorArgs([$regex, 1, 2])
                          ->enableProxyingToOriginalMethods()
                          ->onlyMethods(["normalizeName"])
                          ->getMock();
 
-        $this->assertSame($regex, $urlRegex->getRegex());
-        $this->assertSame(1, $urlRegex->getNameIndex());
-        $this->assertSame(2, $urlRegex->getSingleIndex());
+        $this->assertSame($regex, $ResourceUrlRegex->getRegex());
+        $this->assertSame(1, $ResourceUrlRegex->getNameIndex());
+        $this->assertSame(2, $ResourceUrlRegex->getSingleIndex());
 
-        $urlRegex->expects($this->once())->method("normalizeName")->with("MessageItems");
+        $ResourceUrlRegex->expects($this->once())->method("normalizeName")->with("MessageItems");
         $this->assertSame(
             "MessageItem",
-            $urlRegex->getResourceName("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $ResourceUrlRegex->getResourceName("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
         );
 
         $this->assertTrue(
-            $urlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $ResourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
         );
 
         $this->assertFalse(
-            $urlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $ResourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
         );
     }
 
@@ -77,28 +77,28 @@ class UrlRegexTest extends TestCase
      */
     public function testNormalizeName()
     {
-        $urlRegex = new UrlRegex("", 1, 2);
+        $ResourceUrlRegex = new ResourceUrlRegex("", 1, 2);
 
-        $normalizeName = $this->makeAccessible($urlRegex, "normalizeName");
+        $normalizeName = $this->makeAccessible($ResourceUrlRegex, "normalizeName");
 
         $this->assertSame(
             "MessageBody",
-            $normalizeName->invokeArgs($urlRegex, ["MessageBodies"])
+            $normalizeName->invokeArgs($ResourceUrlRegex, ["MessageBodies"])
         );
 
         $this->assertSame(
             "Address",
-            $normalizeName->invokeArgs($urlRegex, ["Addresses"])
+            $normalizeName->invokeArgs($ResourceUrlRegex, ["Addresses"])
         );
     }
 
 
     /**
-     * @return UrlRegex
+     * @return ResourceUrlRegex
      */
-    protected function createUrlRegex(): UrlRegex
+    protected function createResourceUrlRegex(): ResourceUrlRegex
     {
-        return new UrlRegex(
+        return new ResourceUrlRegex(
             "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m",
             1,
             2

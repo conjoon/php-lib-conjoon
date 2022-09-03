@@ -32,15 +32,15 @@ namespace Conjoon\JsonApi\Request;
 use Conjoon\Core\Data\AbstractList;
 
 /**
- * A list for managing UrlRegex-instances.
+ * A list for managing ResourceUrlRegex-instances.
  */
-class UrlRegexList extends AbstractList
+class ResourceUrlRegexList extends AbstractList
 {
     /**
      * @inheritdoc
      */
     public function getEntityType(): string
     {
-        return UrlRegex::class;
+        return ResourceUrlRegex::class;
     }
 }

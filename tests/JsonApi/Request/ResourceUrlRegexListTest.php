@@ -30,14 +30,14 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Core\Data\AbstractList;
-use Conjoon\JsonApi\Request\UrlRegex;
-use Conjoon\JsonApi\Request\UrlRegexList;
+use Conjoon\JsonApi\Request\ResourceUrlRegex;
+use Conjoon\JsonApi\Request\ResourceUrlRegexList;
 use Tests\TestCase;
 
 /**
- * tests UrlRegexList
+ * tests ResourceUrlRegexList
  */
-class UrlRegexListTest extends TestCase
+class ResourceUrlRegexListTest extends TestCase
 {
     /**
      * Tests constructor
@@ -47,15 +47,15 @@ class UrlRegexListTest extends TestCase
         $list = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $list);
 
-        $this->assertSame(UrlRegex::class, $list->getEntityType());
+        $this->assertSame(ResourceUrlRegex::class, $list->getEntityType());
     }
 
 
     /**
-     * @return UrlRegexList
+     * @return ResourceUrlRegexList
      */
-    protected function createList(): UrlRegexList
+    protected function createList(): ResourceUrlRegexList
     {
-        return new UrlRegexList();
+        return new ResourceUrlRegexList();
     }
 }
