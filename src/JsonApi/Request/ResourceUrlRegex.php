@@ -96,7 +96,7 @@ class ResourceUrlRegex
         preg_match_all($this->regex, $url, $matches, PREG_SET_ORDER, 0);
 
         if ($matches) {
-            if (isset($matches[0][$this->getSingleIndex()]) && $matches[0][$this->getSingleIndex()] != "") {
+            if (isset($matches[0][$this->getSingleIndex()]) && $matches[0][$this->getSingleIndex()] !== "") {
                 return true;
             }
             return false;
