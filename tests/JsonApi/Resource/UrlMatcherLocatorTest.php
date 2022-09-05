@@ -32,9 +32,11 @@ namespace Tests\Conjoon\JsonApi\Resource;
 use Conjoon\Core\Exception\ClassNotFoundException;
 use Conjoon\Core\Exception\InvalidTypeException;
 use Conjoon\Http\Request\Request;
+use Conjoon\JsonApi\Request\ResourceUrlParser;
+use Conjoon\JsonApi\Request\ResourceUrlRegex;
+use Conjoon\JsonApi\Request\ResourceUrlRegexList;
 use Conjoon\JsonApi\Resource\Locator;
 use Conjoon\JsonApi\Resource\UrlMatcherLocator;
-use Conjoon\JsonApi\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**
@@ -47,42 +49,11 @@ class UrlMatcherLocatorTest extends TestCase
      */
     public function testClass()
     {
-        $locator = new UrlMatcherLocator("bucket", []);
+        $parser = $this->createParser("");
+        $locator = new UrlMatcherLocator($parser);
         $this->assertInstanceOf(Locator::class, $locator);
 
-        $getResourceBucket = $this->makeAccessible($locator, "getResourceBucket");
-        $getMatchers = $this->makeAccessible($locator, "getMatchers");
-
-        $this->assertSame("bucket", $getResourceBucket->invokeArgs($locator, []));
-        $this->assertSame([], $getMatchers->invokeArgs($locator, []));
-    }
-
-
-    /**
-     * tests computeClassName
-     */
-    public function testComputeClassName()
-    {
-        $locator = new UrlMatcherLocator("bucket", [
-            "/(MailAccounts)\/?[^\/]*$/m",
-            "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)\/*.*$/m",
-            "/MailAccounts\/.+\/(MailFolders)\/?[^\/]*$/m",
-
-        ]);
-        $computeClassName = $this->makeAccessible($locator, "computeClassName");
-
-        $tests = [
-            "MailAccounts/dev/MailFolders/INBOX/MessageItems/1" => "MessageItem",
-            "MailAccounts/dev/MailFolders/INBOX" => "MailFolder",
-            "MailAccounts/dev/MailFolders/INBOX/MessageItems" => "MessageItem",
-            "MailAccounts/dev" => "MailAccount",
-            "MailAccounts" => "MailAccount",
-            "4/3/2/1" => null
-        ];
-
-        foreach ($tests as $url => $result) {
-            $this->assertSame($result, $computeClassName->invokeArgs($locator, [$url]));
-        }
+        $this->assertSame($parser, $locator->getResourceUrlParser());
     }
 
 
@@ -95,15 +66,9 @@ class UrlMatcherLocatorTest extends TestCase
 
         $request = $this->createMockForAbstract(Request::class, ["getUrl"]);
         $request->expects($this->once())->method("getUrl")->willReturn($url);
-        $locator = $this->getMockBuilder(UrlMatcherLocator::class)
-                        ->disableOriginalConstructor()
-                        ->onlyMethods(["computeClassName"])
-                        ->getMock();
 
-        $locator->expects($this->once())
-                ->method("computeClassName")
-                ->with($url)
-                ->willReturn(null);
+        $parser = $this->createParser("");
+        $locator = new UrlMatcherLocator($parser);
 
         $this->assertNull($locator->getResourceTarget($request));
     }
@@ -116,23 +81,12 @@ class UrlMatcherLocatorTest extends TestCase
     {
         $this->expectException(ClassNotFoundException::class);
 
-        $url = "localurl";
+        $url     = "MailAccounts/dev/MailFolders/INBOX/MessageItems";
+        $parser  = $this->createParser("notfound");
+        $locator = new UrlMatcherLocator($parser);
 
         $request = $this->createMockForAbstract(Request::class, ["getUrl"]);
         $request->expects($this->once())->method("getUrl")->willReturn($url);
-        $locator = $this->getMockBuilder(UrlMatcherLocator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(["getResourceBucket", "computeClassName"])
-            ->getMock();
-
-        $locator->expects($this->once())
-            ->method("getResourceBucket")
-            ->willReturn("bucket");
-
-        $locator->expects($this->once())
-            ->method("computeClassName")
-            ->with($url)
-            ->willReturn("someclass");
 
         $locator->getResourceTarget($request);
     }
@@ -145,23 +99,12 @@ class UrlMatcherLocatorTest extends TestCase
     {
         $this->expectException(InvalidTypeException::class);
 
-        $url = "localurl";
+        $url     = "MailAccounts/dev/MailFolders/INBOX/MessageItems";
+        $parser  = $this->createParser("Tests\\Conjoon\\JsonApi\\Resource\\TestResourceStd");
+        $locator = new UrlMatcherLocator($parser);
 
         $request = $this->createMockForAbstract(Request::class, ["getUrl"]);
         $request->expects($this->once())->method("getUrl")->willReturn($url);
-        $locator = $this->getMockBuilder(UrlMatcherLocator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(["getResourceBucket", "computeClassName"])
-            ->getMock();
-
-        $locator->expects($this->once())
-            ->method("getResourceBucket")
-            ->willReturn("Tests\\Conjoon\\JsonApi\\Resource");
-
-        $locator->expects($this->once())
-            ->method("computeClassName")
-            ->with($url)
-            ->willReturn("TestResourceStd");
 
         $locator->getResourceTarget($request);
     }
@@ -172,27 +115,28 @@ class UrlMatcherLocatorTest extends TestCase
      */
     public function testGetResourceTarget()
     {
-        $url = "localurl";
+        $url     = "MailAccounts/dev/MailFolders/INBOX/MessageItems";
+        $parser  = $this->createParser("Tests\\Conjoon\\JsonApi\\Resource\\TestResourceObjectDescription");
+        $locator = new UrlMatcherLocator($parser);
 
         $request = $this->createMockForAbstract(Request::class, ["getUrl"]);
         $request->expects($this->once())->method("getUrl")->willReturn($url);
-        $locator = $this->getMockBuilder(UrlMatcherLocator::class)
-            ->disableOriginalConstructor()
-            ->onlyMethods(["getResourceBucket", "computeClassName"])
-            ->getMock();
 
-        $locator->expects($this->once())
-            ->method("getResourceBucket")
-            ->willReturn("Tests\\Conjoon\\JsonApi\\Resource");
+        $locator->getResourceTarget($request);
+    }
 
-        $locator->expects($this->once())
-            ->method("computeClassName")
-            ->with($url)
-            ->willReturn("TestResourceObjectDescription");
 
-        $this->assertInstanceOf(
-            ObjectDescription::class,
-            $locator->getResourceTarget($request)
-        );
+    /**
+     * @param $template
+     * @return ResourceUrlParser
+     */
+    protected function createParser($template): ResourceUrlParser
+    {
+        $urlRegexList = new ResourceUrlRegexList();
+        $urlRegexList[] = new ResourceUrlRegex("/(MailAccounts)(\/)?[^\/]*$/m", 1, 2);
+        $urlRegexList[] = new ResourceUrlRegex("/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m", 1, 2);
+        $urlRegexList[] = new ResourceUrlRegex("/MailAccounts\/.+\/(MailFolders)(\/)?[^\/]*$/m", 1, 2);
+
+        return new ResourceUrlParser($urlRegexList, $template);
     }
 }

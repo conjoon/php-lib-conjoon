@@ -32,62 +32,46 @@ namespace Conjoon\JsonApi\Resource;
 use Conjoon\Core\Exception\ClassNotFoundException;
 use Conjoon\Core\Exception\InvalidTypeException;
 use Conjoon\Http\Request\Request;
+use Conjoon\JsonApi\Request\ResourceUrlParser;
 
 /**
  * Provides a contract for locating resource object descriptions targeted by Requests.
- * Class names are computed w/o prefix or postfix. Pluralized names will be transformed to their singular
- * representations.
- * An instance of this class expects an array of regular expressions that should be used for matching an url of
- * a request to its corresponding resource object description.
  *
  * @example
  *
- *   $matchers = [
- *        "/MailAccounts\/.+\/MailFolders\/.*\/(MessageItems)\/*$/m"
- *   ]
+ *   $matchers = new ResourceUrlRegexList();
+ *   $matchers[] = new ResourceUrlRegex("/MailAccounts\/.+\/MailFolders\/.*\/(MessageItems)(\/)*$/m", 1, 2);
  *
- *   $locator = new UrlMatcherLocator("App\\Resource", $matchers);
+ *   $parser = new ResourceUrlParser($matchers, "App\\Resource\\{0}")
+ *   $locator = new UrlMatcherLocator($parser);
  *
  *   // ...
  *   // $request available with url http://localhost/MailAccounts/dev/MailFolders/INBOX/MessageItems
- *   $locator->getResourceTarget($request); // App\Resource\MessageItem;
- *
- *   // ...
- *   // $request available with url http://localhost/MailAccounts/dev/MailFolders/INBOX/MessageItems/123
  *   $locator->getResourceTarget($request); // App\Resource\MessageItem;
  *
  */
 class UrlMatcherLocator implements Locator
 {
     /**
-     * @var string
+     * @var ResourceUrlParser
      */
-    protected string $resourceBucket;
-
-    /**
-     * @var array
-     */
-    protected array $matchers;
+    protected ResourceUrlParser $resourceUrlParser;
 
 
     /**
      * Creates a new instance of the UrlMatcherLocator.
      *
-     * @param string $resourceBucket The namespace where the computed class names
-     * can be found.
-     * @param array $matchers an array of regular expressions that should be used with
-     * the url of the request to determine the requested resource target
+     * @param ResourceUrlParser $resourceUrlParser
      */
-    public function __construct(string $resourceBucket, array $matchers)
+    public function __construct(ResourceUrlParser $resourceUrlParser)
     {
-        $this->resourceBucket = $resourceBucket;
-        $this->matchers = $matchers;
+        $this->resourceUrlParser = $resourceUrlParser;
     }
 
 
     /**
      * Return the resource object description for the resource targeted by the specified
-     * $request by evaluating (RESTful) urls and transforming path parts into class names.
+     * $request if this class' $resourceUrlParser parses the request's url successfully.
      *
      * @param Request $request The $request of which the value of getUrl() will be used for
      * determining the class name of the ObjectDescription
@@ -103,15 +87,11 @@ class UrlMatcherLocator implements Locator
     {
         $url = $request->getUrl();
 
-        $className = $this->computeClassName($url);
+        $fqn = $this->resourceUrlParser->parse($url);
 
-        if ($className === null) {
+        if ($fqn === null) {
             return null;
         }
-
-        $resourceBucket = $this->getResourceBucket();
-
-        $fqn = "$resourceBucket\\$className";
 
         if (!class_exists($fqn)) {
             throw new ClassNotFoundException(
@@ -130,51 +110,10 @@ class UrlMatcherLocator implements Locator
 
 
     /**
-     * Computes the class name based on the given url.
-     *
-     * @param string $url
-     *
-     * @return string|null The computed class name, or null if the class name could not be computed
+     * @return ResourceUrlParser
      */
-    protected function computeClassName(string $url): ?string
+    public function getResourceUrlParser(): ResourceUrlParser
     {
-        $matchers = $this->getMatchers();
-        $match    = null;
-        foreach ($matchers as $regex) {
-            preg_match_all($regex, $url, $matches, PREG_SET_ORDER, 0);
-
-            if ($matches) {
-                $match = $matches[0][1];
-                break;
-            }
-        }
-
-        if (!$match) {
-            return null;
-        }
-
-        if (str_ends_with($match, "s")) {
-            return substr($match, 0, -1);
-        }
-
-        return $match;
-    }
-
-
-    /**
-     * @return string
-     */
-    protected function getResourceBucket(): string
-    {
-        return $this->resourceBucket;
-    }
-
-
-    /**
-     * @return array
-     */
-    protected function getMatchers(): array
-    {
-        return $this->matchers;
+        return $this->resourceUrlParser;
     }
 }
