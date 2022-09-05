@@ -44,29 +44,29 @@ class ResourceUrlRegexTest extends TestCase
     public function testClass()
     {
         $regex = "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m";
-        $ResourceUrlRegex = $this->getMockBuilder(ResourceUrlRegex::class)
+        $resourceUrlRegex = $this->getMockBuilder(ResourceUrlRegex::class)
                          ->enableOriginalConstructor()
                          ->setConstructorArgs([$regex, 1, 2])
                          ->enableProxyingToOriginalMethods()
                          ->onlyMethods(["normalizeName"])
                          ->getMock();
 
-        $this->assertSame($regex, $ResourceUrlRegex->getRegex());
-        $this->assertSame(1, $ResourceUrlRegex->getNameIndex());
-        $this->assertSame(2, $ResourceUrlRegex->getSingleIndex());
+        $this->assertSame($regex, $resourceUrlRegex->getRegex());
+        $this->assertSame(1, $resourceUrlRegex->getNameIndex());
+        $this->assertSame(2, $resourceUrlRegex->getSingleIndex());
 
-        $ResourceUrlRegex->expects($this->once())->method("normalizeName")->with("MessageItems");
+        $resourceUrlRegex->expects($this->once())->method("normalizeName")->with("MessageItems");
         $this->assertSame(
             "MessageItem",
-            $ResourceUrlRegex->getResourceName("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $resourceUrlRegex->getResourceName("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
         );
 
         $this->assertTrue(
-            $ResourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
         );
 
         $this->assertFalse(
-            $ResourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
         );
     }
 
@@ -77,18 +77,40 @@ class ResourceUrlRegexTest extends TestCase
      */
     public function testNormalizeName()
     {
-        $ResourceUrlRegex = new ResourceUrlRegex("", 1, 2);
+        $resourceUrlRegex = new ResourceUrlRegex("", 1, 2);
 
-        $normalizeName = $this->makeAccessible($ResourceUrlRegex, "normalizeName");
+        $normalizeName = $this->makeAccessible($resourceUrlRegex, "normalizeName");
 
         $this->assertSame(
             "MessageBody",
-            $normalizeName->invokeArgs($ResourceUrlRegex, ["MessageBodies"])
+            $normalizeName->invokeArgs($resourceUrlRegex, ["MessageBodies"])
         );
 
         $this->assertSame(
             "Address",
-            $normalizeName->invokeArgs($ResourceUrlRegex, ["Addresses"])
+            $normalizeName->invokeArgs($resourceUrlRegex, ["Addresses"])
+        );
+    }
+
+
+    /**
+     * Tests singleIndex null
+     */
+    public function testSingleIndexIsNull()
+    {
+        $resourceUrlRegex = new ResourceUrlRegex(
+            "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m",
+            1
+        );
+
+        $this->assertNull($resourceUrlRegex->getSingleIndex());
+
+        $this->assertFalse(
+            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+        );
+
+        $this->assertFalse(
+            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
         );
     }
 

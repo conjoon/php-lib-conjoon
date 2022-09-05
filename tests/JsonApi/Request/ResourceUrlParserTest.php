@@ -98,6 +98,47 @@ class ResourceUrlParserTest extends TestCase
     }
 
 
+    /**
+     * Tests parser without submitting a singeIndex to the reqex
+     * @return void
+     */
+    public function testWithoutSingleIndex()
+    {
+        $urlRegexList = new ResourceUrlRegexList();
+        $urlRegexList[] = new ResourceUrlRegex("/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m", 1);
+
+        $template = "{0}Resource";
+        $collectionTemplate = "Collection{0}";
+
+        $parser = new ResourceUrlParser(
+            $urlRegexList,
+            $template,
+            $collectionTemplate
+        );
+
+        $this->assertSame(
+            "CollectionMessageItem",
+            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+        );
+        $this->assertSame(
+            "CollectionMessageItem",
+            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+        );
+
+        $parser = new ResourceUrlParser(
+            $urlRegexList,
+            $template
+        );
+
+        $this->assertSame(
+            "MessageItemResource",
+            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+        );
+        $this->assertSame(
+            "MessageItemResource",
+            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+        );
+    }
 
 
     /**

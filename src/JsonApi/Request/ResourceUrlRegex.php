@@ -49,9 +49,9 @@ namespace Conjoon\JsonApi\Request;
 class ResourceUrlRegex
 {
     /**
-     * @var int
+     * @var int|null
      */
-    private int $singleIndex;
+    private ?int $singleIndex = null;
 
 
     /**
@@ -71,11 +71,10 @@ class ResourceUrlRegex
      *
      * @param string $regex The regular expression.
      * @param int $nameIndex The group index in the regular expression that captures the targeted resource name.
-     * @param int $singleIndex The group index in the regular expression that captures additional characters hinting
+     * @param int|null $singleIndex The group index in the regular expression that captures additional characters hinting
      * to a single resource request. If not available, the tested url should be treated as a collection request.
-     *
      */
-    public function __construct(string $regex, int $nameIndex, int $singleIndex)
+    public function __construct(string $regex, int $nameIndex, ?int $singleIndex = null)
     {
         $this->regex = $regex;
         $this->nameIndex = $nameIndex;
@@ -86,6 +85,7 @@ class ResourceUrlRegex
     /**
      * Returns true if the $url requests a single resource object, false if it targets a collection.
      * If the $url passed was not matched by THIS regex, null is returned.
+     * If no single index is available for this instance, false will be returned.
      *
      * @param string $url
      *
@@ -95,8 +95,14 @@ class ResourceUrlRegex
     {
         preg_match_all($this->regex, $url, $matches, PREG_SET_ORDER, 0);
 
+        $singleIndex = $this->getSingleIndex();
+
         if ($matches) {
-            if (isset($matches[0][$this->getSingleIndex()]) && $matches[0][$this->getSingleIndex()] !== "") {
+            if (
+                $singleIndex !== null &&
+                isset($matches[0][$singleIndex]) &&
+                $matches[0][$singleIndex] !== ""
+            ) {
                 return true;
             }
             return false;
@@ -166,9 +172,9 @@ class ResourceUrlRegex
 
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getSingleIndex(): int
+    public function getSingleIndex(): ?int
     {
         return $this->singleIndex;
     }
