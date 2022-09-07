@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Request;
 
-use Conjoon\Http\Query\Exception\UnexpectedQueryException;
 use Conjoon\Http\Query\Query;
 
 /**
@@ -41,7 +40,7 @@ interface Request
     /**
      * Returns the Query available with this request, if any.
      *
-     * @return Query
+     * @return Query|null
      */
     public function getQuery(): ?Query;
 
