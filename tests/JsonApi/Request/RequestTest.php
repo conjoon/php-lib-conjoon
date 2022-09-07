@@ -29,8 +29,10 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
+use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request;
 use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\JsonApi\Resource\ObjectDescription;
@@ -58,11 +60,74 @@ class RequestTest extends TestCase
 
         $request = new Request($decoratedRequest, $resourceTarget);
 
+        $this->assertNull($request->getQueryValidator());
         $this->assertSame($method, $request->getMethod());
         $this->assertSame($url, $request->getUrl());
 
         $this->assertInstanceOf(HttpRequest::class, $request);
         $this->assertSame($resourceTarget, $request->getResourceTarget());
+
+
+        $validator = $this->getMockForAbstractClass(Validator::class);
+        $request = new Request($decoratedRequest, $resourceTarget, $validator);
+
+        $this->assertSame($validator, $request->getQueryValidator());
+    }
+
+
+    /**
+     * tests validate() without available Validator
+     */
+    public function testValidateWithoutValidator()
+    {
+        $resourceTarget = $this->createResourceTarget();
+        $decoratedRequest = $this->createRequest();
+
+        $request = new Request($decoratedRequest, $resourceTarget);
+
+        $errors = $request->validate();
+
+        $this->assertInstanceOf(
+            ValidationErrors::class,
+            $errors
+        );
+
+        $this->assertFalse($errors->hasError());
+    }
+
+
+    /**
+     * tests validate()
+     */
+    public function testValidate()
+    {
+        $query = $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock();
+
+        $resourceTarget   = $this->createResourceTarget();
+        $decoratedRequest = $this->createRequest();
+
+        $validator = $this->createMockForAbstract(Validator::class, ["validate"]);
+
+        $validator->expects($this->once())->method("validate")->with($query, $this->callback(function ($arg) {
+            $this->assertInstanceOf(
+                ValidationErrors::class,
+                $arg
+            );
+            return true;
+        }));
+
+        $request = $this->getMockBuilder(Request::class)->enableOriginalConstructor()->setConstructorArgs(
+            [$decoratedRequest, $resourceTarget, $validator]
+        )->onlyMethods(["getQuery"])->getMock();
+
+        $request->expects($this->once())->method("getQuery")->willReturn($query);
+
+        $errors = $request->validate();
+
+        $this->assertInstanceOf(
+            ValidationErrors::class,
+            $errors
+        );
     }
 
 

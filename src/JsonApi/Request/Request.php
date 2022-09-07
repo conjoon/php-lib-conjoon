@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Request;
 
+use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\JsonApi\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\Validator;
 
 /**
  * Request specific for JSON:API, containing resource target ObjectDescriptions.
@@ -59,15 +61,26 @@ class Request implements HttpRequest
 
 
     /**
+     * @var Validator|null
+     */
+    private ?Validator $queryValidator;
+
+
+    /**
      * Constructor.
      *
      * @param Request $request
      * @param ObjectDescription $resourceTarget
+     * @param Validator|null $queryValidator
      */
-    public function __construct(HttpRequest $request, ObjectDescription $resourceTarget)
-    {
+    public function __construct(
+        HttpRequest $request,
+        ObjectDescription $resourceTarget,
+        Validator $queryValidator = null
+    ) {
         $this->request = $request;
         $this->resourceTarget = $resourceTarget;
+        $this->queryValidator = $queryValidator;
     }
 
 
@@ -120,5 +133,36 @@ class Request implements HttpRequest
     public function getResourceTarget(): ObjectDescription
     {
         return $this->resourceTarget;
+    }
+
+
+    /**
+     * Returns the query validator for this request, if any was specified with the constructor.
+     */
+    public function getQueryValidator(): ?Validator
+    {
+        return $this->queryValidator;
+    }
+
+
+    /**
+     * Validates the request.
+     * Will return an ValidationErrors-collection with details about all the errors that were found.
+     *
+     * @return ValidationErrors
+     */
+    public function validate(): ValidationErrors
+    {
+        $errors = new ValidationErrors();
+        $validator = $this->getQueryValidator();
+
+        if (!$validator) {
+            return $errors;
+        }
+
+        $query = $this->getQuery();
+        $validator->validate($query, $errors);
+
+        return $errors;
     }
 }
