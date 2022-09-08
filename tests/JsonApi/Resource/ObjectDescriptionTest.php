@@ -190,12 +190,12 @@ class ObjectDescriptionTest extends TestCase
      */
     public function testGetAllRelationshipResourceDescriptions(): void
     {
-        $resourceTarget = $this->getObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget = $this->getObjectDescriptionMock(["getRelationships"], "A");
         $reflection = new ReflectionClass($resourceTarget);
 
-        $resourceTarget_1_1 = $this->getObjectDescriptionMock(["getRelationships"]);
-        $resourceTarget_1_2 = $this->getObjectDescriptionMock(["getRelationships"]);
-        $resourceTarget_2_1 = $this->getObjectDescriptionMock(["getRelationships"]);
+        $resourceTarget_1_1 = $this->getObjectDescriptionMock(["getRelationships"], "B");
+        $resourceTarget_1_2 = $this->getObjectDescriptionMock(["getRelationships"], "C");
+        $resourceTarget_2_1 = $this->getObjectDescriptionMock(["getRelationships"], "D");
 
         $relationships = new ObjectDescriptionList();
         $relationships[] = $resourceTarget_1_1;
@@ -249,11 +249,21 @@ class ObjectDescriptionTest extends TestCase
      * @param array $methods
      * @return MockObject
      */
-    protected function getObjectDescriptionMock(array $methods = []): MockObject
+    protected function getObjectDescriptionMock(array $methods = [], $type = ""): MockObject
     {
-        return $this->createMockForAbstract(
+        if (!in_array("getType", $methods)) {
+            $methods[] = "getType";
+        }
+
+        $mock = $this->createMockForAbstract(
             ObjectDescription::class,
             $methods
         );
+
+        if ($type !== "") {
+            $mock->expects($this->any())->method("getType")->willReturn($type);
+        }
+
+        return $mock;
     }
 }

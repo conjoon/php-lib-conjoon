@@ -121,6 +121,9 @@ abstract class ObjectDescription
      * BD
      * </pre>
      *
+     * Note: The method tries to avoid circular dependencies and will not visit a resource that
+     * has previously been visited.
+     *
      * @param bool $withResourceTarget If true, returns the list including *this*
      *
      * @return array
@@ -128,7 +131,8 @@ abstract class ObjectDescription
     public function getAllRelationshipPaths(bool $withResourceTarget = false): array
     {
         $tree = [];
-        $traverse = function ($resourceTarget, array $path = []) use (&$traverse, $withResourceTarget, &$tree) {
+        $visited = [];
+        $traverse = function ($resourceTarget, array $path = []) use (&$traverse, $withResourceTarget, &$visited, &$tree) {
 
             $path[] = $resourceTarget->getType();
 
@@ -136,11 +140,16 @@ abstract class ObjectDescription
 
             $tree[] = $path;
             foreach ($relationships as $child) {
+                if (in_array($child, $visited)) {
+                    continue;
+                };
+                $visited[] = $child;
                 $traverse($child, $path);
             }
         };
 
         if ($withResourceTarget) {
+            $visited = [$this];
             $traverse($this);
         } else {
             foreach ($this->getRelationships() as $node) {
@@ -155,6 +164,8 @@ abstract class ObjectDescription
     /**
      * Returns all resource object description available with all relationships spawning
      * from the resource object target for this instance and its related resources.
+     * Note: The method tries to avoid circular dependencies and will not visit a resource that
+     * has previously been visited.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
      * *this* ObjectDescription describes
@@ -168,15 +179,19 @@ abstract class ObjectDescription
 
         $list = new ObjectDescriptionList();
 
+
         if ($withResourceTarget === true) {
             $list[] = $this;
         }
 
-        $traverse = function ($resourceObject) use ($list, &$traverse) {
+        $traverse = function ($resourceObject) use (&$list, &$traverse) {
 
             $t = $resourceObject->getRelationships();
 
             foreach ($t as $rel) {
+                if ($list->findBy(fn(ObjectDescription $item) => $item->getType() === $rel->getType())) {
+                    continue;
+                }
                 $list[] = $rel;
                 $traverse($rel);
             }
