@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Request;
 
+use Conjoon\Core\Contract\Arrayable;
+
 /**
  * Helper function for URL based operations requiring regular expressions for determining the
  * targeted resource of a request.
@@ -46,7 +48,7 @@ namespace Conjoon\JsonApi\Request;
  *   $locator = new UrlMatcherLocator("App\\Query\\Validation", $matchers);
  *
  */
-class ResourceUrlRegex
+class ResourceUrlRegex implements Arrayable
 {
     /**
      * @var int|null
@@ -186,5 +188,18 @@ class ResourceUrlRegex
     public function getNameIndex(): int
     {
         return $this->nameIndex;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "regex" => $this->getRegex(),
+            "nameIndex" => $this->getNameIndex(),
+            "singleIndex" => $this->getSingleIndex()
+        ];
     }
 }

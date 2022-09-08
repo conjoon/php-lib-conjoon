@@ -52,6 +52,29 @@ class ResourceUrlRegexListTest extends TestCase
 
 
     /**
+     * Tests toArray
+     * @return void
+     */
+    public function testToArray()
+    {
+        $list = new ResourceUrlRegexList();
+        $this->assertEquals([], $list->toArray());
+
+        $resourceUrlRegex = $this->createMockForAbstract(
+            ResourceUrlRegex::class,
+            ["toArray"],
+            ["", 1, 2]
+        );
+        $resourceUrlRegex->expects($this->once())->method("toArray")->willReturn([]);
+
+        $list = new ResourceUrlRegexList();
+        $list[] = $resourceUrlRegex;
+
+        $this->assertEquals([[]], $list->toArray());
+    }
+
+
+    /**
      * @return ResourceUrlRegexList
      */
     protected function createList(): ResourceUrlRegexList

@@ -43,4 +43,19 @@ class ResourceUrlRegexList extends AbstractList
     {
         return ResourceUrlRegex::class;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $res = [];
+
+        foreach ($this->data as $entry) {
+            $res[] = $entry->toArray();
+        }
+
+        return $res;
+    }
 }

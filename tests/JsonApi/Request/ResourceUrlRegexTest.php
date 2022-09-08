@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\JsonApi\Request\ResourceUrlRegex;
 use ReflectionException;
 use Tests\TestCase;
@@ -50,6 +51,8 @@ class ResourceUrlRegexTest extends TestCase
                          ->enableProxyingToOriginalMethods()
                          ->onlyMethods(["normalizeName"])
                          ->getMock();
+
+        $this->assertInstanceOf(Arrayable::class, $resourceUrlRegex);
 
         $this->assertSame($regex, $resourceUrlRegex->getRegex());
         $this->assertSame(1, $resourceUrlRegex->getNameIndex());
@@ -114,6 +117,27 @@ class ResourceUrlRegexTest extends TestCase
         );
     }
 
+
+    /**
+     * Tests toArray()
+     *
+     * @return void
+     */
+    public function testToArray()
+    {
+        $regex = "/MailAccounts\/.+\/MailFolders\/.+\/(MessageItems)(\/*.*$)/m";
+        $resourceUrlRegex = new ResourceUrlRegex($regex, 1);
+
+        $this->assertEquals([
+            "regex" => $regex, "nameIndex" => 1, "singleIndex" => null
+        ], $resourceUrlRegex->toArray());
+
+
+        $resourceUrlRegex = new ResourceUrlRegex($regex, 1, 2);
+        $this->assertEquals([
+            "regex" => $regex, "nameIndex" => 1, "singleIndex" => 2
+        ], $resourceUrlRegex->toArray());
+    }
 
     /**
      * @return ResourceUrlRegex
