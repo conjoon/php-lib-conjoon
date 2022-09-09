@@ -67,17 +67,11 @@ class AbstractErrorTest extends TestCase
 
         $this->assertInstanceOf(AnonymousErrorSource::class, $error->getSource());
         $this->assertSame($std, $error->getSource()->getSource());
-    }
 
-
-    /**
-     * @return Errors
-     */
-    protected function createList(): Errors
-    {
-        $list = new Errors();
-
-
-        return $list;
+        $this->assertEquals([
+            "source" => $error->getSource()->toArray(),
+            "detail" => $error->getDetails(),
+            "code" => $error->getCode()
+        ], $error->toArray());
     }
 }

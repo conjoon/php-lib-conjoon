@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Error;
 
+use Conjoon\Core\Contract\Arrayable;
+
 /**
  * Stores and exposes information about entities causing errors modeled with this interface.
  */
-interface Error
+interface Error extends Arrayable
 {
     /**
      * Returns the source that caused this error.

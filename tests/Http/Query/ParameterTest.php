@@ -52,10 +52,13 @@ class ParameterTest extends TestCase
 
         $this->assertSame("name=value", $mock->toString());
         $this->assertSame($mock, $mock->getSource());
+        $this->assertSame(["parameter" => $mock->getName()], $mock->toArray());
     }
 
 
     /**
+     * @param $name
+     * @param $value
      * @return Parameter
      */
     protected function getQueryParameter($name, $value): Parameter

@@ -125,4 +125,15 @@ class Query implements HttpQuery
     {
         return $this->query->toString();
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "query" => $this->toString()
+        ];
+    }
 }

@@ -75,4 +75,13 @@ class AnonymousErrorSource implements ErrorSource
     {
         return $this->source;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return ["pointer" => $this->getName()];
+    }
 }

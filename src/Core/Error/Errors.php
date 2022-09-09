@@ -54,4 +54,18 @@ class Errors extends AbstractList
     {
         return count($this) > 0;
     }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $list = [];
+        foreach ($this->data as $error) {
+            $list[] = $error->toArray();
+        }
+
+        return $list;
+    }
 }

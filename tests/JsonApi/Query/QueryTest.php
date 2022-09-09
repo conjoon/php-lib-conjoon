@@ -61,7 +61,7 @@ class QueryTest extends TestCase
         $query->expects($this->once())->method("getAllParameters")->willReturn($parameterList);
         $query->expects($this->once())->method("getAllParameterNames")->willReturn(["parameter_name"]);
         $query->expects($this->once())->method("getName")->willReturn("query_name");
-        $query->expects($this->once())->method("toString")->willReturn("query_to_string");
+        $query->expects($this->any())->method("toString")->willReturn("query_to_string");
 
         $this->assertInstanceOf(HttpQuery::class, $jsonApiQuery);
         $this->assertSame($resourceDescription, $jsonApiQuery->getResourceTarget());
@@ -73,5 +73,9 @@ class QueryTest extends TestCase
         $this->assertSame("query_name", $jsonApiQuery->getName());
         $this->assertSame("query_to_string", $jsonApiQuery->toString());
         $this->assertSame($jsonApiQuery, $jsonApiQuery->getSource());
+
+        $this->assertSame([
+            "query" => $jsonApiQuery->toString()
+        ], $jsonApiQuery->toArray());
     }
 }

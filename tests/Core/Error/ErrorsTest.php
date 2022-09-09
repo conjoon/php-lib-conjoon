@@ -52,7 +52,7 @@ class ErrorsTest extends TestCase
 
 
     /**
-     * Tests to array
+     * Tests hasError
      */
     public function testHasError()
     {
@@ -65,13 +65,26 @@ class ErrorsTest extends TestCase
 
 
     /**
+     * tests toArray()
+     * @return void
+     */
+    public function testToArray(): void
+    {
+        $list = $this->createList();
+
+        $error = $this->createMockForAbstract(Error::class, ["toArray"]);
+        $error->expects($this->once())->method("toArray")->willReturn([]);
+        $list[] = $error;
+
+        $this->assertSame([[]], $list->toArray());
+    }
+
+
+    /**
      * @return Errors
      */
     protected function createList(): Errors
     {
-        $list = new Errors();
-
-
-        return $list;
+        return new Errors();
     }
 }

@@ -57,6 +57,11 @@ class AnonymousErrorSourceTest extends TestCase
         );
 
         $this->assertSame(
+            ["pointer" => $anon->getName()],
+            $anon->toArray()
+        );
+
+        $this->assertSame(
             $obj,
             $anon->getSource()
         );

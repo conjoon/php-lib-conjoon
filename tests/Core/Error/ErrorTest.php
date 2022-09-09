@@ -27,28 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Tests\Conjoon\Core\Error;
 
-use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Error\Error;
+use Tests\TestCase;
 
 /**
- * An interface allowing for exposing details about the object that caused the error.
+ * tests Error
  */
-interface ErrorSource extends Stringable, Arrayable
+class ErrorTest extends TestCase
 {
     /**
-     * Returns a string for identifying the ErrorSource.
-     *
-     * @return string
+     * Tests functionality
      */
-    public function getName(): string;
-
-    /**
-     * Returns the source this ErrorSource represents. If the ErrorSource is implemented by the Object
-     * that caused the error, this method should return itself.
-     *
-     * @return string
-     */
-    public function getSource(): object;
+    public function testClass()
+    {
+        $error = $this->createMockForAbstract(Error::class);
+        $this->assertInstanceOf(Arrayable::class, $error);
+    }
 }

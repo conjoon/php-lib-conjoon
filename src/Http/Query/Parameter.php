@@ -48,7 +48,8 @@ class Parameter implements ErrorSource
 
 
     /**
-     * @param string|null $value
+     * @param string $name
+     * @param string $value
      */
     public function __construct(string $name, string $value)
     {
@@ -60,9 +61,9 @@ class Parameter implements ErrorSource
     /**
      * Returns the value this Parameter was created with.
      *
-     * @return string|null
+     * @return string
      */
-    public function getValue()
+    public function getValue(): string
     {
         return $this->value;
     }
@@ -93,5 +94,13 @@ class Parameter implements ErrorSource
     public function toString(): string
     {
         return $this->getName() . "=" . $this->getValue();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return ["parameter" => $this->getName()];
     }
 }

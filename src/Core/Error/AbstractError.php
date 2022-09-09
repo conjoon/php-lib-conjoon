@@ -45,7 +45,7 @@ abstract class AbstractError implements Error
     private int $code;
 
     /**
-     * @var ErrorSource|AnonymousErrorSource
+     * @var ErrorSource
      */
     private ErrorSource $source;
 
@@ -53,7 +53,7 @@ abstract class AbstractError implements Error
      * Constructor.
      *
      * @param Object $source The source of the error. If the object is not of type ErrorSource,
-     * it will be wrapped in an instance of AnyonymouseErrorSource.
+     * it will be wrapped in an instance of AnonymousErrorSource.
      * @param string $details
      * @param int $code
      */
@@ -90,5 +90,18 @@ abstract class AbstractError implements Error
     public function getCode(): int
     {
         return $this->code;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "code"   => $this->getCode(),
+            "source" => $this->getSource()->toArray(),
+            "detail" => $this->getDetails()
+        ];
     }
 }

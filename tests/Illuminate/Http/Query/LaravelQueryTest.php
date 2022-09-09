@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Illuminate\Http\Query;
 
-use Conjoon\Http\Query\Exception\InvalidParameterResourceException;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Illuminate\Http\Query\LaravelQuery;
 use Conjoon\Http\Query\Query;
@@ -54,16 +53,6 @@ class LaravelQueryTest extends TestCase
         $this->assertInstanceOf(Query::class, $query);
     }
 
-
-    /**
-     * Tests constructor() with InvalidParameterResourceException
-     *
-     */
-    public function testConstructorException()
-    {
-        $this->expectException(InvalidParameterResourceException::class);
-        $query = new LaravelQuery([]);
-    }
 
     /**
      * tests getParameter()
@@ -165,10 +154,10 @@ class LaravelQueryTest extends TestCase
 
 
     /**
-     * tests toString() and getName()
+     * tests toString() and getName() and toArray()
      * @return void
      */
-    public function testToStringAndGetName()
+    public function testToStringAndGetNameAndToArray()
     {
         $request = $this->getMockBuilder(Request::class)->onlyMethods(["getQueryString"])->getMock();
 
@@ -179,5 +168,9 @@ class LaravelQueryTest extends TestCase
 
         $this->assertSame($request->getQueryString(), $query->toString());
         $this->assertSame($query->toString(), $query->getName());
+
+        $this->assertSame([
+            "query" => $query->toString()
+        ], $query->toArray());
     }
 }

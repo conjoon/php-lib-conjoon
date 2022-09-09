@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Illuminate\Http\Query;
 
-use Conjoon\Http\Query\Exception\InvalidParameterResourceException;
 use Conjoon\Http\Query\ParameterList;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
@@ -65,28 +64,19 @@ final class LaravelQuery implements Query
 
 
     /**
-     * @var string|null
+     * @var string
      */
     protected string $queryString;
 
     /**
      * Constructor.
      *
-     * @param $parameterResource
-     *
-     * @throws InvalidParameterResourceException if the supplied argument is not
-     * an instance of Illuminate\Http\Request
+     * @param Request $request
      */
-    public function __construct($parameterResource)
+    public function __construct(Request $request)
     {
-        if (!($parameterResource instanceof Request)) {
-            throw new InvalidParameterResourceException(
-                "Expected \"parameterResource\" to be instance of " . Request::class
-            );
-        }
-
-        $this->queryString   = $parameterResource->getQueryString() ?? "";
-        $this->rawParameters = $parameterResource->query();
+        $this->queryString   = $request->getQueryString() ?? "";
+        $this->rawParameters = $request->query();
     }
 
 
@@ -186,5 +176,15 @@ final class LaravelQuery implements Query
     public function toString(): string
     {
         return $this->queryString;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "query" => $this->toString()
+        ];
     }
 }
