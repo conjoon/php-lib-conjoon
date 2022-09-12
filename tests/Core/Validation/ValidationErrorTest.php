@@ -29,16 +29,16 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Validation;
 
-use Conjoon\Core\Error\Errors;
+use Conjoon\Core\Error\AbstractError;
 use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use stdClass;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
- * tests ValidationErrors
+ * tests ValidationError
  */
-class ValidationErrorsTest extends TestCase
+class ValidationErrorTest extends TestCase
 {
     use JsonableTestTrait;
 
@@ -47,9 +47,8 @@ class ValidationErrorsTest extends TestCase
      */
     public function testClass()
     {
-        $list = $this->createList();
-        $this->assertInstanceOf(Errors::class, $list);
-        $this->assertSame(ValidationError::class, $list->getEntityType());
+        $error = $this->createError();
+        $this->assertInstanceOf(AbstractError::class, $error);
     }
 
 
@@ -59,16 +58,15 @@ class ValidationErrorsTest extends TestCase
      */
     public function testToJson(): void
     {
-        $this->runToJsonTest($this->createList());
+        $this->runToJsonTest($this->createError());
     }
 
 
     /**
-     * @return Errors
+     * @return ValidationError
      */
-    protected function createList(): ValidationErrors
+    protected function createError(): ValidationError
     {
-        $list = new ValidationErrors();
-        return $list;
+        return new ValidationError(new stdClass());
     }
 }

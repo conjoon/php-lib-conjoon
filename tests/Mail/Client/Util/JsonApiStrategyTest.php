@@ -30,16 +30,18 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Util;
 
 use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Validation\ValidationError;
+use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Data\AbstractList;
+use stdClass;
 use Tests\TestCase;
 
 /**
- * Class JsonApiStrategyTest
- * @package ests\Conjoon\Mail\Client\Util
+ * Tests JsonApiStrategy
  */
 class JsonApiStrategyTest extends TestCase
 {
@@ -206,7 +208,7 @@ class JsonApiStrategyTest extends TestCase
      * Tests toJson with a Problem-object
      * @return void
      */
-    public function testFromProblem()
+    public function testFromProblem(): void
     {
         $strategy = new JsonApiStrategy();
 
@@ -276,7 +278,7 @@ class JsonApiStrategyTest extends TestCase
      * Tests toJson with an abstract list
      * @return void
      */
-    public function testFromAbstractList()
+    public function testFromAbstractList(): void
     {
         $strategy = new JsonApiStrategy();
 
@@ -300,6 +302,35 @@ class JsonApiStrategyTest extends TestCase
 
         $this->assertEquals([[0], [1], [2]], $strategy->toJson($list));
     }
+
+
+    /**
+     * tests fromValidationErrors
+     */
+    public function testFromValidationErrors()
+    {
+        $strategy = new JsonApiStrategy();
+
+        $validationErrors = new ValidationErrors();
+
+        $error = $this->createMockForAbstract(
+            ValidationError::class,
+            ["toArray"],
+            [new stdClass(), "details", -1]
+        );
+        $error->expects($this->once())->method("toArray")->willReturn([
+            "fakeError" => ""
+        ]);
+
+        $validationErrors[] = $error;
+
+       $result = $validationErrors->toJson($strategy);
+
+        $this->assertEquals(["errors" => [[
+            "fakeError" => ""
+        ]]], $result);
+    }
+
 }
 
 /**
@@ -316,4 +347,4 @@ class JsonableMock implements Jsonable, Arrayable
     {
         return [];
     }
-} ;
+}

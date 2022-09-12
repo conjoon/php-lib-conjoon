@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Util;
 
+use Conjoon\Core\Validation\ValidationError;
+use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Contract\Arrayable;
@@ -45,7 +47,7 @@ class JsonApiStrategy implements JsonStrategy
      * attributes and relationships.
      * Makes sure child elements are properly considered where applicable, e.g. for MailFolders.
      *
-     * @param Arrayable $source Expects $source to be an instance of jsonable
+     * @param Arrayable $source Expects $source to be an instance of Jsonable
      *
      * @return array
      *
@@ -53,16 +55,23 @@ class JsonApiStrategy implements JsonStrategy
      */
     public function toJson(Arrayable $source): array
     {
-        $data = $source->toArray();
-
         if ($source instanceof AbstractProblem) {
-            return $this->transformFromError($data);
+            return $this->transformFromError($source->toArray());
+        }
+
+        if ($source instanceof ValidationError) {
+            return $source->toArray();
+        }
+
+        if ($source instanceof ValidationErrors) {
+            return $this->fromValidationErrors($source);
         }
 
         if ($source instanceof AbstractList) {
             return $this->fromAbstractList($source);
         }
 
+        $data = $source->toArray();
         if (!isset($data["type"])) {
             return $data;
         }
@@ -75,11 +84,10 @@ class JsonApiStrategy implements JsonStrategy
      * Implementation for the json strategy.
      *
      * @param array $data
-     * @param boolean $recurse
      *
      * @return array|array[]
      */
-    protected function transform(array $data, bool $recurse = false): array
+    protected function transform(array $data): array
     {
         $types = [
             "mailFolderId"  => "MailFolder",
@@ -132,7 +140,7 @@ class JsonApiStrategy implements JsonStrategy
         if (isset($attributes["data"]) && $result["type"] === "MailFolder") {
             $children = [];
             foreach ($attributes["data"] as $node) {
-                $children[] = $this->transform($node, true);
+                $children[] = $this->transform($node);
             }
             $attributes["data"] = $children;
         }
@@ -147,9 +155,9 @@ class JsonApiStrategy implements JsonStrategy
      *
      * @param AbstractList $source
      *
-     * @return void
+     * @return array
      */
-    public function fromAbstractList(AbstractList $source)
+    public function fromAbstractList(AbstractList $source): array
     {
         $data = [];
 
@@ -158,6 +166,27 @@ class JsonApiStrategy implements JsonStrategy
         }
 
         return $data;
+    }
+
+
+    /**
+     * Makes sure the ValidationErrors-list is properly transformed into its JSON representative.
+     *
+     * @param ValidationErrors $source
+     *
+     * @return array
+     */
+    public function fromValidationErrors(ValidationErrors $source): array
+    {
+        $data = [];
+
+        foreach ($source as $item) {
+            $data[] = $item->toJson($this);
+        }
+
+        return [
+            "errors" => $data
+        ];
     }
 
 

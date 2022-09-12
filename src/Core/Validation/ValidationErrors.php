@@ -29,12 +29,14 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Validation;
 
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Error\Errors;
 
 /**
  * A list for managing validation errors.
  */
-class ValidationErrors extends Errors
+class ValidationErrors extends Errors implements Jsonable
 {
     /**
      * @inheritdoc
@@ -42,5 +44,14 @@ class ValidationErrors extends Errors
     public function getEntityType(): string
     {
         return ValidationError::class;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this) : $this->toArray();
     }
 }
