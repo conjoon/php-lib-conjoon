@@ -49,9 +49,9 @@ use Conjoon\Core\Contract\Jsonable;
  * Class ParameterBag
  * @package Conjoon\Core
  *
- * @method string|null getString(string)
- * @method int|null getInt(string)
- * @method int|null getBool(string)
+ * @method string getString(string)
+ * @method int getInt(string)
+ * @method bool getBool(bool)
  */
 class ParameterBag implements Jsonable
 {
