@@ -41,7 +41,7 @@ use Illuminate\Http\Request;
  * was specified as a parameter name, this parameter name will be considered as a fqn
  * for its lookup.
  */
-final class LaravelQuery implements Query
+final class LaravelQuery extends Query
 {
     use ParameterTrait;
 

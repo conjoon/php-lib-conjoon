@@ -27,51 +27,40 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Http\Query\Parameter;
+use Conjoon\Http\Query\ParameterList;
+use Conjoon\Http\Query\Query;
+use Tests\TestCase;
 
 /**
- * Interface used to control Http-Queries.
+ * Tests QueryParameter.
+ *
  */
-abstract class Query implements ErrorSource
+class QueryTest extends TestCase
 {
     /**
-     * Gets the parameter from this Query. Returns null if no parameter with the
-     * name exists with this query.
-     *
-     * @param string $name
-     *
-     * @return Parameter|null
+     * Class functionality
      */
-    abstract public function getParameter(string $name): ?Parameter;
-
-
-    /**
-     * Returns a ParameterList containing all the parameters of this query.
-     *
-     * @return ParameterList
-     */
-    abstract public function getAllParameters(): ParameterList;
-
-
-    /**
-     * Returns an array containing all available parameter names of this query.
-     * Returns an empty array if no parameters are available.
-     *
-     * @return array
-     */
-    abstract public function getAllParameterNames(): array;
-
-
-    /**
-     * Returns a ParameterBag containing all the data from this parameters.
-     *
-     * @return ParameterBag
-     */
-    public function getParameterBag(): ParameterBag
+    public function testGetParameterBag()
     {
-        return new ParameterBag($this->getAllParameters()->toArray());
+        $query = $this->createMockForAbstract(Query::class, ["getParameters"]);
+
+        $parameterList = new ParameterList();
+        $parameterList[] = new Parameter("fields[MessageItem]", "a,b,c");
+        $parameterList[] = new Parameter("sort", "subject,-date");
+
+        $query->expects($this->once())->method("getAllParameters")->willReturn($parameterList);
+
+        $parameterBag = $query->getParameterBag();
+
+        $this->assertSame(
+            [
+            "fields[MessageItem]" => "a,b,c",
+            "sort" => "subject,-date"
+            ],
+            $parameterBag->toJson()
+        );
     }
 }
