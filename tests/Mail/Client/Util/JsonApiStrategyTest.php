@@ -324,13 +324,12 @@ class JsonApiStrategyTest extends TestCase
 
         $validationErrors[] = $error;
 
-       $result = $validationErrors->toJson($strategy);
+        $result = $validationErrors->toJson($strategy);
 
         $this->assertEquals(["errors" => [[
             "fakeError" => ""
         ]]], $result);
     }
-
 }
 
 /**
