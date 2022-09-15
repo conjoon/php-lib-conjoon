@@ -61,7 +61,7 @@ class ClassLookupTest extends TestCase
 
         $lookup = new ClassLookup();
 
-        $lookup->load("Tests\\Conjoon\\JsonApi\\Resource\\TestResourceStd", "Conjoon\\Core");
+        $lookup->load("Tests\\Conjoon\\Core\\Resource\\TestResourceStd", "Conjoon\\Core");
     }
 
 
@@ -73,12 +73,12 @@ class ClassLookupTest extends TestCase
         $lookup = new ClassLookup();
 
         $inst = $lookup->load(
-            "Tests\\Conjoon\\JsonApi\\Resource\\TestResourceObjectDescription",
-            "Conjoon\\JsonApi\\Resource\\ObjectDescription"
+            "Tests\\Conjoon\\Core\\Resource\\TestResourceObjectDescription",
+            "Conjoon\\Core\\Resource\\ObjectDescription"
         );
 
         $this->assertInstanceOf(
-            "Tests\\Conjoon\\JsonApi\\Resource\\TestResourceObjectDescription",
+            "Tests\\Conjoon\\Core\\Resource\\TestResourceObjectDescription",
             $inst
         );
     }

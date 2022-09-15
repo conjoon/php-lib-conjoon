@@ -27,20 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Resource;
-
-use Conjoon\Core\Data\AbstractList;
+namespace Tests\Conjoon\Core\Resource;
 
 /**
- * An abstract list maintaining entities of the type ObjectDescription.
+ * Test class loaded with tests for Locator
  */
-class ObjectDescriptionList extends AbstractList
+class TestResourceStd
 {
-    /**
-     * @return string
-     */
-    public function getEntityType(): string
-    {
-        return ObjectDescription::class;
-    }
 }

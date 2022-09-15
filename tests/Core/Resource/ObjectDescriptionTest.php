@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Resource;
+namespace Tests\Conjoon\Core\Resource;
 
-use Conjoon\JsonApi\Resource\ObjectDescription;
-use Conjoon\JsonApi\Resource\ObjectDescriptionList;
+use Conjoon\Core\Resource\ObjectDescription;
+use Conjoon\Core\Resource\ObjectDescriptionList;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use ReflectionException;

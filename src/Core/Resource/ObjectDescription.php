@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Resource;
+namespace Conjoon\Core\Resource;
 
 /**
  * Description for a Resource Object that can be used by servers and clients
@@ -174,7 +174,7 @@ abstract class ObjectDescription
      * @return ObjectDescriptionList
      */
     public function getAllRelationshipResourceDescriptions(
-        $withResourceTarget = false
+        bool $withResourceTarget = false
     ): ObjectDescriptionList {
 
         $list = new ObjectDescriptionList();
