@@ -27,31 +27,26 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\DataManagement;
+namespace Tests\Conjoon\Core\Data\Resource;
 
-use Conjoon\DataManagement\SortDirection;
+use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\AbstractList;
 use Tests\TestCase;
 
 /**
- * Tests SortDirection.
+ * Tests ObjectDescriptionList
  */
-class SortDirectionTest extends TestCase
+class ObjectDescriptionListTest extends TestCase
 {
-// ---------------------
-//    Tests
-// ---------------------
-
     /**
-     * Tests constructor
+     * Class functionality
      */
     public function testClass()
     {
-        $this->assertEqualsCanonicalizing(
-            [SortDirection::ASC, SortDirection::DESC],
-            SortDirection::cases()
-        );
+        $list = new ObjectDescriptionList();
 
-        $this->assertSame("ascending", SortDirection::ASC->value);
-        $this->assertSame("descending", SortDirection::DESC->value);
+        $this->assertInstanceOf(AbstractList::class, $list);
+        $this->assertSame(ObjectDescription::class, $list->getEntityType());
     }
 }

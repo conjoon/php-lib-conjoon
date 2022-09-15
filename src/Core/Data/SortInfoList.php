@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,34 +27,42 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\DataManagement;
+namespace Conjoon\Core\Data;
 
-use Conjoon\DataManagement\SortDirection;
-use Conjoon\DataManagement\SortInfo;
-use Tests\TestCase;
 
 /**
- * Tests SortOrder.
+ * Represents list of sort information.
+ *
+ * @example
+ *
+ *      $list = new SortInfoList();
+ *      $sort = new SortInfo("subject", SortDirection::ASC);
+ *
+ *      $list[] = $sort;
+ *
  */
-class SortInfoTest extends TestCase
+class SortInfoList extends AbstractList
 {
-// ---------------------
-//    Tests
-// ---------------------
+    /**
+     * @inheritdoc
+     */
+    public function getEntityType(): string
+    {
+        return SortInfo::class;
+    }
+
 
     /**
-     * Tests constructor
+     * @inheritdoc
      */
-    public function testClass()
+    public function toArray(): array
     {
-        $sort = new SortInfo("subject", SortDirection::ASC);
-        $this->assertSame("subject", $sort->getField());
-        $this->assertSame(SortDirection::ASC, $sort->getDirection());
+        $res = [];
 
+        foreach ($this->data as $data) {
+            $res[] = $data->toArray();
+        }
 
-        $this->assertSame([
-            "field" => "subject",
-            "direction" => SortDirection::ASC->value
-        ], $sort->toArray());
+        return $res;
     }
 }

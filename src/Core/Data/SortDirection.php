@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,20 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\DataManagement\Resource;
-
-use Conjoon\Core\Data\AbstractList;
+namespace Conjoon\Core\Data;
 
 /**
- * An abstract list maintaining entities of the type ObjectDescription.
+ * Represents sort order direction.
  */
-class ObjectDescriptionList extends AbstractList
+enum SortDirection: string
 {
-    /**
-     * @return string
-     */
-    public function getEntityType(): string
-    {
-        return ObjectDescription::class;
-    }
+    case ASC = "ascending";
+
+    case DESC = "descending";
 }

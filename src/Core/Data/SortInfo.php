@@ -27,14 +27,69 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\DataManagement;
+namespace Conjoon\Core\Data;
+
+use Conjoon\Core\Contract\Arrayable;
 
 /**
- * Represents sort order direction.
+ * Represents sort information.
+ *
+ * @example
+ *
+ *     $sort = new SortInfo("subject", SortDirection::ASC);
  */
-enum SortDirection: string
+class SortInfo implements Arrayable
 {
-    case ASC = "ascending";
+    /**
+     * @var string
+     */
+    protected string $field;
 
-    case DESC = "descending";
+    /**
+     * @var SortDirection
+     */
+    protected SortDirection $direction;
+
+
+    /**
+     * Constructor.
+     *
+     * @param string $field
+     * @param SortDirection $direction
+     */
+    public function __construct(string $field, SortDirection $direction)
+    {
+        $this->field     = $field;
+        $this->direction = $direction;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+
+    /**
+     * @return SortDirection
+     */
+    public function getDirection(): SortDirection
+    {
+        return $this->direction;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "field" => $this->getField(),
+            "direction" => $this->getDirection()->value
+        ];
+    }
 }

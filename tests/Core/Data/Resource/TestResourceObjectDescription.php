@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\DataManagement\Resource;
+namespace Tests\Conjoon\Core\Data\Resource;
 
-use Conjoon\DataManagement\Resource\ObjectDescription;
-use Conjoon\DataManagement\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
 
 /**
  * Test class loaded with tests for Locator

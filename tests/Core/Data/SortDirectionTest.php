@@ -27,18 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\DataManagement;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\DataManagement\SortDirection;
-use Conjoon\DataManagement\SortInfo;
-use Conjoon\DataManagement\SortInfoList;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Data\SortDirection;
 use Tests\TestCase;
 
 /**
- * Tests SortInfoList.
+ * Tests SortDirection.
  */
-class SortInfoListTest extends TestCase
+class SortDirectionTest extends TestCase
 {
 // ---------------------
 //    Tests
@@ -49,48 +46,12 @@ class SortInfoListTest extends TestCase
      */
     public function testClass()
     {
-
-        $list = $this->createList();
-        $this->assertInstanceOf(AbstractList::class, $list);
-
-        $this->assertSame(SortInfo::class, $list->getEntityType());
-    }
-
-
-    /**
-     * Tests to array
-     */
-    public function testToArray()
-    {
-        $list = $this->createList();
-
-        $entry1 = $this->createMockForAbstract(
-            SortInfo::class,
-            ["toArray"],
-            ["subject", SortDirection::ASC]
+        $this->assertEqualsCanonicalizing(
+            [SortDirection::ASC, SortDirection::DESC],
+            SortDirection::cases()
         );
-        $entry1->expects($this->once())->method("toArray")->willReturn([]);
-        $entry2 = $this->createMockForAbstract(
-            SortInfo::class,
-            ["toArray"],
-            ["subject", SortDirection::ASC]
-        );
-        $entry2->expects($this->once())->method("toArray")->willReturn([]);
 
-        $list[] = $entry1;
-        $list[] = $entry2;
-
-        $this->assertEquals([
-            [], []
-        ], $list->toArray());
-    }
-
-
-    /**
-     * @return SortInfoList
-     */
-    protected function createList(): SortInfoList
-    {
-        return new SortInfoList();
+        $this->assertSame("ascending", SortDirection::ASC->value);
+        $this->assertSame("descending", SortDirection::DESC->value);
     }
 }

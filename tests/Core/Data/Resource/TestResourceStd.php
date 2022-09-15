@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,43 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\DataManagement;
-
-use Conjoon\Core\Data\AbstractList;
+namespace Tests\Conjoon\Core\Data\Resource;
 
 /**
- * Represents list of sort information.
- *
- * @example
- *
- *      $list = new SortInfoList();
- *      $sort = new SortInfo("subject", SortDirection::ASC);
- *
- *      $list[] = $sort;
- *
+ * Test class loaded with tests for Locator
  */
-class SortInfoList extends AbstractList
+class TestResourceStd
 {
-    /**
-     * @inheritdoc
-     */
-    public function getEntityType(): string
-    {
-        return SortInfo::class;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        $res = [];
-
-        foreach ($this->data as $data) {
-            $res[] = $data->toArray();
-        }
-
-        return $res;
-    }
 }

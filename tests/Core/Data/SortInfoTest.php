@@ -27,11 +27,34 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\DataManagement\Resource;
+namespace Tests\Conjoon\Core\Data;
+
+use Conjoon\Core\Data\SortDirection;
+use Conjoon\Core\Data\SortInfo;
+use Tests\TestCase;
 
 /**
- * Test class loaded with tests for Locator
+ * Tests SortOrder.
  */
-class TestResourceStd
+class SortInfoTest extends TestCase
 {
+// ---------------------
+//    Tests
+// ---------------------
+
+    /**
+     * Tests constructor
+     */
+    public function testClass()
+    {
+        $sort = new SortInfo("subject", SortDirection::ASC);
+        $this->assertSame("subject", $sort->getField());
+        $this->assertSame(SortDirection::ASC, $sort->getDirection());
+
+
+        $this->assertSame([
+            "field" => "subject",
+            "direction" => SortDirection::ASC->value
+        ], $sort->toArray());
+    }
 }

@@ -27,59 +27,70 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\Core\ClassLookup;
-use Conjoon\Core\Exception\ClassNotFoundException;
-use Conjoon\Core\Exception\InvalidTypeException;
+use Conjoon\Core\Data\SortDirection;
+use Conjoon\Core\Data\SortInfo;
+use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Core\Data\AbstractList;
 use Tests\TestCase;
 
 /**
- * Tests ClassLookup
+ * Tests SortInfoList.
  */
-class ClassLookupTest extends TestCase
+class SortInfoListTest extends TestCase
 {
+// ---------------------
+//    Tests
+// ---------------------
+
     /**
-     * tests load() with ClassNotFoundException
+     * Tests constructor
      */
-    public function testGetResourceTargetWithClassNotFoundException()
+    public function testClass()
     {
-        $this->expectException(ClassNotFoundException::class);
 
-        $lookup = new ClassLookup();
+        $list = $this->createList();
+        $this->assertInstanceOf(AbstractList::class, $list);
 
-        $lookup->load("RandomClass", "RandomParentClass");
+        $this->assertSame(SortInfo::class, $list->getEntityType());
     }
 
 
     /**
-     * tests load() with InvalidTypeException
+     * Tests to array
      */
-    public function testGetResourceTargetWithInvalidTypeException()
+    public function testToArray()
     {
-        $this->expectException(InvalidTypeException::class);
+        $list = $this->createList();
 
-        $lookup = new ClassLookup();
+        $entry1 = $this->createMockForAbstract(
+            SortInfo::class,
+            ["toArray"],
+            ["subject", SortDirection::ASC]
+        );
+        $entry1->expects($this->once())->method("toArray")->willReturn([]);
+        $entry2 = $this->createMockForAbstract(
+            SortInfo::class,
+            ["toArray"],
+            ["subject", SortDirection::ASC]
+        );
+        $entry2->expects($this->once())->method("toArray")->willReturn([]);
 
-        $lookup->load("Tests\\Conjoon\\Core\\Data\\Resource\\TestResourceStd", "Conjoon\\Core");
+        $list[] = $entry1;
+        $list[] = $entry2;
+
+        $this->assertEquals([
+            [], []
+        ], $list->toArray());
     }
 
 
     /**
-     * tests getResourceTarget()
+     * @return SortInfoList
      */
-    public function testGetResourceTarget()
+    protected function createList(): SortInfoList
     {
-        $lookup = new ClassLookup();
-
-        $inst = $lookup->load(
-            "Tests\\Conjoon\\Core\\Data\\Resource\\TestResourceObjectDescription",
-            "Conjoon\\Core\\Data\\Resource\\ObjectDescription"
-        );
-
-        $this->assertInstanceOf(
-            "Tests\\Conjoon\\Core\\Data\\Resource\\TestResourceObjectDescription",
-            $inst
-        );
+        return new SortInfoList();
     }
 }
