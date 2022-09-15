@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Resource;
+namespace Conjoon\DataManagement\Resource;
 
 use Conjoon\Core\Data\AbstractList;
 

@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Resource;
+namespace Tests\Conjoon\DataManagement\Resource;
 
-use Conjoon\Core\Resource\ObjectDescription;
-use Conjoon\Core\Resource\ObjectDescriptionList;
+use Conjoon\DataManagement\Resource\ObjectDescription;
+use Conjoon\DataManagement\Resource\ObjectDescriptionList;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
 use ReflectionException;
