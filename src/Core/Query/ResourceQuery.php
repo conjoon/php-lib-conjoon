@@ -33,6 +33,7 @@ use BadMethodCallException;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Data\ParameterBag;
+use Conjoon\JsonApi\Resource\ObjectDescription;
 
 /**
  * A ResourceQuery provides an interface for a validated and certified collection
@@ -46,7 +47,6 @@ use Conjoon\Core\Data\ParameterBag;
  * This ResourceQuery delegates all method calls involving getters to the ParameterBag
  * using __call, including querying the properties using __get.
  *
- * Class ResourceQuery
  */
 abstract class ResourceQuery implements Jsonable
 {
@@ -112,4 +112,11 @@ abstract class ResourceQuery implements Jsonable
     {
         return $this->parameters->toJson($strategy);
     }
+
+
+    /**
+     * Returns the ObjectDescription this resource query targets.
+     * @return ObjectDescription
+     */
+    abstract function getResourceTarget(): ObjectDescription;
 }
