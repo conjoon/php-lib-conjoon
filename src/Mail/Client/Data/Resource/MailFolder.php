@@ -37,6 +37,4 @@ use Conjoon\Core\Data\Resource\ObjectDescription;
  */
 abstract class MailFolder extends ObjectDescription
 {
-
-
 }
