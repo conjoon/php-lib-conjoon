@@ -27,14 +27,53 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Query;
+namespace Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\ResourceQuery;
+use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Core\Data\SortInfoList;
 
 /**
- * Class MessageItemListResourceQuery
- * @package Conjoon\Mail\Client\Query
+ * ResourceQuery implementation for querying MessageItemList.
+ *
  */
-class MessageItemListResourceQuery extends ResourceQuery
+abstract class MessageItemListQuery extends ResourceQuery
 {
+    /**
+     * Returns the int-value of "page[start]".
+     *
+     * @return int
+     */
+    abstract public function getStart(): int;
+
+
+    /**
+     * Returns the limit specified for this query.
+     * Returns "null" if no limit was specified.
+     *
+     * @return int|null
+     */
+    abstract public function getLimit(): ?int;
+
+
+    /**
+     * Returns the fields that should be queried. If no fields where specified, this implementation
+     * will return the default fields of the resource target for this query.
+     *
+     * @return array
+     */
+    abstract public function getFields(): array;
+
+
+    /**
+     * Returns sort information for this query.
+     *
+     * @return SortInfoList
+     */
+    abstract public function getSort(): SortInfoList;
+
+
+    /**
+     * @inheritdoc
+     */
+    abstract public function getResourceTarget(): MessageItem;
 }
