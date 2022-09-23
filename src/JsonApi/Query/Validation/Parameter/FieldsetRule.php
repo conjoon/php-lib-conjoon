@@ -33,7 +33,7 @@ use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
-use Conjoon\JsonApi\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
 
 /**
  * Validates fieldset parameters of the type "fields[TYPE]=field,field2,field3" given the

@@ -35,7 +35,7 @@ use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request;
 use Conjoon\Http\Request\Request as HttpRequest;
-use Conjoon\JsonApi\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescription;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 

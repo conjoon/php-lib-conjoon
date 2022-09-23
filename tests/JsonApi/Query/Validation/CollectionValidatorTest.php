@@ -31,11 +31,11 @@ namespace Tests\Conjoon\JsonApi\Query\Validation;
 
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
-use Conjoon\JsonApi\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
 use Conjoon\JsonApi\Query\Validation\CollectionValidator;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Query\Query;
-use Conjoon\JsonApi\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**

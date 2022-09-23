@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Query;
 
 use Conjoon\Http\Query\ParameterList;
-use Conjoon\JsonApi\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;
