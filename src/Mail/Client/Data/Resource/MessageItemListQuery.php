@@ -73,7 +73,10 @@ abstract class MessageItemListQuery extends ResourceQuery
 
 
     /**
-     * @inheritdoc
+     * This ResourceQuery targets MessageItems.
      */
-    abstract public function getResourceTarget(): MessageItem;
+    public function getResourceTarget(): MessageItem
+    {
+        return new MessageItem();
+    }
 }

@@ -3,7 +3,7 @@
 /**
  * conjoon
  * lumen-app-email
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
+ * Copyright (c) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,47 +27,67 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Data\Resource;
+namespace Tests\Conjoon\Mail\Client\Data\Resource;
 
+use Conjoon\Mail\Client\Data\Resource\MailFolder;
 use Conjoon\Core\Data\Resource\ObjectDescription;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Mail\Client\Data\Resource\MessageBody;
+use Conjoon\Mail\Client\Data\Resource\MessageItem;
+use Tests\TestCase;
 
 /**
- * ResourceDescription for a MessageItem.
- *
+ * Tests MessageItem.
  */
-class MessageItem extends ObjectDescription
+class MessageItemTest extends TestCase
 {
     /**
-     * @return string
+     * test class
      */
-    public function getType(): string
+    public function testClass()
     {
-        return "MessageItem";
+        $inst = new MessageItem();
+        $this->assertInstanceOf(ObjectDescription::class, $inst);
     }
 
 
     /**
-     * @return ObjectDescriptionList
+     * @return void
      */
-    public function getRelationships(): ObjectDescriptionList
+    public function testGetType(): void
     {
-        $list = new ObjectDescriptionList();
-        $list[] = new MailFolder();
-        $list[] = new MessageBody();
-
-        return $list;
+        $this->assertSame("MessageItem", $this->createDescription()->getType());
     }
 
 
     /**
-     * Returns all fields the entity exposes.
-     *
-     * @return string[]
+     * Tests getRelationships()
      */
-    public function getFields(): array
+    public function testGetRelationships(): void
     {
-        return [
+        $list = $this->createDescription()->getRelationships();
+        $this->assertSame(2, count($list));
+
+        $this->assertInstanceOf(MailFolder::class, $list[0]);
+        $this->assertInstanceOf(MessageBody::class, $list[1]);
+
+        $this->assertSame(
+            ["MessageItem", "MessageItem.MailFolder", "MessageItem.MailFolder.MailAccount", "MessageItem.MessageBody"],
+            $this->createDescription()->getAllRelationshipPaths(true)
+        );
+
+        $this->assertEqualsCanonicalizing(
+            ["MessageItem", "MailFolder", "MessageBody", "MailAccount"],
+            $this->createDescription()->getAllRelationshipTypes(true)
+        );
+    }
+
+
+    /**
+     * Tests getFields()
+     */
+    public function testGetFields(): void
+    {
+        $this->assertEqualsCanonicalizing([
             "from",
             "to",
             "subject",
@@ -85,18 +105,16 @@ class MessageItem extends ObjectDescription
             "cc",
             "bcc",
             "replyTo"
-        ];
+        ], $this->createDescription()->getFields());
     }
 
 
     /**
-     * Default fields to pass to the lower level api.
-     *
-     * @return array
+     * tests getDefaultFields()
      */
-    public function getDefaultFields(): array
+    public function testGetDefaultFields(): void
     {
-        return [
+        $this->assertEqualsCanonicalizing([
             "from",
             "to",
             "subject",
@@ -111,6 +129,15 @@ class MessageItem extends ObjectDescription
             "messageId",
             "size",
             "hasAttachments"
-        ];
+        ], $this->createDescription()->getDefaultFields());
+    }
+
+
+    /**
+     * @return MessageItem
+     */
+    protected function createDescription(): MessageItem
+    {
+        return new MessageItem();
     }
 }

@@ -2,8 +2,8 @@
 
 /**
  * conjoon
- * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * lumen-app-email
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -30,11 +30,65 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Data\Resource;
 
 use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
 
 /**
- * ObjectDescription for MailFolder resource targets.
+ * ResourceDescription for a MailFolder.
  *
  */
-abstract class MailFolder extends ObjectDescription
+class MailFolder extends ObjectDescription
 {
+    /**
+     * @return string
+     */
+    public function getType(): string
+    {
+        return "MailFolder";
+    }
+
+
+    /**
+     * @return ObjectDescriptionList
+     */
+    public function getRelationships(): ObjectDescriptionList
+    {
+        $list = new ObjectDescriptionList();
+        $list[] = new MailAccount();
+
+        return $list;
+    }
+
+
+    /**
+     * Returns all fields the entity exposes.
+     *
+     * @return string[]
+     */
+    public function getFields(): array
+    {
+        return [
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
+        ];
+    }
+
+
+    /**
+     * Default fields to pass to the lower level api.
+     *
+     * @return array
+     */
+    public function getDefaultFields(): array
+    {
+        return [
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
+        ];
+    }
 }
