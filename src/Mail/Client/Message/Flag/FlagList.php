@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Message\Flag;
 
-use Conjoon\Util\AbstractList;
+use Conjoon\Core\Data\AbstractList;
 
 /**
  * Class FlagList manages a list of flags.
