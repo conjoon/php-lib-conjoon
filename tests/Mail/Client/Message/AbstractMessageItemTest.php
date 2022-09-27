@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
@@ -40,9 +40,9 @@ use Conjoon\Mail\Client\Message\Flag\DraftFlag;
 use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Util\Modifiable;
+use Conjoon\Core\Data\Modifiable;
 use DateTime;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;

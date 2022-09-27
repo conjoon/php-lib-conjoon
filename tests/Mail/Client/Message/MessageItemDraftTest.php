@@ -36,7 +36,7 @@ use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\AbstractMessageItem;
 use Conjoon\Mail\Client\Message\DraftTrait;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Util\Modifiable;
+use Conjoon\Core\Data\Modifiable;
 use Tests\TestCase;
 use TypeError;
 

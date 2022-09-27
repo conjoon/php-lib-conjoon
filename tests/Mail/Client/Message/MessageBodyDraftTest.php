@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\AbstractMessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Contract\Jsonable;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
