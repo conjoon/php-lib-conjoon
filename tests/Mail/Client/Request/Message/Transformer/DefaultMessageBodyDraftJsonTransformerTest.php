@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Mail\Client\Request\Message\Transformer;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Request\Message\Transformer\DefaultMessageBodyDraftJsonTransformer;
 use Conjoon\Mail\Client\Request\Message\Transformer\MessageBodyDraftJsonTransformer;
-use Conjoon\Util\JsonDecodable;
+use Conjoon\Core\Contract\JsonDecodable;
 use Tests\TestCase;
 
 /**

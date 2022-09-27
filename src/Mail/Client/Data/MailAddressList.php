@@ -29,14 +29,14 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data;
 
-use Conjoon\Core\Arrayable;
-use Conjoon\Util\AbstractList;
-use Conjoon\Util\Copyable;
-use Conjoon\Core\Jsonable;
-use Conjoon\Util\JsonDecodable;
-use Conjoon\Util\JsonDecodeException;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Contract\Copyable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Exception\JsonDecodeException;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Contract\Stringable;
 
 /**
  * Class MailAddressList organizes a list of MailAddresses.

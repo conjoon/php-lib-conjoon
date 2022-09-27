@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Mail\Client\Attachment;
 use Conjoon\Mail\Client\Attachment\AbstractAttachment;
 use Conjoon\Mail\Client\Attachment\FileAttachmentItem;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Contract\Jsonable;
 use InvalidArgumentException;
 use Tests\TestCase;
 
@@ -75,7 +75,7 @@ class FileAttachmentItemTest extends TestCase
 
         $this->assertEquals(
             array_merge(
-                $attachment->getAttachmentKey()->toJson(),
+                $attachment->getAttachmentKey()->toArray(),
                 ["type" => $type,
                 "text" => $text,
                 "size" => $size,

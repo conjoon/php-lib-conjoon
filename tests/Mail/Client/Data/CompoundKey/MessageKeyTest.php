@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\CompoundKey\CompoundKey;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAccount;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Stringable;
 use InvalidArgumentException;
 use Tests\TestCase;
 

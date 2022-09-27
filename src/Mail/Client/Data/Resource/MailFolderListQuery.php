@@ -27,14 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Query;
+namespace Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\ResourceQuery;
+use Conjoon\Core\Data\Resource\ResourceQuery;
 
 /**
- * Class MailFolderListResourceQuery
- * @package Conjoon\Mail\Client\Query
+ * Class MailFolderListResourceQuery.
  */
-class MailFolderListResourceQuery extends ResourceQuery
+abstract class MailFolderListQuery extends ResourceQuery
 {
+    function getResourceTarget(): MailFolder
+    {
+        return new MailFolder();
+    }
 }

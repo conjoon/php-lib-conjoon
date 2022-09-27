@@ -31,10 +31,10 @@ namespace Tests\Conjoon\Mail\Client\Data;
 
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
-use Conjoon\Util\AbstractList;
-use Conjoon\Util\Copyable;
-use Conjoon\Util\JsonDecodable;
-use Conjoon\Util\JsonDecodeException;
+use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Contract\Copyable;
+use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Exception\JsonDecodeException;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 

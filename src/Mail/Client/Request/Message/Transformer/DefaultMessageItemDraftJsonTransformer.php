@@ -33,8 +33,8 @@ use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Core\Jsonable;
-use Conjoon\Util\JsonDecodeException;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Exception\JsonDecodeException;
 use DateTime;
 use Exception;
 

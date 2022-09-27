@@ -32,8 +32,8 @@ namespace Tests\Conjoon\Mail\Client\Attachment;
 use Conjoon\Mail\Client\Attachment\FileAttachment;
 use Conjoon\Mail\Client\Attachment\FileAttachmentList;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Util\AbstractList;
-use Conjoon\Core\Jsonable;
+use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Contract\Jsonable;
 use Tests\TestCase;
 
 /**

@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Data;
 
-use Conjoon\Core\Arrayable;
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Mail\Client\Data\MailAddress;
-use Conjoon\Util\Copyable;
-use Conjoon\Util\JsonDecodable;
-use Conjoon\Util\JsonDecodeException;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Copyable;
+use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Exception\JsonDecodeException;
+use Conjoon\Core\Contract\Stringable;
 use InvalidArgumentException;
 use Tests\TestCase;
 use Tests\JsonableTestTrait;
