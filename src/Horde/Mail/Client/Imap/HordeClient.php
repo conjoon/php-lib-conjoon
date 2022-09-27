@@ -29,9 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Imap;
 
-use Conjoon\Mail\Client\Attachment\FileAttachment;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Mail\Client\Data\CompoundKey\CompoundKey;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
@@ -57,15 +54,14 @@ use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
-use Conjoon\Util\ArrayUtil;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
+use Conjoon\Core\Data\ArrayUtil;
 use DateTime;
 use Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
-use Horde_Imap_Client_Mailbox;
 use Horde_Imap_Client_Socket;
 use Horde_Mail_Transport;
 use Horde_Mail_Transport_Smtphorde;
@@ -83,7 +79,6 @@ use Horde_Mime_Part;
 class HordeClient implements MailClient
 {
     use FilterTrait;
-    use FieldsTrait;
     use AttachmentTrait;
 
     /**
@@ -314,7 +309,7 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList
+    public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList
     {
         $options = $query->toJson();
 
@@ -330,7 +325,7 @@ class HordeClient implements MailClient
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
-            $options["fields"] = $options["fields"]["MessageItem"] ?? $this->computeDefaultFields("MessageItem");
+            $options["fields"] = $query->getFields();
 
             return $this->buildMessageItems(
                 $client,

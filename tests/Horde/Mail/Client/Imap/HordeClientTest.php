@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\JsonStrategy;
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Horde\Mail\Client\Imap\HordeClient;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
@@ -54,7 +54,7 @@ use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
 use DateTime;
 use Exception;
 use Horde_Imap_Client;
@@ -204,7 +204,7 @@ class HordeClientTest extends TestCase
             ->with($folderKey)
         ->willThrowException(new Horde_Imap_Client_Exception());
 
-        $client->getMessageItemList($folderKey, new MessageItemListResourceQuery(new ParameterBag()));
+        $client->getMessageItemList($folderKey, new MessageItemListQuery(new ParameterBag()));
     }
 
 
@@ -231,7 +231,7 @@ class HordeClientTest extends TestCase
         $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
         $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
 
-        $client->getMessageItemList($folderKey, new MessageItemListResourceQuery(new ParameterBag()));
+        $client->getMessageItemList($folderKey, new MessageItemListQuery(new ParameterBag()));
     }
 
 
@@ -291,7 +291,7 @@ class HordeClientTest extends TestCase
 
         $messageItemList = $client->getMessageItemList(
             $folderKey,
-            new MessageItemListResourceQuery(new ParameterBag(["start" => 0, "limit" => 2]))
+            new MessageItemListQuery(new ParameterBag(["start" => 0, "limit" => 2]))
         );
 
 
@@ -378,7 +378,7 @@ class HordeClientTest extends TestCase
 
         $messageItemList = $client->getMessageItemList(
             $folderKey,
-            new MessageItemListResourceQuery(new ParameterBag(
+            new MessageItemListQuery(new ParameterBag(
                 ["start" => 0, "limit" => 1, "fields" => ["MessageItem" => ["from" => true, "references" => true]]]
             ))
         );
@@ -443,7 +443,7 @@ class HordeClientTest extends TestCase
 
         $messageItemList = $client->getMessageItemList(
             $folderKey,
-            new MessageItemListResourceQuery(new ParameterBag(
+            new MessageItemListQuery(new ParameterBag(
                 ["filter" => [["property" => "id", "operator" => "in", "value" => [34]]]]
             ))
         );

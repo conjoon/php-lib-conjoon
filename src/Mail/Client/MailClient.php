@@ -42,7 +42,7 @@ use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
 use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 /**
@@ -187,7 +187,7 @@ interface MailClient
      * Returns the specified MessageList for the submitted arguments.
      *
      * @param FolderKey $folderKey
-     * @param MessageItemListResourceQuery $query An additional set of options for querying the
+     * @param MessageItemListQuery $query An additional set of options for querying the
      * MessageList, such as sort-direction, start/limit values and the ids of the messageItems to return.
      * Options may include an "fields" configuration specifying the fields of a message (and/or) any related
      * resource that should be queried and returned. Clients need to return a default set of fields if no fields
@@ -198,7 +198,7 @@ interface MailClient
      * @throws MailFolderNotFoundException|MailClientException if the specified
      * MailFolder was not found, or an exception thrown by the implementing API wrapped in a MailClientException
      */
-    public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
+    public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList;
 
 
     /**
@@ -284,25 +284,5 @@ interface MailClient
      * not the same, or if any other error occurs
      */
     public function moveMessage(MessageKey $messageKey, FolderKey $folderKey): MessageKey;
-
-
-    /**
-     * Returns an array with the field-names the client supports.
-     *
-     * @param string $type The resource type (e.g. MessageItem, MailFolder) of the fields
-     *
-     * @return array
-     */
-    public function getSupportedFields(string $type): array;
-
-
-    /**
-     * Returns an array with the fields the client guarantees to query if no fields
-     * where specified for methods that require them.
-     *
-     * @param string $type The resource type (e.g. MessageItem, MailFolder) of the fields
-     *
-     * @return array
-     */
-    public function getDefaultFields(string $type): array;
+    
 }
