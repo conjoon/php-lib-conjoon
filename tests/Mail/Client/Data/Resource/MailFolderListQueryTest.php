@@ -2,8 +2,8 @@
 
 /**
  * conjoon
- * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * lumen-app-email
+ * Copyright (c) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,30 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Data\Resource;
+namespace Tests\Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Mail\Client\Data\Resource\MailFolder;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
+use Tests\TestCase;
 
 /**
- * Class MailFolderListResourceQuery.
+ * Tests MessageItem.
  */
-abstract class MailFolderListQuery extends ResourceQuery
+class MailFolderListQueryTest extends TestCase
 {
-
     /**
-     * Returns the fields that should be queried. If no fields where specified, this implementation
-     * will return the default fields of the resource target for this query.
-     *
-     * @return array
+     * test class
      */
-    abstract public function getFields(): array;
-
-
-    /**
-     * This ResourceQuery targets MessageItems.
-     */
-    function getResourceTarget(): MailFolder
+    public function testClass()
     {
-        return new MailFolder();
+        $inst = $this->createMockForAbstract(MailFolderListQuery::class, [], [new ParameterBag()]);
+
+        $this->assertInstanceOf(MailFolder::class, $inst->getResourceTarget(
+        ));
     }
+
+
 }
