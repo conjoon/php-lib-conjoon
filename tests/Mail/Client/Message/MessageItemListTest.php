@@ -31,9 +31,8 @@ namespace Tests\Conjoon\Mail\Client\Message;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageItemList;
-use Conjoon\Mail\Client\Message\MessagePart;
+use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Core\Data\AbstractList;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
@@ -59,7 +58,7 @@ class MessageItemListTest extends TestCase
         $messageItemList = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $messageItemList);
         $this->assertInstanceOf(Arrayable::class, $messageItemList);
-        $this->assertSame(ListMessageItem::class, $messageItemList->getEntityType());
+        $this->assertSame(MessageItem::class, $messageItemList->getEntityType());
 
         $this->assertSame([
             $messageItemList[0]->toArray(),
@@ -78,15 +77,13 @@ class MessageItemListTest extends TestCase
     protected function createList()
     {
         $messageItemList = new MessageItemList();
-        $messageItemList[] = new ListMessageItem(
+        $messageItemList[] = new MessageItem(
             new MessageKey("dev", "INBOX", "1"),
-            null,
-            new MessagePart("foo", "bar", "text/plain")
+            null
         );
-        $messageItemList[] = new ListMessageItem(
+        $messageItemList[] = new MessageItem(
             new MessageKey("dev", "INBOX", "2"),
-            null,
-            new MessagePart("foo", "bar", "text/plain")
+            null
         );
 
         return $messageItemList;

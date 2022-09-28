@@ -35,13 +35,13 @@ use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Data\JsonStrategy;
 
 /**
- * Class MessageItemList organizes a list of ListMessageItems.
+ * Class MessageItemList organizes a list of MessageItems.
  *
  * @example
  *
  *    $list = new MessageItemList();
  *
- *    $item = new ListMessageItem(new MessageKey("INBOX", "232"), null, new MessagePart("foo", "UTF-8", "text/plain));
+ *    $item = new MessageItem(new MessageKey("INBOX", "232"), null);
  *    $list[] = $item;
  *
  *    foreach ($list as $key => $mItem) {
@@ -61,7 +61,7 @@ class MessageItemList extends AbstractList implements Arrayable, Jsonable
      */
     public function getEntityType(): string
     {
-        return ListMessageItem::class;
+        return MessageItem::class;
     }
 
 
@@ -98,6 +98,8 @@ class MessageItemList extends AbstractList implements Arrayable, Jsonable
      *
      * Each entry in the returning array holds a JSON representation of
      * a MessageItem.
+     *
+     * @param JsonStrategy|null $strategy
      *
      * @return array
      */
