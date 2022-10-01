@@ -27,49 +27,29 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Tests\Conjoon\Core\Data;
 
-use Conjoon\Core\Data\NameValue;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\Operand;
+use Tests\TestCase;
 
 /**
- * Class QueryParameter represents the Parameter of a Query.
- * This class enforces $value to be of type string.
+ * Tests NameValue.
  */
-class Parameter extends NameValue implements ErrorSource
+class OperandTest extends TestCase
 {
-    /**
-     * @param string $name
-     * @param string $value
-     */
-    public function __construct(string $name, string $value)
-    {
-        parent::__construct($name, $value);
-    }
-
+// ---------------------
+//    Tests
+// ---------------------
 
     /**
-     * @inheritdoc
+     * Tests class
      */
-    public function getSource(): object
+    public function testClass()
     {
-        return $this;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(): string
-    {
-        return $this->getName() . "=" . $this->getValue();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        return ["parameter" => $this->getName()];
+        $operand = $this->createMockForAbstract(Operand::class);
+        $this->assertInstanceOf(Arrayable::class, $operand);
+        $this->assertInstanceOf(Jsonable::class, $operand);
     }
 }

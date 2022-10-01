@@ -27,49 +27,75 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
-
-use Conjoon\Core\Data\NameValue;
-use Conjoon\Core\Error\ErrorSource;
+namespace Conjoon\Core\Data;
 
 /**
- * Class QueryParameter represents the Parameter of a Query.
- * This class enforces $value to be of type string.
+ * Represents a Filter.
  */
-class Parameter extends NameValue implements ErrorSource
+class NameValue implements Operand
 {
     /**
+     * @var string
+     */
+    protected string $name;
+
+
+    /**
+     * @var mixed
+     */
+    protected mixed $value;
+
+
+    /**
      * @param string $name
-     * @param string $value
+     * @param mixed $value
      */
-    public function __construct(string $name, string $value)
+    public function __construct(string $name, mixed $value)
     {
-        parent::__construct($name, $value);
+        $this->name = $name;
+        $this->value = $value;
     }
 
 
     /**
-     * @inheritdoc
+     * @return string
      */
-    public function getSource(): object
+    public function getName(): string
     {
-        return $this;
+        return $this->name;
     }
 
 
     /**
-     * @inheritdoc
+     * @return mixed
      */
-    public function toString(): string
+    public function getValue(): mixed
     {
-        return $this->getName() . "=" . $this->getValue();
+        return $this->value;
     }
 
+
     /**
-     * @inheritdoc
+     * @return array
      */
     public function toArray(): array
     {
-        return ["parameter" => $this->getName()];
+        return [
+            $this->getName() => $this->getValue()
+        ];
+    }
+
+
+    /**
+     * @param JsonStrategy|null $strategy
+     * @return array
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        if (!$strategy) {
+            return $this->toArray();
+        }
+
+        return $strategy->toJson($this);
     }
 }

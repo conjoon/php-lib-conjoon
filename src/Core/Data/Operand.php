@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,49 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Conjoon\Core\Data;
 
-use Conjoon\Core\Data\NameValue;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
 
 /**
- * Class QueryParameter represents the Parameter of a Query.
- * This class enforces $value to be of type string.
+ * interface for classes oop representation of Operands.
  */
-class Parameter extends NameValue implements ErrorSource
+interface Operand extends Arrayable, Jsonable
 {
     /**
-     * @param string $name
-     * @param string $value
+     * Returns the value of this operand.
+     *
+     * @return mixed
      */
-    public function __construct(string $name, string $value)
-    {
-        parent::__construct($name, $value);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getSource(): object
-    {
-        return $this;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(): string
-    {
-        return $this->getName() . "=" . $this->getValue();
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        return ["parameter" => $this->getName()];
-    }
+    public function getValue(): mixed;
 }
