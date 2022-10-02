@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,43 +27,40 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Folder;
+namespace Tests\Conjoon\Core\Data\Operator;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Data\Operator\Operator;
+use Conjoon\Core\Data\Operator\LogicalOperator;
+use ReflectionClass;
+use Tests\TestCase;
 
 /**
- * Class MailFolderList organizes a list of ListMailFolders.
- *
- * @example
- *
- *    $list = new MailFolderList();
- *
- *    $listMailFolder = new ListMailFolder(
- *      new FolderKey("dev", "INBOX"), [
- *              "delimiter" => ".",
- *              "name" => "INBOX",
- *              "unreadMessages" => 23,
- *              "totalMessages" => 100
- *      ]);
- *    $list[] = $listMailFolder;
- *
- *    foreach ($list as $key => $mItem) {
- *        // iterating over the item
- *    }
- *
- * @package Conjoon\Mail\Client\Folder
+ * Tests LogicalOperator.
  */
-class MailFolderList extends AbstractList
+class LogicalOperatorTest extends TestCase
 {
-// -------------------------
-//  AbstractList
-// -------------------------
+// ---------------------
+//    Tests
+// ---------------------
 
     /**
-     * @inheritdoc
+     * Tests class
      */
-    public function getEntityType(): string
+    public function testClass()
     {
-        return ListMailFolder::class;
+        $class = new ReflectionClass(LogicalOperator::class);
+        $this->assertTrue($class->implementsInterface(Operator::class));
+
+
+        $this->assertEqualsCanonicalizing(
+            [
+            LogicalOperator::AND,
+            LogicalOperator::OR
+            ],
+            LogicalOperator::cases()
+        );
+
+        $this->assertSame("&&", LogicalOperator::AND->value);
+        $this->assertSame("||", LogicalOperator::OR->value);
     }
 }

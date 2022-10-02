@@ -49,6 +49,4 @@ class MessageItemListQueryTest extends TestCase
         $this->assertInstanceOf(MessageItem::class, $inst->getResourceTarget(
         ));
     }
-
-
 }

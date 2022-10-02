@@ -27,43 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Folder;
-
-use Conjoon\Core\Data\AbstractList;
+namespace Conjoon\Core\Data\Operator;
 
 /**
- * Class MailFolderList organizes a list of ListMailFolders.
+ * Represents logical operators.
  *
- * @example
- *
- *    $list = new MailFolderList();
- *
- *    $listMailFolder = new ListMailFolder(
- *      new FolderKey("dev", "INBOX"), [
- *              "delimiter" => ".",
- *              "name" => "INBOX",
- *              "unreadMessages" => 23,
- *              "totalMessages" => 100
- *      ]);
- *    $list[] = $listMailFolder;
- *
- *    foreach ($list as $key => $mItem) {
- *        // iterating over the item
- *    }
- *
- * @package Conjoon\Mail\Client\Folder
  */
-class MailFolderList extends AbstractList
+enum LogicalOperator: string implements Operator
 {
-// -------------------------
-//  AbstractList
-// -------------------------
+    case AND = "&&";
 
-    /**
-     * @inheritdoc
-     */
-    public function getEntityType(): string
-    {
-        return ListMailFolder::class;
-    }
+    case OR = "||";
 }

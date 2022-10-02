@@ -32,10 +32,10 @@ namespace Tests\Conjoon\Mail\Client\Folder;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
-use Conjoon\Util\AbstractList;
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
+use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 use Tests\TestCase;
 
 /**

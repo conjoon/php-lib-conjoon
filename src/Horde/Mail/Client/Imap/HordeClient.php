@@ -53,7 +53,7 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
 use Conjoon\Core\Data\ArrayUtil;
 use DateTime;
@@ -234,14 +234,9 @@ class HordeClient implements MailClient
     /**
      * @inheritdoc
      */
-    public function getMailFolderList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderList
+    public function getMailFolderList(MailAccount $mailAccount, MailFolderListQuery $query): MailFolderList
     {
-        $options = $query ? $query->toJson() : [];
-
-        $fields = $options["fields"]["MailFolder"] ?? $this->computeDefaultFields("MailFolder");
-
-        $fields = array_keys(array_filter($fields, fn($value) => !!$value));
-
+        $fields = $query->getFields();
 
         try {
             $client = $this->connect($mailAccount->getId());
@@ -255,8 +250,6 @@ class HordeClient implements MailClient
             $mailFolderList = new MailFolderList();
 
             foreach ($mailboxes as $folderId => $mailbox) {
-                $status = [];
-
                 $args = ["name" => $folderId];
 
                 if ($this->isMailboxSelectable($mailbox)) {
@@ -311,7 +304,11 @@ class HordeClient implements MailClient
      */
     public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList
     {
-        $options = $query->toJson();
+        $options = [
+            "fields" => $query->getFields(),
+            "start"  => $query->getStart(),
+            "limit"  => $query->getLimit()
+        ];
 
         try {
             $client = $this->connect($folderKey);
@@ -325,7 +322,7 @@ class HordeClient implements MailClient
             $results = $this->queryItems($client, $folderKey, $options);
             $fetchedItems = $this->fetchMessageItems($client, $results["match"], $folderKey->getId(), $options);
 
-            $options["fields"] = $query->getFields();
+
 
             return $this->buildMessageItems(
                 $client,
@@ -1042,8 +1039,8 @@ class HordeClient implements MailClient
             $messagePart = null;
 
             $contentKeys = [];
-            $this->getField("plain", $fields) && $contentKeys[] = "plain";
-            $this->getField("html", $fields) && $contentKeys[] = "html";
+            in_array("plain", $fields) && $contentKeys[] = "plain";
+            in_array("html", $fields) && $contentKeys[] = "html";
 
             // if precedence is set for html, reverse this. Else, let plain
             // process first
@@ -1115,7 +1112,7 @@ class HordeClient implements MailClient
     ): array {
 
         $wants = function ($key) use ($options) {
-            return $this->getField($key, $options["fields"] ?? []);
+            return in_array($key, $options["fields"] ?? []);
         };
 
         $envelope = $item->getEnvelope();
@@ -1272,9 +1269,9 @@ class HordeClient implements MailClient
         $fields = $options["fields"] ?? [];
 
         $ret = [];
-        $findHtml        = $this->getField("html", $fields);
-        $findPlain       = $this->getField("plain", $fields);
-        $findAttachments = $this->getField("hasAttachments", $fields);
+        $findHtml        = in_array("html", $fields);
+        $findPlain       = in_array("plain", $fields);
+        $findAttachments = in_array("hasAttachments", $fields);
 
         $typeMap = $messageStructure->contentTypeMap();
         $bodyQuery = new Horde_Imap_Client_Fetch_Query();
@@ -1516,5 +1513,31 @@ class HordeClient implements MailClient
         }
 
         return strtolower($key) === strtolower($folderKey->getId());
+    }
+
+
+
+    /**
+     * Returns the target's value at "$key" if the value is truthy, otherwise
+     * null or $default (if !null) is returned.
+     *
+     * @param $key
+     * @param $target
+     * @param null $default
+     * @return mixed|null
+     * @noinspection PhpSameParameterValueInspection
+     */
+    private function getField($key, $target, $default = null)
+    {
+        if (array_key_exists($key, $target)) {
+            $val = $target[$key];
+            if (is_array($val) && empty($val)) {
+                $val = true;
+            }
+
+            return $val ?: $default;
+        }
+
+        return $default;
     }
 }
