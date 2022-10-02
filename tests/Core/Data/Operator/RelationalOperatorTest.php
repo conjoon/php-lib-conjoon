@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
+namespace Tests\Conjoon\Core\Data\Operator;
 
 use Conjoon\Core\Data\Operator\Operator;
 use Conjoon\Core\Data\Operator\RelationalOperator;
