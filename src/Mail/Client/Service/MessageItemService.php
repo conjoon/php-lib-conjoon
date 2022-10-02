@@ -42,7 +42,7 @@ use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\Mail\Client\Message\Text\PreviewTextProcessor;
 use Conjoon\Mail\Client\Reader\ReadableMessagePartContentProcessor;
-use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
+use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
 use Conjoon\Mail\Client\Writer\WritableMessagePartContentProcessor;
 
 /**
@@ -59,7 +59,7 @@ interface MessageItemService
      * specified MailAccount and the MailFolder.
      *
      * @param FolderKey $folderKey
-     * @param MessageItemListQuery $query The resource query for the
+     * @param MessageItemListResourceQuery $query The resource query for the
      * MessageItemLi
      *
      * @return MessageItemList
@@ -68,7 +68,7 @@ interface MessageItemService
      * was not found, or a generic MailClientException indicating an error while
      * communicating with the underlying (mail)backend.
      */
-    public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList;
+    public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
 
 
     /**

@@ -51,24 +51,24 @@ class FilterTraitTest extends TestCase
                 "output" => "ALL"
             ], [
                 "input" => [
-                    ["=" => ["recent" => true]],
-                    [">=" => ["id" => 1000]]
+                    ["property" => "recent", "value" => true, "operator" => "="],
+                    ["property" => "id", "value" => 1000, "operator" => ">="]
                 ],
                 "output" => "OR (UID 1000:*) (RECENT)"
             ], [
                 "input" => [
-                    ["=" => ["recent" => true]]
+                    ["property" => "recent", "value" => true, "operator" => "="]
                 ],
                 "output" => "RECENT"
             ], [
                 "input" => [
-                    [">=" => ["id" => 1000]]
+                    ["property" => "id", "value" => 1000, "operator" => ">="]
                 ],
                 "output" => "UID 1000:*"
             ], [
                 "input" => [
-                    ["=" => ["recent" => true]],
-                    ["in" => ["id" => [1000, 1001]]]
+                    ["property" => "recent", "value" => true, "operator" => "="],
+                    ["property" => "id", "value" => [1000, 1001], "operator" => "IN"]
                 ],
                 "output" => "OR (UID 1000:1001) (RECENT)"
             ]

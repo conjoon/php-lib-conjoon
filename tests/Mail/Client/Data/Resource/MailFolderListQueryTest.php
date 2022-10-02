@@ -49,4 +49,6 @@ class MailFolderListQueryTest extends TestCase
         $this->assertInstanceOf(MailFolder::class, $inst->getResourceTarget(
         ));
     }
+
+
 }

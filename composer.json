@@ -6,9 +6,9 @@
         {"url": "https://horde-satis.maintaina.com", "type": "composer"}
     ],
     "require": {
-        "php": ">=8.0",
+        "php": ">=7.4",
         "ezyang/htmlpurifier": "^4.11",
-        "laravel/lumen-framework": "^8.0",
+        "laravel/lumen-framework": "5.8.*",
         "horde/imap_client": "dev-FRAMEWORK_6_0",
         "horde/smtp": "dev-FRAMEWORK_6_0"
     },

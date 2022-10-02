@@ -31,7 +31,7 @@ namespace Conjoon\Horde\Mail\Client\Message\Composer;
 
 use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Core\Contract\Stringable;
+use Conjoon\Util\Stringable;
 use DateTime;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;

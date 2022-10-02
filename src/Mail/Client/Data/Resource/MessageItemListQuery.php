@@ -73,14 +73,6 @@ abstract class MessageItemListQuery extends ResourceQuery
 
 
     /**
-     * Returns filter information for this query.
-     *
-     * @return Filter
-     */
-    abstract public function getFilter(): Filter;
-
-
-    /**
      * This ResourceQuery targets MessageItems.
      */
     public function getResourceTarget(): MessageItem

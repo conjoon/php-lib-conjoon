@@ -41,7 +41,7 @@ use Horde_Imap_Client_Search_Query;
  * @example
  *
  *    $options = [
- *      ["recent" => [, "value" => true, "operator" => "="],
+ *      ["property" => "recent", "value" => true, "operator" => "="],
  *      ["property" => "id", "value" => 1000, "operator" => ">="]
  *    ]
  *

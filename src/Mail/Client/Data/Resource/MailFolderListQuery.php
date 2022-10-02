@@ -36,6 +36,7 @@ use Conjoon\Core\Data\Resource\ResourceQuery;
  */
 abstract class MailFolderListQuery extends ResourceQuery
 {
+
     /**
      * Returns the fields that should be queried. If no fields where specified, this implementation
      * will return the default fields of the resource target for this query.

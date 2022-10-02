@@ -345,7 +345,7 @@ class AttachmentTraitTest extends TestCase
 
         $result = $trait->deleteAttachment($attachmentKey);
 
-        $this->assertEquals($newMessageKey->toArray(), $result->toArray());
+        $this->assertEquals($newMessageKey->toJson(), $result->toJson());
     }
 
 

@@ -35,8 +35,6 @@ use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAccount;
-use Conjoon\Mail\Client\Exception\MailClientException;
-use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\MessageBody;
@@ -45,7 +43,7 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
-use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
+use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 /**
  * Interface MailClient
@@ -58,7 +56,7 @@ interface MailClient
      * mailboxes available for the specified MailAccount.
      *
      * @param MailAccount $mailAccount
-     * @param MailFolderListQuery $query An additional set of options for querying the
+     * @param MailFolderListResourceQuery|null $query An additional set of options for querying the
      * MailFolderIst, such as the fields to return with each entry.
      * Clients need to return a default set of fields if no fields are defined. See #getDefaultFields
      *
@@ -66,7 +64,7 @@ interface MailClient
      *
      * @throws MailClientException if any exception occurs
      */
-    public function getMailFolderList(MailAccount $mailAccount, MailFolderListQuery $query): MailFolderList;
+    public function getMailFolderList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderList;
 
 
     /**
@@ -122,7 +120,7 @@ interface MailClient
      *
      * @param MessageKey $messageKey
      *
-     * @return MessageBody|null The MessageBody or null if none found.
+     * @return MessageBody The MessageBody or null if none found.
      *
      * @throws MailClientException if any exception occurs
      */
@@ -177,7 +175,7 @@ interface MailClient
      *
      * @param MessageItemDraft $messageItemDraft
      *
-     * @return MessageItemDraft|null The MessageItemDraft updated, along with its MessageKey, which
+     * @return MessageItemDraft The MessageItemDraft updated, along with its MessageKey, which
      * might not equal to the MessageKey in $messageItemDraft.
      *
      * @throws MailClientException if any exception occurs
@@ -191,7 +189,7 @@ interface MailClient
      * @param FolderKey $folderKey
      * @param MessageItemListQuery $query An additional set of options for querying the
      * MessageList, such as sort-direction, start/limit values and the ids of the messageItems to return.
-     * Options may include a "fields" configuration specifying the fields of a message (and/or) any related
+     * Options may include an "fields" configuration specifying the fields of a message (and/or) any related
      * resource that should be queried and returned. Clients need to return a default set of fields if no fields
      * are defined. See #getDefaultFields
      *
@@ -210,7 +208,7 @@ interface MailClient
      *
      * @param FolderKey $folderKey
      *
-     * @return array
+     * @return int
      *
      * @throws MailClientException if any exception occurs
      */
@@ -223,7 +221,7 @@ interface MailClient
      * @param MessageKey $messageKey
      * @param FileAttachmentList $attachmentList
      *
-     * @return FileAttachmentList the created FileAttachmentItemList
+     * @return FileAttachmentItemList the created FileAttachmentItemList
      *
      * @throws MailClientException if any exception occurs
      */
@@ -286,4 +284,5 @@ interface MailClient
      * not the same, or if any other error occurs
      */
     public function moveMessage(MessageKey $messageKey, FolderKey $folderKey): MessageKey;
+    
 }
