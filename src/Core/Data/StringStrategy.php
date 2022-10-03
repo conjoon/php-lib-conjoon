@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,20 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Contract;
+namespace Conjoon\Core\Data;
 
-use Conjoon\Core\Data\StringStrategy;
 
 /**
- * Interface Stringable.
+ * Interface StringStrategy.
  */
-interface Stringable
+interface StringStrategy
 {
     /**
-     * Returns a string representation of this instance.
+     * Returns a String representation of the data passed to this method.
      *
-     * @param StringStrategy|null $stringStrategy
+     * @param mixed $source
+     *
      * @return string
      */
-    public function toString(?StringStrategy $stringStrategy = null): string;
+    public function toString(mixed $target): string;
 }

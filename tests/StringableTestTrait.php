@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,20 +27,37 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Contract;
+namespace Tests;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Data\StringStrategy;
 
 /**
- * Interface Stringable.
+ * Class StringableTestTrait
  */
-interface Stringable
+trait StringableTestTrait
 {
     /**
-     * Returns a string representation of this instance.
-     *
-     * @param StringStrategy|null $stringStrategy
-     * @return string
+     * Test toJson
      */
-    public function toString(?StringStrategy $stringStrategy = null): string;
+    public function runToStringTest($target)
+    {
+        $serialized = md5(serialize($target));
+
+        $strategyStub = $this->createMockForAbstract(StringStrategy::class, ["toString"]);
+        $strategyStub->expects($this->once())->method("toString")->with($target)->willReturn($serialized);
+
+        $this->assertInstanceOf(Stringable::class, $target);
+        $target->expects($this->exactly(2))->method("toString")
+            ->withConsecutive([null], [$strategyStub])
+            ->willReturnOnConsecutiveCalls(
+                $serialized,
+                $this->returnCallback(function(StringStrategy $strategy) use ($target) {
+                    return $strategy->toString($target);
+                })
+            );
+
+        $this->assertSame($serialized, $target->toString(null));
+        $this->assertSame($serialized, $target->toString($strategyStub));
+    }
 }
