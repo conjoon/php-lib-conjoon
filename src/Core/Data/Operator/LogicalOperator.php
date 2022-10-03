@@ -35,6 +35,8 @@ namespace Conjoon\Core\Data\Operator;
  */
 enum LogicalOperator: string implements Operator
 {
+    use OperatorStringableTrait;
+
     case AND = "&&";
 
     case OR = "||";

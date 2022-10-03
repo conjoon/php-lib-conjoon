@@ -29,9 +29,13 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Data\Operator;
 
+
+use Conjoon\Core\Contract\Stringable;
+
 /**
  * Tagging interface for a Operator.
  */
-interface Operator
+interface Operator extends Stringable
 {
+
 }

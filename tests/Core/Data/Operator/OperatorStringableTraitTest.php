@@ -27,27 +27,39 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
+namespace Tests\Conjoon\Core\Data\Operator;
 
+use Conjoon\Core\Data\Operator\OperatorStringableTrait;
 use Conjoon\Core\Data\StringStrategy;
+use Tests\TestCase;
 
 /**
- * Represents relational operators.
+ * Class OperatorStringableTraitTest
  */
-enum RelationalOperator: string implements Operator
+class OperatorStringableTraitTest extends TestCase
 {
-    use OperatorStringableTrait;
+    /**
+     * Tests getSearchQueryFromFilter
+     */
+    public function testToString()
+    {
+        $trait = $this->getMockedTrait();
 
-    case IS = "=";
+        $trait->value = "someValue";
 
-    case IS_NOT = "!=";
+        $this->assertSame("someValue", $trait->toString());
 
-    case GREATER_THAN = ">";
+        $strategyStub = $this->createMockForAbstract(StringStrategy::class, ["toString"]);
+        $strategyStub->expects($this->once())->method("toString")->with($trait)->willReturn("CALLED");
+        $this->assertSame("CALLED", $trait->toString($strategyStub));
+    }
 
-    case LESS_THAN = "<";
 
-    case LESS_THAN_OR_EQUAL = "<=";
 
-    case GREATER_THAN_OR_EQUAL = ">=";
-
+    public function getMockedTrait()
+    {
+        return new class (){
+            use OperatorStringableTrait;
+        };
+    }
 }

@@ -27,27 +27,44 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
+namespace Tests\Conjoon\Core\Data\Operator;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Data\Operator\Operator;
+use Tests\StringableTestTrait;
+use Tests\TestCase;
 
 /**
- * Represents relational operators.
+ * Tests FunctionalOperator.
  */
-enum RelationalOperator: string implements Operator
+class OperatorTest extends TestCase
 {
-    use OperatorStringableTrait;
 
-    case IS = "=";
+    use StringableTestTrait;
 
-    case IS_NOT = "!=";
 
-    case GREATER_THAN = ">";
+// ---------------------
+//    Tests
+// ---------------------
 
-    case LESS_THAN = "<";
+    /**
+     * Tests class
+     */
+    public function testClass()
+    {
+        $operator = $this->createMockForAbstract(Operator::class);
+        $this->assertInstanceOf(Stringable::class, $operator);
+    }
 
-    case LESS_THAN_OR_EQUAL = "<=";
 
-    case GREATER_THAN_OR_EQUAL = ">=";
+    /**
+     * @return void
+     */
+    public function testToString()
+    {
+        $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
+
+        $this->runToStringTest($operator);
+    }
 
 }

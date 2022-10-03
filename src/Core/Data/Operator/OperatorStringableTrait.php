@@ -34,20 +34,19 @@ use Conjoon\Core\Data\StringStrategy;
 /**
  * Represents relational operators.
  */
-enum RelationalOperator: string implements Operator
+trait OperatorStringableTrait
 {
-    use OperatorStringableTrait;
 
-    case IS = "=";
+    /**
+     * @param StringStrategy|null $stringStrategy
+     * @return string
+     */
+    public function toString(?StringStrategy $stringStrategy = null): string
+    {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
 
-    case IS_NOT = "!=";
-
-    case GREATER_THAN = ">";
-
-    case LESS_THAN = "<";
-
-    case LESS_THAN_OR_EQUAL = "<=";
-
-    case GREATER_THAN_OR_EQUAL = ">=";
-
+        return $this->value;
+    }
 }

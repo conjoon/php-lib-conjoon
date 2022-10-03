@@ -35,5 +35,7 @@ namespace Conjoon\Core\Data\Operator;
  */
 enum FunctionalOperator: string implements Operator
 {
+    use OperatorStringableTrait;
+
     case IN = "IN";
 }
