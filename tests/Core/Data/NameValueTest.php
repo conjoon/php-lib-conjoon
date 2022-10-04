@@ -32,6 +32,7 @@ namespace Tests\Conjoon\Core\Data;
 use Conjoon\Core\Data\NameValue;
 use Conjoon\Core\Data\Operand;
 use Tests\JsonableTestTrait;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -40,6 +41,7 @@ use Tests\TestCase;
 class NameValueTest extends TestCase
 {
     use JsonableTestTrait;
+    use StringableTestTrait;
 
 // ---------------------
 //    Tests
@@ -76,5 +78,17 @@ class NameValueTest extends TestCase
     {
         $nameValue = new NameValue("name", "value");
         $this->runToJsonTest($nameValue);
+    }
+
+
+    /**
+     * Tests toString()
+     */
+    public function testToString()
+    {
+        $nameValue = new NameValue("name", "value");
+        $this->assertSame("name=value", $nameValue->toString());
+
+        $this->runToStringTest($this->createMockForAbstract(NameValue::class, ["toString"], ["name", "value"]));
     }
 }

@@ -98,4 +98,18 @@ class NameValue implements Operand
 
         return $strategy->toJson($this);
     }
+
+
+    /**
+     * @param StringStrategy|null $stringStrategy
+     * @return string
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        if (!$stringStrategy) {
+            return $this->getName() . "=" . $this->getValue();
+        }
+
+        return $stringStrategy->toJson($this);
+    }
 }
