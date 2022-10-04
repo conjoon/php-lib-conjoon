@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Core\Data;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Data\Operand;
 use Tests\TestCase;
 
@@ -51,5 +52,6 @@ class OperandTest extends TestCase
         $operand = $this->createMockForAbstract(Operand::class);
         $this->assertInstanceOf(Arrayable::class, $operand);
         $this->assertInstanceOf(Jsonable::class, $operand);
+        $this->assertInstanceOf(Stringable::class, $operand);
     }
 }

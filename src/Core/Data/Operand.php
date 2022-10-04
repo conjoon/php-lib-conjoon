@@ -31,11 +31,12 @@ namespace Conjoon\Core\Data;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Contract\Stringable;
 
 /**
  * interface for classes oop representation of Operands.
  */
-interface Operand extends Arrayable, Jsonable
+interface Operand extends Arrayable, Jsonable, Stringable
 {
     /**
      * Returns the value of this operand.
