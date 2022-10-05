@@ -39,7 +39,6 @@ use Tests\TestCase;
  */
 class OperatorTest extends TestCase
 {
-
     use StringableTestTrait;
 
 
@@ -66,5 +65,4 @@ class OperatorTest extends TestCase
 
         $this->runToStringTest($operator);
     }
-
 }

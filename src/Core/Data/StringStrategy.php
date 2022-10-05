@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Data;
 
-
 /**
  * Interface StringStrategy.
  */
