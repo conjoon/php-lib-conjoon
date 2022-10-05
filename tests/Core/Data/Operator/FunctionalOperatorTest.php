@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Core\Data\Operator;
 
 use Conjoon\Core\Data\Operator\Operator;
 use Conjoon\Core\Data\Operator\FunctionalOperator;
+use Conjoon\Core\Data\Operator\OperatorStringableTrait;
 use ReflectionClass;
 use Tests\TestCase;
 
@@ -48,6 +49,9 @@ class FunctionalOperatorTest extends TestCase
      */
     public function testClass()
     {
+        $uses = class_uses(FunctionalOperator::class);
+        $this->assertContains(OperatorStringableTrait::class, $uses);
+
         $class = new ReflectionClass(FunctionalOperator::class);
         $this->assertTrue($class->implementsInterface(Operator::class));
 

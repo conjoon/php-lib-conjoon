@@ -30,8 +30,11 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Core\Data\Operator;
 
 use Conjoon\Core\Data\Operator\Operator;
+use Conjoon\Core\Data\Operator\OperatorStringableTrait;
 use Conjoon\Core\Data\Operator\RelationalOperator;
+use Conjoon\Core\Data\StringStrategy;
 use ReflectionClass;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -48,29 +51,35 @@ class RelationalOperatorTest extends TestCase
      */
     public function testClass()
     {
+        $uses = class_uses(RelationalOperator::class);
+        $this->assertContains(OperatorStringableTrait::class, $uses);
+
         $class = new ReflectionClass(RelationalOperator::class);
         $this->assertTrue($class->implementsInterface(Operator::class));
 
 
         $this->assertEqualsCanonicalizing(
             [
-            RelationalOperator::IS,
-            RelationalOperator::IS_NOT,
-            RelationalOperator::GREATER_THAN,
-            RelationalOperator::LESS_THAN,
-            RelationalOperator::LESS_THAN_OR_EQUAL,
-            RelationalOperator::GREATER_THAN_OR_EQUAL,
+                RelationalOperator::IS,
+                RelationalOperator::IS_NOT,
+                RelationalOperator::GREATER_THAN,
+                RelationalOperator::LESS_THAN,
+                RelationalOperator::LESS_THAN_OR_EQUAL,
+                RelationalOperator::GREATER_THAN_OR_EQUAL,
             ],
             RelationalOperator::cases()
         );
 
         $this->assertSame("=", RelationalOperator::IS->value);
+
         $this->assertSame("!=", RelationalOperator::IS_NOT->value);
 
         $this->assertSame(">", RelationalOperator::GREATER_THAN->value);
+
         $this->assertSame("<", RelationalOperator::LESS_THAN->value);
 
         $this->assertSame(">=", RelationalOperator::GREATER_THAN_OR_EQUAL->value);
+
         $this->assertSame("<=", RelationalOperator::LESS_THAN_OR_EQUAL->value);
     }
 }
