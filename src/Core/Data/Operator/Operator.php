@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Data\Operator;
 
-
 use Conjoon\Core\Contract\Stringable;
 
 /**
@@ -37,5 +36,4 @@ use Conjoon\Core\Contract\Stringable;
  */
 interface Operator extends Stringable
 {
-
 }

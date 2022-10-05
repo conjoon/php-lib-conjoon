@@ -36,12 +36,11 @@ use Conjoon\Core\Data\StringStrategy;
  */
 trait OperatorStringableTrait
 {
-
     /**
      * @param StringStrategy|null $stringStrategy
      * @return string
      */
-    public function toString(?StringStrategy $stringStrategy = null): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
         if ($stringStrategy) {
             return $stringStrategy->toString($this);
