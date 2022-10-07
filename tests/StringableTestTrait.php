@@ -52,7 +52,7 @@ trait StringableTestTrait
             ->withConsecutive([null], [$strategyStub])
             ->willReturnOnConsecutiveCalls(
                 $serialized,
-                $this->returnCallback(function(StringStrategy $strategy) use ($target) {
+                $this->returnCallback(function (StringStrategy $strategy) use ($target) {
                     return $strategy->toString($target);
                 })
             );
