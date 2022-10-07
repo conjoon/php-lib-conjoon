@@ -34,6 +34,7 @@ use Conjoon\Core\Contract\Stringable;
 use Conjoon\Statement\Expression\Operator\Operator;
 use Conjoon\Statement\Operand;
 use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Statement\OperandList;
 
 /**
@@ -107,5 +108,18 @@ abstract class Expression implements Stringable, Arrayable, Operand
         );
 
         return $ops;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        if (!$strategy) {
+            return $this->toArray();
+        }
+
+        return $strategy->toJson($this);
     }
 }

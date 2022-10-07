@@ -35,6 +35,7 @@ use Conjoon\Statement\Expression\Expression;
 use Conjoon\Statement\Expression\Operator\Operator;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
+use Tests\JsonableTestTrait;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
@@ -44,7 +45,7 @@ use Tests\TestCase;
 class ExpressionTest extends TestCase
 {
     use StringableTestTrait;
-
+    use JsonableTestTrait;
 
 // ---------------------
 //    Tests
@@ -75,7 +76,7 @@ class ExpressionTest extends TestCase
     /**
      * @return void
      */
-    public function testToStringAndToArray()
+    public function testToStringAndToArray(): void
     {
         $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
         $operand1 = $this->createMockForAbstract(Operand::class, ["toArray"]);
@@ -95,7 +96,22 @@ class ExpressionTest extends TestCase
 
         $expression = $this->createMockForAbstract(Expression::class, ["toString"]);
         $this->runToStringTest($expression);
+    }
 
+
+    /**
+     * @return void
+     */
+    public function testToJson(): void
+    {
+        $expression = $this->createMockForAbstract(Expression::class, ["getOperands", "getOperator"]);
+
+        $expression->expects($this->any())->method("getOperands")->willReturn(new OperandList());
+        $expression->expects($this->any())->method("getOperator")->willReturn(
+            $this->createMockForAbstract(Operator::class)
+        );
+
+        $this->runToJsonTest($expression);
     }
 
 }
