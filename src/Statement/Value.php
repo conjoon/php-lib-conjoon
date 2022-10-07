@@ -35,7 +35,7 @@ use Conjoon\Core\Data\StringStrategy;
 /**
  * Represents an arbitrary Value.
  */
-class Value extends Operand
+class Value implements Operand
 {
     /**
      * @var mixed

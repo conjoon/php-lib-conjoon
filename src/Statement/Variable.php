@@ -35,7 +35,7 @@ use Conjoon\Core\Data\StringStrategy;
 /**
  * Represents a Variable, providing a symbolic name and an arbitrary value.
  */
-class Variable extends Operand
+class Variable implements Operand
 {
     /**
      * @var VariableName

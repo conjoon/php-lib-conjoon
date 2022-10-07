@@ -35,7 +35,7 @@ use Conjoon\Core\Data\StringStrategy;
 /**
  * Represents the name of a variable, i.e. a symbolic name for some storage location.
  */
-class VariableName extends Operand
+class VariableName implements Operand
 {
     /**
      * @var string
