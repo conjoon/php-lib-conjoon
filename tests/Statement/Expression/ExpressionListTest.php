@@ -35,7 +35,7 @@ use Conjoon\Core\Data\AbstractList;
 use Tests\TestCase;
 
 /**
- * Tests SortInfoList.
+ * Tests ExpressionList.
  */
 class ExpressionListTest extends TestCase
 {
