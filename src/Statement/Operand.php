@@ -36,12 +36,12 @@ use Conjoon\Core\Contract\Stringable;
 /**
  * Abstract class representing an operand.
  */
-abstract class Operand implements Arrayable, Jsonable, Stringable
+interface Operand extends Arrayable, Jsonable, Stringable
 {
     /**
      * Returns the value this operand is representing.
      *
      * @return mixed
      */
-    abstract public function getValue(): mixed;
+    public function getValue(): mixed;
 }
