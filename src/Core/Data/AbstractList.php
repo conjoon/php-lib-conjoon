@@ -54,6 +54,25 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 
 
     /**
+     * Factory method for easily creating instances of the implementing class.
+     *
+     * @param mixed ...$items
+     *
+     * @return AbstractList
+     */
+    public static function make(...$items): AbstractList
+    {
+        $self = new static();
+
+        foreach ($items as $item) {
+            $self[] = $item;
+        }
+
+        return $self;
+    }
+
+
+    /**
      * Returns the class name of the entity-type this list should maintain
      * entries of.
      *

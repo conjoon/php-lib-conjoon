@@ -212,6 +212,31 @@ class AbstractListTest extends TestCase
         $this->assertSame($two, $abstractList->peek());
     }
 
+
+    /**
+     * Tests make()
+     * @return void
+     */
+    public function testMake()
+    {
+        $abstractList = new class extends AbstractList {
+            public function getEntityType(): string
+            {
+                return stdClass::class;
+            }
+        };
+
+        $one = new stdClass();
+        $two = new stdClass();
+
+        $list = $abstractList::make($one, $two);
+
+        $this->assertInstanceOf($abstractList::class , $list);
+
+        $this->assertSame($list[0], $one);
+        $this->assertSame($list[1], $two);
+    }
+
 // ---------------------
 //    Helper Functions
 // ---------------------
