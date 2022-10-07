@@ -33,6 +33,7 @@ use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Statement\Expression\Expression;
 use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\InvalidOperationException;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
 use Tests\JsonableTestTrait;
@@ -112,6 +113,19 @@ class ExpressionTest extends TestCase
         );
 
         $this->runToJsonTest($expression);
+    }
+
+
+    /**
+     * tests getValue()
+     * @return void
+     */
+    public function testGetValue(): void
+    {
+        $this->expectException(InvalidOperationException::class);
+
+        $expression = $this->createMockForAbstract(Expression::class);
+        $expression->getValue();
     }
 
 }

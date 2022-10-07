@@ -32,6 +32,7 @@ namespace Conjoon\Statement\Expression;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\InvalidOperationException;
 use Conjoon\Statement\Operand;
 use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Core\Data\JsonStrategy;
@@ -121,5 +122,15 @@ abstract class Expression implements Stringable, Arrayable, Operand
         }
 
         return $strategy->toJson($this);
+    }
+
+    /**
+     * @return mixed
+     *
+     * @throws InvalidOperationException
+     */
+    public function getValue(): mixed
+    {
+        throw new InvalidOperationException("getValue() not supported for this expression");
     }
 }
