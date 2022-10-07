@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,17 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
+namespace Conjoon\Expression\Operator;
+
+use Conjoon\Core\Contract\Stringable;
 
 /**
- * Represents logical operators.
- *
+ * Tagging interface for a Operator.
  */
-enum LogicalOperator: string implements Operator
+interface Operator extends Stringable
 {
-    use OperatorStringableTrait;
-
-    case AND = "&&";
-
-    case OR = "||";
 }

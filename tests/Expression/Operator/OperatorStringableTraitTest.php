@@ -27,9 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data\Operator;
+namespace Tests\Conjoon\Expression\Operator;
 
-use Conjoon\Core\Data\Operator\OperatorStringableTrait;
+use Conjoon\Expression\Operator\OperatorStringableTrait;
 use Conjoon\Core\Data\StringStrategy;
 use Tests\TestCase;
 

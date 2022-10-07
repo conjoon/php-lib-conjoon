@@ -27,26 +27,46 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
+namespace Tests\Conjoon\Expression\Operator;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Expression\Operator\Operator;
+use Conjoon\Expression\Operator\LogicalOperator;
+use Conjoon\Expression\Operator\OperatorStringableTrait;
+use ReflectionClass;
+use Tests\TestCase;
 
 /**
- * Represents relational operators.
+ * Tests LogicalOperator.
  */
-enum RelationalOperator: string implements Operator
+class LogicalOperatorTest extends TestCase
 {
-    use OperatorStringableTrait;
+// ---------------------
+//    Tests
+// ---------------------
 
-    case IS = "=";
+    /**
+     * Tests class
+     */
+    public function testClass()
+    {
+        $uses = class_uses(LogicalOperator::class);
+        $this->assertContains(OperatorStringableTrait::class, $uses);
 
-    case IS_NOT = "!=";
+        $class = new ReflectionClass(LogicalOperator::class);
+        $this->assertTrue($class->implementsInterface(Operator::class));
 
-    case GREATER_THAN = ">";
 
-    case LESS_THAN = "<";
+        $this->assertEqualsCanonicalizing(
+            [
+            LogicalOperator::AND,
+            LogicalOperator::OR,
+            LogicalOperator::NOT
+            ],
+            LogicalOperator::cases()
+        );
 
-    case LESS_THAN_OR_EQUAL = "<=";
-
-    case GREATER_THAN_OR_EQUAL = ">=";
+        $this->assertSame("&&", LogicalOperator::AND->value);
+        $this->assertSame("||", LogicalOperator::OR->value);
+        $this->assertSame("!", LogicalOperator::NOT->value);
+    }
 }

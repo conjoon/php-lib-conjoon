@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,24 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
+namespace Conjoon\Expression\Operator;
 
 /**
- * Represents functional operators.
- *
+ * Represents relational operators.
  */
-enum FunctionalOperator: string implements Operator
+enum RelationalOperator: string implements Operator
 {
     use OperatorStringableTrait;
 
-    case IN = "IN";
+    case IS = "=";
+
+    case IS_NOT = "!=";
+
+    case GREATER_THAN = ">";
+
+    case LESS_THAN = "<";
+
+    case LESS_THAN_OR_EQUAL = "<=";
+
+    case GREATER_THAN_OR_EQUAL = ">=";
 }

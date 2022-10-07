@@ -27,42 +27,25 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data\Operator;
+namespace Conjoon\Expression\Operator;
 
-use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Data\Operator\Operator;
-use Tests\StringableTestTrait;
-use Tests\TestCase;
+use Conjoon\Core\Data\StringStrategy;
 
 /**
- * Tests FunctionalOperator.
+ * Represents relational operators.
  */
-class OperatorTest extends TestCase
+trait OperatorStringableTrait
 {
-    use StringableTestTrait;
-
-
-// ---------------------
-//    Tests
-// ---------------------
-
     /**
-     * Tests class
+     * @param StringStrategy|null $stringStrategy
+     * @return string
      */
-    public function testClass()
+    public function toString(StringStrategy $stringStrategy = null): string
     {
-        $operator = $this->createMockForAbstract(Operator::class);
-        $this->assertInstanceOf(Stringable::class, $operator);
-    }
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
 
-
-    /**
-     * @return void
-     */
-    public function testToString()
-    {
-        $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
-
-        $this->runToStringTest($operator);
+        return $this->value;
     }
 }

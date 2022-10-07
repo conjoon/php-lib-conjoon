@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,42 +27,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data\Operator;
-
-use Conjoon\Core\Data\Operator\Operator;
-use Conjoon\Core\Data\Operator\FunctionalOperator;
-use Conjoon\Core\Data\Operator\OperatorStringableTrait;
-use ReflectionClass;
-use Tests\TestCase;
+namespace Conjoon\Expression\Operator;
 
 /**
- * Tests FunctionalOperator.
+ * Represents logical operators.
+ *
  */
-class FunctionalOperatorTest extends TestCase
+enum LogicalOperator: string implements Operator
 {
-// ---------------------
-//    Tests
-// ---------------------
+    use OperatorStringableTrait;
 
-    /**
-     * Tests class
-     */
-    public function testClass()
-    {
-        $uses = class_uses(FunctionalOperator::class);
-        $this->assertContains(OperatorStringableTrait::class, $uses);
+    case AND = "&&";
 
-        $class = new ReflectionClass(FunctionalOperator::class);
-        $this->assertTrue($class->implementsInterface(Operator::class));
+    case OR = "||";
 
-
-        $this->assertEqualsCanonicalizing(
-            [
-                FunctionalOperator::IN
-            ],
-            FunctionalOperator::cases()
-        );
-
-        $this->assertSame("IN", FunctionalOperator::IN->value);
-    }
+    case NOT = "!";
 }

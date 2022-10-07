@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,13 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Operator;
-
-use Conjoon\Core\Contract\Stringable;
+namespace Conjoon\Expression\Operator;
 
 /**
- * Tagging interface for a Operator.
+ * Represents functional operators.
+ *
  */
-interface Operator extends Stringable
+enum FunctionalOperator: string implements Operator
 {
+    use OperatorStringableTrait;
+
+    case IN = "IN";
 }
