@@ -31,27 +31,48 @@ namespace Conjoon\Statement\Expression;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Data\Operand;
 use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\Operand;
 use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Statement\OperandList;
 
 /**
  * Represents an operation.
  */
-abstract class Expression implements Stringable, Arrayable
+abstract class Expression implements Stringable, Arrayable, Operand
 {
     /**
-     * Returns the operand used with this operation.
-     * @return Operand
+     * @var OperandList
      */
-    abstract public function getOperand(): Operand;
+    protected OperandList $operands;
 
 
     /**
-     * Returns the operator used with this operation,
+     * @var Operator
+     */
+    protected Operator $operator;
+
+
+    /**
+     * Returns the operands used with this expression.
+     *
+     * @return OperandList
+     */
+    public function getOperands(): OperandList
+    {
+        return $this->operands;
+    }
+
+
+    /**
+     * Returns the operator used with this expression.
+     *
      * @return Operator
      */
-    abstract public function getOperator(): Operator;
+    public function getOperator(): Operator
+    {
+        return $this->operator;
+    }
 
 
     /**
@@ -60,7 +81,13 @@ abstract class Expression implements Stringable, Arrayable
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-            return implode("", [$this->getOperator()->toString(), $this->getOperand()->toString()]);
+
+            return "(" .
+                    implode(
+                        $this->getOperator()->toString(),
+                        $this->getOperands()->toArray()
+                    ) .
+                ")";
         }
 
         return $stringStrategy->toString($this);
@@ -72,6 +99,13 @@ abstract class Expression implements Stringable, Arrayable
      */
     public function toArray(): array
     {
-        return [$this->getOperator()->toString(), $this->getOperand()->toString()];
+        $ops = $this->getOperands()->toArray();
+
+        array_unshift(
+            $ops,
+            $this->getOperator()->toString()
+        );
+
+        return $ops;
     }
 }

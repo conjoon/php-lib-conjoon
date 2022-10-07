@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Statement\Expression;
 
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Statement\Expression\Expression;
-use Conjoon\Core\Data\Operand;
 use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\Operand;
+use Conjoon\Statement\OperandList;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
@@ -53,10 +55,22 @@ class ExpressionTest extends TestCase
      */
     public function testClass()
     {
-        $operation = $this->createMockForAbstract(Expression::class);
-        $this->assertInstanceOf(Stringable::class, $operation);
-    }
+        $expression = $this->createMockForAbstract(Expression::class);
+        $this->assertInstanceOf(Stringable::class, $expression);
+        $this->assertInstanceOf(Arrayable::class, $expression);
 
+        $operands = $this->makeAccessible($expression,"operands", true);
+        $list = new OperandList();
+        $operands->setValue($expression, $list);
+
+        $operator = $this->makeAccessible($expression,"operator", true);
+        $value = $this->createMockForAbstract(Operator::class);
+        $operator->setValue($expression, $value);
+
+
+        $this->assertSame($value, $expression->getOperator());
+
+    }
 
     /**
      * @return void
@@ -64,19 +78,24 @@ class ExpressionTest extends TestCase
     public function testToStringAndToArray()
     {
         $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
-        $operand = $this->createMockForAbstract(Operand::class, ["toString"]);
-        $operator->expects($this->exactly(2))->method("toString")->willReturn("OPERATOR");
-        $operand->expects($this->exactly(2))->method("toString")->willReturn("OPERAND");
+        $operand1 = $this->createMockForAbstract(Operand::class, ["toArray"]);
+        $operand2 = $this->createMockForAbstract(Operand::class, ["toArray"]);
 
+        $operator->expects($this->exactly(2))->method("toString")->willReturn("+");
+        $operand1->expects($this->exactly(2))->method("toString")->willReturn("A");
+        $operand2->expects($this->exactly(2))->method("toString")->willReturn("B");
+        $operandList = OperandList::make($operand1, $operand2);
 
-        $expression = $this->createMockForAbstract(Expression::class, ["getOperator", "getOperand"]);
+        $expression = $this->createMockForAbstract(Expression::class, ["getOperator", "getOperands"]);
         $expression->expects($this->exactly(2))->method("getOperator")->willReturn($operator);
-        $expression->expects($this->exactly(2))->method("getOperand")->willReturn($operand);
+        $expression->expects($this->exactly(2))->method("getOperands")->willReturn($operandList);
 
-        $this->assertSame("OPERATOROPERAND", $expression->toString());
-        $this->assertSame(["OPERATOR", "OPERAND"], $expression->toArray());
+        $this->assertSame("(A+B)", $expression->toString());
+        $this->assertSame(["+", "A", "B"], $expression->toArray());
 
         $expression = $this->createMockForAbstract(Expression::class, ["toString"]);
         $this->runToStringTest($expression);
+
     }
+
 }
