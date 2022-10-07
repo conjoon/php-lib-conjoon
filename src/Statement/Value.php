@@ -27,19 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data;
+namespace Conjoon\Statement;
+
+use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\StringStrategy;
 
 /**
- * Represents a Variable.
+ * Represents an arbitrary Value.
  */
-class Variable implements Operand
+class Value extends Operand
 {
-    /**
-     * @var string
-     */
-    protected string $name;
-
-
     /**
      * @var mixed
      */
@@ -47,35 +44,27 @@ class Variable implements Operand
 
 
     /**
-     * @param string $name
+     * Creates a new Value.
+     *
      * @param mixed $value
-     * @return Variable
+     *
+     * @return Value
      */
-    public static function make(string $name, mixed $value): Variable
+    public static function make(mixed $value): Value
     {
-        return new self($name, $value);
+        return new self($value);
     }
 
 
     /**
-     * @param string $name
+     * Constructor.
+     *
      * @param mixed $value
      */
-    public function __construct(string $name, mixed $value)
+    public function __construct(mixed $value)
     {
-        $this->name = $name;
         $this->value = $value;
     }
-
-
-    /**
-     * @return string
-     */
-    public function getName(): string
-    {
-        return $this->name;
-    }
-
 
     /**
      * @return mixed
@@ -92,7 +81,7 @@ class Variable implements Operand
     public function toArray(): array
     {
         return [
-            $this->getName() => $this->getValue()
+            $this->getValue()
         ];
     }
 
@@ -118,7 +107,7 @@ class Variable implements Operand
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-            return "\"" . $this->getName() . "\":\"" . $this->getValue() . "\"";
+            return (string)$this->getValue();
         }
 
         return $stringStrategy->toJson($this);

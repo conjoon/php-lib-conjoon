@@ -27,18 +27,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
+namespace Tests\Conjoon\Statement;
 
-use Conjoon\Core\Data\Variable;
-use Conjoon\Core\Data\Operand;
+use Conjoon\Statement\VariableName;
+use Conjoon\Statement\Operand;
 use Tests\JsonableTestTrait;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
- * Tests Variable.
+ * Tests VariableName.
  */
-class VariableTest extends TestCase
+class VariableNameTest extends TestCase
 {
     use JsonableTestTrait;
     use StringableTestTrait;
@@ -52,11 +52,15 @@ class VariableTest extends TestCase
      */
     public function testConstructor()
     {
-        $variable = new Variable("name", "value");
-        $this->assertInstanceOf(Operand::class, $variable);
+        $variableName = new VariableName("name");
+        $this->assertInstanceOf(Operand::class, $variableName);
 
-        $this->assertSame("name", $variable->getName());
-        $this->assertSame("value", $variable->getValue());
+        $this->assertSame("name", $variableName->getValue());
+
+
+        $variableName = VariableName::make("name");
+        $this->assertInstanceOf(VariableName::class, $variableName);
+        $this->assertSame("name", $variableName->getValue());
     }
 
 
@@ -65,9 +69,9 @@ class VariableTest extends TestCase
      */
     public function testToArray()
     {
-        $variable = new Variable("name", "value");
+        $variableName = new VariableName("name");
 
-        $this->assertSame(["name" => "value"], $variable->toArray());
+        $this->assertSame(["name"], $variableName->toArray());
     }
 
 
@@ -76,8 +80,8 @@ class VariableTest extends TestCase
      */
     public function testToJson()
     {
-        $variable = new Variable("name", "value");
-        $this->runToJsonTest($variable);
+        $variableName = new VariableName("name");
+        $this->runToJsonTest($variableName);
     }
 
 
@@ -86,9 +90,9 @@ class VariableTest extends TestCase
      */
     public function testToString()
     {
-        $variable = new Variable("name", "value");
-        $this->assertSame("\"name\":\"value\"", $variable->toString());
+        $variableName = new VariableName("name");
+        $this->assertSame("name", $variableName->toString());
 
-        $this->runToStringTest($this->createMockForAbstract(Variable::class, ["toString"], ["name", "value"]));
+        $this->runToStringTest($this->createMockForAbstract(VariableName::class, ["toString"], ["name"]));
     }
 }
