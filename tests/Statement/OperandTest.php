@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
+namespace Tests\Conjoon\Statement;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Data\Operand;
+use Conjoon\Statement\Operand;
 use Tests\TestCase;
 
 /**

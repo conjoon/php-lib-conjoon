@@ -27,21 +27,21 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data;
+namespace Conjoon\Statement;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\Stringable;
 
 /**
- * Interface for classes oop representation of Operands.
+ * Abstract class representing an operand.
  */
-interface Operand extends Arrayable, Jsonable, Stringable
+abstract class Operand implements Arrayable, Jsonable, Stringable
 {
     /**
-     * Returns the value of this operand.
+     * Returns the value this operand is representing.
      *
      * @return mixed
      */
-    public function getValue(): mixed;
+    abstract public function getValue(): mixed;
 }
