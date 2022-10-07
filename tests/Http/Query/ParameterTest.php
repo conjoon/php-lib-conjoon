@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Core\Data\NameValue;
 use Conjoon\Core\Error\ErrorSource;
 use Conjoon\Http\Query\Parameter;
 use Tests\TestCase;
@@ -48,7 +47,6 @@ class ParameterTest extends TestCase
         $mock = $this->getQueryParameter("name", "value");
 
         $this->assertInstanceOf(ErrorSource::class, $mock);
-        $this->assertInstanceOf(NameValue::class, $mock);
         $this->assertSame("value", $mock->getValue());
 
         $this->assertSame("name", $mock->getName());

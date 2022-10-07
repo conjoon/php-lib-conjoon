@@ -29,22 +29,54 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Core\Data\NameValue;
 use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Data\StringStrategy;
 
 /**
  * Class QueryParameter represents the Parameter of a Query.
- * This class enforces $value to be of type string.
  */
-class Parameter extends NameValue implements ErrorSource
+class Parameter implements ErrorSource
 {
+    /**
+     * @var string
+     */
+    private string $value;
+
+    /**
+     * @var string
+     */
+    private string $name;
+
+
     /**
      * @param string $name
      * @param string $value
      */
     public function __construct(string $name, string $value)
     {
-        parent::__construct($name, $value);
+        $this->name  = $name;
+        $this->value = $value;
+    }
+
+
+    /**
+     * Returns the value this Parameter was created with.
+     *
+     * @return string
+     */
+    public function getValue(): string
+    {
+        return $this->value;
+    }
+
+
+    /**
+     * Textual representation of this parameter's name.
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
     }
 
 
@@ -60,7 +92,7 @@ class Parameter extends NameValue implements ErrorSource
     /**
      * @inheritdoc
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
         return $this->getName() . "=" . $this->getValue();
     }

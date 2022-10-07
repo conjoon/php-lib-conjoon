@@ -30,9 +30,9 @@ declare(strict_types=1);
 namespace Conjoon\Core\Data;
 
 /**
- * Represents a Filter.
+ * Represents a Variable.
  */
-class NameValue implements Operand
+class Variable implements Operand
 {
     /**
      * @var string
@@ -44,6 +44,17 @@ class NameValue implements Operand
      * @var mixed
      */
     protected mixed $value;
+
+
+    /**
+     * @param string $name
+     * @param mixed $value
+     * @return Variable
+     */
+    public static function make(string $name, mixed $value): Variable
+    {
+        return new self($name, $value);
+    }
 
 
     /**
@@ -107,7 +118,7 @@ class NameValue implements Operand
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-            return $this->getName() . "=" . $this->getValue();
+            return "\"" . $this->getName() . "\":\"" . $this->getValue() . "\"";
         }
 
         return $stringStrategy->toJson($this);

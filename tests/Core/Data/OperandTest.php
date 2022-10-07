@@ -36,7 +36,7 @@ use Conjoon\Core\Data\Operand;
 use Tests\TestCase;
 
 /**
- * Tests NameValue.
+ * Tests Operand.
  */
 class OperandTest extends TestCase
 {
