@@ -67,18 +67,18 @@ class OperandListTest extends TestCase
             Operand::class,
             ["toArray"]
         );
-        $entry1->expects($this->once())->method("toArray")->willReturn(["entry1"]);
+        $entry1->expects($this->once())->method("toString")->willReturn("entry1");
         $entry2 = $this->createMockForAbstract(
             Operand::class,
             ["toArray"]
         );
-        $entry2->expects($this->once())->method("toArray")->willReturn(["entry2"]);
+        $entry2->expects($this->once())->method("toString")->willReturn("entry2");
 
         $list[] = $entry1;
         $list[] = $entry2;
 
         $this->assertEquals([
-            ["entry1"], ["entry2"]
+            "entry1", "entry2"
         ], $list->toArray());
     }
 

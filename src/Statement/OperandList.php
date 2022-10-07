@@ -53,7 +53,7 @@ class OperandList extends AbstractList
         $res = [];
 
         foreach ($this->data as $data) {
-            $res[] = $data->toArray();
+            $res[] = $data->toString();
         }
 
         return $res;
