@@ -27,19 +27,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Expression\Operator;
+namespace Tests\Conjoon\Statement\Expression\Operator;
 
-use Conjoon\Expression\Operator\Operator;
-use Conjoon\Expression\Operator\FunctionalOperator;
-use Conjoon\Expression\Operator\OperatorStringableTrait;
-use ReflectionClass;
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Statement\Expression\Operator\Operator;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
  * Tests FunctionalOperator.
  */
-class FunctionalOperatorTest extends TestCase
+class OperatorTest extends TestCase
 {
+    use StringableTestTrait;
+
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -49,20 +51,18 @@ class FunctionalOperatorTest extends TestCase
      */
     public function testClass()
     {
-        $uses = class_uses(FunctionalOperator::class);
-        $this->assertContains(OperatorStringableTrait::class, $uses);
-
-        $class = new ReflectionClass(FunctionalOperator::class);
-        $this->assertTrue($class->implementsInterface(Operator::class));
+        $operator = $this->createMockForAbstract(Operator::class);
+        $this->assertInstanceOf(Stringable::class, $operator);
+    }
 
 
-        $this->assertEqualsCanonicalizing(
-            [
-                FunctionalOperator::IN
-            ],
-            FunctionalOperator::cases()
-        );
+    /**
+     * @return void
+     */
+    public function testToString()
+    {
+        $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
 
-        $this->assertSame("IN", FunctionalOperator::IN->value);
+        $this->runToStringTest($operator);
     }
 }

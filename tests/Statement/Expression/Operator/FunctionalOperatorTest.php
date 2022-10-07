@@ -27,25 +27,42 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Expression\Operator;
+namespace Tests\Conjoon\Statement\Expression\Operator;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\Expression\Operator\FunctionalOperator;
+use Conjoon\Statement\Expression\Operator\OperatorStringableTrait;
+use ReflectionClass;
+use Tests\TestCase;
 
 /**
- * Represents relational operators.
+ * Tests FunctionalOperator.
  */
-trait OperatorStringableTrait
+class FunctionalOperatorTest extends TestCase
 {
-    /**
-     * @param StringStrategy|null $stringStrategy
-     * @return string
-     */
-    public function toString(StringStrategy $stringStrategy = null): string
-    {
-        if ($stringStrategy) {
-            return $stringStrategy->toString($this);
-        }
+// ---------------------
+//    Tests
+// ---------------------
 
-        return $this->value;
+    /**
+     * Tests class
+     */
+    public function testClass()
+    {
+        $uses = class_uses(FunctionalOperator::class);
+        $this->assertContains(OperatorStringableTrait::class, $uses);
+
+        $class = new ReflectionClass(FunctionalOperator::class);
+        $this->assertTrue($class->implementsInterface(Operator::class));
+
+
+        $this->assertEqualsCanonicalizing(
+            [
+                FunctionalOperator::IN
+            ],
+            FunctionalOperator::cases()
+        );
+
+        $this->assertSame("IN", FunctionalOperator::IN->value);
     }
 }

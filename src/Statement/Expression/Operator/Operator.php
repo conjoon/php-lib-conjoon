@@ -27,39 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Expression\Operator;
+namespace Conjoon\Statement\Expression\Operator;
 
-use Conjoon\Expression\Operator\OperatorStringableTrait;
-use Conjoon\Core\Data\StringStrategy;
-use Tests\TestCase;
+use Conjoon\Core\Contract\Stringable;
 
 /**
- * Class OperatorStringableTraitTest
+ * Tagging interface for a Operator.
  */
-class OperatorStringableTraitTest extends TestCase
+interface Operator extends Stringable
 {
-    /**
-     * Tests getSearchQueryFromFilter
-     */
-    public function testToString()
-    {
-        $trait = $this->getMockedTrait();
-
-        $trait->value = "someValue";
-
-        $this->assertSame("someValue", $trait->toString());
-
-        $strategyStub = $this->createMockForAbstract(StringStrategy::class, ["toString"]);
-        $strategyStub->expects($this->once())->method("toString")->with($trait)->willReturn("CALLED");
-        $this->assertSame("CALLED", $trait->toString($strategyStub));
-    }
-
-
-
-    public function getMockedTrait()
-    {
-        return new class (){
-            use OperatorStringableTrait;
-        };
-    }
 }

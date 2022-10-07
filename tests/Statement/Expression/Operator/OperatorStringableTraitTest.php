@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,39 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Expression\Operator;
+namespace Tests\Conjoon\Statement\Expression\Operator;
+
+use Conjoon\Statement\Expression\Operator\OperatorStringableTrait;
+use Conjoon\Core\Data\StringStrategy;
+use Tests\TestCase;
 
 /**
- * Represents functional operators.
- *
+ * Class OperatorStringableTraitTest
  */
-enum FunctionalOperator: string implements Operator
+class OperatorStringableTraitTest extends TestCase
 {
-    use OperatorStringableTrait;
+    /**
+     * Tests getSearchQueryFromFilter
+     */
+    public function testToString()
+    {
+        $trait = $this->getMockedTrait();
 
-    case IN = "IN";
+        $trait->value = "someValue";
+
+        $this->assertSame("someValue", $trait->toString());
+
+        $strategyStub = $this->createMockForAbstract(StringStrategy::class, ["toString"]);
+        $strategyStub->expects($this->once())->method("toString")->with($trait)->willReturn("CALLED");
+        $this->assertSame("CALLED", $trait->toString($strategyStub));
+    }
+
+
+
+    public function getMockedTrait()
+    {
+        return new class (){
+            use OperatorStringableTrait;
+        };
+    }
 }

@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Expression\Operator;
+namespace Conjoon\Statement\Expression\Operator;
 
 /**
  * Represents logical operators.

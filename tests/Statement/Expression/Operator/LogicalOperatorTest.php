@@ -27,13 +27,46 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Expression\Operator;
+namespace Tests\Conjoon\Statement\Expression\Operator;
 
-use Conjoon\Core\Contract\Stringable;
+use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\Expression\Operator\LogicalOperator;
+use Conjoon\Statement\Expression\Operator\OperatorStringableTrait;
+use ReflectionClass;
+use Tests\TestCase;
 
 /**
- * Tagging interface for a Operator.
+ * Tests LogicalOperator.
  */
-interface Operator extends Stringable
+class LogicalOperatorTest extends TestCase
 {
+// ---------------------
+//    Tests
+// ---------------------
+
+    /**
+     * Tests class
+     */
+    public function testClass()
+    {
+        $uses = class_uses(LogicalOperator::class);
+        $this->assertContains(OperatorStringableTrait::class, $uses);
+
+        $class = new ReflectionClass(LogicalOperator::class);
+        $this->assertTrue($class->implementsInterface(Operator::class));
+
+
+        $this->assertEqualsCanonicalizing(
+            [
+            LogicalOperator::AND,
+            LogicalOperator::OR,
+            LogicalOperator::NOT
+            ],
+            LogicalOperator::cases()
+        );
+
+        $this->assertSame("&&", LogicalOperator::AND->value);
+        $this->assertSame("||", LogicalOperator::OR->value);
+        $this->assertSame("!", LogicalOperator::NOT->value);
+    }
 }
