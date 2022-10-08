@@ -35,6 +35,8 @@ use Conjoon\Statement\Expression\Operator\RelationalOperator;
 use Conjoon\Statement\InvalidOperandException;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
+use Conjoon\Statement\Value;
+use \Conjoon\Core\Data\StringStrategy;
 use Tests\TestCase;
 
 /**
@@ -82,7 +84,6 @@ class RelationalExpressionTest extends TestCase
      */
     public function testConstructorWithInvalidOperandException()
     {
-
         $this->expectException(InvalidOperandException::class);
         $this->expectExceptionMessage("expects 2 operands");
 
@@ -91,5 +92,35 @@ class RelationalExpressionTest extends TestCase
             $operator,
             new OperandList()
         );
+    }
+
+    /**
+     * Tests constructor with InvalidOperandException
+     */
+    public function testToString()
+    {
+        $operator = RelationalOperator::IS;
+        $expression = RelationalExpression::make(
+            $operator,
+            new Value(1), new Value(2)
+        );
+
+        $this->assertSame("(1=2)", $expression->toString());
+
+        $pnStrategy = new class implements StringStrategy {
+
+            public function toString(mixed $target): string
+            {
+                list($lft, $rt) = $target->getOperands();
+
+                return "(" .implode(" ", [
+                    $target->getOperator()->toString(), $lft->toString(), $rt->toString()
+                ]) . ")";
+            }
+        };
+
+        $this->assertSame("(= 1 2)", $expression->toString(new $pnStrategy));
+
+
     }
 }
