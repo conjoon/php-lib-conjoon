@@ -110,6 +110,6 @@ class VariableName implements Operand
             return $this->getValue();
         }
 
-        return $stringStrategy->toJson($this);
+        return $stringStrategy->toString($this);
     }
 }

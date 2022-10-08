@@ -40,24 +40,37 @@ trait StringableTestTrait
     /**
      * Test toJson
      */
-    public function runToStringTest($target)
+    public function runToStringTest($className)
     {
-        $serialized = md5(serialize($target));
 
-        $strategyStub = $this->createMockForAbstract(StringStrategy::class, ["toString"]);
-        $strategyStub->expects($this->once())->method("toString")->with($target)->willReturn($serialized);
+        $expected = $className;
 
-        $this->assertInstanceOf(Stringable::class, $target);
-        $target->expects($this->exactly(2))->method("toString")
-            ->withConsecutive([null], [$strategyStub])
-            ->willReturnOnConsecutiveCalls(
-                $serialized,
-                $this->returnCallback(function (StringStrategy $strategy) use ($target) {
-                    return $strategy->toString($target);
-                })
-            );
+        // w/o strategy
+        $targetWithoutStrategy = $this->getMockBuilder($className)
+            ->onlyMethods(["toString"])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $targetWithoutStrategy->expects($this->once())
+                              ->method("toString")
+                              ->with(null)
+                              ->willReturn($expected);
+        $this->assertInstanceOf(Stringable::class, $targetWithoutStrategy);
 
-        $this->assertSame($serialized, $target->toString(null));
-        $this->assertSame($serialized, $target->toString($strategyStub));
+        $this->assertSame($expected, $targetWithoutStrategy->toString(null));
+
+        // w/ strategy
+        $target = $this->getMockBuilder($className)
+            ->onlyMethods([])
+            ->disableOriginalConstructor()
+            ->getMock();
+        $expectedFromStrategy = $expected . "_fromStrategy";
+        $strategyStub = $this->createMockForAbstract(StringStrategy::class);
+
+        $strategyStub
+            ->expects($this->once())
+            ->method("toString")
+            ->with($target)
+            ->willReturn($expectedFromStrategy);
+        $this->assertSame($expectedFromStrategy, $target->toString($strategyStub));
     }
 }

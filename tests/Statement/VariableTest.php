@@ -109,6 +109,6 @@ class VariableTest extends TestCase
         $variable = new Variable($n, $v);
         $this->assertSame($n->toString() . ":" . $v->toString(), $variable->toString());
 
-        $this->runToStringTest($this->createMockForAbstract(Variable::class, ["toString"], [$n, $v]));
+        $this->runToStringTest(Variable::class);
     }
 }

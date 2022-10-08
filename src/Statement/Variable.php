@@ -126,6 +126,6 @@ class Variable implements Operand
             return $this->getName()->toString() . ":" . $this->getValue()->toString();
         }
 
-        return $stringStrategy->toJson($this);
+        return $stringStrategy->toString($this);
     }
 }

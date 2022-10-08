@@ -93,6 +93,6 @@ class ValueTest extends TestCase
         $variableName = new Value("value");
         $this->assertSame("value", $variableName->toString());
 
-        $this->runToStringTest($this->createMockForAbstract(Value::class, ["toString"], ["value"]));
+        $this->runToStringTest(Value::class);
     }
 }

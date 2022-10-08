@@ -110,6 +110,6 @@ class Value implements Operand
             return (string)$this->getValue();
         }
 
-        return $stringStrategy->toJson($this);
+        return $stringStrategy->toString($this);
     }
 }
