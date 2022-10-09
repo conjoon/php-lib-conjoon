@@ -42,7 +42,6 @@ use Conjoon\Statement\OperandList;
  */
 class RelationalExpression extends Expression
 {
-
     /**
      * Factory method for easily creating a RelationalExpression.
      *
@@ -72,12 +71,11 @@ class RelationalExpression extends Expression
     {
         if (count($operands) !== 2) {
             throw new InvalidOperandException(
-                "RelationalExpression expects 2 operands, " . count ($operands) . " given"
+                "RelationalExpression expects 2 operands, " . count($operands) . " given"
             );
         }
 
         $this->operands  = $operands;
         $this->operator = $operator;
     }
-
 }

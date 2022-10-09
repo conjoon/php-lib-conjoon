@@ -30,13 +30,15 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Core\Data\Filter\Operation;
 
 use Conjoon\Statement\Expression\Expression;
+use Conjoon\Statement\Expression\Operator\Operator;
 use Conjoon\Statement\Expression\RelationalExpression;
 use Conjoon\Statement\Expression\Operator\RelationalOperator;
 use Conjoon\Statement\InvalidOperandException;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
 use Conjoon\Statement\Value;
-use \Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Statement\VariableName;
 use Tests\TestCase;
 
 /**
@@ -70,7 +72,9 @@ class RelationalExpressionTest extends TestCase
 
 
         $expression = RelationalExpression::make(
-            $operator, $lftOperand, $rtOperand
+            $operator,
+            $lftOperand,
+            $rtOperand
         );
 
         $this->assertInstanceOf(RelationalExpression::class, $expression);
@@ -102,25 +106,25 @@ class RelationalExpressionTest extends TestCase
         $operator = RelationalOperator::IS;
         $expression = RelationalExpression::make(
             $operator,
-            new Value(1), new Value(2)
+            new Value(1),
+            new Value(2)
         );
 
-        $this->assertSame("(1=2)", $expression->toString());
+        $this->assertSame("(1==2)", $expression->toString());
 
-        $pnStrategy = new class implements StringStrategy {
+        $operator = RelationalOperator::LESS_THAN_OR_EQUAL;
+        $lftOp = RelationalOperator::IS_NOT;
+        $rtOp = RelationalOperator::GREATER_THAN;
 
-            public function toString(mixed $target): string
-            {
-                list($lft, $rt) = $target->getOperands();
+        $expression = RelationalExpression::make(
+            $operator,
+            RelationalExpression::make($lftOp, new VariableName("x"), new VariableName("y")),
+            RelationalExpression::make($rtOp, new VariableName("a"), new VariableName("b"))
+        );
 
-                return "(" .implode(" ", [
-                    $target->getOperator()->toString(), $lft->toString(), $rt->toString()
-                ]) . ")";
-            }
-        };
-
-        $this->assertSame("(= 1 2)", $expression->toString(new $pnStrategy));
-
-
+        $this->assertSame(
+            "((x!=y)<=(a>b))",
+            $expression->toString()
+        );
     }
 }
