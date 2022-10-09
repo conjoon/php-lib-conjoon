@@ -61,17 +61,16 @@ class ExpressionTest extends TestCase
         $this->assertInstanceOf(Stringable::class, $expression);
         $this->assertInstanceOf(Arrayable::class, $expression);
 
-        $operands = $this->makeAccessible($expression,"operands", true);
+        $operands = $this->makeAccessible($expression, "operands", true);
         $list = new OperandList();
         $operands->setValue($expression, $list);
 
-        $operator = $this->makeAccessible($expression,"operator", true);
+        $operator = $this->makeAccessible($expression, "operator", true);
         $value = $this->createMockForAbstract(Operator::class);
         $operator->setValue($expression, $value);
 
 
         $this->assertSame($value, $expression->getOperator());
-
     }
 
     /**
@@ -96,7 +95,7 @@ class ExpressionTest extends TestCase
         $this->assertSame(["+", "A", "B"], $expression->toArray());
 
         $expression = $this->createMockForAbstract(Expression::class, ["toString"]);
-        $this->runToStringTest($expression);
+        $this->runToStringTest(Expression::class);
     }
 
 
@@ -127,5 +126,4 @@ class ExpressionTest extends TestCase
         $expression = $this->createMockForAbstract(Expression::class);
         $expression->getValue();
     }
-
 }
