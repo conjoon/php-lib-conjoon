@@ -29,6 +29,9 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Data;
 
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Exception\UnexpectedTypeException;
+
 /**
  * Interface StringStrategy.
  */
@@ -37,9 +40,10 @@ interface StringStrategy
     /**
      * Returns a String representation of the data passed to this method.
      *
-     * @param mixed $source
-     *
+     * @param Stringable $target
      * @return string
+     *
+     * @throws UnexpectedTypeException
      */
-    public function toString(mixed $target): string;
+    public function toString(Stringable $target): string;
 }
