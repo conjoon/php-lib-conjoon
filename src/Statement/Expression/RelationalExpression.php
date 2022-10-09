@@ -39,6 +39,15 @@ use Conjoon\Statement\OperandList;
  * Relational expressions evaluate to a boolean value.
  *
  * @example
+ *
+ *   $operator = RelationalOperator::IS;
+ *   $expression = RelationalExpression::make(
+ *       $operator,
+ *       new Value(1),
+ *       new Value(2)
+ *   );
+ *
+ *  $expression->toString(); // 1 == 2
  */
 class RelationalExpression extends Expression
 {
@@ -75,7 +84,7 @@ class RelationalExpression extends Expression
             );
         }
 
-        $this->operands  = $operands;
+        $this->operands = $operands;
         $this->operator = $operator;
     }
 }
