@@ -36,7 +36,7 @@ enum RelationalOperator: string implements Operator
 {
     use OperatorStringableTrait;
 
-    case IS = "=";
+    case IS = "==";
 
     case IS_NOT = "!=";
 
