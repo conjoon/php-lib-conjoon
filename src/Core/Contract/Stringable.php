@@ -40,7 +40,8 @@ interface Stringable
      * Returns a string representation of this instance.
      *
      * @param StringStrategy|null $stringStrategy
+     *
      * @return string
      */
-    public function toString(?StringStrategy $stringStrategy = null): string;
+    public function toString(StringStrategy $stringStrategy = null): string;
 }
