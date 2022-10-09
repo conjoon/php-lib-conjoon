@@ -231,7 +231,7 @@ class AbstractListTest extends TestCase
 
         $list = $abstractList::make($one, $two);
 
-        $this->assertInstanceOf($abstractList::class , $list);
+        $this->assertInstanceOf($abstractList::class, $list);
 
         $this->assertSame($list[0], $one);
         $this->assertSame($list[1], $two);

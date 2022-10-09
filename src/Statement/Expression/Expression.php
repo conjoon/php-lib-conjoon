@@ -83,7 +83,6 @@ abstract class Expression implements Stringable, Arrayable, Operand
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-
             return "(" .
                     implode(
                         $this->getOperator()->toString(),
