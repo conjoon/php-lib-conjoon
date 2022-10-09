@@ -107,7 +107,16 @@ class Value implements Operand
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-            return (string)$this->getValue();
+            $value = $this->getValue();
+
+            switch (true) {
+                case ($value === true):
+                    return "true";
+                case ($value ===false):
+                    return "false";
+                default:
+                    return (string)$value;
+            }
         }
 
         return $stringStrategy->toString($this);

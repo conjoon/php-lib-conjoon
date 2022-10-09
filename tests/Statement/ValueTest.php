@@ -90,8 +90,12 @@ class ValueTest extends TestCase
      */
     public function testToString()
     {
-        $variableName = new Value("value");
-        $this->assertSame("value", $variableName->toString());
+        $tests = [[true, "true"], [false, "false"], [1, "1"], ["value", "value"]];
+
+        foreach ($tests as $test) {
+            $variableName = new Value($test[0]);
+            $this->assertSame($test[1], $variableName->toString());
+        }
 
         $this->runToStringTest(Value::class);
     }
