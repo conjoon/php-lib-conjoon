@@ -51,6 +51,17 @@ use Conjoon\Statement\OperandList;
  */
 class RelationalExpression extends Expression
 {
+    use OperatorCallTrait;
+
+    /**
+     * @inheritdoc
+     */
+    public static function getOperatorClass(): string
+    {
+        return RelationalOperator::class;
+    }
+
+
     /**
      * Factory method for easily creating a RelationalExpression.
      *
@@ -67,6 +78,7 @@ class RelationalExpression extends Expression
             OperandList::make($lftOperand, $rtOperand)
         );
     }
+
 
     /**
      * Constructor.

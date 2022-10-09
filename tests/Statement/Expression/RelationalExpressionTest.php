@@ -30,14 +30,13 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Core\Data\Filter\Operation;
 
 use Conjoon\Statement\Expression\Expression;
-use Conjoon\Statement\Expression\Operator\Operator;
+use Conjoon\Statement\Expression\OperatorCallTrait;
 use Conjoon\Statement\Expression\RelationalExpression;
 use Conjoon\Statement\Expression\Operator\RelationalOperator;
 use Conjoon\Statement\InvalidOperandException;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
 use Conjoon\Statement\Value;
-use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Statement\VariableName;
 use Tests\TestCase;
 
@@ -55,6 +54,11 @@ class RelationalExpressionTest extends TestCase
      */
     public function testClass()
     {
+        $uses = class_uses(RelationalExpression::class);
+        $this->assertContains(OperatorCallTrait::class, $uses);
+
+        $this->assertSame(RelationalOperator::class, RelationalExpression::getOperatorClass());
+
         $operator = RelationalOperator::IS;
 
         $lftOperand = $this->createMockForAbstract(Operand::class);
@@ -99,7 +103,7 @@ class RelationalExpressionTest extends TestCase
     }
 
     /**
-     * Tests constructor with InvalidOperandException
+     * Tests toString()
      */
     public function testToString()
     {
