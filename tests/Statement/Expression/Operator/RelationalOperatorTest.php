@@ -68,7 +68,7 @@ class RelationalOperatorTest extends TestCase
             RelationalOperator::cases()
         );
 
-        $this->assertSame("=", RelationalOperator::IS->value);
+        $this->assertSame("==", RelationalOperator::IS->value);
 
         $this->assertSame("!=", RelationalOperator::IS_NOT->value);
 

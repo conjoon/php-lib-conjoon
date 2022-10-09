@@ -65,8 +65,8 @@ class LogicalOperatorTest extends TestCase
             LogicalOperator::cases()
         );
 
-        $this->assertSame("&&", LogicalOperator::AND->value);
-        $this->assertSame("||", LogicalOperator::OR->value);
+        $this->assertSame("AND", LogicalOperator::AND->value);
+        $this->assertSame("OR", LogicalOperator::OR->value);
         $this->assertSame("!", LogicalOperator::NOT->value);
     }
 }
