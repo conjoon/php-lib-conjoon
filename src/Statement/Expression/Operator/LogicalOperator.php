@@ -37,9 +37,9 @@ enum LogicalOperator: string implements Operator
 {
     use OperatorStringableTrait;
 
-    case AND = "AND";
+    case AND = "&&";
 
-    case OR = "OR";
+    case OR = "||";
 
     case NOT = "!";
 }
