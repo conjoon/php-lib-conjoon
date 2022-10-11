@@ -112,7 +112,7 @@ class Value implements Operand
             switch (true) {
                 case ($value === true):
                     return "true";
-                case ($value ===false):
+                case ($value === false):
                     return "false";
                 default:
                     return (string)$value;
