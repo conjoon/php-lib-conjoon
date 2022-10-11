@@ -83,12 +83,17 @@ abstract class Expression implements Stringable, Arrayable, Operand
     public function toString(StringStrategy $stringStrategy = null): string
     {
         if (!$stringStrategy) {
-            return "(" .
-                    implode(
-                        $this->getOperator()->toString(),
-                        $this->getOperands()->toArray()
-                    ) .
-                ")";
+
+            $operands = $this->getOperands()->toArray();
+
+            return "(" . (
+                count($operands) == 1
+                    ? $this->getOperator()->toString() . "" . $operands[0]
+                    : implode(
+                          $this->getOperator()->toString(),
+                          $operands
+                       )
+                ) . ")";
         }
 
         return $stringStrategy->toString($this);

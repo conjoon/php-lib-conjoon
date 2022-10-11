@@ -82,9 +82,9 @@ class ExpressionTest extends TestCase
         $operand1 = $this->createMockForAbstract(Operand::class, ["toArray"]);
         $operand2 = $this->createMockForAbstract(Operand::class, ["toArray"]);
 
-        $operator->expects($this->exactly(2))->method("toString")->willReturn("+");
-        $operand1->expects($this->exactly(2))->method("toString")->willReturn("A");
-        $operand2->expects($this->exactly(2))->method("toString")->willReturn("B");
+        $operator->expects($this->any())->method("toString")->willReturn("+");
+        $operand1->expects($this->any())->method("toString")->willReturn("A");
+        $operand2->expects($this->any())->method("toString")->willReturn("B");
         $operandList = OperandList::make($operand1, $operand2);
 
         $expression = $this->createMockForAbstract(Expression::class, ["getOperator", "getOperands"]);
@@ -94,7 +94,12 @@ class ExpressionTest extends TestCase
         $this->assertSame("(A+B)", $expression->toString());
         $this->assertSame(["+", "A", "B"], $expression->toArray());
 
-        $expression = $this->createMockForAbstract(Expression::class, ["toString"]);
+        $operandList = OperandList::make($operand1);
+        $expression = $this->createMockForAbstract(Expression::class, ["getOperator", "getOperands"]);
+        $expression->expects($this->exactly(1))->method("getOperator")->willReturn($operator);
+        $expression->expects($this->exactly(1))->method("getOperands")->willReturn($operandList);
+        $this->assertSame("(+A)", $expression->toString());
+
         $this->runToStringTest(Expression::class);
     }
 
