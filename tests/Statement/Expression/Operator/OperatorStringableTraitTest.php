@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Statement\Expression\Operator;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Statement\Expression\Operator\OperatorStringableTrait;
 use Conjoon\Core\Data\StringStrategy;
 use Tests\TestCase;
@@ -58,7 +59,7 @@ class OperatorStringableTraitTest extends TestCase
 
     public function getMockedTrait()
     {
-        return new class (){
+        return new class implements Stringable {
             use OperatorStringableTrait;
         };
     }
