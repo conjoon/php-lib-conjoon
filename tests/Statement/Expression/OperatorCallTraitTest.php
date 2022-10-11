@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Statement\Expression;
 
+use Conjoon\Statement\Expression\Expression;
 use Conjoon\Statement\Expression\OperatorCallTrait;
 use Conjoon\Statement\OperandList;
 use Conjoon\Statement\Value;
@@ -48,6 +49,8 @@ class OperatorCallTraitTest extends TestCase
         $lft = Value::make(1);
         $rt = Value::make(2);
         $result = TestClass::EXAMPLE($lft, $rt);
+
+
 
         $this->assertInstanceOf(TestClass::class, $result);
         $this->assertSame($result->enum, TestEnum::EXAMPLE);
@@ -74,7 +77,7 @@ enum TestEnum
     case EXAMPLE;
 }
 
-class TestClass
+class TestClass extends Expression
 {
     use OperatorCallTrait;
 

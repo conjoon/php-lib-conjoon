@@ -34,11 +34,9 @@ use BadMethodCallException;
 use Error;
 
 /**
- * Trait providing functionality for using an existing enum's constant name
- * as a method call, using the resolved enum as the operator.
+ * Trait providing functionality for using existing enum values as static method calls.
  *
  * @example
- *
  *  $expression = RelationalExpression::IS(
  *     Value::make(1), Value::make(2)
  *  );
@@ -54,7 +52,7 @@ use Error;
 trait OperatorCallTrait
 {
     /**
-     * Returns the fqn of the operator this expression is using.
+     * Returns the fqn of the Operator this expression is using.
      *
      * @return string
      */
@@ -62,19 +60,17 @@ trait OperatorCallTrait
 
 
     /**
-     * Shorthand for directly using methods named after the available operators for this
+     * Shorthand for directly using static methods named after the available operators for this
      * expression.
-     *
-     * @example
-     *   $expression = RelationalExpression::IS(Value::make(1), Value::make(2));
-     *   $expression->toString(); // (1 == 2)
      *
      * @param string $method
      * @param array $arguments
      *
      * @return Expression
+     *
+     * @throws BadMethodCallException
      */
-    public static function __callStatic(string $method, array $arguments)
+    public static function __callStatic(string $method, array $arguments): Expression
     {
         $method = strtoupper($method);
 
