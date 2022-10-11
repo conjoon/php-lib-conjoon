@@ -32,7 +32,7 @@ namespace Conjoon\Statement\Expression\Operator;
 use Conjoon\Core\Data\StringStrategy;
 
 /**
- * Represents relational operators.
+ * Trait providing toString implementation for operators.
  */
 trait OperatorStringableTrait
 {
