@@ -71,7 +71,7 @@ class RelationalExpression extends Expression
      *
      * @return RelationalExpression
      */
-    public static function make(RelationalOperator $operator, Operand $lftOperand, Operand $rtOperand)
+    public static function make(RelationalOperator $operator, Operand $lftOperand, Operand $rtOperand): RelationalExpression
     {
         return new self(
             $operator,
