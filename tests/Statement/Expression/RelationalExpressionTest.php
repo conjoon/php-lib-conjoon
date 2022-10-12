@@ -59,7 +59,7 @@ class RelationalExpressionTest extends TestCase
 
         $this->assertSame(RelationalOperator::class, RelationalExpression::getOperatorClass());
 
-        $operator = RelationalOperator::IS;
+        $operator = RelationalOperator::EQ;
 
         $lftOperand = $this->createMockForAbstract(Operand::class);
         $rtOperand = $this->createMockForAbstract(Operand::class);
@@ -95,7 +95,7 @@ class RelationalExpressionTest extends TestCase
         $this->expectException(InvalidOperandException::class);
         $this->expectExceptionMessage("expects 2 operands");
 
-        $operator = RelationalOperator::IS;
+        $operator = RelationalOperator::EQ;
         new RelationalExpression(
             $operator,
             new OperandList()
@@ -107,7 +107,7 @@ class RelationalExpressionTest extends TestCase
      */
     public function testToString()
     {
-        $operator = RelationalOperator::IS;
+        $operator = RelationalOperator::EQ;
         $expression = RelationalExpression::make(
             $operator,
             new Value(1),
@@ -116,9 +116,9 @@ class RelationalExpressionTest extends TestCase
 
         $this->assertSame("(1==2)", $expression->toString());
 
-        $operator = RelationalOperator::LESS_THAN_OR_EQUAL;
-        $lftOp = RelationalOperator::IS_NOT;
-        $rtOp = RelationalOperator::GREATER_THAN;
+        $operator = RelationalOperator::LE;
+        $lftOp = RelationalOperator::NE;
+        $rtOp = RelationalOperator::GT;
 
         $expression = RelationalExpression::make(
             $operator,

@@ -58,26 +58,26 @@ class RelationalOperatorTest extends TestCase
 
         $this->assertEqualsCanonicalizing(
             [
-                RelationalOperator::IS,
-                RelationalOperator::IS_NOT,
-                RelationalOperator::GREATER_THAN,
-                RelationalOperator::LESS_THAN,
-                RelationalOperator::LESS_THAN_OR_EQUAL,
-                RelationalOperator::GREATER_THAN_OR_EQUAL,
+                RelationalOperator::EQ,
+                RelationalOperator::NE,
+                RelationalOperator::GT,
+                RelationalOperator::LT,
+                RelationalOperator::LE,
+                RelationalOperator::GE,
             ],
             RelationalOperator::cases()
         );
 
-        $this->assertSame("==", RelationalOperator::IS->value);
+        $this->assertSame("==", RelationalOperator::EQ->value);
 
-        $this->assertSame("!=", RelationalOperator::IS_NOT->value);
+        $this->assertSame("!=", RelationalOperator::NE->value);
 
-        $this->assertSame(">", RelationalOperator::GREATER_THAN->value);
+        $this->assertSame(">", RelationalOperator::GT->value);
 
-        $this->assertSame("<", RelationalOperator::LESS_THAN->value);
+        $this->assertSame("<", RelationalOperator::LT->value);
 
-        $this->assertSame(">=", RelationalOperator::GREATER_THAN_OR_EQUAL->value);
+        $this->assertSame(">=", RelationalOperator::GE->value);
 
-        $this->assertSame("<=", RelationalOperator::LESS_THAN_OR_EQUAL->value);
+        $this->assertSame("<=", RelationalOperator::LE->value);
     }
 }

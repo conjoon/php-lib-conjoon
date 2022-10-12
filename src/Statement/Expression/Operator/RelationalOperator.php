@@ -36,15 +36,15 @@ enum RelationalOperator: string implements Operator
 {
     use OperatorStringableTrait;
 
-    case IS = "==";
+    case EQ = "==";
 
-    case IS_NOT = "!=";
+    case NE = "!=";
 
-    case GREATER_THAN = ">";
+    case GT = ">";
 
-    case LESS_THAN = "<";
+    case LT = "<";
 
-    case LESS_THAN_OR_EQUAL = "<=";
+    case LE = "<=";
 
-    case GREATER_THAN_OR_EQUAL = ">=";
+    case GE = ">=";
 }

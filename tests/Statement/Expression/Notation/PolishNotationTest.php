@@ -88,7 +88,7 @@ class PolishNotationTest extends TestCase
      */
     public function testToString()
     {
-        $operator = RelationalOperator::IS;
+        $operator = RelationalOperator::EQ;
         $expression = RelationalExpression::make(
             $operator,
             new Value(1),
@@ -97,9 +97,9 @@ class PolishNotationTest extends TestCase
 
         $this->assertSame("== 1 2", $expression->toString(new PolishNotation()));
 
-        $operator = RelationalOperator::LESS_THAN_OR_EQUAL;
-        $lftOp = RelationalOperator::IS_NOT;
-        $rtOp = RelationalOperator::GREATER_THAN;
+        $operator = RelationalOperator::LE;
+        $lftOp = RelationalOperator::NE;
+        $rtOp = RelationalOperator::GT;
 
         $expression = RelationalExpression::make(
             $operator,

@@ -37,12 +37,12 @@ use Error;
  * Trait providing functionality for using existing enum values as static method calls.
  *
  * @example
- *  $expression = RelationalExpression::IS(
+ *  $expression = RelationalExpression::EQ(
  *     Value::make(1), Value::make(2)
  *  );
  *  // is the same as
  *  $expression = RelationalExpression::make(
- *     RelationalOperator::IS,
+ *     RelationalOperator::EQ,
  *     Value::make(1),
  *     Value::make(2)
  *  );

@@ -40,7 +40,7 @@ use Conjoon\Statement\OperandList;
  *
  * @example
  *
- *   $operator = RelationalOperator::IS;
+ *   $operator = RelationalOperator::EQ;
  *   $expression = RelationalExpression::make(
  *       $operator,
  *       new Value(1),

@@ -40,7 +40,7 @@ use Conjoon\Core\Exception\UnexpectedTypeException;
  * StringStrategy for transforming Expressions to polish notation.
  *
  * @example
- *  $operator = RelationalOperator::IS;
+ *  $operator = RelationalOperator::EQ;
  *  $expression = RelationalExpression::make(
  *            $operator,
  *            new Value(1),
