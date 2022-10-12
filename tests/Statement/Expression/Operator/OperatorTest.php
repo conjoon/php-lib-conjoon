@@ -39,8 +39,6 @@ use Tests\TestCase;
  */
 class OperatorTest extends TestCase
 {
-    use StringableTestTrait;
-
 
 // ---------------------
 //    Tests
@@ -55,14 +53,4 @@ class OperatorTest extends TestCase
         $this->assertInstanceOf(Stringable::class, $operator);
     }
 
-
-    /**
-     * @return void
-     */
-    public function testToString()
-    {
-        $operator = $this->createMockForAbstract(Operator::class, ["toString"]);
-
-        $this->runToStringTest($operator);
-    }
 }
