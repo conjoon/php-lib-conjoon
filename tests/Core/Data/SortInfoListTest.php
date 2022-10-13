@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Data;
 
+use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Data\SortDirection;
 use Conjoon\Core\Data\SortInfo;
 use Conjoon\Core\Data\SortInfoList;
 use Conjoon\Core\Data\AbstractList;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -40,6 +42,8 @@ use Tests\TestCase;
  */
 class SortInfoListTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -52,13 +56,14 @@ class SortInfoListTest extends TestCase
 
         $list = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $list);
+        $this->assertInstanceOf(Jsonable::class, $list);
 
         $this->assertSame(SortInfo::class, $list->getEntityType());
     }
 
 
     /**
-     * Tests to array
+     * Tests toArray()
      */
     public function testToArray()
     {
@@ -83,6 +88,15 @@ class SortInfoListTest extends TestCase
         $this->assertEquals([
             [], []
         ], $list->toArray());
+    }
+
+
+    /**
+     * Tests toJson()
+     */
+    public function testToJson()
+    {
+        $this->runToJsonTest($this->createMockForAbstract(SortInfoList::class));
     }
 
 

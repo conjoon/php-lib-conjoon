@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Data;
 
+use Conjoon\Core\Contract\Jsonable;
+
 /**
  * Represents list of sort information.
  *
@@ -40,7 +42,7 @@ namespace Conjoon\Core\Data;
  *      $list[] = $sort;
  *
  */
-class SortInfoList extends AbstractList
+class SortInfoList extends AbstractList implements Jsonable
 {
     /**
      * @inheritdoc
@@ -63,5 +65,18 @@ class SortInfoList extends AbstractList
         }
 
         return $res;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        if (!$strategy) {
+            return $this->toArray();
+        }
+
+        return $strategy->toJson($this);
     }
 }

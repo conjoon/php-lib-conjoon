@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Core\Data;
 
 use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
 
 /**
  * Represents sort information.
@@ -38,7 +39,7 @@ use Conjoon\Core\Contract\Arrayable;
  *
  *     $sort = new SortInfo("subject", SortDirection::ASC);
  */
-class SortInfo implements Arrayable
+class SortInfo implements Arrayable, Jsonable
 {
     /**
      * @var string
@@ -91,5 +92,18 @@ class SortInfo implements Arrayable
             "field" => $this->getField(),
             "direction" => $this->getDirection()->value
         ];
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        if (!$strategy) {
+            return $this->toArray();
+        }
+
+        return $strategy->toJson($this);
     }
 }
