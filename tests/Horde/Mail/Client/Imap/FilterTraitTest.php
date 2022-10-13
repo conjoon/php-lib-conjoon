@@ -29,7 +29,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
+use Conjoon\Filter\Filter;
 use Conjoon\Horde\Mail\Client\Imap\FilterTrait;
+use Conjoon\Math\Expression\FunctionalExpression;
+use Conjoon\Math\Expression\LogicalExpression;
+use Conjoon\Math\Expression\RelationalExpression;
+use Conjoon\Math\Value;
+use Conjoon\Math\VariableName;
 use Tests\TestCase;
 
 /**
@@ -47,29 +53,49 @@ class FilterTraitTest extends TestCase
 
         $tests = [
             [
-                "input" => [],
-                "output" => "ALL"
-            ], [
-                "input" => [
-                    ["property" => "recent", "value" => true, "operator" => "="],
-                    ["property" => "id", "value" => 1000, "operator" => ">="]
-                ],
+                "input" => new Filter(
+                    LogicalExpression::OR(
+                        RelationalExpression::EQ(
+                            VariableName::make("RECENT"),
+                            Value::make(true)
+                        ),
+                        RelationalExpression::GE(
+                            VariableName::make("UID"),
+                            Value::make(1000)
+                        )
+                    )
+                ),
                 "output" => "OR (UID 1000:*) (RECENT)"
             ], [
-                "input" => [
-                    ["property" => "recent", "value" => true, "operator" => "="]
-                ],
+                "input" => new Filter(
+                    RelationalExpression::EQ(
+                        VariableName::make("RECENT"),
+                        Value::make(true)
+                    )
+                ),
                 "output" => "RECENT"
             ], [
-                "input" => [
-                    ["property" => "id", "value" => 1000, "operator" => ">="]
-                ],
+                "input" => new Filter(
+                    RelationalExpression::GE(
+                        VariableName::make("UID"),
+                        Value::make(1000)
+                    )
+                ),
                 "output" => "UID 1000:*"
             ], [
-                "input" => [
-                    ["property" => "recent", "value" => true, "operator" => "="],
-                    ["property" => "id", "value" => [1000, 1001], "operator" => "IN"]
-                ],
+                "input" =>  new Filter(
+                    LogicalExpression::OR(
+                        RelationalExpression::EQ(
+                            VariableName::make("RECENT"),
+                            Value::make(true)
+                        ),
+                        FunctionalExpression::IN(
+                            VariableName::make("UID"),
+                            Value::make(1000),
+                            Value::make(1001)
+                        )
+                    )
+                ),
                 "output" => "OR (UID 1000:1001) (RECENT)"
             ]
         ];

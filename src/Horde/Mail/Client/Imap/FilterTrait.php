@@ -29,24 +29,32 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Imap;
 
+use Conjoon\Filter\Filter;
+use Conjoon\Math\Expression\Expression;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Search_Query;
 
 /**
- * Trait for building SearchQueries based on filter options submitted by the client.
+ * Trait for building SearchQueries based on the available Filter.
  * Filter configurations are treated as OR-queries.
- *
  *
  * @example
  *
- *    $options = [
- *      ["property" => "recent", "value" => true, "operator" => "="],
- *      ["property" => "id", "value" => 1000, "operator" => ">="]
- *    ]
+ *    $filter = new Filter(
+ *        LogicalExpression::OR(
+ *            RelationalExpression::EQ(
+ *                VariableName::make("RECENT"),
+ *                Value::make(true)
+ *            ),
+ *            RelationalExpression::GE(
+ *                VariableName::make("UID"),
+ *                Value::make(1000)
+ *            )
+ *        )
+ *    );
  *
- *    $this->getSearchQueryFromFilterTrait($options)->toString(); // returns "OR (UID 1000:*) (RECENT)"
- *
+ *    $this->getSearchQueryFromFilterTrait($filter)->__toString(); // "OR (UID 1000:*) (RECENT)"
  *
  * Trait FilterTrait
  * @package Conjoon\Horde\Mail\Client\Imap
@@ -54,44 +62,69 @@ use Horde_Imap_Client_Search_Query;
 trait FilterTrait
 {
     /**
-     * Looks up filter information from the passed array and creates a Horde_Imap_Client_Search_Query
-     * from it.
+     * Looks up filter information from the passed Filter and creates a
+     * Horde_Imap_Client_Search_Query from it.
      *
-     * @param array $clientFilter
+     * @param Filter $filter
      *
      * @return Horde_Imap_Client_Search_Query
      */
-    public function getSearchQueryFromFilter(array $clientFilter): Horde_Imap_Client_Search_Query
+    public function getSearchQueryFromFilter(Filter $filter): Horde_Imap_Client_Search_Query
     {
         $searchQuery = new Horde_Imap_Client_Search_Query();
 
-        // check if we have filter here
-        if (!empty($clientFilter)) {
-            $clientSearches = [];
-
-            foreach ($clientFilter as $filter) {
-                if ($filter["property"] === "id") {
-                    if ($filter["operator"] === ">=") {
-                        $filterId = $filter["value"] . ":*";
-                        $latestQuery = new Horde_Imap_Client_Search_Query();
-                        $latestQuery->ids(new Horde_Imap_Client_Ids([$filterId]));
-                        $clientSearches[] = $latestQuery;
-                    } elseif (strtolower($filter["operator"]) === "in") {
-                        $latestQuery = new Horde_Imap_Client_Search_Query();
-                        $latestQuery->ids(new Horde_Imap_Client_Ids($filter["value"]));
-                        $clientSearches[] = $latestQuery;
-                    }
-                }
-                if ($filter["property"] === "recent" && $filter["operator"] === "=" && $filter["value"] === true) {
-                    $recentQuery = new Horde_Imap_Client_Search_Query();
-                    $recentQuery->flag(Horde_Imap_Client::FLAG_RECENT, true);
-                    $clientSearches[] = $recentQuery;
-                }
-            }
-
-            $searchQuery->orSearch($clientSearches);
-        }
+        $clientSearches = $this->transformFilter($filter->getExpression());
+        $searchQuery->orSearch($clientSearches);
 
         return $searchQuery;
+    }
+
+
+    /**
+     * Transforms the submitted expression into an array of Horde_Imap_Client_Search_Query
+     *
+     * @param Expression $filter
+     *
+     * @return array
+     */
+    protected function transformFilter(Expression $filter): array
+    {
+        $clientSearches = [];
+
+        $operator = $filter->getOperator()->toString();
+        $operands = $filter->getOperands();
+
+        if ($operator === "||") {
+            foreach ($operands as $operand) {
+                $clientSearches = array_merge($clientSearches, $this->transformFilter($operand));
+            }
+        } elseif ($operator === "&&") {
+            throw new \RuntimeException("AND not supported");
+        }
+
+        $property = $filter->getOperands()[0]->toString();
+        $value    = $filter->getOperands()[1];
+
+        if ($property === "UID") {
+            if ($operator === ">=") {
+                $value    = array_slice($filter->getOperands()->toArray(), 1);
+                $filterId = implode(":", $value) . ":*";
+                $latestQuery = new Horde_Imap_Client_Search_Query();
+                $latestQuery->ids(new Horde_Imap_Client_Ids([$filterId]));
+                $clientSearches[] = $latestQuery;
+            } elseif ($operator === "IN") {
+                $value    = array_slice($filter->getOperands()->toArray(), 1);
+                $latestQuery = new Horde_Imap_Client_Search_Query();
+                $latestQuery->ids(new Horde_Imap_Client_Ids($value));
+                $clientSearches[] = $latestQuery;
+            }
+        }
+        if ($property === "RECENT" && $operator === "==" && $value->getValue() === true) {
+            $recentQuery = new Horde_Imap_Client_Search_Query();
+            $recentQuery->flag(Horde_Imap_Client::FLAG_RECENT, true);
+            $clientSearches[] = $recentQuery;
+        }
+
+        return $clientSearches;
     }
 }
