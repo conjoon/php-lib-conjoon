@@ -32,8 +32,6 @@ namespace Tests\Conjoon\Statement;
 use Conjoon\Statement\Operand;
 use Conjoon\Statement\OperandList;
 use Conjoon\Core\Data\AbstractList;
-use Tests\JsonableTestTrait;
-use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -41,9 +39,6 @@ use Tests\TestCase;
  */
 class OperandListTest extends TestCase
 {
-    use StringableTestTrait;
-    use JsonableTestTrait;
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -56,7 +51,6 @@ class OperandListTest extends TestCase
 
         $list = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $list);
-        $this->assertInstanceOf(Operand::class, $list);
 
         $this->assertSame(Operand::class, $list->getEntityType());
     }
@@ -90,46 +84,10 @@ class OperandListTest extends TestCase
 
 
     /**
-     * Tests getValue()
-     */
-    public function testGetValue()
-    {
-        $operandList = $this->createMockForAbstract(OperandList::class, ["toArray"]);
-        $operandList->expects($this->once())->method("toArray")->willReturn([1, 2, 3]);
-
-        $this->assertSame(
-            [1, 2, 3],
-            $operandList->getValue()
-        );
-    }
-
-
-
-    /**
-     * Tests toString()
-     */
-    public function testToString()
-    {
-        $this->runToStringTest(OperandList::class);
-    }
-
-
-    /**
-     * Tests toJson()
-     */
-    public function testToJson()
-    {
-        $this->runToJsonTest($this->createMockForAbstract(OperandList::class));
-    }
-
-    /**
      * @returnOperandList
      */
     protected function createList(): OperandList
     {
         return new OperandList();
     }
-
-
-
 }

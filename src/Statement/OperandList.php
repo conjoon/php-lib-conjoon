@@ -30,13 +30,11 @@ declare(strict_types=1);
 namespace Conjoon\Statement;
 
 use Conjoon\Core\Data\AbstractList;
-use Conjoon\Core\Data\JsonStrategy;
-use Conjoon\Core\Data\StringStrategy;
 
 /**
  * Represents a list of Operands.
  */
-class OperandList extends AbstractList implements Operand
+class OperandList extends AbstractList
 {
     /**
      * @inheritdoc
@@ -59,40 +57,5 @@ class OperandList extends AbstractList implements Operand
         }
 
         return $res;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toJson(JsonStrategy $strategy = null): array
-    {
-        if ($strategy) {
-            return $strategy->toJson($this);
-        }
-
-        return $this->toArray();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getValue(): mixed
-    {
-        return $this->toArray();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(StringStrategy $stringStrategy = null): string
-    {
-        if ($stringStrategy) {
-            return $stringStrategy->toString($this);
-        }
-
-        return "[" . implode(", ", $this->toArray()) . "]";
     }
 }
