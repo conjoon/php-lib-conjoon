@@ -37,5 +37,9 @@ enum FunctionalOperator: string implements Operator
 {
     use OperatorStringableTrait;
 
+    /**
+     * The IN operator allows for a more convenient way of writing multiple RelationalOperator::EQ expressions
+     * joined by OR.
+     */
     case IN = "IN";
 }
