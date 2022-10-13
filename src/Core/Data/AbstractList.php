@@ -146,7 +146,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
         // would also be a valid expression
         if (!($value instanceof $entityType)) {
             throw new TypeError(
-                "Expected type \"$entityType\" for value-argument"
+                "Expected type \"$entityType\" for value-argument, got " . get_class($value)
             );
         }
 
