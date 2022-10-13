@@ -29,7 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Filter;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Filter\Filter;
+use Conjoon\Math\Expression\Expression;
 use Conjoon\Math\Expression\RelationalExpression;
 use Conjoon\Math\Value;
 use Tests\TestCase;
@@ -50,6 +52,20 @@ class FilterTest extends TestCase
     {
         $expr = RelationalExpression::EQ(Value::make(1), Value::make(2));
         $filter = new Filter($expr);
+        $this->assertInstanceOf(Stringable::class, $filter);
         $this->assertSame($expr, $filter->getExpression());
+    }
+
+
+    /**
+     * Tests toString()
+     */
+    public function testToString()
+    {
+        $expr = $this->createMockForAbstract(Expression::class, ["toString"]);
+        $expr->expects($this->once())->method("toString")->willReturn("string");
+
+        $filter = new Filter($expr);
+        $this->assertSame("string", $filter->toString());
     }
 }

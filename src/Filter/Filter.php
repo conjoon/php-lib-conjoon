@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Filter;
 
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Math\Expression\Expression;
 
 /**
@@ -41,9 +43,8 @@ use Conjoon\Math\Expression\Expression;
  *          new ValueArgument("subject", "Hello World")
  *     ));
  */
-class Filter
+class Filter implements Stringable
 {
-
     /**
      * @var Expression
      */
@@ -71,4 +72,12 @@ class Filter
         return $this->expression;
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        return $this->getExpression()->toString($stringStrategy);
+    }
 }
