@@ -34,6 +34,7 @@ use Conjoon\Core\Data\AbstractList;
 use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Core\Exception\JsonDecodeException;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Contract\Stringable;
@@ -138,6 +139,7 @@ class MailAddressList extends AbstractList implements JsonDecodable, Stringable,
     /**
      * Returns a string representation of this email address list.
      *
+     * @param StringStrategy|null $stringStrategy
      * @return string
      * @example
      *   $list = new MailAddressList();
@@ -145,10 +147,12 @@ class MailAddressList extends AbstractList implements JsonDecodable, Stringable,
      *   $list[] = new MailAddress("PeterGriffin@quahog.com", "Peter Griffin");
      *
      *   $list->toString(); // returns "Peter Parker <PeterParker@newyork.com>, Peter Griffin <PeterGriffin@quahog.com>"
-     *
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
 
         $data = [];
         foreach ($this->data as $address) {

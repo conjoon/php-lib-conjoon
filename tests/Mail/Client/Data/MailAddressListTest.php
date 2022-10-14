@@ -36,6 +36,7 @@ use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\JsonDecodable;
 use Conjoon\Core\Exception\JsonDecodeException;
 use Tests\JsonableTestTrait;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -45,6 +46,7 @@ use Tests\TestCase;
 class MailAddressListTest extends TestCase
 {
     use JsonableTestTrait;
+    use StringableTestTrait;
 
 // ---------------------
 //    Tests
@@ -129,6 +131,8 @@ class MailAddressListTest extends TestCase
             $mailAddressList[0]->toString() . ", " . $mailAddressList[1]->toString(),
             $mailAddressList->toString()
         );
+
+        $this->runToStringTest(MailAddressList::class);
     }
 
     /**
