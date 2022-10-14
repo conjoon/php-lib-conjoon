@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Horde\Mail\Client\Imap\HordeClient;
+use Conjoon\Horde\Mail\Client\Imap\SortInfoStrategy;
 use Conjoon\Mail\Client\Attachment\FileAttachmentList;
 use Conjoon\Mail\Client\Message\Composer\AttachmentComposer;
 use Conjoon\Mail\Client\Message\Composer\BodyComposer;
@@ -89,12 +90,24 @@ trait ClientGeneratorTrait
 
 
     /**
+     * @return SortInfoStrategy
+     */
+    protected function createSortInfoStrategy(): SortInfoStrategy
+    {
+
+        return new class () extends SortInfoStrategy {
+        };
+    }
+
+
+    /**
      * Creates an instance of HordeClient.
      *
      * @param null $mailAccount
      * @param null $bodyComposer
      * @param null $headerComposer
      * @param null $attachmentComposer
+     * @param null $sortInfoStrategy
      *
      * @return HordeClient
      */
@@ -102,7 +115,8 @@ trait ClientGeneratorTrait
         $mailAccount = null,
         $bodyComposer = null,
         $headerComposer = null,
-        $attachmentComposer = null
+        $attachmentComposer = null,
+        $sortInfoStrategy = null
     ): HordeClient {
 
         if (!$mailAccount) {
@@ -121,6 +135,16 @@ trait ClientGeneratorTrait
             $attachmentComposer = $this->createAttachmentComposer();
         }
 
-        return new HordeClient($mailAccount, $bodyComposer, $headerComposer, $attachmentComposer);
+        if (!$sortInfoStrategy) {
+            $sortInfoStrategy = $this->createSortInfoStrategy();
+        }
+
+        return new HordeClient(
+            $mailAccount,
+            $bodyComposer,
+            $headerComposer,
+            $attachmentComposer,
+            $sortInfoStrategy
+        );
     }
 }

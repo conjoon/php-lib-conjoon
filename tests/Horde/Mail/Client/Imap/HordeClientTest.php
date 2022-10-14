@@ -32,12 +32,17 @@ namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Core\Data\SortDirection;
+use Conjoon\Core\Data\SortInfo;
+use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Filter\Filter;
 use Conjoon\Horde\Mail\Client\Imap\HordeClient;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
+use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
 use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Imap\ImapClientException;
@@ -53,8 +58,12 @@ use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItem as MessageItemResource;
+use Conjoon\Math\Expression\FunctionalExpression;
+use Conjoon\Math\Value;
+use Conjoon\Math\VariableName;
 use DateTime;
 use Exception;
 use Horde_Imap_Client;
@@ -74,10 +83,10 @@ use Mockery;
 use ReflectionClass;
 use ReflectionException;
 use RuntimeException;
+use stdClass;
 use Tests\TestCase;
 use Tests\TestTrait;
 use Conjoon\Horde\Mail\Client\Imap\FilterTrait;
-use Conjoon\Horde\Mail\Client\Imap\FieldsTrait;
 use Conjoon\Horde\Mail\Client\Imap\AttachmentTrait;
 
 /**
@@ -104,11 +113,13 @@ class HordeClientTest extends TestCase
     {
         $uses = class_uses(HordeClient::class);
         $this->assertContains(FilterTrait::class, $uses);
-        $this->assertContains(FieldsTrait::class, $uses);
         $this->assertContains(AttachmentTrait::class, $uses);
 
-        $client = $this->createClient();
+        $sortInfoStrategy = $this->createSortInfoStrategy();
+        $client = $this->createClient(sortInfoStrategy:  $sortInfoStrategy);
         $this->assertInstanceOf(MailClient::class, $client);
+
+        $this->assertSame($sortInfoStrategy, $client->getSortInfoStrategy());
     }
 
 
@@ -204,7 +215,7 @@ class HordeClientTest extends TestCase
             ->with($folderKey)
         ->willThrowException(new Horde_Imap_Client_Exception());
 
-        $client->getMessageItemList($folderKey, new MessageItemListQuery(new ParameterBag()));
+        $client->getMessageItemList($folderKey, $this->createMessageItemListQuery());
     }
 
 
@@ -231,7 +242,7 @@ class HordeClientTest extends TestCase
         $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
         $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
 
-        $client->getMessageItemList($folderKey, new MessageItemListQuery(new ParameterBag()));
+        $client->getMessageItemList($folderKey, $this->createMessageItemListQuery());
     }
 
 
@@ -257,7 +268,7 @@ class HordeClientTest extends TestCase
             ->andReturn([$folderKey->getId() => ""]);
 
         $imapStub->shouldReceive("search")->with($folderKey->getId(), Mockery::any(), [
-            "sort" => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_DATE]
+            "sort" => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_SIZE]
         ])->andReturn(["match" => new Horde_Imap_Client_Ids([111, 222, 333])]);
 
         $messageIds = [111 => "foo", 222 => "bar"];
@@ -289,10 +300,24 @@ class HordeClientTest extends TestCase
 
         $client = $this->createClient();
 
-        $messageItemList = $client->getMessageItemList(
-            $folderKey,
-            new MessageItemListQuery(new ParameterBag(["start" => 0, "limit" => 2]))
+
+        $messageItemListQuery = $this->createMockForAbstract(
+            MessageItemListQuery::class,
+            ["getFields", "getStart", "getLimit", "getSort", "getFilter"],
+            [new ParameterBag()]
         );
+        $messageItemListQuery->expects($this->atLeastOnce())->method("getFields")->willReturn(
+            (new MessageItemResource())->getDefaultFields()
+        );
+        $messageItemListQuery->expects($this->once())->method("getStart")->willReturn(0);
+        $messageItemListQuery->expects($this->once())->method("getLimit")->willReturn(2);
+        $sortInfoList = new SortInfoList();
+        $sortInfoList[] = new SortInfo("size", SortDirection::DESC);
+        $messageItemListQuery->expects($this->once())->method("getSort")->willReturn($sortInfoList);
+        $messageItemListQuery->expects($this->once())->method("getFilter")->willReturn(null);
+
+
+        $messageItemList = $client->getMessageItemList($folderKey, $messageItemListQuery);
 
 
         $this->assertInstanceOf(MessageItemList::class, $messageItemList);
@@ -376,11 +401,23 @@ class HordeClientTest extends TestCase
 
         $client = $this->createClient();
 
+
+        $messageItemListQuery = $this->createMockForAbstract(
+            MessageItemListQuery::class,
+            ["getFields", "getStart", "getLimit"],
+            [new ParameterBag()]
+        );
+        $messageItemListQuery->expects($this->atLeastOnce())->method("getFields")->willReturn(
+            ["from", "references"]
+        );
+        $messageItemListQuery->expects($this->once())->method("getStart")->willReturn(0);
+        $messageItemListQuery->expects($this->once())->method("getLimit")->willReturn(1);
+        $messageItemListQuery->expects($this->once())->method("getSort")->willReturn(null);
+        $messageItemListQuery->expects($this->once())->method("getFilter")->willReturn(null);
+
         $messageItemList = $client->getMessageItemList(
             $folderKey,
-            new MessageItemListQuery(new ParameterBag(
-                ["start" => 0, "limit" => 1, "fields" => ["MessageItem" => ["from" => true, "references" => true]]]
-            ))
+            $messageItemListQuery
         );
 
         $this->assertEquals([
@@ -441,13 +478,23 @@ class HordeClientTest extends TestCase
 
         $client = $this->createClient();
 
+        $messageItemListQuery = $this->createMockForAbstract(
+            MessageItemListQuery::class,
+            ["getFilter"],
+            [new ParameterBag()]
+        );
+        $filter = new Filter(FunctionalExpression::IN(VariableName::make("UID"), Value::make(34)));
+        $messageItemListQuery->expects($this->atLeastOnce())->method("getFields")->willReturn(
+            (new MessageItemResource())->getDefaultFields()
+        );
+        $messageItemListQuery->expects($this->atLeastOnce())->method("getFilter")->willReturn($filter);
+        $messageItemListQuery->expects($this->once())->method("getStart")->willReturn(0);
+        $messageItemListQuery->expects($this->once())->method("getLimit")->willReturn(1);
+
         $messageItemList = $client->getMessageItemList(
             $folderKey,
-            new MessageItemListQuery(new ParameterBag(
-                ["filter" => [["property" => "id", "operator" => "in", "value" => [34]]]]
-            ))
+            $messageItemListQuery
         );
-
 
         $this->assertInstanceOf(MessageItemList::class, $messageItemList);
 
@@ -479,8 +526,6 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItem()
     {
-
-
         $client = $this->createClient();
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
@@ -506,7 +551,18 @@ class HordeClientTest extends TestCase
         )->andReturn($fetchResults);
 
 
-        $item = $client->getMessageItem($this->createMessageKey($account->getId(), "INBOX", "16"));
+        $messageItemQuery = $this->createMockForAbstract(
+            MessageItemQuery::class,
+            ["getFields"],
+            [new ParameterBag()]
+        );
+        $messageItemQuery->expects($this->once())->method("getFields")->willReturn(
+            (new MessageItemResource())->getDefaultFields()
+        );
+        $item = $client->getMessageItem(
+            $this->createMessageKey($account->getId(), "INBOX", "16"),
+            $messageItemQuery
+        );
 
         $this->assertInstanceOf(MessageItem::class, $item);
         $this->assertSame(null, $item->getFrom());
@@ -544,6 +600,8 @@ class HordeClientTest extends TestCase
 
         $messageId = "kjgjkggjkkgjkgj";
 
+        $draftInfo = "draftInfo";
+
         $fetchResults[16]->setEnvelope([
             "cc" => $cc[0]->getAddress(),
             "bcc" => $bcc[0]->getAddress(),
@@ -551,19 +609,33 @@ class HordeClientTest extends TestCase
             "message-id" => $messageId
         ]);
 
+        $fetchResults[16]->setHeaders("X-CN-DRAFT-INFO", $draftInfo);
+
         $imapStub->shouldReceive("fetch")->with(
             "INBOX",
             Mockery::any(),
             Mockery::type("array")
         )->andReturn($fetchResults);
 
-        $item = $client->getMessageItemDraft($this->createMessageKey($account->getId(), "INBOX", "16"));
+        $messageItemQuery = $this->createMockForAbstract(
+            MessageItemQuery::class,
+            ["getFields"],
+            [new ParameterBag()]
+        );
+        $messageItemQuery->expects($this->once())->method("getFields")->willReturn(
+            (new MessageItemResource())->getFields()
+        );
+        $item = $client->getMessageItemDraft(
+            $this->createMessageKey($account->getId(), "INBOX", "16"),
+            $messageItemQuery
+        );
 
         $this->assertInstanceOf(MessageItemDraft::class, $item);
         $this->assertEquals($cc, $item->getCc());
         $this->assertEquals($bcc, $item->getBcc());
         $this->assertEquals($replyTo, $item->getReplyTo());
         $this->assertSame($messageId, $item->getMessageId());
+        $this->assertSame($draftInfo, $item->getDraftInfo());
     }
 
 
@@ -629,7 +701,7 @@ class HordeClientTest extends TestCase
     /**
      * Tests getMailFolderList testtemplate
      */
-    public function getMailFolderListTemplate($input)
+    public function getMailFolderListTemplate(MailFolderListQuery $query)
     {
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
@@ -648,46 +720,31 @@ class HordeClientTest extends TestCase
         $args = ["INBOX"];
         $return = [];
 
-        if (isset($input["fields"]["MailFolder"])) {
-            $getUnreadMessages = $input["fields"]["MailFolder"]["unreadMessages"] ?? false;
-            $getTotalMessages  = $input["fields"]["MailFolder"]["totalMessages"] ?? false;
-            $getName           = $input["fields"]["MailFolder"]["name"] ?? false;
 
-            if ($getUnreadMessages) {
-                $args[] = Horde_Imap_Client::STATUS_UNSEEN;
-                $return["unseen"] = 30;
-                $inline[0][] = fn($listMailFolder)
-                =>  $this->assertSame(30, $listMailFolder->getUnreadMessages());
-            }
-            if ($getTotalMessages) {
-                $args[] = Horde_Imap_Client::STATUS_MESSAGES;
-                $return["messages"] = 100;
-                $inline[0][] = fn($listMailFolder)
-                =>  $this->assertSame(100, $listMailFolder->getTotalMessages());
-            }
-            if ($getName) {
-                $inline[0][] = fn($listMailFolder)
-                =>  $this->assertSame("INBOX", $listMailFolder->getName());
+        $getUnreadMessages = in_array("unreadMessages", $query->getFields());
+        $getTotalMessages  = in_array("totalMessages", $query->getFields());
+        $getName           = in_array("name", $query->getFields());
 
-                $inline[1][] = fn($listMailFolder) =>
-                $this->assertSame("INBOX.Folder", $listMailFolder->getName());
-            }
-        } else {
-            // default behavior is ALL fields (@see #getDefaultFields)
+        if ($getUnreadMessages) {
             $args[] = Horde_Imap_Client::STATUS_UNSEEN;
-            $args[] = Horde_Imap_Client::STATUS_MESSAGES;
             $return["unseen"] = 30;
+            $inline[0][] = fn($listMailFolder)
+            =>  $this->assertSame(30, $listMailFolder->getUnreadMessages());
+        }
+        if ($getTotalMessages) {
+            $args[] = Horde_Imap_Client::STATUS_MESSAGES;
             $return["messages"] = 100;
             $inline[0][] = fn($listMailFolder)
-                             => $this->assertSame(30, $listMailFolder->getUnreadMessages());
-            $inline[0][] = fn($listMailFolder)
-                             => $this->assertSame(100, $listMailFolder->getTotalMessages());
-            $inline[0][] = fn($listMailFolder)
-                             => $this->assertSame("INBOX", $listMailFolder->getName());
-
-            $inline[1][] = fn($listMailFolder)
-                             => $this->assertSame("INBOX.Folder", $listMailFolder->getName());
+            =>  $this->assertSame(100, $listMailFolder->getTotalMessages());
         }
+        if ($getName) {
+            $inline[0][] = fn($listMailFolder)
+            =>  $this->assertSame("INBOX", $listMailFolder->getName());
+
+            $inline[1][] = fn($listMailFolder) =>
+            $this->assertSame("INBOX.Folder", $listMailFolder->getName());
+        }
+
 
         $imapStub->shouldReceive("status")->with(
             ...$args
@@ -704,7 +761,7 @@ class HordeClientTest extends TestCase
 
         $mailFolderList = $client->getMailFolderList(
             $account,
-            new MailFolderListResourceQuery(new ParameterBag(["fields" => $input["fields"]]))
+            $query
         );
 
         $this->assertInstanceOf(MailFolderList::class, $mailFolderList);
@@ -735,7 +792,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList1()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["unreadMessages"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -745,7 +805,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList2()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true, "totalMessages" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["unreadMessages", "totalMessages"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -755,7 +818,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList3()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["unreadMessages" => true, "totalMessages" => true, "name" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["unreadMessages", "totalMessages", "name"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -765,7 +831,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList4()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["name"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -775,7 +844,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList5()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true, "unreadMessages" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["name", "unreadMessages"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -785,7 +857,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList6()
     {
-        $this->getMailFolderListTemplate(["fields" => ["MailFolder" => ["name" => true, "totalmessages" => true]]]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn(["name", "totalmessages"]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -795,7 +870,10 @@ class HordeClientTest extends TestCase
      */
     public function testGetMailFolderList7()
     {
-        $this->getMailFolderListTemplate(["fields" => []]);
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFields"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFields")->willReturn([]);
+
+        $this->getMailFolderListTemplate($query);
     }
 
 
@@ -1003,7 +1081,7 @@ class HordeClientTest extends TestCase
         $composer->expects($this->once())->method("compose")->with("", $messageItemDraft)->willReturn("HEADER");
         $client->expects($this->once())->method("getHeaderComposer")->willReturn($composer);
 
-        $ids = new \stdClass();
+        $ids = new stdClass();
         $ids->ids = [1];
         $socket->expects($this->once())->method("append")->with(
             $folderKey->getId(),
@@ -1240,6 +1318,7 @@ class HordeClientTest extends TestCase
 
     /**
      * Tests getMailer() with secure param
+     * @throws ReflectionException
      */
     public function testGetMailerSecure()
     {
@@ -1251,7 +1330,6 @@ class HordeClientTest extends TestCase
             "outbox_password" => "outboxPassword",
             "outbox_secure"   => "ssl"
         ]);
-        ;
 
         $client = $this->createClient($mailAccount);
         $mailer = $client->getMailer($mailAccount);
@@ -1327,7 +1405,7 @@ class HordeClientTest extends TestCase
              *
              * @noinspection PhpUnused
              */
-            public function getFullMsg()
+            public function getFullMsg(): void
             {
             }
 
@@ -1563,11 +1641,14 @@ class HordeClientTest extends TestCase
      */
     public function testQueryItems()
     {
-        $options = ["filter" => [[]]];
-
         $key = new FolderKey("dev", "INBOX");
 
         $search = new Horde_Imap_Client_Search_Query();
+
+        $sortInfo = null;
+        $filter = new Filter(
+            FunctionalExpression::IN(VariableName::make("size"), Value::make(1))
+        );
 
         $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
                         ->disableOriginalConstructor()
@@ -1583,21 +1664,22 @@ class HordeClientTest extends TestCase
                ->with(
                    $key->getId(),
                    $search,
-                   $this->anything()
+                   ["sort" => [Horde_Imap_Client::SORT_REVERSE, Horde_Imap_Client::SORT_DATE]]
                )
                ->willReturn([]);
 
         $client->expects($this->once())
                ->method("getSearchQueryFromFilter")
-               ->with($options["filter"])
+               ->with($filter)
                ->willReturn($search);
 
         $reflection = new ReflectionClass(HordeClient::class);
         $queryItems = $reflection->getMethod("queryItems");
         $queryItems->setAccessible(true);
 
-        $queryItems->invokeArgs($client, [$socket, $key, $options]);
+        $queryItems->invokeArgs($client, [$socket, $key, $sortInfo, $filter]);
     }
+
 
 // -------------------------------
 //  Helper
@@ -1609,7 +1691,7 @@ class HordeClientTest extends TestCase
      *
      * @param mixed $testType true, false or "exception"
      */
-    protected function deleteMessageTest($testType)
+    protected function deleteMessageTest(mixed $testType)
     {
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
@@ -1638,9 +1720,11 @@ class HordeClientTest extends TestCase
 
         $client = $this->createClient();
 
+        $res = null;
+
         try {
             $res = $client->deleteMessage($messageKey);
-        } catch (ImapClientException $exc) {
+        } catch (ImapClientException) {
             if ($testType === "exception") {
                 $this->assertTrue(true);
                 return;
@@ -1649,7 +1733,7 @@ class HordeClientTest extends TestCase
 
         if ($testType === "exception") {
             // if we are here, no exception was thrown
-            $this->assertTrue(false);
+            $this->fail();
         }
 
         $resultValue = $testType === true;
@@ -1766,21 +1850,12 @@ class HordeClientTest extends TestCase
             ->with($basePart);
 
 
-        switch ($testType) {
-            case "DRAFTINFO_INVALID":
-                $value = "NO!";
-                break;
-
-            case "DRAFTINFO_NOJSON":
-                $value = base64_encode("{\"abc\" \"def\"}");
-                break;
-            case "INVALID_MAILACCOUNT":
-                $value = base64_encode(json_encode(["abc", "foo", "bar"]));
-                break;
-            default:
-                $value = base64_encode(json_encode([$account->getId(), "foo", "bar"]));
-                break;
-        }
+        $value = match ($testType) {
+            "DRAFTINFO_INVALID" => "NO!",
+            "DRAFTINFO_NOJSON" => base64_encode("{\"abc\" \"def\"}"),
+            "INVALID_MAILACCOUNT" => base64_encode(json_encode(["abc", "foo", "bar"])),
+            default => base64_encode(json_encode([$account->getId(), "foo", "bar"])),
+        };
 
 
         $headerElement->shouldReceive("__get")
@@ -1896,6 +1971,48 @@ class HordeClientTest extends TestCase
     protected function createMessageKey($mid, $fid, $id): MessageKey
     {
         return new MessageKey($mid, $fid, $id);
+    }
+
+
+    /**
+     * @param ParameterBag|null $bag
+     * @return MessageItemListQuery
+     */
+    protected function createMessageItemListQuery(?ParameterBag $bag = null): MessageItemListQuery
+    {
+        if (!$bag) {
+            $bag = new ParameterBag();
+        }
+
+        return $this->createMockForAbstract(MessageItemListQuery::class, [], [$bag]);
+    }
+
+
+    /**
+     * @param ParameterBag|null $bag
+     * @return MessageItemQuery
+     */
+    protected function createMessageItemQuery(?ParameterBag $bag = null): MessageItemQuery
+    {
+        if (!$bag) {
+            $bag = new ParameterBag();
+        }
+
+        return $this->createMockForAbstract(MessageItemQuery::class, [], [$bag]);
+    }
+
+
+    /**
+     * @param ParameterBag|null $bag
+     * @return MailFolderListQuery
+     */
+    protected function createMailFolderListQuery(?ParameterBag $bag = null): MailFolderListQuery
+    {
+        if (!$bag) {
+            $bag = new ParameterBag();
+        }
+
+        return $this->createMockForAbstract(MailFolderListQuery::class, [], [$bag]);
     }
 }
 
