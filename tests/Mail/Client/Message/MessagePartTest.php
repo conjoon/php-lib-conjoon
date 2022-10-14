@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Core\Contract\Copyable;
 use Tests\TestCase;
@@ -49,19 +50,19 @@ class MessagePartTest extends TestCase
     {
 
 
-        $messagePart = new MessagePart("foo", "bar", "text/html");
+        $messagePart = new MessagePart("foo", "bar", MimeType::TEXT_HTML);
 
         $this->assertInstanceOf(Copyable::class, $messagePart);
 
         $this->assertSame("foo", $messagePart->getContents());
         $this->assertSame("bar", $messagePart->getCharset());
-        $this->assertSame("text/html", $messagePart->getMimeType());
+        $this->assertSame(MimeType::TEXT_HTML, $messagePart->getMimeType());
 
         $messagePart->setContents("contents", "charset");
 
         $this->assertSame("contents", $messagePart->getContents());
         $this->assertSame("charset", $messagePart->getCharset());
-        $this->assertSame("text/html", $messagePart->getMimeType());
+        $this->assertSame(MimeType::TEXT_HTML, $messagePart->getMimeType());
 
         $copy = $messagePart->copy();
         $this->assertNotSame($copy, $messagePart);

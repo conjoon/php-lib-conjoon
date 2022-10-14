@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Message;
 
 use Conjoon\Core\Contract\Copyable;
+use Conjoon\Core\Data\MimeType;
 
 /**
  * Class MessagePart models a simplified representation of a Mail Message Part,
@@ -37,10 +38,7 @@ use Conjoon\Core\Contract\Copyable;
  *
  * @example
  *
- *    $part = new MessagePart();
- *
- *    $body->setContents("foo");
- *    $item->setCharset("ISO-8859-1");
+ *    $part = new MessagePart("foo", "ISO-8859-1", MimeType::TEXT_PLAIN);
  *
  *    $body->getContents();// "foo"
  *    $item->getCharset(); // "ISO-8859-1"
@@ -50,9 +48,9 @@ use Conjoon\Core\Contract\Copyable;
 class MessagePart implements Copyable
 {
     /**
-     * @vr string
+     * @var string
      */
-    protected string $mimeType = "";
+    protected MimeType $mimeType;
 
     /**
      * @var string
@@ -70,9 +68,9 @@ class MessagePart implements Copyable
      *
      * @param string $contents
      * @param string $charset
-     * @param string $mimeType
+     * @param MimeType $mimeType
      */
-    public function __construct(string $contents, string $charset, string $mimeType)
+    public function __construct(string $contents, string $charset, MimeType $mimeType)
     {
         $this->setContents($contents, $charset);
         $this->setMimeType($mimeType);
@@ -133,11 +131,11 @@ class MessagePart implements Copyable
     /**
      * Sets the "$mimeType" for this part.
      *
-     * @param String $mimeType
+     * @param MimeType $mimeType
      *
      * @return $this
      */
-    protected function setMimeType(string $mimeType): MessagePart
+    protected function setMimeType(MimeType $mimeType): MessagePart
     {
         $this->mimeType = $mimeType;
         return $this;
@@ -147,9 +145,9 @@ class MessagePart implements Copyable
     /**
      * Returns the $mimeType of this part.
      *
-     * @return string
+     * @return MimeType
      */
-    public function getMimeType(): string
+    public function getMimeType(): MimeType
     {
         return $this->mimeType;
     }
