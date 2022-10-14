@@ -33,6 +33,7 @@ use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Core\Exception\JsonDecodeException;
 use Conjoon\Core\Data\JsonStrategy;
 use Conjoon\Core\Contract\Stringable;
@@ -168,15 +169,19 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Arrayable, Jso
     /**
      * Returns a string representation of this email address.
      *
+     * @param StringStrategy|null $stringStrategy
      * @return string
      * @example
      *   $address = new MailAddress("PeterParker@newyork.com", "Peter Parker");
      *
      *   $address->toString(); // returns "Peter Parker <PeterParker@newyork.com>"
-     *
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
+
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
 
         $address = $this->getAddress();
         $name = $this->getName();

@@ -36,6 +36,7 @@ use Conjoon\Core\Contract\JsonDecodable;
 use Conjoon\Core\Exception\JsonDecodeException;
 use Conjoon\Core\Contract\Stringable;
 use InvalidArgumentException;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 use Tests\JsonableTestTrait;
 
@@ -46,6 +47,7 @@ use Tests\JsonableTestTrait;
 class MailAddressTest extends TestCase
 {
     use JsonableTestTrait;
+    use StringableTestTrait;
 
 // ---------------------
 //    Tests
@@ -105,6 +107,8 @@ class MailAddressTest extends TestCase
         $mailAddress = new MailAddress($address, $name);
 
         $this->assertSame("Peter Parker <peter.parker@newyork.com>", $mailAddress->toString());
+
+        $this->runToStringTest(MailAddress::class);
     }
 
     /**
