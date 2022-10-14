@@ -67,14 +67,16 @@ abstract class MessageItemListQuery extends ResourceQuery
 
     /**
      * Returns sort information for this query.
+     * Returns null if no sort information is available.
      *
-     * @return SortInfoList
+     * @return SortInfoList|null
      */
-    abstract public function getSort(): SortInfoList;
+    abstract public function getSort(): ?SortInfoList;
 
 
     /**
      * Returns filter information for this query.
+     * Returns null if no filter information is  available.
      *
      * @return Filter|null
      */
