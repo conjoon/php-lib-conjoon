@@ -34,6 +34,7 @@ use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Parameter;
 use Illuminate\Http\Request;
+use Conjoon\Core\Data\StringStrategy;
 
 /**
  * LaravelQuery representing queries of Requests with the type Illuminate\Http\Request.
@@ -41,7 +42,7 @@ use Illuminate\Http\Request;
  * was specified as a parameter name, this parameter name will be considered as a fqn
  * for its lookup.
  */
-final class LaravelQuery extends Query
+class LaravelQuery extends Query
 {
     use ParameterTrait;
 
@@ -173,8 +174,12 @@ final class LaravelQuery extends Query
     /**
      * @inheritdoc
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
+
         return $this->queryString;
     }
 

@@ -33,6 +33,7 @@ use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Illuminate\Http\Query\LaravelQuery;
 use Conjoon\Http\Query\Query;
 use Illuminate\Http\Request;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -40,6 +41,8 @@ use Tests\TestCase;
  */
 class LaravelQueryTest extends TestCase
 {
+    use StringableTestTrait;
+
     /**
      * Class functionality
      */
@@ -172,5 +175,7 @@ class LaravelQueryTest extends TestCase
         $this->assertSame([
             "query" => $query->toString()
         ], $query->toArray());
+
+        $this->runToStringTest(LaravelQuery::class);
     }
 }
