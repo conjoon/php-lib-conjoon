@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Horde\Mail\Client\Message\Composer\HordeBodyComposer;
 use Conjoon\Mail\Client\Message\Composer\BodyComposer;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
@@ -59,8 +60,8 @@ class HordeBodyComposerTest extends TestCase
     {
 
         $messageBodyDraft = new MessageBodyDraft();
-        $htmlPart = new MessagePart("foo", "UTF-8", "text/html");
-        $plainPart = new MessagePart("bar", "UTF-8", "text/plain");
+        $htmlPart = new MessagePart("foo", "UTF-8", MimeType::TEXT_HTML);
+        $plainPart = new MessagePart("bar", "UTF-8", MimeType::TEXT_PLAIN);
         $messageBodyDraft->setTextHtml($htmlPart);
         $messageBodyDraft->setTextPlain($plainPart);
 
