@@ -32,6 +32,9 @@ use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
+use Conjoon\Math\Expression\Operator\FunctionalOperator;
+use Conjoon\Math\Expression\Operator\LogicalOperator;
+use Conjoon\Math\Expression\Operator\RelationalOperator;
 
 /**
  * This parameter rule supports validation of filters provided as json encoded objects containing
@@ -42,8 +45,8 @@ use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
  * with the id "1":
  * ?filter={"=": {"id": 1]}
  *
- * The following requests data marked as "recent", or data marked as "unseen" and with an id >= 1657:
- * ?filter={"OR":[{"=":{"recent":true}}, "AND": [{"=": {"unseen": true}}, {">=": {"id":1657}}]}
+ * The following requests data marked as "recent", or data marked as "unseen" or with an id >= 1657:
+ * ?filter={"OR":[{"=":{"recent":true}}, "OR": [{"=": {"unseen": true}}, {">=": {"id":1657}}]}
  *
  * This rule applies for parameters named "filter"
  */
@@ -95,7 +98,7 @@ class PnFilterRule extends JsonEncodedRule
                     continue;
                 }
 
-                //{"AND" : [{"=": ...}, {">=" : ...}}]
+                //{"OR" : [{"==": ...}, {">=" : ...}}]
                 if ($this->isLogicalOperator($operator)) {
                     if (count($filter) <= 1) {
                         return "Logical operator \"$operator\" " .
@@ -164,7 +167,7 @@ class PnFilterRule extends JsonEncodedRule
      */
     public function getRelationalOperators(): array
     {
-        return ["<=", "<", "!=", "=", ">", ">="];
+        return array_merge(array_map(fn($enum) => $enum->value, RelationalOperator::cases()), ["="]);
     }
 
 
@@ -175,7 +178,7 @@ class PnFilterRule extends JsonEncodedRule
      */
     public function getLogicalOperators(): array
     {
-        return ["AND", "OR"];
+        return [LogicalOperator::OR->value, "OR"];
     }
 
 
@@ -186,7 +189,7 @@ class PnFilterRule extends JsonEncodedRule
      */
     public function getFunctions(): array
     {
-        return ["IN"];
+        return array_map(fn($enum) => $enum->value, FunctionalOperator::cases());
     }
 
 

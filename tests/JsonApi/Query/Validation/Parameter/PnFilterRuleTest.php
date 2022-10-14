@@ -73,7 +73,7 @@ class PnFilterRuleTest extends TestCase
      */
     public function testGetRelationalOperators()
     {
-        $operators = ["<=", "<", "!=", "=", ">", ">="];
+        $operators = ["<=", "<", "!=", "=", ">", ">=", "=="];
         $rule = new PnFilterRule([]);
 
         $this->assertEqualsCanonicalizing(
@@ -107,7 +107,7 @@ class PnFilterRuleTest extends TestCase
      */
     public function testGetLogicalOperators()
     {
-        $operators = ["AND", "OR"];
+        $operators = ["OR", "||"];
         $rule = new PnFilterRule([]);
 
         $this->assertEqualsCanonicalizing(
@@ -122,7 +122,7 @@ class PnFilterRuleTest extends TestCase
      */
     public function testIsLogicalOperator()
     {
-        $operators = ["AND", "OR"];
+        $operators = ["||", "OR"];
 
         $rule = new PnFilterRule([]);
 
@@ -156,11 +156,11 @@ class PnFilterRuleTest extends TestCase
                 "result" => "is not a valid operator"
             ],
             [
-                "filter" => ["AND" => [[ "=" => ["size" => 1000]], [">" => ["date" => 127000000]]]],
+                "filter" => ["OR" => [[ "==" => ["size" => 1000]], [">" => ["date" => 127000000]]]],
                 "result" => true
             ],
             [
-                "filter" => ["AND" => [[ "=" => ["size" => 1000]]]],
+                "filter" => ["OR" => [[ "=" => ["size" => 1000]]]],
                 "result" => "expects at least 2 operands"
             ],
             [
@@ -174,8 +174,8 @@ class PnFilterRuleTest extends TestCase
             [
                 "filter" => [
                     "OR" => [
-                        ["=" => ["id" => 4]],
-                        ["AND" => [
+                        ["==" => ["id" => 4]],
+                        ["||" => [
                             ["="  => ["subject"  => "Hello World"]],
                             [">=" => ["size"     => 1657]]
                         ]]
