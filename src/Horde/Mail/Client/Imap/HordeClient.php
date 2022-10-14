@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Imap;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Core\Data\SortInfoList;
 use Conjoon\Filter\Filter;
 use Conjoon\Mail\Client\Data\CompoundKey\CompoundKey;
@@ -48,7 +49,6 @@ use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
 use Conjoon\Mail\Client\Message\Flag\AnsweredFlag;
 use Conjoon\Mail\Client\Message\Flag\DraftFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
-use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessageItem;
@@ -58,11 +58,11 @@ use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
 use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
-use Conjoon\Core\Data\ArrayUtil;
 use DateTime;
 use Exception;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Exception;
+use Horde_Imap_Client_Exception_NoSupportExtension;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Socket;
@@ -191,11 +191,11 @@ class HordeClient implements MailClient
      * Returns the MailAccount providing connection info for the CompoundKey
      * or string (which will be treated as the id of the MailAccount to look up).
      *
-     * @param CompoundKey|string $key
+     * @param string|CompoundKey $key
      *
      * @return MailAccount|null
      */
-    public function getMailAccount($key): ?MailAccount
+    public function getMailAccount(CompoundKey|string $key): ?MailAccount
     {
 
         $id = $key;
@@ -226,7 +226,7 @@ class HordeClient implements MailClient
      * @throws ImapClientException if the MailAccount used with this Client does not share
      * the same mailAccountId with the $key
      */
-    public function connect($key): Horde_Imap_Client_Socket
+    public function connect(CompoundKey|string $key): Horde_Imap_Client_Socket
     {
 
         if (!$this->socket) {
@@ -328,12 +328,6 @@ class HordeClient implements MailClient
      */
     public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList
     {
-        $options = [
-            "fields" => $query->getFields(),
-            "start"  => $query->getStart(),
-            "limit"  => $query->getLimit()
-        ];
-
         try {
             $client = $this->connect($folderKey);
 
@@ -353,7 +347,7 @@ class HordeClient implements MailClient
                 $client,
                 $results["match"],
                 $folderKey->getId(),
-                $options
+                $query
             );
 
 
@@ -361,7 +355,7 @@ class HordeClient implements MailClient
                 $client,
                 $folderKey,
                 $fetchedItems,
-                $options
+                $query->getFields()
             );
         } catch (Horde_Imap_Client_Exception $e) {
             throw new ImapClientException($e->getMessage(), 0, $e);
@@ -466,17 +460,17 @@ class HordeClient implements MailClient
             $messageStructure = $serverItem->getStructure();
 
             $d = $this->getContents($client, $messageStructure, $messageKey, [
-                "fields" => ["plain" => true, "html" => true]
+                "plain", "html"
             ]);
 
             $body = new MessageBody($messageKey);
 
             if ($d["html"]["content"]) {
-                $htmlPart = new MessagePart($d["html"]["content"], $d["html"]["charset"], "text/html");
+                $htmlPart = new MessagePart($d["html"]["content"], $d["html"]["charset"], MimeType::TEXT_HTML);
                 $body->setTextHtml($htmlPart);
             }
 
-            $plainPart = new MessagePart($d["plain"]["content"], $d["plain"]["charset"], "text/plain");
+            $plainPart = new MessagePart($d["plain"]["content"], $d["plain"]["charset"], MimeType::TEXT_PLAIN);
             $body->setTextPlain($plainPart);
         } catch (Exception $e) {
             throw new ImapClientException($e->getMessage(), 0, $e);
@@ -704,7 +698,7 @@ class HordeClient implements MailClient
 
             // Check for X-CN-DRAFT-INFO...
             $draftInfo = $headers->getHeader("X-CN-DRAFT-INFO");
-            $draftInfo = $draftInfo ? $draftInfo->value_single : null;
+            $draftInfo = $draftInfo?->value_single;
             // ...delete the header...
             $headers->removeHeader("X-CN-DRAFT-INFO");
 
@@ -784,7 +778,7 @@ class HordeClient implements MailClient
      * Returns a MessageItem or a MessageItemDraft, based on $returnItem.
      * @param MessageKey $messageKey
      * @param MessageItemQuery $query
-     * @param $returnItem
+     * @param bool $returnItem
      *
      * @return MessageItem|MessageItemDraft
      *
@@ -793,7 +787,7 @@ class HordeClient implements MailClient
     protected function getItemOrDraft(
         MessageKey $messageKey,
         MessageItemQuery $query,
-        $returnItem = true
+        bool $returnItem = true
     ): MessageItem|MessageItemDraft {
         try {
             $client = $this->connect($messageKey);
@@ -802,14 +796,14 @@ class HordeClient implements MailClient
                 $client,
                 new Horde_Imap_Client_Ids($messageKey->getId()),
                 $mailFolderId,
-                []
+                $query
             );
 
             $ret = $this->buildMessageItem(
                 $client,
                 new FolderKey($messageKey->getMailAccountId(), $mailFolderId),
                 $fetchedItems[0],
-                ["fields" => $query->getFields()]
+                $query->getFields()
             );
 
             $class = $returnItem === false ? MessageItemDraft::class : MessageItem::class;
@@ -869,9 +863,9 @@ class HordeClient implements MailClient
      *
      * @param MailAccount $account
      *
-     * @return Horde_Mail_Transport
+     * @return Horde_Mail_Transport_Smtphorde|Horde_Mail_Transport|null
      */
-    public function getMailer(MailAccount $account)
+    public function getMailer(MailAccount $account): Horde_Mail_Transport_Smtphorde|Horde_Mail_Transport|null
     {
 
         $account = $this->getMailAccount($account->getId());
@@ -949,21 +943,27 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param Horde_Imap_Client_Ids $searchResultIds
      * @param string $mailFolderId
-     * @param array $options
+     * @param MessageItemQuery|MessageItemListQuery $query
      *
      * @return array
      *
      * @throws Horde_Imap_Client_Exception
+     * @throws Horde_Imap_Client_Exception_NoSupportExtension
      */
     protected function fetchMessageItems(
         Horde_Imap_Client_Socket $client,
         Horde_Imap_Client_Ids $searchResultIds,
         string $mailFolderId,
-        array $options
+        MessageItemQuery|MessageItemListQuery $query
     ): array {
 
-        $start = isset($options["start"]) ? intval($options["start"]) : -1;
-        $limit = isset($options["limit"]) ? intval($options["limit"]) : -1;
+        $start = -1;
+        $limit = -1;
+
+        if ($query instanceof MessageItemListQuery) {
+            $start = $query->getStart() ?? -1;
+            $limit = $query->getLimit() ?? -1;
+        }
 
         if ($start >= 0 && $limit > 0) {
             $rangeList = new Horde_Imap_Client_Ids();
@@ -1005,12 +1005,10 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param FolderKey $key
      * @param $item
-     * @param array $options An array with a key "fields" that specifies the fields to query.
-     * The keys are the fields that should be considered, the values are configuration options for the queries
-     * of the fields.
+     * @param array $fields An array with that specifies the fields to query.
      *
      * @example
-     *    $this->buildMessageItem($client, $key, $item, ["fields" => ["size" => [], "hasAttachments" => true]]);
+     *    $this->buildMessageItem($client, $key, $item, ["size", "hasAttachments"]);
      *
      *
      * @return array an array indexed with "messageKey" and "data" which should both be used to create
@@ -1023,10 +1021,10 @@ class HordeClient implements MailClient
         Horde_Imap_Client_Socket $client,
         FolderKey $key,
         $item,
-        array $options = []
+        array $fields
     ): array {
 
-        $result = $this->getItemStructure($client, $item, $key, $options);
+        $result = $this->getItemStructure($client, $item, $key, $fields);
 
         return [
             "messageKey" => $result["messageKey"],
@@ -1037,13 +1035,11 @@ class HordeClient implements MailClient
 
     /**
      * Transform the passed list of $items to an instance of MessageItemList.
-     * If both html/plain fields where requested, it will always try to use
-     * text/plain for the MessagePart, then fall back to text/html if required.
      *
      * @param Horde_Imap_Client_Socket $client
      * @param FolderKey $key
      * @param array $items
-     * @param array $options
+     * @param array $fields array of field names that should be considered
      *
      * @return MessageItemList
      *
@@ -1054,53 +1050,20 @@ class HordeClient implements MailClient
         Horde_Imap_Client_Socket $client,
         FolderKey $key,
         array $items,
-        array $options
+        array $fields
     ): MessageItemList {
 
         $messageItems = new MessageItemList();
 
-        $fields = $options["fields"] ?? [];
-
         foreach ($items as $item) {
-            $result = $this->getItemStructure($client, $item, $key, $options);
+            $result = $this->getItemStructure($client, $item, $key, $fields);
             $data = $result["data"];
-
-            $contentData = $result["contentData"];
-
-            $messageItem = null;
-            $messagePart = null;
-
-            $contentKeys = [];
-            in_array("plain", $fields) && $contentKeys[] = "plain";
-            in_array("html", $fields) && $contentKeys[] = "html";
-
-            // if precedence is set for html, reverse this. Else, let plain
-            // process first
-            if (ArrayUtil::unchain("html.precedence", $fields, false) === true) {
-                $contentKeys = array_reverse($contentKeys);
-            }
-
-            // plain first
-            foreach ($contentKeys as $contentKey) {
-                $content = $contentData[$contentKey] ?? null;
-                if (!$content || !trim($content["content"])) {
-                    continue;
-                }
-                $messagePart = new MessagePart(
-                    $content['content'],
-                    $content['charset'],
-                    $contentKey === "plain" ? "text/plain" : "text/html"
-                );
-                // if we have a MessagePart for the preview, we can exit
-                break;
-            }
 
             $messageKey = $result["messageKey"];
 
-            $messageItem = new ListMessageItem(
+            $messageItem = new MessageItem(
                 $messageKey,
-                $data,
-                $messagePart
+                $data
             );
 
             $messageItems[] = $messageItem;
@@ -1117,18 +1080,16 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param $item
      * @param FolderKey $key
-     * @param array $options An array providing "fields" which is an associative array where the keys
-     * are the fields that should be queried, and their values additional configuration options for the
-     * query itself.
+     * @param array $fields An array providing "fields" which is numeric array holding
+     * fields to return
      *
      * @example
      *  $this->getItemStructure(
      *     $client,
      *     $item,
      *     $key,
-     *     ["fields" => [
-     *          "from" => [], "to" => true, "plain" => ["length" => 200]
-     *      ]]); // returns "from", "to" and "plain" with a length of 100 characters
+     *     ["from", "to", "plain"]
+     *   ); // returns "from", "to" and "plain"
      *
      *
      * @return array data with the item structure, options holding additional requested data (passed via $options)
@@ -1140,11 +1101,11 @@ class HordeClient implements MailClient
         Horde_Imap_Client_Socket $client,
         $item,
         FolderKey $key,
-        array $options = []
+        array $fields = []
     ): array {
 
-        $wants = function ($key) use ($options) {
-            return in_array($key, $options["fields"] ?? []);
+        $wants = function ($key) use ($fields) {
+            return in_array($key, $fields);
         };
 
         $envelope = $item->getEnvelope();
@@ -1185,9 +1146,9 @@ class HordeClient implements MailClient
 
 
         $contentData = [];
-        if ($wants("hasAttachments") || $wants("plain") || $wants("html")) {
+        if ($wants("hasAttachments")) {
             $messageStructure = $item->getStructure();
-            $contentData      = $this->getContents($client, $messageStructure, $messageKey, $options);
+            $contentData      = $this->getContents($client, $messageStructure, $messageKey, $fields);
 
             if ($wants("hasAttachments") && array_key_exists("hasAttachments", $contentData)) {
                 $data["hasAttachments"] = $contentData["hasAttachments"];
@@ -1242,19 +1203,15 @@ class HordeClient implements MailClient
      * @param Horde_Imap_Client_Socket $client
      * @param $messageStructure
      * @param MessageKey $key
-     * @param array $options = array (
-     *      "fields" => [] // an array of fields this method should consider. Possible
-     *                         // keys are html, plain, hasAttachments. The values are configuration
-     *                        // objects this method should considered.
-     *                        // Both "html" and "plain" allow for specifying a "length"-option
-     *                        // that tells this method to only return the specified number
-     *                        // of characters for this message part.
-     * );
+     * @param array $fields an array of fields this method should consider. Possible
+     * keys are html, plain, hasAttachments. The values are configuration
+     * objects this method should considered.
+     *
      *
      * @example
      *   $this->getContents($client, $messageStructure, $key, [
-     *      "fields" => ["html" => [], "plain" => [$length => 200]]
-     *   ]); // returns full html, but only first 200 characters of plain.
+     *      "html", "plain"
+     *   ]); // returns full html
      *
      *
      * @return array
@@ -1265,10 +1222,8 @@ class HordeClient implements MailClient
         Horde_Imap_Client_Socket $client,
         $messageStructure,
         MessageKey $key,
-        array $options
+        array $fields = []
     ): array {
-
-        $fields = $options["fields"] ?? [];
 
         $ret = [];
         $findHtml        = in_array("html", $fields);
@@ -1383,7 +1338,7 @@ class HordeClient implements MailClient
     protected function getMessageIdStringFromReferencesHeaderValue(string $value): string
     {
 
-        if (strpos($value, "References:") !== 0) {
+        if (!str_starts_with($value, "References:")) {
             return "";
         }
 
@@ -1435,7 +1390,7 @@ class HordeClient implements MailClient
      *
      * @return MailAddress|MailAddressList|null
      */
-    protected function getAddress($envelope, string $type)
+    protected function getAddress($envelope, string $type): MailAddressList|MailAddress|null
     {
 
         $type = $type === "replyTo" ? "reply-to" : $type;
@@ -1474,8 +1429,12 @@ class HordeClient implements MailClient
 
     /**
      * @param MessageKey $messageKey
+     * @param Horde_Imap_Client_Socket $client
+     * @return mixed
+     * @throws Horde_Imap_Client_Exception
+     * @throws Horde_Imap_Client_Exception_NoSupportExtension
      */
-    protected function getFullMsg(MessageKey $messageKey, Horde_Imap_Client_Socket $client)
+    protected function getFullMsg(MessageKey $messageKey, Horde_Imap_Client_Socket $client): mixed
     {
         $mailFolderId = $messageKey->getMailFolderId();
         $id = $messageKey->getId();
@@ -1494,11 +1453,11 @@ class HordeClient implements MailClient
     /**
      * Return true if the mailbox represented by $folderKey exists on the server, otehrwise false.
      *
-     * @param FolderKey $key
-     *
+     * @param FolderKey $folderKey
      * @return bool
+     * @throws Horde_Imap_Client_Exception
      */
-    protected function doesMailboxExist(FolderKey $folderKey)
+    protected function doesMailboxExist(FolderKey $folderKey): bool
     {
         $client = $this->connect($folderKey);
 
@@ -1515,31 +1474,5 @@ class HordeClient implements MailClient
         }
 
         return strtolower($key) === strtolower($folderKey->getId());
-    }
-
-
-
-    /**
-     * Returns the target's value at "$key" if the value is truthy, otherwise
-     * null or $default (if !null) is returned.
-     *
-     * @param $key
-     * @param $target
-     * @param null $default
-     * @return mixed|null
-     * @noinspection PhpSameParameterValueInspection
-     */
-    private function getField($key, $target, $default = null)
-    {
-        if (array_key_exists($key, $target)) {
-            $val = $target[$key];
-            if (is_array($val) && empty($val)) {
-                $val = true;
-            }
-
-            return $val ?: $default;
-        }
-
-        return $default;
     }
 }

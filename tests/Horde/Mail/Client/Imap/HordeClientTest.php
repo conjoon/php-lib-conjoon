@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Core\Data\SortDirection;
 use Conjoon\Core\Data\SortInfo;
@@ -51,10 +52,9 @@ use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
 use Conjoon\Mail\Client\Message\Flag\FlaggedFlag;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
-use Conjoon\Mail\Client\Message\ListMessageItem;
+use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
-use Conjoon\Mail\Client\Message\MessageItem;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
 use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
@@ -150,7 +150,7 @@ class HordeClientTest extends TestCase
 
         $this->assertSame(
             null,
-            $client->getMailAccount(89)
+            $client->getMailAccount("89")
         );
     }
 
@@ -324,8 +324,8 @@ class HordeClientTest extends TestCase
 
         $this->assertSame(2, count($messageItemList));
 
-        $this->assertInstanceOf(ListMessageItem::Class, $messageItemList[0]);
-        $this->assertInstanceOf(ListMessageItem::Class, $messageItemList[1]);
+        $this->assertInstanceOf(MessageItem::Class, $messageItemList[0]);
+        $this->assertInstanceOf(MessageItem::Class, $messageItemList[1]);
 
         $this->assertSame("utf-8", $messageItemList[0]->getCharset());
         $this->assertSame("iso-8859-1", $messageItemList[1]->getCharset());
@@ -500,7 +500,7 @@ class HordeClientTest extends TestCase
 
         $this->assertSame(1, count($messageItemList));
 
-        $this->assertInstanceOf(ListMessageItem::Class, $messageItemList[0]);
+        $this->assertInstanceOf(MessageItem::Class, $messageItemList[0]);
 
         $this->assertSame("utf-8", $messageItemList[0]->getCharset());
 
@@ -952,8 +952,8 @@ class HordeClientTest extends TestCase
         $messageItemId = "989786";
 
         $messageBodyDraft = new MessageBodyDraft();
-        $htmlPart = new MessagePart("foo", "UTF-8", "text/html");
-        $plainPart = new MessagePart("bar", "UTF-8", "text/plain");
+        $htmlPart = new MessagePart("foo", "UTF-8", MimeType::TEXT_HTML);
+        $plainPart = new MessagePart("bar", "UTF-8", MimeType::TEXT_PLAIN);
         $messageBodyDraft->setTextHtml($htmlPart);
         $messageBodyDraft->setTextPlain($plainPart);
 
@@ -1119,8 +1119,8 @@ class HordeClientTest extends TestCase
         $messageKey = new MessageKey($account, $mailFolderId, $messageItemId);
 
         $messageBodyDraft = new MessageBodyDraft($messageKey);
-        $htmlPart = new MessagePart("foo", "UTF-8", "text/html");
-        $plainPart = new MessagePart("bar", "UTF-8", "text/plain");
+        $htmlPart = new MessagePart("foo", "UTF-8", MimeType::TEXT_HTML);
+        $plainPart = new MessagePart("bar", "UTF-8", MimeType::TEXT_PLAIN);
         $messageBodyDraft->setTextHtml($htmlPart);
         $messageBodyDraft->setTextPlain($plainPart);
 
