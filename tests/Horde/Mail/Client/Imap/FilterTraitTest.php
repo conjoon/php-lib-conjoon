@@ -60,7 +60,7 @@ class FilterTraitTest extends TestCase
                             Value::make(true)
                         ),
                         RelationalExpression::GE(
-                            VariableName::make("UID"),
+                            VariableName::make("ID"),
                             Value::make(1000)
                         )
                     )

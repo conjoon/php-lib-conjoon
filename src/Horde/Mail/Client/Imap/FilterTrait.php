@@ -31,6 +31,8 @@ namespace Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Filter\Filter;
 use Conjoon\Math\Expression\Expression;
+use Conjoon\Math\Expression\Operator\LogicalOperator;
+use Conjoon\Math\Expression\Operator\RelationalOperator;
 use Horde_Imap_Client;
 use Horde_Imap_Client_Ids;
 use Horde_Imap_Client_Search_Query;
@@ -94,18 +96,19 @@ trait FilterTrait
         $operator = $filter->getOperator()->toString();
         $operands = $filter->getOperands();
 
-        if ($operator === "||") {
+        if ($operator === LogicalOperator::OR->value) {
             foreach ($operands as $operand) {
                 $clientSearches = array_merge($clientSearches, $this->transformFilter($operand));
             }
-        } elseif ($operator === "&&") {
+        } elseif ($operator === LogicalOperator::AND->value) {
             throw new \RuntimeException("AND not supported");
         }
 
-        $property = $filter->getOperands()[0]->toString();
+        $property = strtoupper($filter->getOperands()[0]->toString());
         $value    = $filter->getOperands()[1];
 
-        if ($property === "UID") {
+        if (in_array($property, ["ID", "UID"])) {
+            $property = "UID";
             if ($operator === ">=") {
                 $value    = array_slice($filter->getOperands()->toArray(), 1);
                 $filterId = implode(":", $value) . ":*";
@@ -119,7 +122,7 @@ trait FilterTrait
                 $clientSearches[] = $latestQuery;
             }
         }
-        if ($property === "RECENT" && $operator === "==" && $value->getValue() === true) {
+        if ($property === "RECENT" && $operator === RelationalOperator::EQ->value && $value->getValue() === true) {
             $recentQuery = new Horde_Imap_Client_Search_Query();
             $recentQuery->flag(Horde_Imap_Client::FLAG_RECENT, true);
             $clientSearches[] = $recentQuery;
