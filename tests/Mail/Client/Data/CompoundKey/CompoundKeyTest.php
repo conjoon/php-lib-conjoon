@@ -58,5 +58,4 @@ class CompoundKeyTest extends TestCase
     {
         $this->runToStringTest(CompoundKey::class);
     }
-
 }
