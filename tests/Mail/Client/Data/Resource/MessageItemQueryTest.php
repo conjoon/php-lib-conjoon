@@ -27,48 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Mail\Client\Data\Resource;
+namespace Tests\Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\Data\SortInfoList;
-use Conjoon\Filter\Filter;
+use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItem;
+use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
+use Tests\TestCase;
 
 /**
- * ResourceQuery implementation for querying MessageItemList.
- *
+ * Tests MessageItem.
  */
-abstract class MessageItemListQuery extends MessageItemQuery
+class MessageItemQueryTest extends TestCase
 {
     /**
-     * Returns the offset of the first message item requested with the query.
-     *
-     * @return int
+     * test class
      */
-    abstract public function getStart(): int;
+    public function testClass()
+    {
+        $inst = $this->createMockForAbstract(MessageItemQuery::class, [], [new ParameterBag()]);
+        $this->assertInstanceOf(ResourceQuery::class, $inst);
 
-
-    /**
-     * Returns the limit specified for this query.
-     * Returns "null" if no limit was specified.
-     *
-     * @return int|null
-     */
-    abstract public function getLimit(): ?int;
-
-
-    /**
-     * Returns sort information for this query.
-     * Returns null if no sort information is available.
-     *
-     * @return SortInfoList|null
-     */
-    abstract public function getSort(): ?SortInfoList;
-
-
-    /**
-     * Returns filter information for this query.
-     * Returns null if no filter information is  available.
-     *
-     * @return Filter|null
-     */
-    abstract public function getFilter(): ?Filter;
+        $this->assertInstanceOf(MessageItem::class, $inst->getResourceTarget(
+        ));
+    }
 }
