@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
+use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;
@@ -106,10 +107,13 @@ abstract class CompoundKey implements Arrayable, Stringable
 
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function toString(): string
+    public function toString(StringStrategy $strategy = null): string
     {
+        if ($strategy) {
+            return $strategy->toString($this);
+        }
         return json_encode($this->toArray());
     }
 }
