@@ -31,7 +31,7 @@ namespace Conjoon\Horde\Mail\Client\Message\Composer;
 
 use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
 use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Stringable;
 use DateTime;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
@@ -56,7 +56,7 @@ class HordeHeaderComposer implements HeaderComposer
         $headers = Horde_Mime_Headers::parseHeaders($target);
 
         $normalizedHeaders = [
-            "xCnDraftInfo" => "X-Cn-Draft-Info",
+            "draftInfo" => "X-Cn-Draft-Info",
             "replyTo" => "Reply-To",
             "inReplyTo" => "In-Reply-To",
             "userAgent" => "User-Agent",
@@ -132,9 +132,9 @@ class HordeHeaderComposer implements HeaderComposer
         // if our X-CN-DRAFT-INFO header field is not set, we will set it here
         if (
             $source && (!$headers->getHeader("X-Cn-Draft-Info") &&
-                $source->getXCnDraftInfo())
+                $source->getDraftInfo())
         ) {
-            $headerData["xCnDraftInfo"] = $source->getXCnDraftInfo();
+            $headerData["draftInfo"] = $source->getDraftInfo();
         }
 
         // if we do not have a Message Id, we will generate one here and
@@ -188,7 +188,7 @@ class HordeHeaderComposer implements HeaderComposer
      *  - messageId
      *  - references
      *  - userAgent
-     *  - xCnDraftInfo
+     *  - draftInfo
      *
      * Additional header fields specified in $fields not matching order-fields
      * will be appended in no particular order to the returned array.
@@ -213,7 +213,7 @@ class HordeHeaderComposer implements HeaderComposer
             "inReplyTo",
             "references",
             "userAgent",
-            "xCnDraftInfo"
+            "draftInfo"
         ];
 
         $intersect = array_intersect($order, $fields);

@@ -279,7 +279,7 @@ class HordeHeaderComposerTest extends TestCase
         $composer = new HordeHeaderComposer();
 
         $messageItemDraft = new MessageItemDraft(new MessageKey("a", "b", "c"));
-        $messageItemDraft->setXCnDraftInfo("somestring");
+        $messageItemDraft->setDraftInfo("somestring");
 
         $composed = $composer->compose("", $messageItemDraft);
 

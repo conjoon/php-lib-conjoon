@@ -44,7 +44,7 @@ use Conjoon\Mail\Client\Exception\MailClientException;
  * @method getReplyTo()
  * @method getBcc()
  * @method getCc()
- * @method getXCnDraftInfo()
+ * @method getDraftInfo()
  */
 class MessageItemDraft extends AbstractMessageItem
 {
@@ -53,7 +53,7 @@ class MessageItemDraft extends AbstractMessageItem
 
     /**
      * A json encoded array, encoded as a base64-string, containing information about the
-     * mailAccountId, the mailFolderId and the messageItemId this draft references),
+     * mailAccountId, the mailFolderId and the messageItemId this draft references,
      * in this order.
      * This value will be set by the client once a draft gets saved that is created
      * for a reply-to/-all regarding a message, and will be reused once the draft
@@ -62,7 +62,7 @@ class MessageItemDraft extends AbstractMessageItem
      *
      * @var string|null
      */
-    protected ?string $xCnDraftInfo = null;
+    protected ?string $draftInfo = null;
 
 
     /**
@@ -124,20 +124,20 @@ class MessageItemDraft extends AbstractMessageItem
 
 
     /**
-     * Sets the xCnDraftInfo for this MessageItemDraft and throws if
+     * Sets the $draftInfo for this MessageItemDraft and throws if
      * the value was already set.
      *
-     * @param string|null $xCnDraftInfo
+     * @param string|null $draftInfo
      * @return $this
      */
-    public function setXCnDraftInfo(string $xCnDraftInfo = null): MessageItemDraft
+    public function setDraftInfo(string $draftInfo = null): MessageItemDraft
     {
 
-        if (is_string($this->getXCnDraftInfo())) {
-            throw new MailClientException("\"xCnDraftInfo\" was already set.");
+        if (is_string($this->getDraftInfo())) {
+            throw new MailClientException("\"draftInfo\" was already set.");
         }
 
-        $this->xCnDraftInfo = $xCnDraftInfo;
+        $this->draftInfo = $draftInfo;
 
         return $this;
     }

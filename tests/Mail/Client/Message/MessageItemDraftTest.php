@@ -166,7 +166,7 @@ class MessageItemDraftTest extends TestCase
 
         $keys = array_keys($item);
 
-        $skipFields = ["xCnDraftInfo"];
+        $skipFields = ["draftInfo"];
 
         foreach ($keys as $key) {
             if (in_array($key, $skipFields)) {
@@ -280,39 +280,39 @@ class MessageItemDraftTest extends TestCase
 
 
     /**
-     * Tests xCnDraftInfo Field w/ setters and getters
+     * Tests draftInfo Field w/ setters and getters
      */
     public function testXCnDraftInfo()
     {
 
         $draft = $this->createMessageItem(null, $this->getItemConfig());
-        $this->assertSame($draft->getXCnDraftInfo(), $this->getItemConfig()["xCnDraftInfo"]);
+        $this->assertSame($draft->getDraftInfo(), $this->getItemConfig()["draftInfo"]);
 
 
         $draft = $this->createMessageItem(null, ["messageId" => "mid"]);
         $val = "draftinfo";
-        $draft->setXCnDraftInfo($val);
-        $this->assertSame($draft->getXCnDraftInfo(), $val);
+        $draft->setDraftInfo($val);
+        $this->assertSame($draft->getDraftInfo(), $val);
 
         $draft = $this->createMessageItem(null, ["messageId" => "mid"]);
-        $draft->setXCnDraftInfo();
-        $this->assertNull($draft->getXCnDraftInfo());
+        $draft->setDraftInfo();
+        $this->assertNull($draft->getDraftInfo());
     }
 
 
     /**
-     * Tests setting xCnDraftInfo if already set
+     * Tests setting draftInfo if already set
      */
-    public function testSetXCnDraftInfoException()
+    public function testSetDraftInfoException()
     {
 
         $draft = $this->createMessageItem(null, $this->getItemConfig());
 
-        $this->assertNotNull($draft->getXCnDraftInfo());
+        $this->assertNotNull($draft->getDraftInfo());
 
         $this->expectException(MailClientException::class);
 
-        $draft->setXCnDraftInfo("foo");
+        $draft->setDraftInfo("foo");
     }
 
 // ---------------------
@@ -332,7 +332,7 @@ class MessageItemDraftTest extends TestCase
             "cc" => $this->createCc(),
             "bcc" => $this->createBcc(),
             "draft" => true,
-            "xCnDraftInfo" => "WyJzaXRlYXJ0d29yayIsIklOQk9YIiwiMTU5NzUyIl0="
+            "draftInfo" => "WyJzaXRlYXJ0d29yayIsIklOQk9YIiwiMTU5NzUyIl0="
         ];
     }
 
