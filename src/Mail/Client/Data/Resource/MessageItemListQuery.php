@@ -31,6 +31,7 @@ namespace Conjoon\Mail\Client\Data\Resource;
 
 use Conjoon\Core\Data\Resource\ResourceQuery;
 use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Filter\Filter;
 
 /**
  * ResourceQuery implementation for querying MessageItemList.
@@ -39,7 +40,7 @@ use Conjoon\Core\Data\SortInfoList;
 abstract class MessageItemListQuery extends ResourceQuery
 {
     /**
-     * Returns the int-value of "page[start]".
+     * Returns the offset of the first message item requested with the query.
      *
      * @return int
      */
@@ -70,6 +71,14 @@ abstract class MessageItemListQuery extends ResourceQuery
      * @return SortInfoList
      */
     abstract public function getSort(): SortInfoList;
+
+
+    /**
+     * Returns filter information for this query.
+     *
+     * @return Filter|null
+     */
+    abstract public function getFilter(): ?Filter;
 
 
     /**
