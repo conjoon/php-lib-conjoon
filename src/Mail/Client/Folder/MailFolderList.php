@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Folder;
 
-use Conjoon\Util\AbstractList;
+use Conjoon\Core\Data\AbstractList;
 
 /**
  * Class MailFolderList organizes a list of ListMailFolders.

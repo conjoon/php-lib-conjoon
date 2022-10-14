@@ -30,10 +30,9 @@ declare(strict_types=1);
 namespace Conjoon\Mail\Client\Folder;
 
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
-use Conjoon\Core\Arrayable;
-use Conjoon\Core\Jsonable;
-use Conjoon\Core\JsonStrategy;
-use Illuminate\Support\Facades\Mail;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\JsonStrategy;
 use InvalidArgumentException;
 
 /**
