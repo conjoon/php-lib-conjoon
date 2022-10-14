@@ -104,7 +104,8 @@ class MessageItemTest extends TestCase
             "hasAttachments",
             "cc",
             "bcc",
-            "replyTo"
+            "replyTo",
+            "draftInfo"
         ], $this->createDescription()->getFields());
     }
 

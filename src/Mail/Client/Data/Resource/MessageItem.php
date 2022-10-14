@@ -84,7 +84,8 @@ class MessageItem extends ObjectDescription
             "hasAttachments",
             "cc",
             "bcc",
-            "replyTo"
+            "replyTo",
+            "draftInfo"
         ];
     }
 
