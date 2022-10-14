@@ -29,18 +29,20 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Service;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Data\MimeType;
+use Conjoon\Mail\Client\Data\Resource\MessageBodyOptions;
+use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Horde\Mail\Client\Imap\HordeClient;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;
+use Conjoon\Mail\Client\Data\Resource\MessageBodyQuery;
 use Conjoon\Mail\Client\MailClient;
 use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\AbstractMessageItem;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\Flag\SeenFlag;
-use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessageItem;
@@ -49,7 +51,9 @@ use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\Mail\Client\Message\Text\PreviewTextProcessor;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageBody as MessageBodyResource;
 use Conjoon\Mail\Client\Reader\DefaultPlainReadableStrategy;
 use Conjoon\Mail\Client\Reader\PurifiedHtmlStrategy;
 use Conjoon\Mail\Client\Reader\ReadableMessagePartContentProcessor;
@@ -133,67 +137,39 @@ class DefaultMessageItemServiceTest extends TestCase
             $generatedTexts = [];
 
             for ($i = 0; $i < $limit; $i++) {
-                $text = null;
-                $texts  = [
-                    "text/html"  => $this->generateRandomString(is_array($html) ? $html["length"] : null),
-                    "text/plain" => $this->generateRandomString(is_array($plain) ? $plain["length"] : null)
-                ];
-
-
-                $types = ["text/html", "text/plain"];
-
-                $contentType = $html && $plain ? $types[$i % 2] : ($html ? $types[0] : ($plain ? $types[1] : null));
-                if ($contentType) {
-                    $text = $texts[$contentType];
-                }
-
-                $generatedTexts[] = $text ? [$contentType => $text] : [];
                 $id = "" . ($i + 1);
-                $messageItemList[] = new ListMessageItem(
+                $messageItemList[] = new MessageItem(
                     $this->createMessageKey(null, $mailFolderId, $id),
-                    null,
-                    $text ? new MessagePart($text, "UTF-8", $contentType) : null
+                    null
                 );
             }
 
-            return [
-                "texts" => $generatedTexts,
-                "lists" => $messageItemList
-            ];
+            return $messageItemList;
         };
 
         $input = [
-            ["start" => 0, "limit" => 2, "attributes" => ["html" => true, "plain" => true]],
-            ["start" => 0, "limit" => 2, "attributes" => ["html" => false, "plain" => false]],
-            ["start" => 0, "limit" => 2, "attributes" => ["html" => ["length" => 4], "plain" => ["length"  => 20]]]
+            ["start" => 0, "limit" => 2],
+            ["start" => 0, "limit" => 2],
+            ["start" => 0, "limit" => 2]
         ];
 
         foreach ($input as $options) {
-            $query = new MessageItemListResourceQuery(new ParameterBag($options));
+            $query = $this->createMockForAbstract(MessageItemListQuery::class, [], [new ParameterBag()]);
+
             $service = $this->createService();
             // we can work with consecutive calls, but for this test, re-creating the client
             // works as well
             $clientStub = $service->getMailClient();
 
-            list("texts" => $generatedTexts, "lists" => $messageItemList) = $buildList($options);
+            $messageItemList = $buildList($options);
 
             $clientStub->method("getMessageItemList")
                 ->with($folderKey, $query)
                 ->willReturn($messageItemList);
 
             $results = $service->getMessageItemList($folderKey, $query);
-            $i = 0;
             foreach ($results as $resultItem) {
-                $this->assertInstanceOf(ListMessageItem::Class, $resultItem);
-                $text = !empty($generatedTexts[$i])
-                        ? $generatedTexts[$i][$resultItem->getMessagePart()->getMimeType()]
-                        : null;
-
-                $this->assertSame(
-                    $text,
-                    $resultItem->getMessagePart() ? $resultItem->getMessagePart()->getContents() : null
-                );
-                $i++;
+                $this->assertInstanceOf(MessageItem::Class, $resultItem);
             }
         }
     }
@@ -207,20 +183,16 @@ class DefaultMessageItemServiceTest extends TestCase
         $folderKey = new FolderKey("dev", "INBOX");
         $messageKey = new MessageKey("dev", "INBOX", "123");
         $messageKey2 = new MessageKey("dev", "INBOX", "1234");
-        $query = new MessageItemListResourceQuery(new ParameterBag(["attributes" => ["plain" => true]]));
-
-        $messagePart = new MessagePart("", "", "");
-        $messagePartDef = new MessagePart("", "", "");
+        $query = $this->createMockForAbstract(MessageItemListQuery::class, [], [new ParameterBag()]);
 
         $messageItemList = new MessageItemList();
-        $messageItemList[] = new ListMessageItem($messageKey);
-        $messageItemList[] = new ListMessageItem($messageKey2, null, $messagePartDef);
+        $messageItemList[] = new MessageItem($messageKey);
+        $messageItemList[] = new MessageItem($messageKey2, null);
 
         $serviceMock = $this->getMockBuilder(DefaultMessageItemService::class)
                      ->disableOriginalConstructor()
                      ->onlyMethods([
-                         "charsetConvertHeaderFields",
-                         "processTextForPreview"
+                         "charsetConvertHeaderFields"
                      ])
                      ->getMock();
 
@@ -232,11 +204,6 @@ class DefaultMessageItemServiceTest extends TestCase
         $serviceMock->expects($this->exactly(2))
                     ->method("charsetConvertHeaderFields")
                     ->withConsecutive([$messageItemList[0]], [$messageItemList[1]]);
-
-        $serviceMock->expects($this->exactly(2))
-                    ->method("processTextForPreview")
-                    ->withConsecutive([null], [$messagePartDef])
-                    ->willReturn($messagePart, $messagePartDef);
 
         $mailClientMock->expects($this->once())
                        ->method("getMessageItemList")
@@ -252,9 +219,6 @@ class DefaultMessageItemServiceTest extends TestCase
             $messageItemList,
             $serviceMock->getMessageItemList($folderKey, $query)
         );
-
-        $this->assertSame($messagePart, $messageItemList[0]->getMessagePart());
-        $this->assertSame($messagePartDef, $messageItemList[1]->getMessagePart());
     }
 
     /**
@@ -274,17 +238,16 @@ class DefaultMessageItemServiceTest extends TestCase
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
         $messageKey = $this->createMessageKey($account->getId(), $mailFolderId, $messageItemId);
-
+        $query = $this->createMockForAbstract(MessageItemQuery::class, [], [new ParameterBag()]);
 
         $clientStub = $service->getMailClient();
         $clientStub->method("getMessageItem")
-            ->with($messageKey)
+            ->with($messageKey, $query)
             ->willReturn(
                 $this->buildTestMessageItem($account->getId(), $mailFolderId, $messageItemId)
             );
 
-
-        $item = $service->getMessageItem($messageKey);
+        $item = $service->getMessageItem($messageKey, $query);
 
         $cmpItem = $this->buildTestMessageItem($account->getId(), $mailFolderId, $messageItemId);
 
@@ -320,16 +283,17 @@ class DefaultMessageItemServiceTest extends TestCase
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
         $messageKey = $this->createMessageKey($account->getId(), $mailFolderId, $messageItemId);
+        $query = $this->createMockForAbstract(MessageItemQuery::class, [], [new ParameterBag()]);
 
         $clientStub = $service->getMailClient();
         $clientStub->method("getMessageItemDraft")
-            ->with($messageKey)
+            ->with($messageKey, $query)
             ->willReturn(
                 $this->buildTestMessageItem($account->getId(), $mailFolderId, $messageItemId, true)
             );
 
 
-        $item = $service->getMessageItemDraft($messageKey);
+        $item = $service->getMessageItemDraft($messageKey, $query);
 
         $cmpItem = $this->buildTestMessageItem($account->getId(), $mailFolderId, $messageItemId, true);
 
@@ -498,7 +462,7 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("createMessageBodyDraft")
             ->with($folderKey, $messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", "text/html"));
+        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", MimeType::TEXT_HTML));
         $messageBody = $service->createMessageBodyDraft($folderKey, $messageBodyDraft);
         $this->assertSame("WRITTENtext/htmla", $messageBody->getTextHtml()->getContents());
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
@@ -511,7 +475,7 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("createMessageBodyDraft")
             ->with($folderKey, $messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", "text/plain"));
+        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", MimeType::TEXT_PLAIN));
         $messageBody = $service->createMessageBodyDraft($folderKey, $messageBodyDraft);
         $this->assertSame("WRITTENtext/htmla", $messageBody->getTextHtml()->getContents());
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
@@ -524,8 +488,8 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("createMessageBodyDraft")
             ->with($folderKey, $messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", "text/plain"));
-        $messageBodyDraft->setTextHtml(new MessagePart("b", "UTF-8", "text/html"));
+        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", MimeType::TEXT_PLAIN));
+        $messageBodyDraft->setTextHtml(new MessagePart("b", "UTF-8", MimeType::TEXT_HTML));
         $messageBody = $service->createMessageBodyDraft($folderKey, $messageBodyDraft);
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
         $this->assertSame("WRITTENtext/htmlb", $messageBody->getTextHtml()->getContents());
@@ -563,7 +527,7 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub = $service->getMailClient();
 
         $messageBodyDraft = new MessageBodyDraft();
-        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", "text/html"));
+        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", MimeType::TEXT_HTML));
 
         $clientStub->method("createMessageBodyDraft")
             ->with($folderKey, $messageBodyDraft)
@@ -762,7 +726,7 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("updateMessageBodyDraft")
             ->with($messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", "text/html"));
+        $messageBodyDraft->setTextHtml(new MessagePart("a", "UTF-8", MimeType::TEXT_HTML));
         $messageBody = $service->updateMessageBodyDraft($messageBodyDraft);
         $this->assertSame("WRITTENtext/htmla", $messageBody->getTextHtml()->getContents());
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
@@ -775,7 +739,7 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("updateMessageBodyDraft")
             ->with($messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", "text/plain"));
+        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", MimeType::TEXT_PLAIN));
         $messageBody = $service->updateMessageBodyDraft($messageBodyDraft);
         $this->assertSame("WRITTENtext/htmla", $messageBody->getTextHtml()->getContents());
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
@@ -788,8 +752,8 @@ class DefaultMessageItemServiceTest extends TestCase
         $clientStub->method("updateMessageBodyDraft")
             ->with($messageBodyDraft)
             ->will($this->returnCallback($clientMockedMethod));
-        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", "text/plain"));
-        $messageBodyDraft->setTextHtml(new MessagePart("b", "UTF-8", "text/html"));
+        $messageBodyDraft->setTextPlain(new MessagePart("a", "UTF-8", MimeType::TEXT_PLAIN));
+        $messageBodyDraft->setTextHtml(new MessagePart("b", "UTF-8", MimeType::TEXT_HTML));
         $messageBody = $service->updateMessageBodyDraft($messageBodyDraft);
         $this->assertSame("WRITTENtext/plaina", $messageBody->getTextPlain()->getContents());
         $this->assertSame("WRITTENtext/htmlb", $messageBody->getTextHtml()->getContents());
@@ -916,52 +880,6 @@ class DefaultMessageItemServiceTest extends TestCase
 
 
     /**
-     * Tests getListMessageItem
-     *
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     * @noinspection PhpUndefinedMethodInspection
-     */
-    public function testGetListMessageItem()
-    {
-
-        $service = $this->createService();
-
-        $clientStub = $service->getMailClient();
-
-        $mailAccountId = "dev";
-        $mailFolderId = "INBOX";
-        $messageItemId = "1234";
-        $messageKey = $this->createMessageKey($mailAccountId, $mailFolderId, $messageItemId);
-        $folderKey = $messageKey->getFolderKey();
-
-        $messageItemListMock = new MessageItemList();
-        $messageItemListMock[] = new ListMessageItem(
-            $messageKey,
-            null,
-            new MessagePart("preview", "UTF-8", "text/html")
-        );
-
-        $clientStub->method("getMessageItemList")
-            ->with(
-                $folderKey,
-                $this->callback(
-                    function ($query) use ($messageKey) {
-                        $this->assertSame(["ids" => [$messageKey->getId()]], $query->toJson());
-                        return true;
-                    }
-                )
-            )
-            ->willReturn($messageItemListMock);
-
-        $result = $service->getListMessageItem($messageKey);
-
-        $this->assertInstanceOf(ListMessageItem::Class, $result);
-        $this->assertSame("preview", $result->getMessagePart()->getContents());
-    }
-
-
-    /**
      * Tests deleteMessage()
      *
      * @runInSeparateProcess
@@ -1019,43 +937,37 @@ class DefaultMessageItemServiceTest extends TestCase
         $method = $reflection->getMethod("processTextForPreview");
         $method->setAccessible(true);
 
-        $plainMessagePartEmpty = new MessagePart("", "UTF-8", "text/plain");
-        $plainMessagePart = new MessagePart("foo", "UTF-8", "text/plain");
-        $htmlMessagePart = new MessagePart("foo", "UTF-8", "text/html");
+        $plainMessagePartEmpty = new MessagePart("", "UTF-8", MimeType::TEXT_PLAIN);
+        $plainMessagePart = new MessagePart("foo", "UTF-8", MimeType::TEXT_PLAIN);
+        $htmlMessagePart = new MessagePart("foo", "UTF-8", MimeType::TEXT_HTML);
 
         $input = [[
-            null,
-            new MessageItemListResourceQuery(
-                new ParameterBag(["attributes" => ["plain" => ["trimApi" => true, "length" => 20]]])
-            )
-        ], [
             $plainMessagePart,
-            new MessageItemListResourceQuery(
-                new ParameterBag(["attributes" => ["plain" => ["trimApi" => true, "length" => 20]]])
-            )
+            null
+        ], [
+            $plainMessagePartEmpty,
+            ["text/plain" =>  ["trimApi" => true, "length" => 20]]
         ], [
             $htmlMessagePart,
-            new MessageItemListResourceQuery(
-                new ParameterBag(["attributes" => ["html" => ["trimApi" => true, "length" => 1]]])
-            )
+            ["text/html" => ["trimApi" => true, "length" => 1]]
         ], [
             $htmlMessagePart,
-            new MessageItemListResourceQuery(
-                new ParameterBag(["attributes" => ["plain" => ["trimApi" => true, "length" => 1]]])
-            )
+            ["text/html" => ["trimApi" => true]]
         ], [
             $plainMessagePart,
-            new MessageItemListResourceQuery(
-                new ParameterBag(["attributes" => ["plain" => ["length" => 100]]])
-            )
+            ["text/plain" => ["trimApi" => false, "length" => 100]]
+        ], [
+            // text plain configured, but message part is text/html
+            $htmlMessagePart,
+            ["text/plain" => ["trimApi" => true, "length" => 5]]
         ]];
 
         $expectedArgs = [[
-            $plainMessagePartEmpty,
-            "UTF-8",
-            ["length" => 20]
-        ], [
             $plainMessagePart,
+            "UTF-8",
+            []
+        ], [
+            $plainMessagePartEmpty,
             "UTF-8",
             ["length" => 20]
         ], [
@@ -1070,11 +982,12 @@ class DefaultMessageItemServiceTest extends TestCase
             $plainMessagePart,
             "UTF-8",
             []
+        ], [
+            $htmlMessagePart,
+            "UTF-8",
+            []
         ]];
 
-        $this->assertNull($method->invokeArgs($service, [null, new MessageItemListResourceQuery(
-            new ParameterBag(["attributes" => []])
-        )]));
 
         $pP->expects($this->exactly(count($input)))
             ->method("process")
@@ -1083,6 +996,33 @@ class DefaultMessageItemServiceTest extends TestCase
             );
 
         foreach ($input as $args) {
+            $options = $this->createMockForAbstract(
+                MessageBodyOptions::class,
+                ["getLength", "getTrimApi"],
+                []
+            );
+
+            if ($args[1] === null) {
+                $this->assertNotNull($method->invokeArgs($service, $args));
+                continue;
+            }
+            $mimeType = isset($args[1]["text/html"]) ? MimeType::TEXT_HTML : MimeType::TEXT_PLAIN;
+
+            $opts = $args[1][$mimeType->value];
+
+            // delegate calls after MessagePart's mimeType and mimeType configured for tests
+            if (isset($opts["length"]) && $mimeType === $args[0]->getMimeType()) {
+                $options->expects($this->any())->method("getLength")->with($mimeType)->willReturn($opts["length"]);
+            } else {
+                $options->expects($this->any())->method("getLength")->with($args[0]->getMimeType())->willReturn(null);
+            }
+            if (isset($opts["trimApi"]) && $mimeType === $args[0]->getMimeType()) {
+                $options->expects($this->any())->method("getTrimApi")->with($mimeType)->willReturn($opts["trimApi"]);
+            } else {
+                $options->expects($this->any())->method("getTrimApi")->with($args[0]->getMimeType())->willReturn(null);
+            }
+
+            $args[1] = $options;
             $this->assertNotNull($method->invokeArgs($service, $args));
         }
     }
@@ -1234,8 +1174,6 @@ class DefaultMessageItemServiceTest extends TestCase
                 "deleteMessage",
                 "createAttachments",
                 "deleteAttachment",
-                "getSupportedFields",
-                "getDefaultFields"
             ])
             ->addMethods([
                 "getListMessageItem",
@@ -1288,7 +1226,7 @@ class DefaultMessageItemServiceTest extends TestCase
             ): MessagePart {
                 $messagePart->setContents(
                     "READ" .
-                    $messagePart->getMimeType() .
+                    $messagePart->getMimeType()->value .
                     $messagePart->getContents(),
                     "ISO-8859-1"
                 );
@@ -1314,7 +1252,7 @@ class DefaultMessageItemServiceTest extends TestCase
             ): MessagePart {
                 $messagePart->setContents(
                     "WRITTEN" .
-                    $messagePart->getMimeType() .
+                    $messagePart->getMimeType()->value .
                     $messagePart->getContents(),
                     "ISO-8859-1"
                 );
@@ -1430,11 +1368,11 @@ class DefaultMessageItemServiceTest extends TestCase
         $mb = new MessageBody($messageKey);
 
         if ($html) {
-            $mb->setTextHtml(new MessagePart($html, "UTF-8", "text/html"));
+            $mb->setTextHtml(new MessagePart($html, "UTF-8", MimeType::TEXT_HTML));
         }
 
         if ($plain) {
-            $mb->setTextPlain(new MessagePart($plain, "UTF-8", "text/plain"));
+            $mb->setTextPlain(new MessagePart($plain, "UTF-8", MimeType::TEXT_PLAIN));
         }
 
         return $mb;

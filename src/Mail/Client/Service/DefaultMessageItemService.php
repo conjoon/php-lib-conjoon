@@ -29,14 +29,18 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Service;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Data\MimeType;
+use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Filter\Filter;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
+use Conjoon\Mail\Client\Data\Resource\MessageBodyOptions;
+use Conjoon\Mail\Client\Data\Resource\MessageBodyQuery;
 use Conjoon\Mail\Client\MailClient;
 use Conjoon\Mail\Client\Exception\MailClientException;
 use Conjoon\Mail\Client\Message\AbstractMessageItem;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
-use Conjoon\Mail\Client\Message\ListMessageItem;
 use Conjoon\Mail\Client\Message\MessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessageItem;
@@ -46,9 +50,13 @@ use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\Mail\Client\Message\Text\PreviewTextProcessor;
 use Conjoon\Mail\Client\Reader\ReadableMessagePartContentProcessor;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
 use Conjoon\Mail\Client\Writer\WritableMessagePartContentProcessor;
-use Conjoon\Util\ArrayUtil;
+use Conjoon\Core\Data\ArrayUtil;
+use Conjoon\Math\Expression\FunctionalExpression;
+use Conjoon\Math\Value;
+use Conjoon\Math\VariableName;
 
 /**
  * Class DefaultMessageItemService.
@@ -159,7 +167,7 @@ class DefaultMessageItemService implements MessageItemService
     /**
      * @inheritdoc
      */
-    public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList
+    public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList
     {
         $messageItemList = $this->mailClient->getMessageItemList(
             $folderKey,
@@ -168,8 +176,6 @@ class DefaultMessageItemService implements MessageItemService
 
         foreach ($messageItemList as $listMessageItem) {
             $this->charsetConvertHeaderFields($listMessageItem);
-            $processedPart = $this->processTextForPreview($listMessageItem->getMessagePart(), $query);
-            $listMessageItem->setMessagePart($processedPart);
         }
 
         return $messageItemList;
@@ -179,9 +185,9 @@ class DefaultMessageItemService implements MessageItemService
     /**
      * @inheritdoc
      */
-    public function getMessageItem(MessageKey $messageKey): MessageItem
+    public function getMessageItem(MessageKey $messageKey, MessageItemQuery $query): MessageItem
     {
-        $messageItem = $this->mailClient->getMessageItem($messageKey);
+        $messageItem = $this->mailClient->getMessageItem($messageKey, $query);
         $this->charsetConvertHeaderFields($messageItem);
         return $messageItem;
     }
@@ -207,24 +213,9 @@ class DefaultMessageItemService implements MessageItemService
     /**
      * @inheritdoc
      */
-    public function getListMessageItem(MessageKey $messageKey): ListMessageItem
+    public function getMessageItemDraft(MessageKey $messageKey, MessageItemQuery $query): ?MessageItemDraft
     {
-        $messageItemList = $this->getMessageItemList(
-            $messageKey->getFolderKey(),
-            new MessageItemListResourceQuery(new ParameterBag([
-                "ids" => [$messageKey->getId()]
-            ]))
-        );
-
-        return $messageItemList[0];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function getMessageItemDraft(MessageKey $messageKey): ?MessageItemDraft
-    {
-        $messageItemDraft = $this->mailClient->getMessageItemDraft($messageKey);
+        $messageItemDraft = $this->mailClient->getMessageItemDraft($messageKey, $query);
         $this->charsetConvertHeaderFields($messageItemDraft);
         return $messageItemDraft;
     }
@@ -403,18 +394,26 @@ class DefaultMessageItemService implements MessageItemService
         $htmlPart = $messageBodyDraft->getTextHtml();
 
         if (!$plainPart && $htmlPart) {
-            $plainPart = new MessagePart($htmlPart->getContents(), $htmlPart->getCharset(), "text/plain");
+            $plainPart = new MessagePart(
+                $htmlPart->getContents(),
+                $htmlPart->getCharset(),
+                MimeType::TEXT_PLAIN
+            );
             $messageBodyDraft->setTextPlain($plainPart);
         }
         if ($plainPart && !$htmlPart) {
-            $htmlPart = new MessagePart($plainPart->getContents(), $plainPart->getCharset(), "text/html");
+            $htmlPart = new MessagePart(
+                $plainPart->getContents(),
+                $plainPart->getCharset(),
+                MimeType::TEXT_HTML
+            );
             $messageBodyDraft->setTextHtml($htmlPart);
         }
 
         if (!$plainPart && !$htmlPart) {
-            $plainPart = new MessagePart("", $targetCharset, "text/plain");
+            $plainPart = new MessagePart("", $targetCharset, MimeType::TEXT_PLAIN);
             $messageBodyDraft->setTextPlain($plainPart);
-            $htmlPart = new MessagePart("", $targetCharset, "text/html");
+            $htmlPart = new MessagePart("", $targetCharset, MimeType::TEXT_HTML);
             $messageBodyDraft->setTextHtml($htmlPart);
         }
 
@@ -477,38 +476,31 @@ class DefaultMessageItemService implements MessageItemService
     /**
      * Processes the specified MessagePart and returns its contents properly converted to UTF-8
      * and stripped of all HTML-tags.
-     * Length property will be extracted from the $query, if available.
+     * Length property will be extracted from the $options.
      *
-     * @param ?MessagePart $messagePart
-     * @param MessageItemListResourceQuery $query
-     * @return MessagePart
+     * @param MessagePart $messagePart The message part that should be looked up
+     * @param MessageBodyOptions|null $options The options available for processing the MessagePart
+     *
+     * @return MessagePart|null
      *
      * @see PreviewTextProcessor::process
      */
     protected function processTextForPreview(
-        ?MessagePart $messagePart,
-        MessageItemListResourceQuery $query
-    ): ?MessagePart {
-        $attr = $query->attributes ?? [];
+        MessagePart $messagePart,
+        ?MessageBodyOptions $options
+    ): MessagePart {
 
-        if (!$messagePart && empty($attr["html"]) && empty($attr["plain"])) {
-            return null;
-        }
-
-        if (!$messagePart) {
-            $messagePart = new MessagePart(
-                "",
-                "UTF-8",
-                isset($attr["plain"]) ? "text/plain" : "text/html"
-            );
-        }
-
-        $path = $messagePart->getMimeType() === "text/plain" ? "plain" : "html";
+        $mimeType = $messagePart->getMimeType();
 
         $opts    = [];
-        $attr    = $query->attributes ?? [];
-        $length  = ArrayUtil::unchain("$path.length", $attr);
-        $trimApi = ArrayUtil::unchain("$path.trimApi", $attr);
+
+        $trimApi = false;
+        $length  = null;
+
+        if ($options) {
+            $length = $options->getLength($mimeType);
+            $trimApi = $options->getTrimApi($mimeType);
+        }
 
         if ($trimApi && $length) {
             $opts["length"] = $length;

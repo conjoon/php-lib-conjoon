@@ -29,36 +29,39 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Core\Data\MimeType;
+use InvalidArgumentException;
 
 /**
- * ResourceQuery implementation for querying a MessageItem.
+ * Contract for options representing MessageBodyOptions.
  *
  */
-abstract class MessageBodyQuery extends ResourceQuery
+abstract class MessageBodyOptions
 {
     /**
-     * Returns the fields that should be queried. If no fields where specified, this implementation
-     * will return the default fields of the resource target for this query.
+     * Returns the length the text for the MessageBody should be trimmed to.
+     * Returns null if this option is not available.
      *
-     * @return array
+     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
+     *
+     * @return int|null
+     *
+     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
+     * or MimeType::TEXT_PLAIN
      */
-    abstract public function getFields(): array;
+    abstract public function getLength(MimeType $mimeType): ?int;
 
 
     /**
-     * Returns the options configured with this query, or null if no options where configured.
+     * Returns true if the api should trim the text to getLength(), otherwise false.
+     * Returns null if this options is not available.
      *
-     * @return array
+     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
+     *
+     * @return bool|null
+     *
+     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
+     * or MimeType::TEXT_PLAIN
      */
-    abstract public function getOptions(): ?MessageBodyOptions;
-
-
-    /**
-     * This ResourceQuery targets MessageBody.
-     */
-    public function getResourceTarget(): MessageBody
-    {
-        return new MessageBody();
-    }
+    abstract public function getTrimApi(MimeType $mimeType): ?bool;
 }

@@ -31,6 +31,9 @@ namespace Conjoon\Mail\Client\Service;
 
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
+use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
+use Conjoon\Mail\Client\Exception\MailClientException;
+use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
 use Conjoon\Mail\Client\MailClient;
 use Conjoon\Mail\Client\Message\Flag\FlagList;
 use Conjoon\Mail\Client\Message\ListMessageItem;
@@ -42,15 +45,13 @@ use Conjoon\Mail\Client\Message\MessageItemList;
 use Conjoon\Mail\Client\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\Mail\Client\Message\Text\PreviewTextProcessor;
 use Conjoon\Mail\Client\Reader\ReadableMessagePartContentProcessor;
-use Conjoon\Mail\Client\Query\MessageItemListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
 use Conjoon\Mail\Client\Writer\WritableMessagePartContentProcessor;
 
 /**
- * Interface MessageItemService
+ * Interface MessageItemService.
  *
  * Provides a contract for MessageItem(List)/MessageBody related operations.
- *
- * @package Conjoon\Mail\Client\Service
  */
 interface MessageItemService
 {
@@ -59,7 +60,7 @@ interface MessageItemService
      * specified MailAccount and the MailFolder.
      *
      * @param FolderKey $folderKey
-     * @param MessageItemListResourceQuery $query The resource query for the
+     * @param MessageItemListQuery $query The resource query for the
      * MessageItemLi
      *
      * @return MessageItemList
@@ -68,16 +69,18 @@ interface MessageItemService
      * was not found, or a generic MailClientException indicating an error while
      * communicating with the underlying (mail)backend.
      */
-    public function getMessageItemList(FolderKey $folderKey, MessageItemListResourceQuery $query): MessageItemList;
+    public function getMessageItemList(FolderKey $folderKey, MessageItemListQuery $query): MessageItemList;
 
 
     /**
      * Returns a single MessageItem.
      *
      * @param MessageKey $messageKey
+     * @param MessageItemQuery $query
+     *
      * @return MessageItem
      */
-    public function getMessageItem(MessageKey $messageKey): MessageItem;
+    public function getMessageItem(MessageKey $messageKey, MessageItemQuery $query): MessageItem;
 
 
     /**
@@ -90,21 +93,14 @@ interface MessageItemService
 
 
     /**
-     * Returns a single ListMessageItem.
-     *
-     * @param MessageKey $messageKey
-     * @return ListMessageItem
-     */
-    public function getListMessageItem(MessageKey $messageKey): ListMessageItem;
-
-
-    /**
      * Returns a single MessageItemDraft.
      *
      * @param MessageKey $messageKey
-     * @return MessageItemDraft or null if no entity for the key was found
+     * @param MessageItemQuery $query
+     *
+     * @return MessageItemDraft|null or null if no entity for the key was found
      */
-    public function getMessageItemDraft(MessageKey $messageKey): ?MessageItemDraft;
+    public function getMessageItemDraft(MessageKey $messageKey, MessageItemQuery $query): ?MessageItemDraft;
 
 
     /**
@@ -124,7 +120,7 @@ interface MessageItemService
      * @param FolderKey $folderKey
      * @param MessageItemDraft $draft The draft to create
      *
-     * @return MessageItemDraft
+     * @return MessageItemDraft|null
      *
      * @throws ServiceException|MailFolderNotFoundException|MailClientException if the draft cannot be used
      * with this service, if the mail folder was not found, or a generic MailClientException indicating an error while
@@ -141,7 +137,7 @@ interface MessageItemService
      * @param FolderKey $folderKey
      * @param MessageBodyDraft $draft The draft to create
      *
-     * @return MessageBodyDraft
+     * @return MessageBodyDraft|null
      *
      * @throws ServiceException if $draft already has a MessageKey
      */
@@ -157,7 +153,7 @@ interface MessageItemService
      *
      * @param MessageBodyDraft $draft The draft to create
      *
-     * @return MessageBodyDraft
+     * @return MessageBodyDraft|null
      *
      * @throws ServiceException if $draft has no messageKey
      */
