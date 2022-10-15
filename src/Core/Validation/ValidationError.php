@@ -31,7 +31,7 @@ namespace Conjoon\Core\Validation;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Error\AbstractError;
+use Conjoon\Core\Data\Error\AbstractError;
 
 /**
  * Error indicating that a validation failed.

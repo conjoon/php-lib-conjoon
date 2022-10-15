@@ -27,32 +27,58 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Conjoon\Core\Data\Error;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Strategy\StringStrategy;
 
 /**
- * A list for managing errors.
+ * Class representing objects that do not implement the ErrorSource interface.
  */
-class Errors extends AbstractList
+class AnonymousErrorSource implements ErrorSource
 {
+    /**
+     * @var Object
+     */
+    protected object $source;
+
+    /**
+     * @param Object $source
+     */
+    public function __construct(object $source)
+    {
+        $this->source = $source;
+    }
+
     /**
      * @inheritdoc
      */
-    public function getEntityType(): string
+    public function getName(): string
     {
-        return Error::class;
+        return
+            "anonymous<" .
+            str_replace("\n", "", print_r($this->source, true)) .
+            ">";
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
+        return $this->getName();
     }
 
 
     /**
-     * Returns true if this list has any entries.
-     *
-     * @return bool
+     * Returns the source object this class encapsulates.
+     * @return object
      */
-    public function hasError(): bool
+    public function getSource(): object
     {
-        return count($this) > 0;
+        return $this->source;
     }
 
 
@@ -61,11 +87,6 @@ class Errors extends AbstractList
      */
     public function toArray(): array
     {
-        $list = [];
-        foreach ($this->data as $error) {
-            $list[] = $error->toArray();
-        }
-
-        return $list;
+        return ["pointer" => $this->getName()];
     }
 }

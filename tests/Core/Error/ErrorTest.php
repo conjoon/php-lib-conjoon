@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Error;
+namespace Tests\Conjoon\Core\Data\Error;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Error\Error;
+use Conjoon\Core\Data\Error\Error;
 use Tests\TestCase;
 
 /**

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Validation;
 
-use Conjoon\Core\Error\Errors;
+use Conjoon\Core\Data\Error\Errors;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Tests\JsonableTestTrait;

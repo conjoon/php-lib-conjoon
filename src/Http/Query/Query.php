@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Http\Query;
 
 use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Data\Error\ErrorSource;
 
 /**
  * Interface used to control Http-Queries.

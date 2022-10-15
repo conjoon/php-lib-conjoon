@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Data\Error\ErrorSource;
 use Conjoon\Core\Strategy\StringStrategy;
 
 /**

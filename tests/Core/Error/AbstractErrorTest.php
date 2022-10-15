@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Error;
+namespace Tests\Conjoon\Core\Data\Error;
 
-use Conjoon\Core\Error\AbstractError;
-use Conjoon\Core\Error\AnonymousErrorSource;
-use Conjoon\Core\Error\Error;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Data\Error\AbstractError;
+use Conjoon\Core\Data\Error\AnonymousErrorSource;
+use Conjoon\Core\Data\Error\Error;
+use Conjoon\Core\Data\Error\ErrorSource;
 use stdClass;
 use Tests\TestCase;
 

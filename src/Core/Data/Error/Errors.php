@@ -27,28 +27,45 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Conjoon\Core\Data\Error;
 
-use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Data\AbstractList;
 
 /**
- * An interface allowing for exposing details about the object that caused the error.
+ * A list for managing errors.
  */
-interface ErrorSource extends Stringable, Arrayable
+class Errors extends AbstractList
 {
     /**
-     * Returns a string for identifying the ErrorSource.
-     *
-     * @return string
+     * @inheritdoc
      */
-    public function getName(): string;
+    public function getEntityType(): string
+    {
+        return Error::class;
+    }
+
 
     /**
-     * Returns the source this ErrorSource represents. If the ErrorSource is implemented by the Object
-     * that caused the error, this method should return itself.
+     * Returns true if this list has any entries.
      *
-     * @return string
+     * @return bool
      */
-    public function getSource(): object;
+    public function hasError(): bool
+    {
+        return count($this) > 0;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        $list = [];
+        foreach ($this->data as $error) {
+            $list[] = $error->toArray();
+        }
+
+        return $list;
+    }
 }

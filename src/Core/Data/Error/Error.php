@@ -27,66 +27,32 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Conjoon\Core\Data\Error;
 
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\Arrayable;
 
 /**
- * Class representing objects that do not implement the ErrorSource interface.
+ * Stores and exposes information about entities causing errors modeled with this interface.
  */
-class AnonymousErrorSource implements ErrorSource
+interface Error extends Arrayable
 {
     /**
-     * @var Object
+     * Returns the source that caused this error.
+     *
+     * @retun ErrorSource
      */
-    protected object $source;
+    public function getSource(): ErrorSource;
 
     /**
-     * @param Object $source
+     * Returns details about the error.
+     *
+     * @return string
      */
-    public function __construct(object $source)
-    {
-        $this->source = $source;
-    }
+    public function getDetails(): string;
 
     /**
-     * @inheritdoc
+     * Returns a code this error can be identified with.
+     * @return int
      */
-    public function getName(): string
-    {
-        return
-            "anonymous<" .
-            str_replace("\n", "", print_r($this->source, true)) .
-            ">";
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(StringStrategy $stringStrategy = null): string
-    {
-        if ($stringStrategy) {
-            return $stringStrategy->toString($this);
-        }
-        return $this->getName();
-    }
-
-
-    /**
-     * Returns the source object this class encapsulates.
-     * @return object
-     */
-    public function getSource(): object
-    {
-        return $this->source;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        return ["pointer" => $this->getName()];
-    }
+    public function getCode(): int;
 }

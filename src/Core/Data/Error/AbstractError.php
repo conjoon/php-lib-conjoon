@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Conjoon\Core\Data\Error;
 
 /**
  * Abstract representation of an error.

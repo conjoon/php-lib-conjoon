@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Error;
+namespace Tests\Conjoon\Core\Data\Error;
 
-use Conjoon\Core\Error\AnonymousErrorSource;
-use Conjoon\Core\Error\ErrorSource;
+use Conjoon\Core\Data\Error\AnonymousErrorSource;
+use Conjoon\Core\Data\Error\ErrorSource;
 use stdClass;
 use Tests\StringableTestTrait;
 use Tests\TestCase;

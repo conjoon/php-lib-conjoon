@@ -31,7 +31,7 @@ namespace Conjoon\Core\Validation;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Error\Errors;
+use Conjoon\Core\Data\Error\Errors;
 
 /**
  * A list for managing validation errors.

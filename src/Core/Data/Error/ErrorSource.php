@@ -27,32 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Error;
+namespace Conjoon\Core\Data\Error;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Contract\Arrayable;
 
 /**
- * Stores and exposes information about entities causing errors modeled with this interface.
+ * An interface allowing for exposing details about the object that caused the error.
  */
-interface Error extends Arrayable
+interface ErrorSource extends Stringable, Arrayable
 {
     /**
-     * Returns the source that caused this error.
-     *
-     * @retun ErrorSource
-     */
-    public function getSource(): ErrorSource;
-
-    /**
-     * Returns details about the error.
+     * Returns a string for identifying the ErrorSource.
      *
      * @return string
      */
-    public function getDetails(): string;
+    public function getName(): string;
 
     /**
-     * Returns a code this error can be identified with.
-     * @return int
+     * Returns the source this ErrorSource represents. If the ErrorSource is implemented by the Object
+     * that caused the error, this method should return itself.
+     *
+     * @return string
      */
-    public function getCode(): int;
+    public function getSource(): object;
 }
