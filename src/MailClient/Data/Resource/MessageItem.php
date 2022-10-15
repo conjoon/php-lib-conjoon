@@ -27,23 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Resource;
+namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Core\Resource\ObjectDescription;
 use Conjoon\Core\Resource\ObjectDescriptionList;
 
 /**
- * ResourceDescription for a MailFolder.
+ * ResourceDescription for a MessageItem.
  *
  */
-class MailFolder extends ObjectDescription
+class MessageItem extends ObjectDescription
 {
     /**
      * @return string
      */
     public function getType(): string
     {
-        return "MailFolder";
+        return "MessageItem";
     }
 
 
@@ -53,7 +53,8 @@ class MailFolder extends ObjectDescription
     public function getRelationships(): ObjectDescriptionList
     {
         $list = new ObjectDescriptionList();
-        $list[] = new MailAccount();
+        $list[] = new MailFolder();
+        $list[] = new MessageBody();
 
         return $list;
     }
@@ -67,11 +68,24 @@ class MailFolder extends ObjectDescription
     public function getFields(): array
     {
         return [
-            "name",
-            "data",
-            "folderType",
-            "unreadMessages",
-            "totalMessages"
+            "from",
+            "to",
+            "subject",
+            "date",
+            "seen",
+            "answered",
+            "draft",
+            "flagged",
+            "recent",
+            "charset",
+            "references",
+            "messageId",
+            "size",
+            "hasAttachments",
+            "cc",
+            "bcc",
+            "replyTo",
+            "draftInfo"
         ];
     }
 
@@ -84,11 +98,20 @@ class MailFolder extends ObjectDescription
     public function getDefaultFields(): array
     {
         return [
-            "name",
-            "data",
-            "folderType",
-            "unreadMessages",
-            "totalMessages"
+            "from",
+            "to",
+            "subject",
+            "date",
+            "seen",
+            "answered",
+            "draft",
+            "flagged",
+            "recent",
+            "charset",
+            "references",
+            "messageId",
+            "size",
+            "hasAttachments"
         ];
     }
 }

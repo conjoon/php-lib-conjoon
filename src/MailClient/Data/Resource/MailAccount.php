@@ -3,7 +3,7 @@
 /**
  * conjoon
  * lumen-app-email
- * Copyright (c) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,62 +27,43 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Resource;
+namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\MailClient\Resource\MailAccount;
+use Conjoon\Core\Resource\ObjectDescriptionList;
 use Conjoon\Core\Resource\ObjectDescription;
-use Tests\TestCase;
 
 /**
- * Tests MailAccount.
+ * ResourceDescription for a MailAccount.
+ *
  */
-class MailAccountTest extends TestCase
+class MailAccount extends ObjectDescription
 {
-    /**
-     * test class
-     */
-    public function testClass()
-    {
-        $inst = new MailAccount();
-        $this->assertInstanceOf(ObjectDescription::class, $inst);
-    }
-
-
     /**
      * @return string
      */
-    public function testGetType(): void
+    public function getType(): string
     {
-        $this->assertSame("MailAccount", $this->createDescription()->getType());
+        return "MailAccount";
     }
 
 
     /**
-     * Tests getRelationships()
+     * @return ObjectDescriptionList
      */
-    public function testGetRelationships(): void
+    public function getRelationships(): ObjectDescriptionList
     {
-        $list = $this->createDescription()->getRelationships();
-        $this->assertSame(0, count($list));
-
-        $this->assertSame(
-            ["MailAccount"],
-            $this->createDescription()->getAllRelationshipPaths(true)
-        );
-
-        $this->assertEqualsCanonicalizing(
-            ["MailAccount"],
-            $this->createDescription()->getAllRelationshipTypes(true)
-        );
+        return new ObjectDescriptionList();
     }
 
 
     /**
-     * Tests getFields()
+     * Returns all fields the entity exposes.
+     *
+     * @return string[]
      */
-    public function testGetFields(): void
+    public function getFields(): array
     {
-        $this->assertEquals([
+        return [
             "name",
             "folderType",
             "from",
@@ -97,16 +78,18 @@ class MailAccountTest extends TestCase
             "outbox_user",
             "outbox_password",
             "outbox_secure"
-        ], $this->createDescription()->getFields());
+        ];
     }
 
 
     /**
-     * tests getDefaultFields()
+     * Default fields to pass to the lower level api.
+     *
+     * @return array
      */
-    public function testGetDefaultFields(): void
+    public function getDefaultFields(): array
     {
-        $this->assertEquals([
+        return [
             "name",
             "folderType",
             "from",
@@ -121,15 +104,6 @@ class MailAccountTest extends TestCase
             "outbox_user",
             "outbox_password",
             "outbox_secure"
-        ], $this->createDescription()->getDefaultFields());
-    }
-
-
-    /**
-     * @return MailAccount
-     */
-    protected function createDescription(): MailAccount
-    {
-        return new MailAccount();
+        ];
     }
 }

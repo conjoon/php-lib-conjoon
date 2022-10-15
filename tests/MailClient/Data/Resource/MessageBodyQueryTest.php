@@ -27,30 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Resource;
+namespace Tests\Conjoon\MailClient\Data\Resource;
 
+use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Core\Resource\ResourceQuery;
+use Conjoon\MailClient\Data\Resource\MessageBody;
+use Conjoon\MailClient\Data\Resource\MessageBodyQuery;
+use Tests\TestCase;
 
 /**
- * ResourceQuery implementation for querying a MessageItem.
- *
+ * Tests MessageBody.
  */
-abstract class MessageItemQuery extends ResourceQuery
+class MessageBodyQueryTest extends TestCase
 {
     /**
-     * Returns the fields that should be queried. If no fields where specified, this implementation
-     * will return the default fields of the resource target for this query.
-     *
-     * @return array
+     * test class
      */
-    abstract public function getFields(): array;
-
-
-    /**
-     * This ResourceQuery targets MessageItem.
-     */
-    public function getResourceTarget(): MessageItem
+    public function testClass()
     {
-        return new MessageItem();
+        $inst = $this->createMockForAbstract(MessageBodyQuery::class, [], [new ParameterBag()]);
+        $this->assertInstanceOf(ResourceQuery::class, $inst);
+
+        $this->assertInstanceOf(MessageBody::class, $inst->getResourceTarget(
+        ));
     }
 }

@@ -34,7 +34,7 @@ use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\Folder\MailFolderList;
 use Conjoon\MailClient\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\MailClient\MailClient;
-use Conjoon\MailClient\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
 use Conjoon\MailClient\Service\DefaultMailFolderService;
 use Conjoon\MailClient\Service\MailFolderService;
 use Mockery;

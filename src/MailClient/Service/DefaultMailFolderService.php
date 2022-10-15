@@ -33,7 +33,7 @@ use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\MailClient\MailClient;
-use Conjoon\MailClient\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
 
 /**
  * Class DefaultMailFolderService.

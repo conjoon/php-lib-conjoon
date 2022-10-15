@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Resource;
+namespace Tests\Conjoon\MailClient\Data\Resource;
 
-use Conjoon\MailClient\Resource\MailFolder;
+use Conjoon\MailClient\Data\Resource\MailFolder;
 use Conjoon\Core\Resource\ObjectDescription;
-use Conjoon\MailClient\Resource\MessageBody;
-use Conjoon\MailClient\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageBody;
+use Conjoon\MailClient\Data\Resource\MessageItem;
 use Tests\TestCase;
 
 /**

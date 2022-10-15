@@ -2,8 +2,8 @@
 
 /**
  * conjoon
- * lumen-app-email
- * Copyright (c) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
+ * php-lib-conjoon
+ * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,26 +27,48 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Resource;
+namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\ParameterBag;
-use Conjoon\MailClient\Resource\MailFolder;
-use Conjoon\MailClient\Resource\MailFolderListQuery;
-use Tests\TestCase;
+use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Filter\Filter;
 
 /**
- * Tests MessageItem.
+ * ResourceQuery implementation for querying MessageItemList.
+ *
  */
-class MailFolderListQueryTest extends TestCase
+abstract class MessageItemListQuery extends MessageItemQuery
 {
     /**
-     * test class
+     * Returns the offset of the first message item requested with the query.
+     *
+     * @return int
      */
-    public function testClass()
-    {
-        $inst = $this->createMockForAbstract(MailFolderListQuery::class, [], [new ParameterBag()]);
+    abstract public function getStart(): int;
 
-        $this->assertInstanceOf(MailFolder::class, $inst->getResourceTarget(
-        ));
-    }
+
+    /**
+     * Returns the limit specified for this query.
+     * Returns "null" if no limit was specified.
+     *
+     * @return int|null
+     */
+    abstract public function getLimit(): ?int;
+
+
+    /**
+     * Returns sort information for this query.
+     * Returns null if no sort information is available.
+     *
+     * @return SortInfoList|null
+     */
+    abstract public function getSort(): ?SortInfoList;
+
+
+    /**
+     * Returns filter information for this query.
+     * Returns null if no filter information is  available.
+     *
+     * @return Filter|null
+     */
+    abstract public function getFilter(): ?Filter;
 }

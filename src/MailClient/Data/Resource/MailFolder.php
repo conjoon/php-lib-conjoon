@@ -27,23 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Resource;
+namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Core\Resource\ObjectDescription;
 use Conjoon\Core\Resource\ObjectDescriptionList;
 
 /**
- * ResourceDescription for a MessageItem.
+ * ResourceDescription for a MailFolder.
  *
  */
-class MessageItem extends ObjectDescription
+class MailFolder extends ObjectDescription
 {
     /**
      * @return string
      */
     public function getType(): string
     {
-        return "MessageItem";
+        return "MailFolder";
     }
 
 
@@ -53,8 +53,7 @@ class MessageItem extends ObjectDescription
     public function getRelationships(): ObjectDescriptionList
     {
         $list = new ObjectDescriptionList();
-        $list[] = new MailFolder();
-        $list[] = new MessageBody();
+        $list[] = new MailAccount();
 
         return $list;
     }
@@ -68,24 +67,11 @@ class MessageItem extends ObjectDescription
     public function getFields(): array
     {
         return [
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId",
-            "size",
-            "hasAttachments",
-            "cc",
-            "bcc",
-            "replyTo",
-            "draftInfo"
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ];
     }
 
@@ -98,20 +84,11 @@ class MessageItem extends ObjectDescription
     public function getDefaultFields(): array
     {
         return [
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId",
-            "size",
-            "hasAttachments"
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ];
     }
 }

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Folder\Tree;
 
-use Conjoon\MailClient\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
 use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\Folder\MailFolderList;
 

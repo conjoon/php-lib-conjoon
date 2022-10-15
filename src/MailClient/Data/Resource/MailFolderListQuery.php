@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,41 +27,29 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Resource;
+namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\MimeType;
-use InvalidArgumentException;
+use Conjoon\Core\Resource\ResourceQuery;
 
 /**
- * Contract for options representing MessageBodyOptions.
- *
+ * Class MailFolderListQuery.
  */
-abstract class MessageBodyOptions
+abstract class MailFolderListQuery extends ResourceQuery
 {
     /**
-     * Returns the length the text for the MessageBody should be trimmed to.
-     * Returns null if this option is not available.
+     * Returns the fields that should be queried. If no fields where specified, this implementation
+     * will return the default fields of the resource target for this query.
      *
-     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
-     *
-     * @return int|null
-     *
-     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
-     * or MimeType::TEXT_PLAIN
+     * @return array
      */
-    abstract public function getLength(MimeType $mimeType): ?int;
+    abstract public function getFields(): array;
 
 
     /**
-     * Returns true if the api should trim the text to getLength(), otherwise false.
-     * Returns null if this options is not available.
-     *
-     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
-     *
-     * @return bool|null
-     *
-     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
-     * or MimeType::TEXT_PLAIN
+     * This ResourceQuery targets MessageItems.
      */
-    abstract public function getTrimApi(MimeType $mimeType): ?bool;
+    function getResourceTarget(): MailFolder
+    {
+        return new MailFolder();
+    }
 }
