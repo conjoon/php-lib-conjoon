@@ -27,13 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Protocol\Imap\Util;
+namespace Tests\Conjoon\MailClient\Data\Protocol\Imap\Util;
 
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Folder\FolderIdToTypeMapper;
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolder;
-use Conjoon\MailClient\Protocol\Imap\Util\DefaultFolderIdToTypeMapper;
+use Conjoon\MailClient\Data\Protocol\Imap\Util\DefaultFolderIdToTypeMapper;
 use Tests\TestCase;
 
 /**

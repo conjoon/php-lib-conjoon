@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Http\Response;
+namespace Conjoon\MailClient\Data\Protocol\Http\Response;
 
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
@@ -38,7 +38,7 @@ use Conjoon\Core\Data\AbstractList;
 
 /**
  * Class JsonApiStrategy
- * @package Conjoon\MailClient\Protocol\Http\Response;
+ * @package Conjoon\MailClient\Data\Protocol\Http\Response;
  */
 class JsonApiStrategy implements JsonStrategy
 {

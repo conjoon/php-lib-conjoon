@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Http\Request\Transformer;
+namespace Conjoon\MailClient\Data\Protocol\Http\Request\Transformer;
 
 use Conjoon\MailClient\Message\MessageItemDraft;
 use Conjoon\Core\Contract\JsonDecodable;
@@ -35,7 +35,7 @@ use Conjoon\Core\Contract\JsonDecodable;
 /**
  * Interface provides contract for processing data to a MessageItemDraft.
  *
- * @package Conjoon\MailClient\Protocol\Http\Request\Transformer
+ * @package Conjoon\MailClient\Data\Protocol\Http\Request\Transformer
  */
 interface MessageItemDraftJsonTransformer extends JsonDecodable
 {

@@ -27,15 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Protocol\Imap;
+namespace Tests\Conjoon\MailClient\Data\Protocol\Imap;
 
-use Conjoon\MailClient\Protocol\Imap\ImapClientException;
+use Conjoon\MailClient\Data\Protocol\Imap\ImapClientException;
 use Conjoon\MailClient\Exception\MailClientException;
 use Tests\TestCase;
 
 /**
  * Class ImapClientExceptionTest
- * @package Tests\Conjoon\MailClient\Protocol\Imap\Util
+ * @package Tests\Conjoon\MailClient\Data\Protocol\Imap\Util
  */
 class ImapClientExceptionTest extends TestCase
 {

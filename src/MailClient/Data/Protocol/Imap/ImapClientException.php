@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Imap;
+namespace Conjoon\MailClient\Data\Protocol\Imap;
 
 use Conjoon\MailClient\Exception\MailClientException;
 

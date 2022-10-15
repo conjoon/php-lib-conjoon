@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Imap\Util;
+namespace Conjoon\MailClient\Data\Protocol\Imap\Util;
 
 use Conjoon\MailClient\Folder\FolderIdToTypeMapper;
 use Conjoon\MailClient\Folder\ListMailFolder;
@@ -37,7 +37,7 @@ use Conjoon\MailClient\Folder\MailFolder;
  * Class DefaultFolderIdToTypeMapper.
  * Default implementation of a FolderIdToTypeMapper.
  *
- * @package Conjoon\MailClient\Protocol\Imap\Util
+ * @package Conjoon\MailClient\Data\Protocol\Imap\Util
  */
 class DefaultFolderIdToTypeMapper implements FolderIdToTypeMapper
 {

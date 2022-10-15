@@ -27,13 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Protocol\Http\Response;
+namespace Tests\Conjoon\MailClient\Data\Protocol\Http\Response;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
-use Conjoon\MailClient\Protocol\Http\Response\JsonApiStrategy;
+use Conjoon\MailClient\Data\Protocol\Http\Response\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\AbstractList;

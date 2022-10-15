@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
 
 use Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer\LaravelAttachmentListJsonTransformer;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
-use Conjoon\MailClient\Protocol\Http\Request\Transformer\AttachmentListJsonTransformer;
+use Conjoon\MailClient\Data\Protocol\Http\Request\Transformer\AttachmentListJsonTransformer;
 use Conjoon\Core\Contract\JsonDecodable;
 use Illuminate\Http\UploadedFile;
 use RuntimeException;

@@ -27,11 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Protocol\Imap\Search;
+namespace Tests\Conjoon\MailClient\Data\Protocol\Imap\Search;
 
 use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Filter\Filter;
-use Conjoon\MailClient\Protocol\Imap\Search\SearchQueryStrategy;
+use Conjoon\MailClient\Data\Protocol\Imap\Search\SearchQueryStrategy;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Expression\LogicalExpression;
 use Conjoon\Math\Expression\RelationalExpression;

@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Imap\Search;
+namespace Conjoon\MailClient\Data\Protocol\Imap\Search;
 
 use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Core\Contract\Stringable;

@@ -37,7 +37,7 @@ use Conjoon\MailClient\Folder\MailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
 use Conjoon\MailClient\Folder\Tree\DefaultMailFolderTreeBuilder;
 use Conjoon\MailClient\Folder\Tree\MailFolderTreeBuilder;
-use Conjoon\MailClient\Protocol\Imap\Util\DefaultFolderIdToTypeMapper;
+use Conjoon\MailClient\Data\Protocol\Imap\Util\DefaultFolderIdToTypeMapper;
 use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
 use Tests\TestCase;
 

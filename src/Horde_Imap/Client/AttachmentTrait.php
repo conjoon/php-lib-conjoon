@@ -33,7 +33,7 @@ use Conjoon\MailClient\Message\Attachment\FileAttachment;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
-use Conjoon\MailClient\Protocol\Imap\ImapClientException;
+use Conjoon\MailClient\Data\Protocol\Imap\ImapClientException;
 use Conjoon\MailClient\Message\Flag\DraftFlag;
 use Conjoon\MailClient\Message\Flag\FlagList;
 use Exception;
