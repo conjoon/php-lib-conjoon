@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Resource\ObjectDescriptionList;
-use Conjoon\Core\Resource\ObjectDescription;
+use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\Resource\ObjectDescription;
 
 /**
  * ResourceDescription for a MailAccount.

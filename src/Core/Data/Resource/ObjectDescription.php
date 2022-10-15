@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Resource;
+namespace Conjoon\Core\Data\Resource;
 
 /**
  * Description for a Resource Object that can be used by servers and clients

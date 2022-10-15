@@ -27,29 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Resource;
+namespace Conjoon\Core\Data\Resource;
 
-use Conjoon\Core\Resource\ObjectDescription;
-use Conjoon\Core\Resource\ObjectDescriptionList;
+use Conjoon\Core\Data\AbstractList;
 
 /**
- * Test class loaded with tests for Locator
+ * An abstract list maintaining entities of the type ObjectDescription.
  */
-class TestResourceObjectDescription extends ObjectDescription
+class ObjectDescriptionList extends AbstractList
 {
-    public function getType(): string
+    /**
+     * @return string
+     */
+    public function getEntityType(): string
     {
-    }
-
-    public function getRelationships(): ObjectDescriptionList
-    {
-    }
-
-    public function getFields(): array
-    {
-    }
-
-    public function getDefaultFields(): array
-    {
+        return ObjectDescription::class;
     }
 }
