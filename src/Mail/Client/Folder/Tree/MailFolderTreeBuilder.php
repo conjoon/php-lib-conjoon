@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Folder\Tree;
 
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\MailFolderList;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
 
 /**
  * Interface MailFolderTreeBuilder.
@@ -51,9 +51,9 @@ interface MailFolderTreeBuilder
      * @param MailFolderList $mailFolderList
      * @param array $root One or more global ids of the folders that should be used as the root folders.
      * For most IMAP installations, this will be ["INBOX"].
-     * @param MailFolderListResourceQuery $query
+     * @param MailFolderListQuery $query
      *
      * @return MailFolderChildList
      */
-    public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListResourceQuery $query): MailFolderChildList;
+    public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListQuery $query): MailFolderChildList;
 }

@@ -29,15 +29,16 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Folder\Tree;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
+use Conjoon\Mail\Client\Data\Resource\MailFolder as MailFolderResource;
 use Conjoon\Mail\Client\Folder\ListMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Folder\Tree\DefaultMailFolderTreeBuilder;
 use Conjoon\Mail\Client\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\Mail\Client\Imap\Util\DefaultFolderIdToTypeMapper;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Tests\TestCase;
 
 /**
@@ -260,8 +261,10 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
                 $test["input"]["folders"]
             );
 
+            $query =
+
             $mailFolderChildList = $builder->listToTree($mailFolderList, $test["input"]["root"], $this->getResourceQuery(
-                ["fields" => ["MailFolder" => ["name" => true, "totalMessages" => true]]]
+               ["name", "totalMessages"]
             ));
 
             $testFn($test["expected"], $mailFolderChildList);
@@ -362,10 +365,23 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
 
     /**
      * @param array $parameters
-     * @return MailFolderListResourceQuery
+     * @return MailFolderListQuery
      */
-    protected function getResourceQuery($parameters = [])
+    protected function getResourceQuery(array $fields = null): MailFolderListQuery
     {
-        return new MailFolderListResourceQuery(new ParameterBag($parameters));
+        $query = $this->createMockForAbstract(
+            MailFolderListQuery::class, [],
+            [new ParameterBag()]
+        );
+
+        if ($fields) {
+            $query->expects($this->any())->method("getFields")->willReturn($fields);
+        } else {
+            $query->expects($this->any())->method("getFields")->willReturn(
+                (new MailFolderResource())->getFields()
+            );
+        }
+
+        return $query;
     }
 }

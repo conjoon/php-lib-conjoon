@@ -29,12 +29,13 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Folder\Tree;
 
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Folder\FolderIdToTypeMapper;
 use Conjoon\Mail\Client\Folder\ListMailFolder;
 use Conjoon\Mail\Client\Folder\MailFolder;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\MailFolderList;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use InvalidArgumentException;
 
 /**
  * Class DefaultMailFolderTreeBuilder.
@@ -81,11 +82,11 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
     /**
      * @inheritdoc
      */
-    public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListResourceQuery $query): MailFolderChildList
+    public function listToTree(MailFolderList $mailFolderList, array $root, MailFolderListQuery $query): MailFolderChildList
     {
         $folders = [];
 
-        $fields = $this->getDefaultFields($query);
+        $fields = $query->getFields();
         $includeChildNodes = in_array("data", $fields);
         $systemFolderTypes = [];
 
@@ -166,7 +167,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
     /**
      * Sorts the mailfolders given their type, if available, and will
-     * place INBOX, DRAFT, JUNK, SENT and TRASH folders at the firs
+     * place INBOX, DRAFT, JUNK, SENT and TRASH folders at the first
      * indexes, in this order.
      *
      * @param $mailFolders
@@ -184,7 +185,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             return $found;
         };
 
-        $mailFolders = array_merge(
+        return array_merge(
             $findType([MailFolder::TYPE_INBOX]),
             $findType([MailFolder::TYPE_DRAFT]),
             $findType([MailFolder::TYPE_JUNK]),
@@ -192,8 +193,6 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
             $findType([MailFolder::TYPE_TRASH]),
             $findType([MailFolder::TYPE_FOLDER])
         );
-
-        return $mailFolders;
     }
 
     /**
@@ -232,7 +231,7 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      *
      * @return boolean
      */
-    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $root, $includeChildNodes = true): bool
+    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $root, bool $includeChildNodes = true): bool
     {
 
         $delim = $listMailFolder->getDelimiter();
@@ -287,6 +286,8 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      * @param ListMailFolder $mailFolder
      * @param array $systemFolderTypes
      *
+     * @return string
+     *
      * @see getFolderIdToTypeMapper()
      */
     protected function buildFolderType(ListMailFolder $mailFolder, array $systemFolderTypes): string
@@ -301,41 +302,19 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
 
     /**
-     * Returns the fields requested by the client in $query, or the default fields for a MailFolder
-     * if the fields-property was not set in the $query.
-     *
-     * @param MailFolderListResourceQuery $query
-     *
-     * @return array
-     */
-    protected function getDefaultFields(MailFolderListResourceQuery $query)
-    {
-        $fields = $query->fields["MailFolder"] ?? [
-            "name" => true,
-            "unreadMessages" => true,
-            "totalMessages" => true,
-            "folderType" => true,
-            "data" => true
-        ];
-
-        return array_keys($fields);
-    }
-
-
-    /**
      * Returns the value for the field anme, unreadMessages or totalMessages.
      *
      * @param ListMailFolder $mailFolder
      * @param string $field
      *
-     * @throws \InvalidArgumentException if $field is not name, unreadMessages or totalMessages.
+     * @return mixed
      */
-    protected function getValueForField(ListMailFolder $mailFolder, string $field)
+    protected function getValueForField(ListMailFolder $mailFolder, string $field): mixed
     {
         $fields = ["name", "unreadMessages", "totalMessages"];
 
         if (!in_array($field, $fields)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 "\"$field\" must be one of " . implode(", ", $fields)
             );
         }
