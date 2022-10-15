@@ -34,6 +34,7 @@ use Conjoon\Core\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -41,6 +42,8 @@ use Tests\TestCase;
  */
 class QueryTest extends TestCase
 {
+    use StringableTestTrait;
+
     /**
      * Class functionality
      */
@@ -77,5 +80,13 @@ class QueryTest extends TestCase
         $this->assertSame([
             "query" => $jsonApiQuery->toString()
         ], $jsonApiQuery->toArray());
+    }
+
+    /**
+     * Tests toString()
+     */
+    public function testToString()
+    {
+        $this->runToStringTest(Query::class);
     }
 }

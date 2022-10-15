@@ -32,6 +32,7 @@ namespace Tests\Conjoon\Core\Error;
 use Conjoon\Core\Error\AnonymousErrorSource;
 use Conjoon\Core\Error\ErrorSource;
 use stdClass;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -39,6 +40,8 @@ use Tests\TestCase;
  */
 class AnonymousErrorSourceTest extends TestCase
 {
+    use StringableTestTrait;
+
     /**
      * Tests functionality
      */
@@ -70,5 +73,14 @@ class AnonymousErrorSourceTest extends TestCase
             $anon->getName(),
             $anon->toString()
         );
+    }
+
+
+    /**
+     * Tests toString()
+     */
+    public function testToString()
+    {
+        $this->runToStringTest(AnonymousErrorSource::class);
     }
 }

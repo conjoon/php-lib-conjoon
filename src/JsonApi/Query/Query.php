@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query;
 
+use Conjoon\Core\Data\StringStrategy;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;
@@ -121,8 +122,12 @@ class Query extends HttpQuery
     /**
      * @inheritdoc
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
+
         return $this->query->toString();
     }
 

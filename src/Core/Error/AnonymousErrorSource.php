@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Error;
 
+use Conjoon\Core\Data\StringStrategy;
+
 /**
  * Class representing objects that do not implement the ErrorSource interface.
  */
@@ -59,10 +61,13 @@ class AnonymousErrorSource implements ErrorSource
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
-    public function toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
         return $this->getName();
     }
 
