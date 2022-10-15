@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Protocol\Http\Request\Message\Transformer;
+namespace Tests\Conjoon\MailClient\Protocol\Http\Request\Transformer;
 
 use Conjoon\Core\Data\MimeType;
 use Conjoon\MailClient\Message\MessageBodyDraft;
-use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\DefaultMessageBodyDraftJsonTransformer;
-use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\MessageBodyDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Transformer\DefaultMessageBodyDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Transformer\MessageBodyDraftJsonTransformer;
 use Conjoon\Core\Contract\JsonDecodable;
 use Tests\TestCase;
 

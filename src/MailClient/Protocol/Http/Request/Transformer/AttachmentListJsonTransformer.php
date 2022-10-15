@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Protocol\Http\Request\Attachment\Transformer;
+namespace Conjoon\MailClient\Protocol\Http\Request\Transformer;
 
 use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\Core\Contract\JsonDecodable;
@@ -37,7 +37,7 @@ use Conjoon\Core\Contract\JsonDecodable;
  * Interface for setting up contracts for converting raw string/array data into a FileAttachmentList.
  *
  *
- * @package Conjoon\MailClient\Protocol\Http\Request\Attachment\Transformer
+ * @package Conjoon\MailClient\Protocol\Http\Request\Transformer
  */
 interface AttachmentListJsonTransformer extends JsonDecodable
 {

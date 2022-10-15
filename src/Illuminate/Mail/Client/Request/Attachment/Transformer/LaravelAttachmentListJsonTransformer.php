@@ -31,7 +31,7 @@ namespace Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
 
 use Conjoon\MailClient\Message\Attachment\FileAttachment;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
-use Conjoon\MailClient\Protocol\Http\Request\Attachment\Transformer\AttachmentListJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Transformer\AttachmentListJsonTransformer;
 use RuntimeException;
 
 /**
