@@ -33,7 +33,7 @@ use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\Mail\Client\MailClient;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 
 /**
  * Class DefaultMailFolderService.
@@ -93,7 +93,7 @@ class DefaultMailFolderService implements MailFolderService
     /**
      * @inheritdoc
      */
-    public function getMailFolderChildList(MailAccount $mailAccount, ?MailFolderListResourceQuery $query = null): MailFolderChildList
+    public function getMailFolderChildList(MailAccount $mailAccount, ?MailFolderListQuery $query = null): MailFolderChildList
     {
         $mailFolderList = $this->getMailClient()->getMailFolderList($mailAccount, $query);
 

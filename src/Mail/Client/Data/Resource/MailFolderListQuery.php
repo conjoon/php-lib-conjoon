@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Data\Resource;
 use Conjoon\Core\Data\Resource\ResourceQuery;
 
 /**
- * Class MailFolderListResourceQuery.
+ * Class MailFolderListQuery.
  */
 abstract class MailFolderListQuery extends ResourceQuery
 {

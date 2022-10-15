@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Service;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Core\Data\ParameterBag;
 use Conjoon\Mail\Client\Folder\MailFolderChildList;
 use Conjoon\Mail\Client\Folder\MailFolderList;
 use Conjoon\Mail\Client\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\Mail\Client\MailClient;
-use Conjoon\Mail\Client\Query\MailFolderListResourceQuery;
+use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
 use Conjoon\Mail\Client\Service\DefaultMailFolderService;
 use Conjoon\Mail\Client\Service\MailFolderService;
 use Mockery;
@@ -79,8 +79,10 @@ class DefaultMailFolderServiceTest extends TestCase
 
         $mailFolderList = new MailFolderList();
 
-        $query = new MailFolderListResourceQuery(new ParameterBag());
-
+        $query = $this->createMockForAbstract(
+            MailFolderListQuery::class,
+        [], [new ParameterBag()]
+        );
 
 
         $service->getMailClient()
