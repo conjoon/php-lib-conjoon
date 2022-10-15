@@ -27,9 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Attachment;
+namespace Tests\Conjoon\MailClient\Message\Attachment;
 
-use Conjoon\MailClient\Attachment\AbstractAttachment;
+use Conjoon\MailClient\Message\Attachment\AbstractAttachment;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
@@ -38,7 +38,7 @@ use Tests\TestCase;
 
 /**
  * Class AbstractAttachmentTest
- * @package Tests\Conjoon\MailClient\Attachment
+ * @package Tests\Conjoon\MailClient\Message\Attachment
  */
 class AbstractAttachmentTest extends TestCase
 {

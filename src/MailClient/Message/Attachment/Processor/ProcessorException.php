@@ -27,14 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment\Processor;
+namespace Conjoon\MailClient\Message\Attachment\Processor;
 
 use Conjoon\MailClient\Exception\MailClientException;
 
 /**
  * Class ProcessorException
  *
- * @package Conjoon\MailClient\Attachment\Processor
+ * @package Conjoon\MailClient\Message\Attachment\Processor
  */
 class ProcessorException extends MailClientException
 {

@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde_Imap\Client;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Imap\ImapClientException;

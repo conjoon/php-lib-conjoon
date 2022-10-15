@@ -27,17 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Attachment\Processor;
+namespace Tests\Conjoon\MailClient\Message\Attachment\Processor;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\Processor\FileAttachmentProcessor;
-use Conjoon\MailClient\Attachment\Processor\InlineDataProcessor;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\Processor\FileAttachmentProcessor;
+use Conjoon\MailClient\Message\Attachment\Processor\InlineDataProcessor;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Tests\TestCase;
 
 /**
  * Class InlineDataProcessorTest
- * @package Tests\Conjoon\MailClient\Attachment\Processor
+ * @package Tests\Conjoon\MailClient\Message\Attachment\Processor
  */
 class InlineDataProcessorTest extends TestCase
 {

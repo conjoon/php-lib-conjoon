@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Service;
 
-use Conjoon\MailClient\Attachment\FileAttachmentItemList;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
-use Conjoon\MailClient\Attachment\Processor\FileAttachmentProcessor;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItemList;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\Processor\FileAttachmentProcessor;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\MailClient\MailClient;

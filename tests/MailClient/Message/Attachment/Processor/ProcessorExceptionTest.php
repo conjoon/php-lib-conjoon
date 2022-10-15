@@ -27,15 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Attachment\Processor;
+namespace Tests\Conjoon\MailClient\Message\Attachment\Processor;
 
-use Conjoon\MailClient\Attachment\Processor\ProcessorException;
+use Conjoon\MailClient\Message\Attachment\Processor\ProcessorException;
 use Conjoon\MailClient\Exception\MailClientException;
 use Tests\TestCase;
 
 /**
  * Class ProcessorExceptionTest
- * @package Tests\Conjoon\MailClient\Attachment\Processor
+ * @package Tests\Conjoon\MailClient\Message\Attachment\Processor
  */
 class ProcessorExceptionTest extends TestCase
 {

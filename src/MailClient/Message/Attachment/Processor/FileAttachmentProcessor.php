@@ -27,49 +27,31 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment;
+namespace Conjoon\MailClient\Message\Attachment\Processor;
 
-use Conjoon\Core\Data\AbstractList;
-use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItem;
 
 /**
- * Class FileAttachmentItemList organizes a list of FileAttachmentItems.
+ * Interface FileAttachmentProcessor.
+ * Contract for converting a FileAttachment to a FileAttachmentItem to provide
+ * a download and preview for the contents of a FileAttachment.
  *
- *
- * @package Conjoon\MailClient\Attachment
+ * @package Conjoon\MailClient\Message\Attachment\Processor
  */
-class FileAttachmentItemList extends AbstractList implements Jsonable
+interface FileAttachmentProcessor
 {
-// -------------------------
-//  AbstractList
-// -------------------------
-
     /**
-     * @inheritdoc
+     * Processes the FileAttachment ad returns a FileAttachmentItem
+     * with the properties previewImgSrc and downloadUrl computed by the content and
+     * encoding of the FileAttachment.
+     * Both entities need to share the same AttachmentKey-information.
+     *
+     * @param FileAttachment $fileAttachment
+     *
+     * @return FileAttachmentItem
+     *
+     * @throws ProcessorException if any error occurs.
      */
-    public function getEntityType(): string
-    {
-        return FileAttachmentItem::class;
-    }
-
-
-// --------------------------------
-//  Jsonable interface
-// --------------------------------
-
-    /**
-     * @return array
-     */
-    public function toJson(JsonStrategy $strategy = null): array
-    {
-
-        $data = [];
-
-        foreach ($this->data as $item) {
-            $data[] = $item->toJson();
-        }
-
-        return $data;
-    }
+    public function process(FileAttachment $fileAttachment): FileAttachmentItem;
 }

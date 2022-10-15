@@ -27,16 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment\Processor;
+namespace Conjoon\MailClient\Message\Attachment\Processor;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\FileAttachmentItem;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItem;
 
 /**
  * Class InlineDataProcessor.
  * Provides inline data for downloadUrl and previewImgSrc, if applicable
  *
- * @package Conjoon\MailClient\Attachment\Processor
+ * @package Conjoon\MailClient\Message\Attachment\Processor
  */
 class InlineDataProcessor implements FileAttachmentProcessor
 {

@@ -27,27 +27,36 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment;
+namespace Conjoon\MailClient\Message\Attachment;
 
 use Conjoon\Core\Data\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
- * Class FileAttachmentList organizes a list of FileAttachments.
+ * Class FileAttachmentItemList organizes a list of FileAttachmentItems.
  *
- * @package Conjoon\MailClient\Attachment
+ *
+ * @package Conjoon\MailClient\Message\Attachment
  */
-class FileAttachmentList extends AbstractList implements Jsonable
+class FileAttachmentItemList extends AbstractList implements Jsonable
 {
+// -------------------------
+//  AbstractList
+// -------------------------
+
     /**
      * @inheritdoc
      */
     public function getEntityType(): string
     {
-        return FileAttachment::class;
+        return FileAttachmentItem::class;
     }
 
+
+// --------------------------------
+//  Jsonable interface
+// --------------------------------
 
     /**
      * @return array

@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment;
+namespace Conjoon\MailClient\Message\Attachment;
 
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Data\ArrayUtil;
@@ -48,7 +48,7 @@ use InvalidArgumentException;
  *   $keyedAttachment = $attachment->setAttachmentKey(new AttachmentKey("x", "y", "z", "2"));
  *   $keyedAttachment !== $attachment; // true
  *
- * @package Conjoon\MailClient\Attachment
+ * @package Conjoon\MailClient\Message\Attachment
  *
  * @method string getContent()
  * @method string getEncoding()

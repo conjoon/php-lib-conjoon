@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Attachment;
+namespace Tests\Conjoon\MailClient\Message\Attachment;
 
-use Conjoon\MailClient\Attachment\AbstractAttachment;
-use Conjoon\MailClient\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\AbstractAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Data\ArrayUtil;
 use InvalidArgumentException;
@@ -38,7 +38,7 @@ use Tests\TestCase;
 
 /**
  * Class FileAttachmentTest
- * @package Tests\Conjoon\MailClient\Attachment
+ * @package Tests\Conjoon\MailClient\Message\Attachment
  */
 class FileAttachmentTest extends TestCase
 {

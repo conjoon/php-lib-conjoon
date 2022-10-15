@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment;
+namespace Conjoon\MailClient\Message\Attachment;
 
 use BadMethodCallException;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
@@ -38,7 +38,7 @@ use InvalidArgumentException;
 /**
  * AbstractAttachment models an abstract base email message attachment.
  *
- * @package Conjoon\MailClient\Attachment
+ * @package Conjoon\MailClient\Message\Attachment
  *
  * @method string getType()
  * @method string getText()

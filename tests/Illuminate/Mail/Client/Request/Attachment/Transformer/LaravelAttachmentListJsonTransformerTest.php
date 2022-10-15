@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
 
 use Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer\LaravelAttachmentListJsonTransformer;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Request\Attachment\Transformer\AttachmentListJsonTransformer;
 use Conjoon\Core\Contract\JsonDecodable;
 use Illuminate\Http\UploadedFile;

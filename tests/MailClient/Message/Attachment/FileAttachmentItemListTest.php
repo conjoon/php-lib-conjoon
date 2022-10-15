@@ -27,20 +27,20 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Attachment;
+namespace Tests\Conjoon\MailClient\Message\Attachment;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItem;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItemList;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Data\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
 use Tests\TestCase;
 
 /**
- * Class FileAttachmentListTest
- * @package Tests\Conjoon\MailClient\Attachment
+ * Class FileAttachmentItemListTest
+ * @package Tests\Conjoon\MailClient\Message\Attachment
  */
-class FileAttachmentListTest extends TestCase
+class FileAttachmentItemListTest extends TestCase
 {
 // ---------------------
 //    Tests
@@ -52,24 +52,24 @@ class FileAttachmentListTest extends TestCase
     public function testClass()
     {
 
-        $attachmentList = new FileAttachmentList();
+        $attachmentList = new FileAttachmentItemList();
         $this->assertInstanceOf(AbstractList::class, $attachmentList);
         $this->assertInstanceOf(Jsonable::class, $attachmentList);
 
-
-        $this->assertSame(FileAttachment::class, $attachmentList->getEntityType());
+        $this->assertSame(FileAttachmentItem::class, $attachmentList->getEntityType());
     }
 
 
     /**
-     * Tests toJson()
+     * Test toJson
      */
     public function testToJson()
     {
+
         $attachment1 = $this->createAttachment();
         $attachment2 = $this->createAttachment();
 
-        $attachmentList = new FileAttachmentList();
+        $attachmentList = new FileAttachmentItemList();
         $attachmentList[] = $attachment1;
         $attachmentList[] = $attachment2;
 
@@ -80,20 +80,24 @@ class FileAttachmentListTest extends TestCase
     }
 
 
+// ---------------------
+//    Helper
+// ---------------------
+
     /**
-     * @return FileAttachment
+     * @return FileAttachmentItem
      */
-    protected function createAttachment(): FileAttachment
+    protected function createAttachment(): FileAttachmentItem
     {
 
-        return new FileAttachment(
+        return new FileAttachmentItem(
             new AttachmentKey("dev", "INBOX", "123", "1"),
             [
                 "type"          => "1",
-                "text"          => "2",
-                "size"          => 3,
-                "content"   => "4",
-                "encoding" => "base64"
+                 "text"          => "2",
+                 "size"          => 3,
+                 "downloadUrl"   => "4",
+                 "previewImgSrc" => "5"
             ]
         );
     }

@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Service;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\FileAttachmentItem;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
-use Conjoon\MailClient\Attachment\Processor\FileAttachmentProcessor;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentItem;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\Processor\FileAttachmentProcessor;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\MailClient;

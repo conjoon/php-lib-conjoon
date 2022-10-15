@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
 
-use Conjoon\MailClient\Attachment\FileAttachment;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachment;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Request\Attachment\Transformer\AttachmentListJsonTransformer;
 use RuntimeException;
 

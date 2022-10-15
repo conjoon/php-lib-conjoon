@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Attachment;
+namespace Conjoon\MailClient\Message\Attachment;
 
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Strategy\JsonStrategy;
@@ -37,7 +37,7 @@ use InvalidArgumentException;
  * FileAttachmentItem models a downloadable  email message file-attachment,
  * providing a preview-src and a download url.
  *
- * @package Conjoon\MailClient\Attachment
+ * @package Conjoon\MailClient\Message\Attachment
  *
  * @method string getPreviewImgSrc()
  * @method string getDownloadUrl()

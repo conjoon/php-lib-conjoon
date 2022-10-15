@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\Horde_Imap\Client\HordeClient;
 use Conjoon\Horde_Imap\Client\SortInfoStrategy;
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Conjoon\MailClient\Message\Composer\BodyComposer;
 use Conjoon\MailClient\Message\Composer\HeaderComposer;

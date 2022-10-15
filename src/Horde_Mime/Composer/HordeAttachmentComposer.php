@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde_Mime\Composer;
 
-use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
