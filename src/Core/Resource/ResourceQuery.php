@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Resource;
+namespace Conjoon\Core\Resource;
 
 use BadMethodCallException;
 use Conjoon\Core\Contract\Jsonable;

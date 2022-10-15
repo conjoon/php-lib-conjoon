@@ -32,7 +32,7 @@ use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Core\Resource\ObjectDescriptionList;
 
 /**
  * An extension on sparse fieldset as specified with https://conjoon.org/json-api/ext/relfield.

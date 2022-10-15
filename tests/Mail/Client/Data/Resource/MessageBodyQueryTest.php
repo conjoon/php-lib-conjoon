@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Data\Resource;
 
 use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Core\Resource\ResourceQuery;
 use Conjoon\Mail\Client\Data\Resource\MessageBody;
 use Conjoon\Mail\Client\Data\Resource\MessageBodyQuery;
 use Tests\TestCase;

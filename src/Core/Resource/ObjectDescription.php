@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data\Resource;
+namespace Conjoon\Core\Resource;
 
 /**
  * Description for a Resource Object that can be used by servers and clients
  * to discover structure, optional and default fields of resource object that
- * are request from the server.
+ * are requested from the server.
  *
  */
 abstract class ObjectDescription

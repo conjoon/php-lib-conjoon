@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Resource\ObjectDescription;
 use Conjoon\Mail\Client\Data\Resource\MailFolder;
 use Conjoon\Mail\Client\Data\Resource\MessageBody;
 use Conjoon\Mail\Client\Data\Resource\MessageItem;

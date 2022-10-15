@@ -27,26 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data\Resource;
-
-use Conjoon\Core\Data\Resource\ObjectDescription;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
-use Conjoon\Core\Data\AbstractList;
-use Tests\TestCase;
+namespace Tests\Conjoon\Core\Resource;
 
 /**
- * Tests ObjectDescriptionList
+ * Test class loaded with tests for Locator
  */
-class ObjectDescriptionListTest extends TestCase
+class TestResourceStd
 {
-    /**
-     * Class functionality
-     */
-    public function testClass()
-    {
-        $list = new ObjectDescriptionList();
-
-        $this->assertInstanceOf(AbstractList::class, $list);
-        $this->assertSame(ObjectDescription::class, $list->getEntityType());
-    }
 }

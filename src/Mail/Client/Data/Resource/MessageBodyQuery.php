@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\Resource;
 
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Core\Resource\ResourceQuery;
 
 /**
  * ResourceQuery implementation for querying a MessageItem.

@@ -34,8 +34,8 @@ use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
-use Conjoon\Core\Data\Resource\ObjectDescription;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Core\Resource\ObjectDescription;
+use Conjoon\Core\Resource\ObjectDescriptionList;
 use ReflectionException;
 use Tests\TestCase;
 

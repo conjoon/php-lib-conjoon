@@ -31,7 +31,7 @@ namespace Tests\App\Http\V0\JsonApi\Resource;
 
 use Conjoon\Mail\Client\Data\Resource\MailAccount;
 use Conjoon\Mail\Client\Data\Resource\MailFolder;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**

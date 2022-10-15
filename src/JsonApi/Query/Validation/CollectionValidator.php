@@ -33,7 +33,7 @@ use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
 use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Core\Resource\ObjectDescription;
 
 /**
  * Class for validating queries that target resource collections(!) according to JSON:API
