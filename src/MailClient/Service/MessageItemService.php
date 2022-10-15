@@ -44,9 +44,9 @@ use Conjoon\MailClient\Message\MessageItemDraft;
 use Conjoon\MailClient\Message\MessageItemList;
 use Conjoon\MailClient\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\MailClient\Message\Text\PreviewTextProcessor;
-use Conjoon\MailClient\Reader\ReadableMessagePartContentProcessor;
+use Conjoon\MailClient\Data\Reader\ReadableMessagePartContentProcessor;
 use Conjoon\MailClient\Resource\MessageItemListQuery;
-use Conjoon\MailClient\Writer\WritableMessagePartContentProcessor;
+use Conjoon\MailClient\Data\Writer\WritableMessagePartContentProcessor;
 
 /**
  * Interface MessageItemService.

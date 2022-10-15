@@ -28,7 +28,7 @@
 namespace Conjoon\MailClient\Message\Text;
 
 use Conjoon\MailClient\Message\MessagePart;
-use Conjoon\MailClient\Reader\ReadableMessagePartContentProcessor;
+use Conjoon\MailClient\Data\Reader\ReadableMessagePartContentProcessor;
 
 /**
  * Class PreviewProcessor

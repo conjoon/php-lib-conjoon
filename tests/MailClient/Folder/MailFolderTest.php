@@ -33,7 +33,7 @@ use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Folder\AbstractMailFolder;
 use Conjoon\MailClient\Folder\MailFolder;
 use Conjoon\MailClient\Folder\MailFolderChildList;
-use Conjoon\MailClient\Util\JsonApiStrategy;
+use Conjoon\MailClient\Response\JsonApiStrategy;
 use InvalidArgumentException;
 use Tests\TestCase;
 

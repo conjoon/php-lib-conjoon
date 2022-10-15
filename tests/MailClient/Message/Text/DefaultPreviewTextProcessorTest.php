@@ -34,9 +34,9 @@ use Conjoon\MailClient\Message\MessagePart;
 use Conjoon\MailClient\Message\Text\DefaultPreviewTextProcessor;
 use Conjoon\MailClient\Message\Text\PreviewTextProcessor;
 use Conjoon\MailClient\Message\Text\ProcessorException;
-use Conjoon\MailClient\Reader\HtmlReadableStrategy;
-use Conjoon\MailClient\Reader\PlainReadableStrategy;
-use Conjoon\MailClient\Reader\ReadableMessagePartContentProcessor;
+use Conjoon\MailClient\Data\Reader\HtmlReadableStrategy;
+use Conjoon\MailClient\Data\Reader\PlainReadableStrategy;
+use Conjoon\MailClient\Data\Reader\ReadableMessagePartContentProcessor;
 use Conjoon\Text\Converter;
 use Tests\TestCase;
 
