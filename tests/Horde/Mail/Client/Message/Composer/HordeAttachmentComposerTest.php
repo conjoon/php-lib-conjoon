@@ -30,10 +30,10 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
 
 use Conjoon\Horde\Mail\Client\Message\Composer\HordeAttachmentComposer;
-use Conjoon\Mail\Client\Attachment\FileAttachment;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Mail\Client\Message\Composer\AttachmentComposer;
+use Conjoon\MailClient\Attachment\FileAttachment;
+use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
+use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Horde_Mime_Exception;
 use Tests\TestCase;
 

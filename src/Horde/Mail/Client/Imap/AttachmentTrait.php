@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Imap;
 
-use Conjoon\Mail\Client\Attachment\FileAttachment;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Imap\ImapClientException;
-use Conjoon\Mail\Client\Message\Flag\DraftFlag;
-use Conjoon\Mail\Client\Message\Flag\FlagList;
+use Conjoon\MailClient\Attachment\FileAttachment;
+use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
+use Conjoon\MailClient\Data\CompoundKey\MessageKey;
+use Conjoon\MailClient\Imap\ImapClientException;
+use Conjoon\MailClient\Message\Flag\DraftFlag;
+use Conjoon\MailClient\Message\Flag\FlagList;
 use Exception;
 use Horde_Imap_Client_Fetch_Query;
 use Horde_Imap_Client_Ids;

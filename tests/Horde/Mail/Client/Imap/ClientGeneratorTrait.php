@@ -31,12 +31,12 @@ namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Horde\Mail\Client\Imap\HordeClient;
 use Conjoon\Horde\Mail\Client\Imap\SortInfoStrategy;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Message\Composer\AttachmentComposer;
-use Conjoon\Mail\Client\Message\Composer\BodyComposer;
-use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
-use Conjoon\Mail\Client\Message\MessageBodyDraft;
-use Conjoon\Mail\Client\Message\MessageItemDraft;
+use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Composer\AttachmentComposer;
+use Conjoon\MailClient\Message\Composer\BodyComposer;
+use Conjoon\MailClient\Message\Composer\HeaderComposer;
+use Conjoon\MailClient\Message\MessageBodyDraft;
+use Conjoon\MailClient\Message\MessageItemDraft;
 
 /**
  * Trait ClientGeneratorTrait

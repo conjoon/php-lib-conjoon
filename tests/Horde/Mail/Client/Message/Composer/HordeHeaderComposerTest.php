@@ -30,11 +30,11 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
 
 use Conjoon\Horde\Mail\Client\Message\Composer\HordeHeaderComposer;
-use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Data\MailAddress;
-use Conjoon\Mail\Client\Data\MailAddressList;
-use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
-use Conjoon\Mail\Client\Message\MessageItemDraft;
+use Conjoon\MailClient\Data\CompoundKey\MessageKey;
+use Conjoon\MailClient\Data\MailAddress;
+use Conjoon\MailClient\Data\MailAddressList;
+use Conjoon\MailClient\Message\Composer\HeaderComposer;
+use Conjoon\MailClient\Message\MessageItemDraft;
 use DateTime;
 use Horde_Mime_Exception;
 use Tests\TestCase;

@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Message\Composer;
 
-use Conjoon\Mail\Client\Message\Composer\BodyComposer;
-use Conjoon\Mail\Client\Message\MessageBodyDraft;
+use Conjoon\MailClient\Message\Composer\BodyComposer;
+use Conjoon\MailClient\Message\MessageBodyDraft;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
 

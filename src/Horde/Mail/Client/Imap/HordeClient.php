@@ -32,32 +32,32 @@ namespace Conjoon\Horde\Mail\Client\Imap;
 use Conjoon\Core\Data\MimeType;
 use Conjoon\Core\Data\SortInfoList;
 use Conjoon\Filter\Filter;
-use Conjoon\Mail\Client\Data\CompoundKey\CompoundKey;
-use Conjoon\Mail\Client\Data\CompoundKey\FolderKey;
-use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Data\MailAccount;
-use Conjoon\Mail\Client\Data\MailAddress;
-use Conjoon\Mail\Client\Data\MailAddressList;
-use Conjoon\Mail\Client\Exception\MailFolderNotFoundException;
-use Conjoon\Mail\Client\Folder\ListMailFolder;
-use Conjoon\Mail\Client\Folder\MailFolderList;
-use Conjoon\Mail\Client\Imap\ImapClientException;
-use Conjoon\Mail\Client\MailClient;
-use Conjoon\Mail\Client\Message\Composer\AttachmentComposer;
-use Conjoon\Mail\Client\Message\Composer\BodyComposer;
-use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
-use Conjoon\Mail\Client\Message\Flag\AnsweredFlag;
-use Conjoon\Mail\Client\Message\Flag\DraftFlag;
-use Conjoon\Mail\Client\Message\Flag\FlagList;
-use Conjoon\Mail\Client\Message\MessageBody;
-use Conjoon\Mail\Client\Message\MessageBodyDraft;
-use Conjoon\Mail\Client\Message\MessageItem;
-use Conjoon\Mail\Client\Message\MessageItemDraft;
-use Conjoon\Mail\Client\Message\MessageItemList;
-use Conjoon\Mail\Client\Message\MessagePart;
-use Conjoon\Mail\Client\Data\Resource\MailFolderListQuery;
-use Conjoon\Mail\Client\Data\Resource\MessageItemListQuery;
-use Conjoon\Mail\Client\Data\Resource\MessageItemQuery;
+use Conjoon\MailClient\Data\CompoundKey\CompoundKey;
+use Conjoon\MailClient\Data\CompoundKey\FolderKey;
+use Conjoon\MailClient\Data\CompoundKey\MessageKey;
+use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\MailClient\Data\MailAddress;
+use Conjoon\MailClient\Data\MailAddressList;
+use Conjoon\MailClient\Exception\MailFolderNotFoundException;
+use Conjoon\MailClient\Folder\ListMailFolder;
+use Conjoon\MailClient\Folder\MailFolderList;
+use Conjoon\MailClient\Imap\ImapClientException;
+use Conjoon\MailClient\MailClient;
+use Conjoon\MailClient\Message\Composer\AttachmentComposer;
+use Conjoon\MailClient\Message\Composer\BodyComposer;
+use Conjoon\MailClient\Message\Composer\HeaderComposer;
+use Conjoon\MailClient\Message\Flag\AnsweredFlag;
+use Conjoon\MailClient\Message\Flag\DraftFlag;
+use Conjoon\MailClient\Message\Flag\FlagList;
+use Conjoon\MailClient\Message\MessageBody;
+use Conjoon\MailClient\Message\MessageBodyDraft;
+use Conjoon\MailClient\Message\MessageItem;
+use Conjoon\MailClient\Message\MessageItemDraft;
+use Conjoon\MailClient\Message\MessageItemList;
+use Conjoon\MailClient\Message\MessagePart;
+use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
+use Conjoon\MailClient\Data\Resource\MessageItemQuery;
 use DateTime;
 use Exception;
 use Horde_Imap_Client;
@@ -77,7 +77,7 @@ use Horde_Mime_Part;
  * Default implementation of a HordeClient, using \Horde_Imap_Client to communicate with
  * Imap Mail Servers.
  *
- * @package Conjoon\Mail\Client\Imap
+ * @package Conjoon\MailClient\Imap
  */
 class HordeClient implements MailClient
 {

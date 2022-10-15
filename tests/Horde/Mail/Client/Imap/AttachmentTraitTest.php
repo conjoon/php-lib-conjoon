@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
-use Conjoon\Mail\Client\Attachment\FileAttachment;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
-use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
-use Conjoon\Mail\Client\Message\Flag\DraftFlag;
-use Conjoon\Mail\Client\Message\Flag\FlagList;
+use Conjoon\MailClient\Attachment\FileAttachment;
+use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
+use Conjoon\MailClient\Data\CompoundKey\MessageKey;
+use Conjoon\MailClient\Message\Flag\DraftFlag;
+use Conjoon\MailClient\Message\Flag\FlagList;
 use Horde_Imap_Client_Socket;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;

@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Message\Composer;
 
-use Conjoon\Mail\Client\Message\Composer\HeaderComposer;
-use Conjoon\Mail\Client\Message\MessageItemDraft;
+use Conjoon\MailClient\Message\Composer\HeaderComposer;
+use Conjoon\MailClient\Message\MessageItemDraft;
 use Conjoon\Core\Contract\Stringable;
 use DateTime;
 use Horde_Mime_Exception;

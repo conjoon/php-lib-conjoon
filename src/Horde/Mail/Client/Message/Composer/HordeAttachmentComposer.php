@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Horde\Mail\Client\Message\Composer;
 
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Message\Composer\AttachmentComposer;
+use Conjoon\MailClient\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
