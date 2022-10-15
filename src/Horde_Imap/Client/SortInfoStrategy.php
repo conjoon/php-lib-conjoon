@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Horde\Mail\Client\Imap;
+namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Strategy\JsonStrategy;

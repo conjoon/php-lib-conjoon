@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
-use Conjoon\Horde\Mail\Client\Imap\HordeClient;
-use Conjoon\Horde\Mail\Client\Imap\SortInfoStrategy;
+use Conjoon\Horde_Imap\Client\HordeClient;
+use Conjoon\Horde_Imap\Client\SortInfoStrategy;
 use Conjoon\MailClient\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Conjoon\MailClient\Message\Composer\BodyComposer;
@@ -40,7 +40,7 @@ use Conjoon\MailClient\Message\MessageItemDraft;
 
 /**
  * Trait ClientGeneratorTrait
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 trait ClientGeneratorTrait
 {

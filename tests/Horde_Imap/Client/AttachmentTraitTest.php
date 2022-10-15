@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\MailClient\Attachment\FileAttachment;
 use Conjoon\MailClient\Attachment\FileAttachmentList;
@@ -46,7 +46,7 @@ use Tests\TestTrait;
 
 /**
  * Class FilterTraitTest
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 class AttachmentTraitTest extends TestCase
 {

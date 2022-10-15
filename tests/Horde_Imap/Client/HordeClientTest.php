@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Strategy\JsonStrategy;
@@ -37,7 +37,7 @@ use Conjoon\Core\Data\SortDirection;
 use Conjoon\Core\Data\SortInfo;
 use Conjoon\Core\Data\SortInfoList;
 use Conjoon\Filter\Filter;
-use Conjoon\Horde\Mail\Client\Imap\HordeClient;
+use Conjoon\Horde_Imap\Client\HordeClient;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAccount;
@@ -86,12 +86,12 @@ use RuntimeException;
 use stdClass;
 use Tests\TestCase;
 use Tests\TestTrait;
-use Conjoon\Horde\Mail\Client\Imap\FilterTrait;
-use Conjoon\Horde\Mail\Client\Imap\AttachmentTrait;
+use Conjoon\Horde_Imap\Client\FilterTrait;
+use Conjoon\Horde_Imap\Client\AttachmentTrait;
 
 /**
  * Class HordeClientTest
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 class HordeClientTest extends TestCase
 {

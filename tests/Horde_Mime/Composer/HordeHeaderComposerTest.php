@@ -27,9 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
+namespace Tests\Conjoon\Horde_Mime\Composer;
 
-use Conjoon\Horde\Mail\Client\Message\Composer\HordeHeaderComposer;
+use Conjoon\Horde_Mime\Composer\HordeHeaderComposer;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;

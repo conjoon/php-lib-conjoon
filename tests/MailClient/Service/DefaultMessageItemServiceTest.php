@@ -32,7 +32,7 @@ namespace Tests\Conjoon\MailClient\Service;
 use Conjoon\Core\Data\MimeType;
 use Conjoon\MailClient\Data\Resource\MessageBodyOptions;
 use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Horde\Mail\Client\Imap\HordeClient;
+use Conjoon\Horde_Imap\Client\HordeClient;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAddress;

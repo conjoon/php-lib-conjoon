@@ -27,13 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
-use Conjoon\Horde\Mail\Client\Imap\AttachmentTrait;
+use Conjoon\Horde_Imap\Client\AttachmentTrait;
 
 /**
  * Class AttachmentTraitForTesting
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 class AttachmentTraitForTesting
 {

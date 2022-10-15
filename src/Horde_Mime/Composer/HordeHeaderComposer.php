@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Horde\Mail\Client\Message\Composer;
+namespace Conjoon\Horde_Mime\Composer;
 
 use Conjoon\MailClient\Message\Composer\HeaderComposer;
 use Conjoon\MailClient\Message\MessageItemDraft;
@@ -41,7 +41,7 @@ use Horde_Mime_Part;
 /**
  * Class HordeHeaderComposer
  *
- * @package Conjoon\Horde\Mail\Client\Message\Composer
+ * @package Conjoon\Horde_Mime\Composer
  */
 class HordeHeaderComposer implements HeaderComposer
 {

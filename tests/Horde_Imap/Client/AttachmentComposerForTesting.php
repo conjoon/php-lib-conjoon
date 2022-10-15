@@ -27,11 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
 /**
  * Class AttachmentComposerForTesting
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 class AttachmentComposerForTesting
 {

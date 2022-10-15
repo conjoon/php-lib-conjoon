@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\Filter\Filter;
-use Conjoon\Horde\Mail\Client\Imap\FilterTrait;
+use Conjoon\Horde_Imap\Client\FilterTrait;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Expression\LogicalExpression;
 use Conjoon\Math\Expression\RelationalExpression;
@@ -40,7 +40,7 @@ use Tests\TestCase;
 
 /**
  * Class FilterTraitTest
- * @package Tests\Conjoon\Horde\Mail\Client\Imap
+ * @package Tests\Conjoon\Horde_Imap\Client
  */
 class FilterTraitTest extends TestCase
 {

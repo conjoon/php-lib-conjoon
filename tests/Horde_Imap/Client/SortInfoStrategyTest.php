@@ -27,14 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Imap;
+namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\SortDirection;
 use Conjoon\Core\Data\SortInfo;
 use Conjoon\Core\Data\SortInfoList;
-use Conjoon\Horde\Mail\Client\Imap\SortInfoStrategy;
+use Conjoon\Horde_Imap\Client\SortInfoStrategy;
 use Horde_Imap_Client;
 use Tests\TestCase;
 

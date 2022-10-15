@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Horde\Mail\Client\Message\Composer;
+namespace Conjoon\Horde_Mime\Composer;
 
 use Conjoon\MailClient\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
@@ -38,7 +38,7 @@ use Horde_Mime_Part;
 /**
  * Class HordeBodyComposer
  *
- * @package Conjoon\Horde\Mail\Client\Message\Composer
+ * @package Conjoon\Horde_Mime\Composer
  */
 class HordeAttachmentComposer implements AttachmentComposer
 {

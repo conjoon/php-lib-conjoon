@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Horde\Mail\Client\Imap;
+namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\MailClient\Attachment\FileAttachment;
 use Conjoon\MailClient\Attachment\FileAttachmentList;
@@ -37,8 +37,6 @@ use Conjoon\MailClient\Imap\ImapClientException;
 use Conjoon\MailClient\Message\Flag\DraftFlag;
 use Conjoon\MailClient\Message\Flag\FlagList;
 use Exception;
-use Horde_Imap_Client_Fetch_Query;
-use Horde_Imap_Client_Ids;
 use Horde_Mime_Exception;
 use Horde_Mime_Headers;
 use Horde_Mime_Part;
@@ -48,7 +46,7 @@ use RuntimeException;
  * Helper-Trait for attachment operations
  *
  * Trait AttachmentTrait
- * @package Conjoon\Horde\Mail\Client\Imap
+ * @package Conjoon\Horde_Imap\Client
  */
 trait AttachmentTrait
 {

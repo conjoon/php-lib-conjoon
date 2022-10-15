@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
+namespace Tests\Conjoon\Horde_Mime\Composer;
 
 use Conjoon\Core\Data\MimeType;
-use Conjoon\Horde\Mail\Client\Message\Composer\HordeBodyComposer;
+use Conjoon\Horde_Mime\Composer\HordeBodyComposer;
 use Conjoon\MailClient\Message\Composer\BodyComposer;
 use Conjoon\MailClient\Message\MessageBodyDraft;
 use Conjoon\MailClient\Message\MessagePart;

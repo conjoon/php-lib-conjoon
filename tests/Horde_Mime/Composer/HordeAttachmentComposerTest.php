@@ -27,9 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Horde\Mail\Client\Message\Composer;
+namespace Tests\Conjoon\Horde_Mime\Composer;
 
-use Conjoon\Horde\Mail\Client\Message\Composer\HordeAttachmentComposer;
+use Conjoon\Horde_Mime\Composer\HordeAttachmentComposer;
 use Conjoon\MailClient\Attachment\FileAttachment;
 use Conjoon\MailClient\Attachment\FileAttachmentList;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;

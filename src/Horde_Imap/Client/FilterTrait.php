@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Horde\Mail\Client\Imap;
+namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\Filter\Filter;
 use Conjoon\Math\Expression\Expression;
@@ -59,7 +59,7 @@ use Horde_Imap_Client_Search_Query;
  *    $this->getSearchQueryFromFilterTrait($filter)->__toString(); // "OR (UID 1000:*) (RECENT)"
  *
  * Trait FilterTrait
- * @package Conjoon\Horde\Mail\Client\Imap
+ * @package Conjoon\Horde_Imap\Client
  */
 trait FilterTrait
 {
