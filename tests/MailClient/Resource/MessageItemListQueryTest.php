@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Data\Resource;
+namespace Tests\Conjoon\MailClient\Resource;
 
 use Conjoon\Core\Data\ParameterBag;
-use Conjoon\MailClient\Data\Resource\MessageItem;
-use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
-use Conjoon\MailClient\Data\Resource\MessageItemQuery;
+use Conjoon\MailClient\Resource\MessageItem;
+use Conjoon\MailClient\Resource\MessageItemListQuery;
+use Conjoon\MailClient\Resource\MessageItemQuery;
 use Tests\TestCase;
 
 /**

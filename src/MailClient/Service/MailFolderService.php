@@ -32,7 +32,7 @@ namespace Conjoon\MailClient\Service;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\MailClient;
-use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Resource\MailFolderListQuery;
 
 interface MailFolderService
 {

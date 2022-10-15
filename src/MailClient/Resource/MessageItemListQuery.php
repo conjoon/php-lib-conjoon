@@ -27,41 +27,48 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Data\Resource;
+namespace Conjoon\MailClient\Resource;
 
-use Conjoon\Core\Data\MimeType;
-use InvalidArgumentException;
+use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Filter\Filter;
 
 /**
- * Contract for options representing MessageBodyOptions.
+ * ResourceQuery implementation for querying MessageItemList.
  *
  */
-abstract class MessageBodyOptions
+abstract class MessageItemListQuery extends MessageItemQuery
 {
     /**
-     * Returns the length the text for the MessageBody should be trimmed to.
-     * Returns null if this option is not available.
+     * Returns the offset of the first message item requested with the query.
      *
-     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
-     *
-     * @return int|null
-     *
-     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
-     * or MimeType::TEXT_PLAIN
+     * @return int
      */
-    abstract public function getLength(MimeType $mimeType): ?int;
+    abstract public function getStart(): int;
 
 
     /**
-     * Returns true if the api should trim the text to getLength(), otherwise false.
-     * Returns null if this options is not available.
+     * Returns the limit specified for this query.
+     * Returns "null" if no limit was specified.
      *
-     * @param MimeType $mimeType any of MimeType::TEXT_HTML or MimeType::TEXT_PLAIN
-     *
-     * @return bool|null
-     *
-     * @throws InvalidArgumentException if MimeType does not equal to MimeType::TEXT_HTML
-     * or MimeType::TEXT_PLAIN
+     * @return int|null
      */
-    abstract public function getTrimApi(MimeType $mimeType): ?bool;
+    abstract public function getLimit(): ?int;
+
+
+    /**
+     * Returns sort information for this query.
+     * Returns null if no sort information is available.
+     *
+     * @return SortInfoList|null
+     */
+    abstract public function getSort(): ?SortInfoList;
+
+
+    /**
+     * Returns filter information for this query.
+     * Returns null if no filter information is  available.
+     *
+     * @return Filter|null
+     */
+    abstract public function getFilter(): ?Filter;
 }

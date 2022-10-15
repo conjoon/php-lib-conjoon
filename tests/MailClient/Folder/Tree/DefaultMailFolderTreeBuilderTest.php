@@ -31,14 +31,14 @@ namespace Tests\Conjoon\MailClient\Folder\Tree;
 
 use Conjoon\Core\Data\ParameterBag;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
-use Conjoon\MailClient\Data\Resource\MailFolder as MailFolderResource;
+use Conjoon\MailClient\Resource\MailFolder as MailFolderResource;
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
 use Conjoon\MailClient\Folder\Tree\DefaultMailFolderTreeBuilder;
 use Conjoon\MailClient\Folder\Tree\MailFolderTreeBuilder;
 use Conjoon\MailClient\Imap\Util\DefaultFolderIdToTypeMapper;
-use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Resource\MailFolderListQuery;
 use Tests\TestCase;
 
 /**

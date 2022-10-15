@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Data\Resource;
+namespace Conjoon\MailClient\Resource;
 
 use Conjoon\Core\Resource\ResourceQuery;
 
 /**
- * ResourceQuery implementation for querying a MessageItem.
- *
+ * Class MailFolderListQuery.
  */
-abstract class MessageBodyQuery extends ResourceQuery
+abstract class MailFolderListQuery extends ResourceQuery
 {
     /**
      * Returns the fields that should be queried. If no fields where specified, this implementation
@@ -47,18 +46,10 @@ abstract class MessageBodyQuery extends ResourceQuery
 
 
     /**
-     * Returns the options configured with this query, or null if no options where configured.
-     *
-     * @return array
+     * This ResourceQuery targets MessageItems.
      */
-    abstract public function getOptions(): ?MessageBodyOptions;
-
-
-    /**
-     * This ResourceQuery targets MessageBody.
-     */
-    public function getResourceTarget(): MessageBody
+    function getResourceTarget(): MailFolder
     {
-        return new MessageBody();
+        return new MailFolder();
     }
 }
