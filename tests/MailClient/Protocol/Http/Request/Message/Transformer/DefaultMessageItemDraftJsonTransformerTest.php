@@ -27,13 +27,13 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Request\Message\Transformer;
+namespace Tests\Conjoon\MailClient\Protocol\Http\Request\Message\Transformer;
 
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
 use Conjoon\MailClient\Message\MessageItemDraft;
-use Conjoon\MailClient\Request\Message\Transformer\DefaultMessageItemDraftJsonTransformer;
-use Conjoon\MailClient\Request\Message\Transformer\MessageItemDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\DefaultMessageItemDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\MessageItemDraftJsonTransformer;
 use Conjoon\Core\Contract\JsonDecodable;
 use Conjoon\Core\Exception\JsonDecodeException;
 use DateTime;
@@ -42,7 +42,7 @@ use Tests\TestCase;
 
 /**
  * Class DefaultMessageItemDraftJsonTransformerTest
- * @package Tests\Conjoon\MailClient\Request\Message\Transformer
+ * @package Tests\Conjoon\MailClient\Protocol\Http\Request\Message\Transformer
  */
 class DefaultMessageItemDraftJsonTransformerTest extends TestCase
 {

@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,26 +27,28 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Request\Message\Transformer;
+namespace Conjoon\MailClient\Protocol\Http\Request\Attachment\Transformer;
 
-use Conjoon\MailClient\Message\MessageItemDraft;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
 use Conjoon\Core\Contract\JsonDecodable;
 
 /**
- * Interface provides contract for processing data to a MessageItemDraft.
+ * Interface AttachmentListJsonTransformer
+ * Interface for setting up contracts for converting raw string/array data into a FileAttachmentList.
  *
- * @package Conjoon\MailClient\Request\Message\Transformer
+ *
+ * @package Conjoon\MailClient\Protocol\Http\Request\Attachment\Transformer
  */
-interface MessageItemDraftJsonTransformer extends JsonDecodable
+interface AttachmentListJsonTransformer extends JsonDecodable
 {
     /**
      * @inheritdoc
      */
-    public static function fromString(string $value): MessageItemDraft;
+    public static function fromString(string $value): FileAttachmentList;
 
 
     /**
      * @inheritdoc
      */
-    public static function fromArray(array $arr): MessageItemDraft;
+    public static function fromArray(array $arr): FileAttachmentList;
 }

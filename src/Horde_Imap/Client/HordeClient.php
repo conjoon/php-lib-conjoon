@@ -41,7 +41,7 @@ use Conjoon\MailClient\Data\MailAddressList;
 use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
-use Conjoon\MailClient\Imap\ImapClientException;
+use Conjoon\MailClient\Protocol\Imap\ImapClientException;
 use Conjoon\MailClient\MailClient;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Conjoon\MailClient\Message\Composer\BodyComposer;

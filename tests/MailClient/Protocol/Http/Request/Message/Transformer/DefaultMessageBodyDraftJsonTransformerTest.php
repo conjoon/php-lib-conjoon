@@ -27,18 +27,18 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Request\Message\Transformer;
+namespace Tests\Conjoon\MailClient\Protocol\Http\Request\Message\Transformer;
 
 use Conjoon\Core\Data\MimeType;
 use Conjoon\MailClient\Message\MessageBodyDraft;
-use Conjoon\MailClient\Request\Message\Transformer\DefaultMessageBodyDraftJsonTransformer;
-use Conjoon\MailClient\Request\Message\Transformer\MessageBodyDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\DefaultMessageBodyDraftJsonTransformer;
+use Conjoon\MailClient\Protocol\Http\Request\Message\Transformer\MessageBodyDraftJsonTransformer;
 use Conjoon\Core\Contract\JsonDecodable;
 use Tests\TestCase;
 
 /**
  * Class DefaultMessageBodyDraftJsonFromArrayerTest
- * @package Tests\Conjoon\MailClient\Request\Message\FromArrayer
+ * @package Tests\Conjoon\MailClient\Protocol\Http\Request\Message\FromArrayer
  */
 class DefaultMessageBodyDraftJsonTransformerTest extends TestCase
 {

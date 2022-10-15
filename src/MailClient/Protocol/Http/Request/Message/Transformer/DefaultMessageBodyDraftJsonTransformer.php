@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Request\Message\Transformer;
+namespace Conjoon\MailClient\Protocol\Http\Request\Message\Transformer;
 
 use Conjoon\Core\Data\MimeType;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;

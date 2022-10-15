@@ -31,7 +31,7 @@ namespace Tests\Conjoon\MailClient\Data;
 
 use BadMethodCallException;
 use Conjoon\MailClient\Data\MailAccount;
-use Conjoon\MailClient\Response\JsonApiStrategy;
+use Conjoon\MailClient\Protocol\Http\Response\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
