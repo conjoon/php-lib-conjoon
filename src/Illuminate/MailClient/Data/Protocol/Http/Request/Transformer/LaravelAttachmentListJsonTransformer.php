@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
+namespace Conjoon\Illuminate\MailClient\Data\Protocol\Http\Request\Transformer;
 
 use Conjoon\MailClient\Message\Attachment\FileAttachment;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
@@ -36,7 +36,7 @@ use RuntimeException;
 
 /**
  * Class LaravelAttachmentListJsonTransformer
- * @package Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer
+ * @package Conjoon\Illuminate\MailClient\Data\Protocol\Http\Request\Transformer
  */
 class LaravelAttachmentListJsonTransformer implements AttachmentListJsonTransformer
 {
