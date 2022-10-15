@@ -264,7 +264,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
             $query =
 
             $mailFolderChildList = $builder->listToTree($mailFolderList, $test["input"]["root"], $this->getResourceQuery(
-               ["name", "totalMessages"]
+                ["name", "totalMessages"]
             ));
 
             $testFn($test["expected"], $mailFolderChildList);
@@ -370,7 +370,8 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
     protected function getResourceQuery(array $fields = null): MailFolderListQuery
     {
         $query = $this->createMockForAbstract(
-            MailFolderListQuery::class, [],
+            MailFolderListQuery::class,
+            [],
             [new ParameterBag()]
         );
 

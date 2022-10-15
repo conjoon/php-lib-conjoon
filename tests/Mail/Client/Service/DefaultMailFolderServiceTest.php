@@ -81,7 +81,8 @@ class DefaultMailFolderServiceTest extends TestCase
 
         $query = $this->createMockForAbstract(
             MailFolderListQuery::class,
-        [], [new ParameterBag()]
+            [],
+            [new ParameterBag()]
         );
 
 
