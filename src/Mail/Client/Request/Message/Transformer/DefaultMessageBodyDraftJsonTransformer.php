@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Request\Message\Transformer;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Message\MessagePart;
@@ -72,11 +73,11 @@ class DefaultMessageBodyDraftJsonTransformer implements MessageBodyDraftJsonTran
         $textPlain = null;
 
         if (isset($arr["textPlain"])) {
-            $textPlain = new MessagePart($arr["textPlain"], "UTF-8", "text/plain");
+            $textPlain = new MessagePart($arr["textPlain"], "UTF-8", MimeType::TEXT_PLAIN);
         }
 
         if (isset($arr["textHtml"])) {
-            $textHtml = new MessagePart($arr["textHtml"], "UTF-8", "text/html");
+            $textHtml = new MessagePart($arr["textHtml"], "UTF-8", MimeType::TEXT_HTML);
         }
 
         $messageKey = null;

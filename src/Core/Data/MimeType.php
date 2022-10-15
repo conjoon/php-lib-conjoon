@@ -37,4 +37,6 @@ enum MimeType: string
     case TEXT_HTML = "text/html";
 
     case TEXT_PLAIN = "text/plain";
+
+    case IMAGE_JPEG = "image/jpeg";
 }

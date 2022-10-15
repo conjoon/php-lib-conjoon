@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message\Text;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Message\Text\AbstractMessagePartContentProcessor;
 use Conjoon\Mail\Client\Message\Text\HtmlTextStrategy;
@@ -64,7 +65,7 @@ class AbstractMessagePartContentProcessorTest extends TestCase
 
         $processor = $this->createProcessor();
 
-        $mp = new MessagePart("foo", "UTF-8", "image/jpg");
+        $mp = new MessagePart("foo", "UTF-8", MimeType::IMAGE_JPEG);
 
         $processor->process($mp);
     }
@@ -78,8 +79,8 @@ class AbstractMessagePartContentProcessorTest extends TestCase
 
         $processor = $this->createProcessor();
 
-        $textPlain = new MessagePart("IsPlain", "FROM UTF-8", "text/plain");
-        $textHtml = new MessagePart("html", "FROM UTF-8", "text/html");
+        $textPlain = new MessagePart("IsPlain", "FROM UTF-8", MimeType::TEXT_PLAIN);
+        $textHtml = new MessagePart("html", "FROM UTF-8", MimeType::TEXT_HTML);
 
         $processedTextPlain = $processor->process($textPlain, "ABC");
         $this->assertSame("PLAINIsPlain FROM UTF-8 ABC", $textPlain->getContents());

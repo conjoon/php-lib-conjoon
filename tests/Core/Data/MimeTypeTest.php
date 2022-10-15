@@ -46,12 +46,16 @@ class MimeTypeTest extends TestCase
      */
     public function testClass()
     {
-        $this->assertEqualsCanonicalizing(
-            [MimeType::TEXT_HTML, MimeType::TEXT_PLAIN],
+        $this->assertEqualsCanonicalizing([
+            MimeType::TEXT_HTML,
+            MimeType::TEXT_PLAIN,
+            MimeType::IMAGE_JPEG
+        ],
             MimeType::cases()
         );
 
         $this->assertSame("text/html", MimeType::TEXT_HTML->value);
         $this->assertSame("text/plain", MimeType::TEXT_PLAIN->value);
+        $this->assertSame("image/jpeg", MimeType::IMAGE_JPEG->value);
     }
 }

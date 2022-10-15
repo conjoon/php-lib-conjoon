@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message\Text;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Mail\Client\Message\Text\DefaultPreviewTextProcessor;
 use Conjoon\Mail\Client\Message\Text\PreviewTextProcessor;
@@ -40,8 +41,7 @@ use Conjoon\Text\Converter;
 use Tests\TestCase;
 
 /**
- * Class DefaultPreviewTextProcessorTest
- * @package Tests\Conjoon\Mail\Client\Message\Text
+ * Tests DefaultPreviewTextProcessorTest.
  */
 class DefaultPreviewTextProcessorTest extends TestCase
 {
@@ -69,7 +69,7 @@ class DefaultPreviewTextProcessorTest extends TestCase
 
         $processor = $this->createProcessor();
 
-        $mp = new MessagePart("foo", "UTF-8", "image/jpg");
+        $mp = new MessagePart("foo", "UTF-8", MimeType::IMAGE_JPEG);
 
         $processor->process($mp);
     }
@@ -85,8 +85,8 @@ class DefaultPreviewTextProcessorTest extends TestCase
 
         $length = 300;
 
-        $textPlain = new MessagePart(str_repeat("A", $length), "UTF-8", "text/plain");
-        $textHtml = new MessagePart("<b>" . str_repeat("B", $length) . "</b>", "UTF-8", "text/html");
+        $textPlain = new MessagePart(str_repeat("A", $length), "UTF-8", MimeType::TEXT_PLAIN);
+        $textHtml = new MessagePart("<b>" . str_repeat("B", $length) . "</b>", "UTF-8", MimeType::TEXT_HTML);
 
         $processedTextPlain = $processor->process($textPlain);
         $this->assertSame("CALLED" . str_repeat("A", $length), $processedTextPlain->getContents());
@@ -97,11 +97,11 @@ class DefaultPreviewTextProcessorTest extends TestCase
         $this->assertSame($textPlain, $processedTextPlain);
         $this->assertSame($textHtml, $processedTextHtml);
 
-        $textHtml = new MessagePart(" A > B", "UTF-8", "text/html");
+        $textHtml = new MessagePart(" A > B", "UTF-8", MimeType::TEXT_HTML);
         $processedTextHtml = $processor->process($textHtml);
         $this->assertSame("CALLED A &gt; B", $processedTextHtml->getContents());
 
-        $textPlain = new MessagePart(str_repeat("A", $length), "UTF-8", "text/plain");
+        $textPlain = new MessagePart(str_repeat("A", $length), "UTF-8", MimeType::TEXT_PLAIN);
         $processedTextPlain = $processor->process($textPlain, "UTF-8", ["length" => 10]);
         $def = "CALLED";
         $this->assertSame("CALLED" . str_repeat("A", 10 - strlen($def)), $processedTextPlain->getContents());

@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Request\Message\Transformer;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
 use Conjoon\Mail\Client\Request\Message\Transformer\DefaultMessageBodyDraftJsonTransformer;
 use Conjoon\Mail\Client\Request\Message\Transformer\MessageBodyDraftJsonTransformer;
@@ -81,8 +82,8 @@ class DefaultMessageBodyDraftJsonTransformerTest extends TestCase
         $this->assertSame("UTF-8", $draft->getTextPlain()->getCharset());
         $this->assertSame("UTF-8", $draft->getTextHtml()->getCharset());
 
-        $this->assertSame("text/plain", $draft->getTextPlain()->getMimeType());
-        $this->assertSame("text/html", $draft->getTextHtml()->getMimeType());
+        $this->assertSame(MimeType::TEXT_PLAIN, $draft->getTextPlain()->getMimeType());
+        $this->assertSame(MimeType::TEXT_HTML, $draft->getTextHtml()->getMimeType());
     }
 
 

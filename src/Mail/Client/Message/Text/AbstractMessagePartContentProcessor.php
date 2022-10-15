@@ -27,6 +27,7 @@
 
 namespace Conjoon\Mail\Client\Message\Text;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Message\MessagePart;
 use Conjoon\Text\Converter;
 
@@ -88,7 +89,7 @@ abstract class AbstractMessagePartContentProcessor implements MessagePartContent
         $mimeType = $messagePart->getMimeType();
 
         switch ($mimeType) {
-            case "text/plain":
+            case MimeType::TEXT_PLAIN:
                 $messagePart->setContents($this->plainTextStrategy->process($this->converter->convert(
                     $messagePart->getContents(),
                     $messagePart->getCharset(),
@@ -96,7 +97,7 @@ abstract class AbstractMessagePartContentProcessor implements MessagePartContent
                 )), $toCharset);
                 break;
 
-            case "text/html":
+            case MimeType::TEXT_HTML:
                 $messagePart->setContents($this->htmlTextStrategy->process($this->converter->convert(
                     $messagePart->getContents(),
                     $messagePart->getCharset(),

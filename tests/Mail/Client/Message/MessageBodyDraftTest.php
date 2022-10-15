@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Message;
 
+use Conjoon\Core\Data\MimeType;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Message\AbstractMessageBody;
 use Conjoon\Mail\Client\Message\MessageBodyDraft;
@@ -60,8 +61,8 @@ class MessageBodyDraftTest extends TestCase
         $this->assertInstanceOf(Jsonable::class, $body);
         $this->assertInstanceOf(AbstractMessageBody::class, $body);
 
-        $plainPart = new MessagePart("foo", "ISO-8859-1", "text/plain");
-        $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", "text/html");
+        $plainPart = new MessagePart("foo", "ISO-8859-1", MimeType::TEXT_PLAIN);
+        $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", MimeType::TEXT_HTML);
 
         $this->assertEquals([
             "type" => "MessageBody",
@@ -120,8 +121,8 @@ class MessageBodyDraftTest extends TestCase
 
         $body = new MessageBodyDraft(new MessageKey("a", "b", "c"));
 
-        $plainPart = new MessagePart("foo", "ISO-8859-1", "text/plain");
-        $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", "text/html");
+        $plainPart = new MessagePart("foo", "ISO-8859-1", MimeType::TEXT_PLAIN);
+        $htmlPart = new MessagePart("<b>bar</b>", "UTF-8", MimeType::TEXT_HTML);
 
         $body->setTextPlain($plainPart);
         $body->setTextHtml($htmlPart);
