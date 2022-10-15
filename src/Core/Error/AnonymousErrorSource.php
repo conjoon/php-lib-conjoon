@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Error;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 
 /**
  * Class representing objects that do not implement the ErrorSource interface.

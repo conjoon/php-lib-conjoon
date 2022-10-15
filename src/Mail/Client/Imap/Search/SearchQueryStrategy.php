@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Imap\Search;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Filter\Filter;
 use Conjoon\Math\Expression\Expression;

@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Message;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Data\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
  * Class MessageItemList organizes a list of MessageItems.

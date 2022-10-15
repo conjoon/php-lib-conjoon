@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Mail\Client\Imap\Search;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Filter\Filter;
 use Conjoon\Mail\Client\Imap\Search\SearchQueryStrategy;
 use Conjoon\Math\Expression\FunctionalExpression;

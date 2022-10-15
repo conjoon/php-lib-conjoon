@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Util;
 use Conjoon\Core\Validation\ValidationError;
 use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Data\AbstractList;
 

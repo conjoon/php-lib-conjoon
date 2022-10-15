@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Mail\Client\Attachment;
 use Conjoon\Mail\Client\Attachment\AbstractAttachment;
 use Conjoon\Mail\Client\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use InvalidArgumentException;
 use Tests\TestCase;
 

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;

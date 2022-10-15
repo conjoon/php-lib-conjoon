@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Core\Validation;
 
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Error\AbstractError;
 
 /**

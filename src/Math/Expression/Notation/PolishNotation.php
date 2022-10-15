@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Math\Expression\Notation;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Math\Expression\Expression;
 use Conjoon\Math\Expression\Operator\Operator;

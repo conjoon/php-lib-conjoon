@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Mail\Client\Data\CompoundKey;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Mail\Client\Data\MailAccount;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Stringable;

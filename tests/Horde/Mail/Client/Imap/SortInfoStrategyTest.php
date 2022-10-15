@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Horde\Mail\Client\Imap;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\SortDirection;
 use Conjoon\Core\Data\SortInfo;
 use Conjoon\Core\Data\SortInfoList;

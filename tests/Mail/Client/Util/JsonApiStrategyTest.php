@@ -35,7 +35,7 @@ use Conjoon\Core\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Mail\Client\Util\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\AbstractList;
 use stdClass;
 use Tests\TestCase;

@@ -27,21 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data;
+namespace Conjoon\Core\Strategy;
 
-use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Exception\UnexpectedTypeException;
 
 /**
- * Interface JsonStrategy.
+ * Interface StringStrategy.
  */
-interface JsonStrategy
+interface StringStrategy
 {
     /**
-     * Returns a JSON representation of the data passed to this method.
+     * Returns a String representation of the data passed to this method.
      *
-     * @param Arrayable $source
+     * @param Stringable $target
+     * @return string
      *
-     * @return array
+     * @throws UnexpectedTypeException
      */
-    public function toJson(Arrayable $source): array;
+    public function toString(Stringable $target): string;
 }

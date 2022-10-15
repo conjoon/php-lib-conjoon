@@ -32,7 +32,7 @@ namespace Conjoon\Mail\Client\Data;
 use BadMethodCallException;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
  * Class MailAccount models account information for a mail server.

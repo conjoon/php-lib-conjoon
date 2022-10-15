@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Math\Expression;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Math\InvalidOperandException;
 use Conjoon\Math\Operand;
 use Conjoon\Math\Expression\Operator\FunctionalOperator;

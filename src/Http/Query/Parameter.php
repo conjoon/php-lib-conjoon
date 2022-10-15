@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Http\Query;
 
 use Conjoon\Core\Error\ErrorSource;
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 
 /**
  * Class QueryParameter represents the Parameter of a Query.

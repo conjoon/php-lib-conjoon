@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Filter;
 
 use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 use Conjoon\Math\Expression\Expression;
 
 /**

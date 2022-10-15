@@ -31,6 +31,7 @@ namespace Conjoon\Core\Data;
 
 use BadMethodCallException;
 use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
  * A ParameterBag providing object syntax for accessing array arguments and

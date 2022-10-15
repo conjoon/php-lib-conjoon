@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Resource;
 
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\ParameterBag;
 use BadMethodCallException;
 use Conjoon\Core\Resource\ResourceQuery;

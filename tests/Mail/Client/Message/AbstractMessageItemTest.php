@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Mail\Client\Message;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Mail\Client\Data\CompoundKey\MessageKey;
 use Conjoon\Mail\Client\Data\MailAddress;
 use Conjoon\Mail\Client\Data\MailAddressList;

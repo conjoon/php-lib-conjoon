@@ -31,7 +31,7 @@ namespace Conjoon\Mail\Client\Attachment;
 
 use Conjoon\Core\Data\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
  * Class FileAttachmentItemList organizes a list of FileAttachmentItems.

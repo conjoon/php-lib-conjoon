@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Core\Contract;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonDecodable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Tests\TestCase;
 
 /**

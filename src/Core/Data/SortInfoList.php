@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Core\Data;
 
 use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
  * Represents list of sort information.

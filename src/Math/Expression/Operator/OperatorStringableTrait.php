@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Math\Expression\Operator;
 
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 
 /**
  * Trait providing toString implementation for operators.

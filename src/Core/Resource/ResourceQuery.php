@@ -31,7 +31,7 @@ namespace Conjoon\Core\Resource;
 
 use BadMethodCallException;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\JsonStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
 use Conjoon\Core\Data\ParameterBag;
 
 /**

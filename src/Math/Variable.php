@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Math;
 
-use Conjoon\Core\Data\JsonStrategy;
-use Conjoon\Core\Data\StringStrategy;
+use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Strategy\StringStrategy;
 
 /**
  * Represents a Variable, providing a symbolic name and an arbitrary value.
