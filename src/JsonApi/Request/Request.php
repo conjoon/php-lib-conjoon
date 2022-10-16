@@ -55,9 +55,9 @@ class Request implements HttpRequest
 
 
     /**
-     * @var Query|null
+     * @var JsonApiQuery|null
      */
-    protected ?Query $query = null;
+    protected ?JsonApiQuery $query = null;
 
 
     /**
@@ -87,7 +87,7 @@ class Request implements HttpRequest
     /**
      * @inheritdoc
      */
-    public function getQuery(): ?Query
+    public function getQuery(): ?JsonApiQuery
     {
         if ($this->query) {
             return $this->query;
