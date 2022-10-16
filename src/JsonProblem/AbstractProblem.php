@@ -32,7 +32,7 @@ namespace Conjoon\JsonProblem;
 use BadMethodCallException;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Abstract base class for representatives according to rfc7807.

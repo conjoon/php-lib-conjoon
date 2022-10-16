@@ -27,7 +27,7 @@
 
 namespace Conjoon\MailClient\Message\Text;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use Conjoon\MailClient\Message\MessagePart;
 use Conjoon\Text\Converter;
 

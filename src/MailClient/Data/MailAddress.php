@@ -33,9 +33,9 @@ use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonDecodable;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Core\Exception\JsonDecodeException;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Core\Contract\Stringable;
 use InvalidArgumentException;
 

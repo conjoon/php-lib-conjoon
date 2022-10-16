@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\Data\Resource;
 
 use Conjoon\MailClient\Data\Resource\MailFolder;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\MailClient\Data\Resource\MessageBody;
 use Conjoon\MailClient\Data\Resource\MessageItem;
 use Tests\TestCase;

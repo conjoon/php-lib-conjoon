@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query\Validation\Query;
 
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
 use Conjoon\Http\Query\Validation\Query\QueryRule;

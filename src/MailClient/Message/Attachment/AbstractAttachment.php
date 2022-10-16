@@ -32,7 +32,7 @@ namespace Conjoon\MailClient\Message\Attachment;
 use BadMethodCallException;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use InvalidArgumentException;
 
 /**

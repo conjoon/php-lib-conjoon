@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Horde_Imap\Client;
 
-use Conjoon\Filter\Filter;
+use Conjoon\Data\Filter\Filter;
 use Conjoon\Horde_Imap\Client\FilterTrait;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Expression\LogicalExpression;

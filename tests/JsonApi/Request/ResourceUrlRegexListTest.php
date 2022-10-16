@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\JsonApi\Request\ResourceUrlRegex;
 use Conjoon\JsonApi\Request\ResourceUrlRegexList;
 use Tests\TestCase;

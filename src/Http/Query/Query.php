@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Data\Error\ErrorSource;
+use Conjoon\Data\ParameterBag;
+use Conjoon\Error\ErrorSource;
 
 /**
  * Interface used to control Http-Queries.

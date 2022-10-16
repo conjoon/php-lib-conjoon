@@ -40,7 +40,7 @@ use Conjoon\Math\InvalidOperandException;
 use Conjoon\Math\Operand;
 use Conjoon\Math\OperandList;
 use Conjoon\Math\Value;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Math\VariableName;
 use Tests\TestCase;
 

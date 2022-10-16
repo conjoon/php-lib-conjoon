@@ -30,8 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\Http\Query\Validation;
 
 use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\ValidationErrors;
-use Conjoon\Core\Validation\Validator as BaseValidator;
+use Conjoon\Data\Validation\ValidationErrors;
+use Conjoon\Data\Validation\Validator as BaseValidator;
 use Conjoon\Http\Query\Exception\UnexpectedQueryException;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;

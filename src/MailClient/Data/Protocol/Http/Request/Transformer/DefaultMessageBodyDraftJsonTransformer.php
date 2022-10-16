@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Protocol\Http\Request\Transformer;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Message\MessageBodyDraft;
 use Conjoon\MailClient\Message\MessagePart;

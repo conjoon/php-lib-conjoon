@@ -30,9 +30,9 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Message;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Class MessageItemList organizes a list of MessageItems.

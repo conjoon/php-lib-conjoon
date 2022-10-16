@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\Sort\SortInfoList;
-use Conjoon\Filter\Filter;
+use Conjoon\Data\Sort\SortInfoList;
+use Conjoon\Data\Filter\Filter;
 
 /**
  * ResourceQuery implementation for querying MessageItemList.

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Contract;
 
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Interface Jsonable.

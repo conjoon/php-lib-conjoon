@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Math;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 
 /**
  * Represents a list of Operands.

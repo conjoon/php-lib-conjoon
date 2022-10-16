@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Math\Expression\Operator;
 
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Math\Expression\Operator\OperatorStringableTrait;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Tests\TestCase;
 
 /**

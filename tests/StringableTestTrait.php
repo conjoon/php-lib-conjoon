@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 
 /**
  * Class StringableTestTrait

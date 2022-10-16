@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Message;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Message\AbstractMessageBody;
 use Conjoon\MailClient\Message\MessageBodyDraft;

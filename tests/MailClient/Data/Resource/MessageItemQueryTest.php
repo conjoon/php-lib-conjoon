@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Data\ParameterBag;
+use Conjoon\Data\Resource\ResourceQuery;
 use Conjoon\MailClient\Data\Resource\MessageItem;
 use Conjoon\MailClient\Data\Resource\MessageItemQuery;
 use Tests\TestCase;

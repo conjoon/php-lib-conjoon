@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\MailClient\Data\Resource\MessageItem;
 use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
 use Conjoon\MailClient\Data\Resource\MessageItemQuery;

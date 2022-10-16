@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 
 /**
  * Class ParameterList organizes a list of QueryParameters.

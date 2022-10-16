@@ -30,13 +30,13 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonDecodable;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Core\Exception\JsonDecodeException;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Core\Contract\Stringable;
 
 /**

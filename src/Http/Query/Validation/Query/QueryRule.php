@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace Conjoon\Http\Query\Validation\Query;
 
 use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Core\Validation\Rule as ValidationRule;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\Rule as ValidationRule;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
 
 /**

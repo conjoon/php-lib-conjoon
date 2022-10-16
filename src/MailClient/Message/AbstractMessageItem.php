@@ -40,9 +40,9 @@ use Conjoon\MailClient\Message\Flag\FlaggedFlag;
 use Conjoon\MailClient\Message\Flag\FlagList;
 use Conjoon\MailClient\Message\Flag\SeenFlag;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Data\Modifiable;
-use Conjoon\Core\Data\ModifiableTrait;
+use Conjoon\Core\Contract\JsonStrategy;
+use Conjoon\Data\Modifiable;
+use Conjoon\Data\ModifiableTrait;
 use DateTime;
 use TypeError;
 

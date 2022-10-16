@@ -32,7 +32,7 @@ namespace Tests\Conjoon\MailClient\Message\Attachment;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentItem;
 use Conjoon\MailClient\Message\Attachment\FileAttachmentItemList;
 use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
 use Tests\TestCase;
 

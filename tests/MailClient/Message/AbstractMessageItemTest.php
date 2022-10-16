@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\Message;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
@@ -42,7 +42,7 @@ use Conjoon\MailClient\Message\Flag\FlagList;
 use Conjoon\MailClient\Message\Flag\SeenFlag;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\MailClient\Message\MessageItemDraft;
-use Conjoon\Core\Data\Modifiable;
+use Conjoon\Data\Modifiable;
 use DateTime;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;

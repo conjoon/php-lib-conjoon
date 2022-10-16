@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Service;
 
-use Conjoon\Core\Data\MimeType;
-use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Data\Sort\SortInfoList;
-use Conjoon\Filter\Filter;
+use Conjoon\Mime\MimeType;
+use Conjoon\Data\ParameterBag;
+use Conjoon\Data\Sort\SortInfoList;
+use Conjoon\Data\Filter\Filter;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\Resource\MessageBodyOptions;
@@ -53,7 +53,7 @@ use Conjoon\MailClient\Data\Reader\ReadableMessagePartContentProcessor;
 use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
 use Conjoon\MailClient\Data\Resource\MessageItemQuery;
 use Conjoon\MailClient\Data\Writer\WritableMessagePartContentProcessor;
-use Conjoon\Core\Data\ArrayUtil;
+use Conjoon\Core\Util\ArrayUtil;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Value;
 use Conjoon\Math\VariableName;

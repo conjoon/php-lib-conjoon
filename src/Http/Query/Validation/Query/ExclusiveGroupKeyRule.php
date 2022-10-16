@@ -28,8 +28,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Validation\Query;
 
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 

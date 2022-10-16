@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use InvalidArgumentException;
 
 /**

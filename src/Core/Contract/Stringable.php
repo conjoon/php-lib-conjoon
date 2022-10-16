@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Contract;
 
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 
 /**
  * Interface Stringable.

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
 use Conjoon\Http\Query\Validation\Parameter\NamedParameterRule;

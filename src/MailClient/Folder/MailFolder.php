@@ -32,7 +32,7 @@ namespace Conjoon\MailClient\Folder;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use InvalidArgumentException;
 
 /**

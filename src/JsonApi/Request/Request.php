@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Request;
 
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Request\Request as HttpRequest;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Query\Validation\Validator;
 

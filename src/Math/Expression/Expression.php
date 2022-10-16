@@ -34,8 +34,8 @@ use Conjoon\Core\Contract\Stringable;
 use Conjoon\Math\Expression\Operator\Operator;
 use Conjoon\Math\InvalidOperationException;
 use Conjoon\Math\Operand;
-use Conjoon\Core\Strategy\StringStrategy;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Math\OperandList;
 
 /**

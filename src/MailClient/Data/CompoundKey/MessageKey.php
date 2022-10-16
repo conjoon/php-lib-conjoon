@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data\CompoundKey;
 
 use Conjoon\MailClient\Data\MailAccount;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use InvalidArgumentException;
 
 /**

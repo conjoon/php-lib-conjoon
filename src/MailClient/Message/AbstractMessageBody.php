@@ -32,7 +32,7 @@ namespace Conjoon\MailClient\Message;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Class AbstractMessageBody models a simplified representation of mail message

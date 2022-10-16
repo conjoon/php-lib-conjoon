@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Protocol\Imap\Search;
 
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Core\Contract\Stringable;
-use Conjoon\Filter\Filter;
+use Conjoon\Data\Filter\Filter;
 use Conjoon\Math\Expression\Expression;
 use Conjoon\Math\Expression\Operator\Operator;
 use Conjoon\Core\Exception\UnexpectedTypeException;

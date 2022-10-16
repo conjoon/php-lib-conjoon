@@ -29,10 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Folder;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Class MailFolderList organizes a list of ListMailFolders.

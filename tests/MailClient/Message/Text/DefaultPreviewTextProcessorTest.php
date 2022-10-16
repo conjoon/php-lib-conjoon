@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Message\Text;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use Conjoon\MailClient\Message\MessagePart;
 use Conjoon\MailClient\Message\Text\DefaultPreviewTextProcessor;
 use Conjoon\MailClient\Message\Text\PreviewTextProcessor;

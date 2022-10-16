@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\Rule as ValidationRule;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\Rule as ValidationRule;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRule;

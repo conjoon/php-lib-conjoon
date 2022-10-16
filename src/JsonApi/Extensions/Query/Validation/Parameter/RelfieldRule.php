@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Extensions\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ObjectDescriptionList;
 
 /**
  * An extension on sparse fieldset as specified with https://conjoon.org/json-api/ext/relfield.

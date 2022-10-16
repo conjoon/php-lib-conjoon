@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
-use Conjoon\Core\Data\ArrayUtil;
+use Conjoon\Core\Util\ArrayUtil;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
 

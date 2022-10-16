@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Http\Query;
 
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Tests\TestCase;
 
 /**

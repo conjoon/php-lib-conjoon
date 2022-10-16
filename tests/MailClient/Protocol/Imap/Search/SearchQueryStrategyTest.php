@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data\Protocol\Imap\Search;
 
-use Conjoon\Core\Strategy\StringStrategy;
-use Conjoon\Filter\Filter;
+use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\Data\Filter\Filter;
 use Conjoon\MailClient\Data\Protocol\Imap\Search\SearchQueryStrategy;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Expression\LogicalExpression;

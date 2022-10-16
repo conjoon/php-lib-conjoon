@@ -34,7 +34,7 @@ use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Protocol\Http\Response\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Tests\TestCase;
 
 /**

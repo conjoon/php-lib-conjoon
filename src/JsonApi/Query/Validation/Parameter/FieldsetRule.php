@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
-use Conjoon\Core\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ObjectDescriptionList;
 
 /**
  * Validates fieldset parameters of the type "fields[TYPE]=field,field2,field3" given the

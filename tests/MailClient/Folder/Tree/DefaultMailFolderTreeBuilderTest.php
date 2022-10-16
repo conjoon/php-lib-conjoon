@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Folder\Tree;
 
-use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\Resource\MailFolder as MailFolderResource;
 use Conjoon\MailClient\Folder\ListMailFolder;

@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Math\Expression;
 
 use Conjoon\Math\Expression\Expression;
 use Conjoon\Math\Expression\ExpressionList;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Tests\TestCase;
 
 /**

@@ -34,7 +34,7 @@ use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Parameter;
 use Illuminate\Http\Request;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 
 /**
  * LaravelQuery representing queries of Requests with the type Illuminate\Http\Request.

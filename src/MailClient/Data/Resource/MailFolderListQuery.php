@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Core\Data\Resource\ResourceQuery;
+use Conjoon\Data\Resource\ResourceQuery;
 
 /**
  * Class MailFolderListQuery.

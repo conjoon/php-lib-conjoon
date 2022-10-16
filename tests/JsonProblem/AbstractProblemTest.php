@@ -33,7 +33,7 @@ use BadMethodCallException;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Tests\TestCase;
 
 /**

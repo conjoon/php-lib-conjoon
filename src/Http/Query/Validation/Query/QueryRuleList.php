@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Validation\Query;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 
 /**
  * A list for managing QueryRules.

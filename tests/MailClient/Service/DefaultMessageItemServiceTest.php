@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Service;
 
-use Conjoon\Core\Data\MimeType;
+use Conjoon\Mime\MimeType;
 use Conjoon\MailClient\Data\Resource\MessageBodyOptions;
-use Conjoon\Core\Data\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\Horde_Imap\Client\HordeClient;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;

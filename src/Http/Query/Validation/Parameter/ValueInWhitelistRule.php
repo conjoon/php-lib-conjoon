@@ -28,9 +28,9 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query\Validation\Parameter;
 
-use Conjoon\Core\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Http\Query\Parameter;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationErrors;
 
 /**
  * Class providing functionality for making sure a query's parameter contains only valid

@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request;
 use Conjoon\Http\Request\Request as HttpRequest;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ObjectDescription;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 

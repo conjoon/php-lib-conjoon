@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
-use Conjoon\Core\Data\Error\ErrorSource;
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Error\ErrorSource;
+use Conjoon\Core\Contract\StringStrategy;
 
 /**
  * Class QueryParameter represents the Parameter of a Query.

@@ -31,7 +31,7 @@ namespace Tests\Conjoon\MailClient\Data;
 
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Copyable;
 use Conjoon\Core\Contract\JsonDecodable;
 use Conjoon\Core\Exception\JsonDecodeException;

@@ -30,10 +30,10 @@ declare(strict_types=1);
 namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Data\Sort\SortDirection;
-use Conjoon\Core\Data\Sort\SortInfo;
-use Conjoon\Core\Data\Sort\SortInfoList;
+use Conjoon\Core\Contract\JsonStrategy;
+use Conjoon\Data\Sort\SortDirection;
+use Conjoon\Data\Sort\SortInfo;
+use Conjoon\Data\Sort\SortInfoList;
 use Horde_Imap_Client;
 
 /**

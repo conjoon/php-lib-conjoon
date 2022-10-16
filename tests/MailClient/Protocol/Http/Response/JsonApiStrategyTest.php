@@ -30,13 +30,13 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\Data\Protocol\Http\Response;
 
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\MailClient\Data\Protocol\Http\Response\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Contract\JsonStrategy;
+use Conjoon\Core\Util\AbstractList;
 use stdClass;
 use Tests\TestCase;
 

@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Message\Attachment;
 
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Class FileAttachmentItemList organizes a list of FileAttachmentItems.

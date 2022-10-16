@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Http\Query\Validation\Query;
 
 use Conjoon\Http\Query\Validation\Query\QueryRule;
 use Conjoon\Http\Query\Validation\Query\QueryRuleList;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 use Tests\TestCase;
 
 /**

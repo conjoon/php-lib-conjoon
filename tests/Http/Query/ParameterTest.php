@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Core\Data\Error\ErrorSource;
+use Conjoon\Error\ErrorSource;
 use Conjoon\Http\Query\Parameter;
 use Tests\TestCase;
 

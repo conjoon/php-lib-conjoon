@@ -29,12 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Protocol\Http\Response;
 
-use Conjoon\Core\Validation\ValidationError;
-use Conjoon\Core\Validation\ValidationErrors;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
-use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Data\AbstractList;
+use Conjoon\Core\Util\AbstractList;
 
 /**
  * Class JsonApiStrategy

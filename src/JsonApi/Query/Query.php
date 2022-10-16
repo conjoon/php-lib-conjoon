@@ -29,11 +29,11 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query;
 
-use Conjoon\Core\Strategy\StringStrategy;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;
-use Conjoon\Core\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ObjectDescription;
 
 /**
  * Query validated for JSON:API specifications, describing access to a $resourceTarget
