@@ -27,16 +27,21 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
+namespace Tests\Conjoon\Core\Data\Sort\Sort;
 
-use Conjoon\Core\Data\SortDirection;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Data\Sort\SortDirection;
+use Conjoon\Core\Data\Sort\SortInfo;
+use Tests\JsonableTestTrait;
 use Tests\TestCase;
 
 /**
- * Tests SortDirection.
+ * Tests SortOrder.
  */
-class SortDirectionTest extends TestCase
+class SortInfoTest extends TestCase
 {
+    use JsonableTestTrait;
+
 // ---------------------
 //    Tests
 // ---------------------
@@ -46,12 +51,26 @@ class SortDirectionTest extends TestCase
      */
     public function testClass()
     {
-        $this->assertEqualsCanonicalizing(
-            [SortDirection::ASC, SortDirection::DESC],
-            SortDirection::cases()
-        );
+        $sort = new SortInfo("subject", SortDirection::ASC);
+        $this->assertInstanceOf(Jsonable::class, $sort);
+        $this->assertSame("subject", $sort->getField());
+        $this->assertSame(SortDirection::ASC, $sort->getDirection());
 
-        $this->assertSame("ascending", SortDirection::ASC->value);
-        $this->assertSame("descending", SortDirection::DESC->value);
+
+        $this->assertSame([
+            "field" => "subject",
+            "direction" => SortDirection::ASC->value
+        ], $sort->toArray());
+    }
+
+
+    /**
+     * Tests toJson()
+     */
+    public function testToJson()
+    {
+        $this->runToJsonTest(
+            $this->createMockForAbstract(SortInfo::class, [], ["subject", SortDirection::ASC])
+        );
     }
 }

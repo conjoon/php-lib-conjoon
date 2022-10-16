@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Data\MimeType;
-use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Core\Data\Sort\SortInfoList;
 use Conjoon\Filter\Filter;
 use Conjoon\MailClient\Data\CompoundKey\CompoundKey;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;

@@ -31,9 +31,9 @@ namespace Tests\Conjoon\Horde_Imap\Client;
 
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Strategy\JsonStrategy;
-use Conjoon\Core\Data\SortDirection;
-use Conjoon\Core\Data\SortInfo;
-use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Core\Data\Sort\SortDirection;
+use Conjoon\Core\Data\Sort\SortInfo;
+use Conjoon\Core\Data\Sort\SortInfoList;
 use Conjoon\Horde_Imap\Client\SortInfoStrategy;
 use Horde_Imap_Client;
 use Tests\TestCase;

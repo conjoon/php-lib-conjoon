@@ -27,30 +27,60 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data;
+namespace Conjoon\Core\Data\Sort;
 
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Strategy\JsonStrategy;
 
 /**
- * Represents list of sort information.
+ * Represents sort information.
  *
  * @example
  *
- *      $list = new SortInfoList();
- *      $sort = new SortInfo("subject", SortDirection::ASC);
- *
- *      $list[] = $sort;
- *
+ *     $sort = new SortInfo("subject", SortDirection::ASC);
  */
-class SortInfoList extends AbstractList implements Jsonable
+class SortInfo implements Arrayable, Jsonable
 {
     /**
-     * @inheritdoc
+     * @var string
      */
-    public function getEntityType(): string
+    protected string $field;
+
+    /**
+     * @var SortDirection
+     */
+    protected SortDirection $direction;
+
+
+    /**
+     * Constructor.
+     *
+     * @param string $field
+     * @param SortDirection $direction
+     */
+    public function __construct(string $field, SortDirection $direction)
     {
-        return SortInfo::class;
+        $this->field     = $field;
+        $this->direction = $direction;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getField(): string
+    {
+        return $this->field;
+    }
+
+
+    /**
+     * @return SortDirection
+     */
+    public function getDirection(): SortDirection
+    {
+        return $this->direction;
     }
 
 
@@ -59,13 +89,10 @@ class SortInfoList extends AbstractList implements Jsonable
      */
     public function toArray(): array
     {
-        $res = [];
-
-        foreach ($this->data as $data) {
-            $res[] = $data->toArray();
-        }
-
-        return $res;
+        return [
+            "field" => $this->getField(),
+            "direction" => $this->getDirection()->value
+        ];
     }
 
 

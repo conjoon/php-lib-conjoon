@@ -27,12 +27,12 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
+namespace Tests\Conjoon\Core\Data\Sort\Sort;
 
 use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\SortDirection;
-use Conjoon\Core\Data\SortInfo;
-use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Core\Data\Sort\SortDirection;
+use Conjoon\Core\Data\Sort\SortInfo;
+use Conjoon\Core\Data\Sort\SortInfoList;
 use Conjoon\Core\Data\AbstractList;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;

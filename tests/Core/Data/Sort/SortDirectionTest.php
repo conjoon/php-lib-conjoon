@@ -27,48 +27,31 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Data\Resource;
+namespace Tests\Conjoon\Core\Data\Sort\Sort;
 
-use Conjoon\Core\Data\Sort\SortInfoList;
-use Conjoon\Filter\Filter;
+use Conjoon\Core\Data\Sort\SortDirection;
+use Tests\TestCase;
 
 /**
- * ResourceQuery implementation for querying MessageItemList.
- *
+ * Tests SortDirection.
  */
-abstract class MessageItemListQuery extends MessageItemQuery
+class SortDirectionTest extends TestCase
 {
-    /**
-     * Returns the offset of the first message item requested with the query.
-     *
-     * @return int
-     */
-    abstract public function getStart(): int;
-
+// ---------------------
+//    Tests
+// ---------------------
 
     /**
-     * Returns the limit specified for this query.
-     * Returns "null" if no limit was specified.
-     *
-     * @return int|null
+     * Tests constructor
      */
-    abstract public function getLimit(): ?int;
+    public function testClass()
+    {
+        $this->assertEqualsCanonicalizing(
+            [SortDirection::ASC, SortDirection::DESC],
+            SortDirection::cases()
+        );
 
-
-    /**
-     * Returns sort information for this query.
-     * Returns null if no sort information is available.
-     *
-     * @return SortInfoList|null
-     */
-    abstract public function getSort(): ?SortInfoList;
-
-
-    /**
-     * Returns filter information for this query.
-     * Returns null if no filter information is  available.
-     *
-     * @return Filter|null
-     */
-    abstract public function getFilter(): ?Filter;
+        $this->assertSame("ascending", SortDirection::ASC->value);
+        $this->assertSame("descending", SortDirection::DESC->value);
+    }
 }

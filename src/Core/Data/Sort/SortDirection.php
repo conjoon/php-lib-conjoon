@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,50 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Core\Data;
-
-use Conjoon\Core\Contract\Jsonable;
-use Conjoon\Core\Data\SortDirection;
-use Conjoon\Core\Data\SortInfo;
-use Tests\JsonableTestTrait;
-use Tests\TestCase;
+namespace Conjoon\Core\Data\Sort;
 
 /**
- * Tests SortOrder.
+ * Represents sort order direction.
  */
-class SortInfoTest extends TestCase
+enum SortDirection: string
 {
-    use JsonableTestTrait;
+    case ASC = "ascending";
 
-// ---------------------
-//    Tests
-// ---------------------
-
-    /**
-     * Tests constructor
-     */
-    public function testClass()
-    {
-        $sort = new SortInfo("subject", SortDirection::ASC);
-        $this->assertInstanceOf(Jsonable::class, $sort);
-        $this->assertSame("subject", $sort->getField());
-        $this->assertSame(SortDirection::ASC, $sort->getDirection());
-
-
-        $this->assertSame([
-            "field" => "subject",
-            "direction" => SortDirection::ASC->value
-        ], $sort->toArray());
-    }
-
-
-    /**
-     * Tests toJson()
-     */
-    public function testToJson()
-    {
-        $this->runToJsonTest(
-            $this->createMockForAbstract(SortInfo::class, [], ["subject", SortDirection::ASC])
-        );
-    }
+    case DESC = "descending";
 }

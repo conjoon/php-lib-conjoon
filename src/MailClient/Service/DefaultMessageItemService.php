@@ -31,7 +31,7 @@ namespace Conjoon\MailClient\Service;
 
 use Conjoon\Core\Data\MimeType;
 use Conjoon\Core\Data\ParameterBag;
-use Conjoon\Core\Data\SortInfoList;
+use Conjoon\Core\Data\Sort\SortInfoList;
 use Conjoon\Filter\Filter;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;

@@ -27,14 +27,61 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Data;
+namespace Conjoon\Core\Data\Sort;
+
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Strategy\JsonStrategy;
+use Conjoon\Core\Data\AbstractList;
 
 /**
- * Represents sort order direction.
+ * Represents list of sort information.
+ *
+ * @example
+ *
+ *      $list = new SortInfoList();
+ *      $sort = new SortInfo("subject", SortDirection::ASC);
+ *
+ *      $list[] = $sort;
+ *
  */
-enum SortDirection: string
+class SortInfoList extends AbstractList implements Jsonable
 {
-    case ASC = "ascending";
+    /**
+     * @inheritdoc
+     */
+    public function getEntityType(): string
+    {
+        return SortInfo::class;
+    }
 
-    case DESC = "descending";
+
+    /**
+     * @inheritdoc
+     * @return array<int, array>
+     */
+    public function toArray(): array
+    {
+        $res = [];
+
+        foreach ($this->data as $data) {
+            $res[] = $data->toArray();
+        }
+
+        return $res;
+    }
+
+
+    /**
+     * @inheritdoc
+     *
+     * @return array<int, array>
+     */
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        if (!$strategy) {
+            return $this->toArray();
+        }
+
+        return $strategy->toJson($this);
+    }
 }
