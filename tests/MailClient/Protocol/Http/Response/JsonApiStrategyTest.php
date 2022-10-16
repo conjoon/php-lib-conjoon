@@ -36,7 +36,7 @@ use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\MailClient\Data\Protocol\Http\Response\JsonApiStrategy;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\JsonStrategy;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use stdClass;
 use Tests\TestCase;
 

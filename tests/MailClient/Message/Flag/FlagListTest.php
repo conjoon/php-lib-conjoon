@@ -34,7 +34,7 @@ use Conjoon\MailClient\Message\Flag\AnsweredFlag;
 use Conjoon\MailClient\Message\Flag\DraftFlag;
 use Conjoon\MailClient\Message\Flag\FlagList;
 use Conjoon\MailClient\Message\Flag\SeenFlag;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**

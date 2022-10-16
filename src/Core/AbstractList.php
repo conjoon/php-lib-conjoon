@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Core\Util;
+namespace Conjoon\Core;
 
 use ArrayAccess;
 use Conjoon\Core\Contract\Arrayable;

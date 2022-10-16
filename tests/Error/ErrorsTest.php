@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Error;
 
 use Conjoon\Error\Errors;
 use Conjoon\Error\Error;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**

@@ -31,7 +31,7 @@ namespace Tests\Conjoon\MailClient\Folder;
 
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**

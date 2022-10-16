@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Message;
 
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
 

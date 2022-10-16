@@ -34,7 +34,7 @@ use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 
 /**
  * Class JsonApiStrategy

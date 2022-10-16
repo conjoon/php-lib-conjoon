@@ -33,7 +33,7 @@ use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Data\Sort\SortDirection;
 use Conjoon\Data\Sort\SortInfo;
 use Conjoon\Data\Sort\SortInfoList;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Math\Expression;
 
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 
 /**
  * Represents a list of Expressions.

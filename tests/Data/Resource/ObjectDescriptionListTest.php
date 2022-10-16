@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Data\Resource;
 
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**

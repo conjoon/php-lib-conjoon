@@ -33,7 +33,7 @@ use Conjoon\Core\Contract\Arrayable;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Message\MessageItemList;
 use Conjoon\MailClient\Message\MessageItem;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\JsonableTestTrait;
 use Tests\TestCase;
 

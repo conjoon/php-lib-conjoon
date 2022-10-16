@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Request;
 
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 
 /**
  * A list for managing ResourceUrlRegex-instances.

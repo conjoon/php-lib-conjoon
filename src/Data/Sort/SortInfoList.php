@@ -31,7 +31,7 @@ namespace Conjoon\Data\Sort;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 
 /**
  * Represents list of sort information.

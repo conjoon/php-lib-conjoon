@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Data\Resource;
 
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 
 /**
  * An abstract list maintaining entities of the type ObjectDescription.

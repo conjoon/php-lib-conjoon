@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Math;
 
 use Conjoon\Math\Operand;
 use Conjoon\Math\OperandList;
-use Conjoon\Core\Util\AbstractList;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**
