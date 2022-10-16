@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonProblem;
 
 use BadMethodCallException;
+use Conjoon\Data\ParameterBag;
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
@@ -113,5 +114,71 @@ class AbstractProblemTest extends TestCase
         $strategy->expects($this->once())->method("toJson")->with($problem)->willReturn($problem->toArray());
 
         $this->assertEquals($problem->toJson($strategy), $problem->toArray());
+    }
+
+
+    /**
+     * Tests members and functionality related to additional details.
+     *
+     * @return void
+     */
+    public function testAdditionalDetails(): void
+    {
+        $args = ["title", "detail", "instance", "type"];
+        $problem = $this->getMockForAbstractClass(
+            AbstractProblem::class,
+            $args
+        );
+
+        $this->assertNull($problem->getAdditionalDetails());
+
+        $getParameterBag = function () {
+            $parameterBag = new ParameterBag();
+            $parameterBag->parameter = [
+                "name"  => "pName",
+                "value" => "pValue"
+            ];
+            return $parameterBag;
+        };
+
+        $problem->setAdditionalDetails($getParameterBag());
+        $this->assertEquals($getParameterBag(), $problem->getAdditionalDetails());
+        $this->assertEqualsCanonicalizing(
+            array_merge($args, [
+                "additionalDetails" => [
+                    "parameter" => [
+                        "name"  => "pName",
+                        "value" => "pValue"
+                    ]
+                ]
+            ]),
+            $problem->toJson()
+        );
+
+        $problem = $this->getMockForAbstractClass(AbstractProblem::class, $args);
+        $problem->setAdditionalDetails($getParameterBag(), "keys");
+        $this->assertEqualsCanonicalizing(
+            array_merge($args, [
+                "keys" => [
+                    "parameter" => [
+                        "name"  => "pName",
+                        "value" => "pValue"
+                    ]
+                ]
+            ]),
+            $problem->toJson()
+        );
+
+
+        $problem = $this->getMockForAbstractClass(AbstractProblem::class, $args);
+        $problem->setAdditionalDetails($getParameterBag(), null);
+        $this->assertEqualsCanonicalizing(
+            array_merge($args, [
+                "parameter" => [
+                    "name"  => "pName",
+                    "value" => "pValue"
+                ]]),
+            $problem->toJson()
+        );
     }
 }

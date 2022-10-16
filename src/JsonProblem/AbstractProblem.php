@@ -33,11 +33,16 @@ use BadMethodCallException;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
+use Conjoon\Data\ParameterBag;
 
 /**
  * Abstract base class for representatives according to rfc7807.
- *
  * @see https://datatracker.ietf.org/doc/html/rfc7807
+ *
+ * A JsonProblem can carry additional details about the error/problem
+ * the API has encountered.
+ * In this implementation, additional details about the error can be
+ * set and get via set-/getAdditionalDetails().
  *
  *
  * Class AbstractProblem
@@ -101,6 +106,22 @@ abstract class AbstractProblem implements Jsonable, Arrayable
 
 
     /**
+     * A ParameterBag containing key/value pairs with additional details about the
+     * problem that occurred.
+     *
+     * @var ?ParameterBag
+     */
+    protected ?ParameterBag $additionalDetails = null;
+
+
+    /**
+     * The key in the array produced with toArray(), under which the $additionalDetails can be queried.
+     * @var string|null
+     */
+    protected ?string $additionalDetailsKey = "additionalDetails";
+
+
+    /**
      * AbstractProblem constructor.
      *
      * @param string|null $title
@@ -158,7 +179,48 @@ abstract class AbstractProblem implements Jsonable, Arrayable
             "type" => $this->type
         ];
 
+        if ($this->getAdditionalDetails()) {
+            if ($this->additionalDetailsKey !== null) {
+                $data = array_merge($data, [
+                    $this->additionalDetailsKey => $this->getAdditionalDetails()->toJson()
+                ]);
+            } else {
+                $data = array_merge($data, $this->getAdditionalDetails()->toJson());
+            }
+        }
+
         return array_filter($data, fn ($v) => !empty($v));
+    }
+
+
+    /**
+     * Sets additional details for this Problem.
+     *
+     * @param ParameterBag $bag
+     * @param string|false|null $key If set to a string, the additionalData will be made available
+     * under this key in the array resulting with toArray(). If null, the keys available with the
+     * ParameterBag will be directly merged into the resulting array.
+     *
+     * @return void
+     */
+    public function setAdditionalDetails(ParameterBag $bag, string|false|null $key = false): void
+    {
+        $this->additionalDetails = $bag;
+
+        if ($key !== false) {
+            $this->additionalDetailsKey = $key;
+        }
+    }
+
+
+    /**
+     * Returns the additional details for this Problem.
+     *
+     * @return ParameterBag|null
+     */
+    public function getAdditionalDetails(): ?ParameterBag
+    {
+        return $this->additionalDetails;
     }
 
 
