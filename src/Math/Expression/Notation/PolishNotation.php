@@ -56,7 +56,7 @@ class PolishNotation implements StringStrategy
     /**
      * Transforms the $target into polish notation.
      *
-     * @param mixed $target
+     * @param Stringable $target
      *
      * @return string
      *
