@@ -27,32 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Error;
+namespace Tests\Conjoon\Error;
 
 use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Error\ErrorObject;
+use Tests\TestCase;
 
 /**
- * Stores and exposes information about entities causing errors modeled with this interface.
+ * tests Error
  */
-interface Error extends Arrayable
+class ErrorObjectTest extends TestCase
 {
     /**
-     * Returns the source that caused this error.
-     *
-     * @retun ErrorSource
+     * Tests functionality
      */
-    public function getSource(): ErrorSource;
-
-    /**
-     * Returns details about the error.
-     *
-     * @return string
-     */
-    public function getDetails(): string;
-
-    /**
-     * Returns a code this error can be identified with.
-     * @return int
-     */
-    public function getCode(): int;
+    public function testClass()
+    {
+        $error = $this->createMockForAbstract(ErrorObject::class);
+        $this->assertInstanceOf(Arrayable::class, $error);
+    }
 }

@@ -32,7 +32,7 @@ namespace Conjoon\Error;
 /**
  * Abstract representation of an error.
  */
-abstract class AbstractError implements Error
+abstract class AbstractError implements ErrorObject
 {
     /**
      * @var string

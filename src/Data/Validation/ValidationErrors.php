@@ -31,12 +31,12 @@ namespace Conjoon\Data\Validation;
 
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
-use Conjoon\Error\Errors;
+use Conjoon\Error\ErrorObjectList;
 
 /**
  * A list for managing validation errors.
  */
-class ValidationErrors extends Errors implements Jsonable
+class ValidationErrors extends ErrorObjectList implements Jsonable
 {
     /**
      * @inheritdoc

@@ -34,14 +34,14 @@ use Conjoon\Core\AbstractList;
 /**
  * A list for managing errors.
  */
-class Errors extends AbstractList
+class ErrorObjectList extends AbstractList
 {
     /**
      * @inheritdoc
      */
     public function getEntityType(): string
     {
-        return Error::class;
+        return ErrorObject::class;
     }
 
 

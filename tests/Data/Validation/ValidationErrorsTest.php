@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Data\Validation;
 
-use Conjoon\Error\Errors;
+use Conjoon\Error\ErrorObjectList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
 use Tests\JsonableTestTrait;
@@ -48,7 +48,7 @@ class ValidationErrorsTest extends TestCase
     public function testClass()
     {
         $list = $this->createList();
-        $this->assertInstanceOf(Errors::class, $list);
+        $this->assertInstanceOf(ErrorObjectList::class, $list);
         $this->assertSame(ValidationError::class, $list->getEntityType());
     }
 

@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\Data\Validation;
 
 use Conjoon\Core\Exception\UnexpectedTypeException;
-use Conjoon\Error\Errors;
+use Conjoon\Error\ErrorObjectList;
 
 /**
  * Contract for implementing validation rules.

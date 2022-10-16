@@ -29,21 +29,61 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Error;
 
-use Conjoon\Core\Contract\Arrayable;
-use Conjoon\Error\Error;
+use Conjoon\Error\ErrorObjectList;
+use Conjoon\Error\ErrorObject;
+use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**
- * tests Error
+ * tests Errors
  */
-class ErrorTest extends TestCase
+class ErrorObjectListTest extends TestCase
 {
     /**
-     * Tests functionality
+     * Tests constructor
      */
     public function testClass()
     {
-        $error = $this->createMockForAbstract(Error::class);
-        $this->assertInstanceOf(Arrayable::class, $error);
+        $list = $this->createList();
+        $this->assertInstanceOf(AbstractList::class, $list);
+        $this->assertSame(ErrorObject::class, $list->getEntityType());
+    }
+
+
+    /**
+     * Tests hasError
+     */
+    public function testHasError()
+    {
+        $list = $this->createList();
+        $this->assertFalse($list->hasError());
+
+        $list[] = $this->createMockForAbstract(ErrorObject::class);
+        $this->assertTrue($list->hasError());
+    }
+
+
+    /**
+     * tests toArray()
+     * @return void
+     */
+    public function testToArray(): void
+    {
+        $list = $this->createList();
+
+        $error = $this->createMockForAbstract(ErrorObject::class, ["toArray"]);
+        $error->expects($this->once())->method("toArray")->willReturn([]);
+        $list[] = $error;
+
+        $this->assertSame([[]], $list->toArray());
+    }
+
+
+    /**
+     * @return Errors
+     */
+    protected function createList(): ErrorObjectList
+    {
+        return new ErrorObjectList();
     }
 }

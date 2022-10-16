@@ -27,64 +27,32 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Error;
+namespace Conjoon\Error;
 
-use Conjoon\Error\Errors;
-use Conjoon\Error\Error;
-use Conjoon\Core\AbstractList;
-use Tests\TestCase;
+use Conjoon\Core\Contract\Arrayable;
 
 /**
- * tests Errors
+ * Stores and exposes information about entities causing errors modeled with this interface.
  */
-class ErrorsTest extends TestCase
+interface ErrorObject extends Arrayable
 {
     /**
-     * Tests constructor
+     * Returns the source that caused this error.
+     *
+     * @retun ErrorSource
      */
-    public function testClass()
-    {
-        $list = $this->createList();
-        $this->assertInstanceOf(AbstractList::class, $list);
-
-        $this->assertSame(Error::class, $list->getEntityType());
-    }
-
+    public function getSource(): ErrorSource;
 
     /**
-     * Tests hasError
+     * Returns details about the error.
+     *
+     * @return string
      */
-    public function testHasError()
-    {
-        $list = $this->createList();
-        $this->assertFalse($list->hasError());
-
-        $list[] = $this->createMockForAbstract(Error::class);
-        $this->assertTrue($list->hasError());
-    }
-
+    public function getDetails(): string;
 
     /**
-     * tests toArray()
-     * @return void
+     * Returns a code this error can be identified with.
+     * @return int
      */
-    public function testToArray(): void
-    {
-        $list = $this->createList();
-
-        $error = $this->createMockForAbstract(Error::class, ["toArray"]);
-        $error->expects($this->once())->method("toArray")->willReturn([]);
-        $list[] = $error;
-
-        $this->assertSame([[]], $list->toArray());
-    }
-
-
-    /**
-     * @return Errors
-     */
-    protected function createList(): Errors
-    {
-        return new Errors();
-    }
+    public function getCode(): int;
 }

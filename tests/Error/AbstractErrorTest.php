@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Error;
 
 use Conjoon\Error\AbstractError;
 use Conjoon\Error\AnonymousErrorSource;
-use Conjoon\Error\Error;
+use Conjoon\Error\ErrorObject;
 use Conjoon\Error\ErrorSource;
 use stdClass;
 use Tests\TestCase;
@@ -53,7 +53,7 @@ class AbstractErrorTest extends TestCase
             500
         ]);
 
-        $this->assertInstanceOf(Error::class, $error);
+        $this->assertInstanceOf(ErrorObject::class, $error);
         $this->assertSame($errorSource, $error->getSource());
         $this->assertSame("detail", $error->getDetails());
         $this->assertSame(500, $error->getCode());

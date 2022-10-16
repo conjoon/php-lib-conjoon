@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Data\Validation;
 
-use Conjoon\Error\Errors;
+use Conjoon\Error\ErrorObjectList;
 use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Http\Query\Query;
 
