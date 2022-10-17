@@ -58,8 +58,8 @@ class LaravelUrl implements Url
      */
     public function __construct(string $url, LaravelQuery $query)
     {
-        $this->query   = $query;
-        $this->url = $url;
+        $this->query = $query;
+        $this->url   = $url;
     }
 
 
