@@ -27,67 +27,21 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Http\Request;
+namespace Conjoon\Http;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Http\Query\Query;
-use Conjoon\Http\Request\Request;
-use Conjoon\Illuminate\Http\Query\LaravelQuery;
-use Conjoon\Illuminate\Http\LaravelUrl;
-use Illuminate\Http\Request as IlluminateRequest;
 
 /**
- * Adapter for Illuminate\Http\Request providing Request interface.
+ * Represents an URL.
  *
  */
-class LaravelRequest implements Request
+interface Url extends Stringable
 {
     /**
-     * @var IlluminateRequest
-     */
-    protected IlluminateRequest $request;
-
-
-    /**
-     * @var LaravelUrl
-     */
-    protected ?LaravelUrl $url = null;
-
-
-    /**
-     * Constructor.
+     * Returns the Query available with this url, if any.
      *
-     * @param IlluminateRequest $request
+     * @return Query|null
      */
-    public function __construct(IlluminateRequest $request)
-    {
-        $this->request = $request;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getUrl(): LaravelUrl
-    {
-        if (!$this->url) {
-            $this->url = new LaravelUrl(
-                $this->request->url(),
-                new LaravelQuery(
-                    $this->request->getQueryString(),
-                    $this->request->query()
-                )
-            );
-        }
-
-        return $this->url;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getMethod(): string
-    {
-        return $this->request->getMethod();
-    }
+    public function getQuery(): ?Query;
 }

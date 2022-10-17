@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Request;
 
-use Conjoon\Http\Query\Query;
+use Conjoon\Http\Url;
 
 /**
  * Represents an Http Request.
@@ -37,14 +37,6 @@ use Conjoon\Http\Query\Query;
  */
 interface Request
 {
-    /**
-     * Returns the Query available with this request, if any.
-     *
-     * @return Query|null
-     */
-    public function getQuery(): ?Query;
-
-
     /**
      * Returns the HTTP method this request was used with.
      *
@@ -54,9 +46,9 @@ interface Request
 
 
     /**
-     * Get the URL w/o the query string for the request.
+     * Get the URL for the request.
      *
-     * @return string
+     * @return Url
      */
-    public function getUrl(): string;
+    public function getUrl(): Url;
 }

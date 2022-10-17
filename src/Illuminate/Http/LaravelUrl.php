@@ -27,67 +27,56 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Http\Request;
+namespace Conjoon\Illuminate\Http;
 
-use Conjoon\Http\Query\Query;
-use Conjoon\Http\Request\Request;
+use Conjoon\Http\Url;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Illuminate\Http\Query\LaravelQuery;
-use Conjoon\Illuminate\Http\LaravelUrl;
-use Illuminate\Http\Request as IlluminateRequest;
 
 /**
- * Adapter for Illuminate\Http\Request providing Request interface.
- *
+ * LaravelUrl as an adapter for url-strings.
+ * Required by LaravelRequest.
  */
-class LaravelRequest implements Request
+class LaravelUrl implements Url
 {
     /**
-     * @var IlluminateRequest
+     * @var string
      */
-    protected IlluminateRequest $request;
-
+    protected string $url;
 
     /**
-     * @var LaravelUrl
+     * @var LaravelQuery
      */
-    protected ?LaravelUrl $url = null;
+    protected LaravelQuery $query;
 
 
     /**
      * Constructor.
      *
-     * @param IlluminateRequest $request
+     * @param string $url
+     * @param LaravelQuery $query
      */
-    public function __construct(IlluminateRequest $request)
+    public function __construct(string $url, LaravelQuery $query)
     {
-        $this->request = $request;
+        $this->query   = $query;
+        $this->url = $url;
     }
 
 
     /**
      * @inheritdoc
      */
-    public function getUrl(): LaravelUrl
+    public function toString(StringStrategy $stringStrategy = null): string
     {
-        if (!$this->url) {
-            $this->url = new LaravelUrl(
-                $this->request->url(),
-                new LaravelQuery(
-                    $this->request->getQueryString(),
-                    $this->request->query()
-                )
-            );
-        }
-
-        return $this->url;
+        return $stringStrategy ? $stringStrategy->toString($this) : $this->url;
     }
 
 
     /**
      * @inheritdoc
      */
-    public function getMethod(): string
+    public function getQuery(): LaravelQuery
     {
-        return $this->request->getMethod();
+        return $this->query;
     }
 }

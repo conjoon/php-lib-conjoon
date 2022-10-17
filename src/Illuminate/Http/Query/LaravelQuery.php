@@ -33,7 +33,6 @@ use Conjoon\Http\Query\ParameterList;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 use Conjoon\Http\Query\Parameter;
-use Illuminate\Http\Request;
 use Conjoon\Core\Contract\StringStrategy;
 
 /**
@@ -72,12 +71,13 @@ class LaravelQuery extends Query
     /**
      * Constructor.
      *
-     * @param Request $request
+     * @param string|null $queryString
+     * @param array $rawParameters
      */
-    public function __construct(Request $request)
+    public function __construct(string $queryString = null, array $rawParameters = [])
     {
-        $this->queryString   = $request->getQueryString() ?? "";
-        $this->rawParameters = $request->query();
+        $this->queryString   = $queryString ?? "";
+        $this->rawParameters = $rawParameters;
     }
 
 

@@ -48,7 +48,7 @@ class LaravelQueryTest extends TestCase
      */
     public function testClass()
     {
-        $query = new LaravelQuery(new Request());
+        $query = new LaravelQuery(null, []);
 
         $uses = class_uses(LaravelQuery::class);
         $this->assertContains(ParameterTrait::class, $uses);
@@ -63,7 +63,8 @@ class LaravelQueryTest extends TestCase
      */
     public function testGetParameter()
     {
-        $query = new LaravelQuery(new Request(["parameter" => "value"]));
+        $request = new Request(["parameter" => "value"]);
+        $query = new LaravelQuery($request->getQueryString(), $request->query());
 
         $parameter = $query->getParameter("parameter");
         $this->assertNotNull($parameter);
@@ -85,9 +86,10 @@ class LaravelQueryTest extends TestCase
      */
     public function testGetParameterWithBrackets()
     {
-        $query = new LaravelQuery(new Request([
+        $request = new Request([
             "fields" => ["A" => "valueA", "B" => "valueB"]
-        ]));
+        ]);
+        $query = new LaravelQuery($request->getQueryString(), $request->query());
 
         $this->assertNull($query->getParameter("fields"));
 
@@ -110,12 +112,14 @@ class LaravelQueryTest extends TestCase
      */
     public function testGetAllParameterNames()
     {
-        $query = new LaravelQuery(new Request());
+        $query = new LaravelQuery(null, []);
         $this->assertEquals([], $query->getAllParameterNames());
 
-        $query = new LaravelQuery(new Request([
+        $request = new Request([
             "C" => "D", "fields" => ["A" => "valueA", "B" => "valueB"]
-        ]));
+        ]);
+        $query = new LaravelQuery($request->getQueryString(), $request->query());
+
 
         $this->assertEquals(["C", "fields[A]", "fields[B]"], $query->getAllParameterNames());
     }
@@ -127,12 +131,13 @@ class LaravelQueryTest extends TestCase
      */
     public function testGetAllParameters()
     {
-        $query = new LaravelQuery(new Request());
+        $query = new LaravelQuery();
         $this->assertEquals([], $query->getAllParameters()->toArray());
 
-        $query = new LaravelQuery(new Request([
+        $request = new Request([
             "C" => "D", "fields" => ["A" => "valueA", "B" => "valueB"]
-        ]));
+        ]);
+        $query = new LaravelQuery($request->getQueryString(), $request->query());
 
         $list = $query->getAllParameters();
         $this->assertSame($list, $query->getAllParameters());
@@ -151,7 +156,7 @@ class LaravelQueryTest extends TestCase
      */
     public function testGetSource()
     {
-        $query = new LaravelQuery(new Request());
+        $query = new LaravelQuery();
         $this->assertSame($query, $query->getSource());
     }
 
@@ -167,7 +172,7 @@ class LaravelQueryTest extends TestCase
 
         $request->expects($this->exactly(2))->method("getQueryString")->willReturn("query=string");
 
-        $query = new LaravelQuery($request);
+        $query = new LaravelQuery($request->getQueryString(), $request->query());
 
         $this->assertSame($request->getQueryString(), $query->toString());
         $this->assertSame($query->toString(), $query->getName());

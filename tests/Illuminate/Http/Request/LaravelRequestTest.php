@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Http\Request;
 
 use Conjoon\Http\Request\Request;
-use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Conjoon\Illuminate\Http\LaravelUrl;
 use Conjoon\Illuminate\Http\Request\LaravelRequest;
 use Tests\TestCase;
 use Illuminate\Http\Request as IlluminateRequest;
@@ -55,10 +55,9 @@ class LaravelRequestTest extends TestCase
         $this->assertInstanceOf(Request::class, $request);
 
         $this->assertSame("GET", $request->getMethod());
-        $this->assertSame($url, $request->getUrl());
 
-        $this->assertInstanceOf(LaravelQuery::class, $request->getQuery());
-        $this->assertSame($queryString, $request->getQuery()->toString());
-        $this->assertSame("string", $request->getQuery()->getParameter("query")->getValue());
+        $this->assertInstanceOf(LaravelUrl::class, $request->getUrl());
+        $this->assertSame($queryString, $request->getUrl()->getQuery()->toString());
+        $this->assertSame("string", $request->getUrl()->getQuery()->getParameter("query")->getValue());
     }
 }

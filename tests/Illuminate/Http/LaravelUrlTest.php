@@ -27,67 +27,47 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Http\Request;
+namespace Tests\Conjoon\Illuminate\Http;
 
-use Conjoon\Http\Query\Query;
-use Conjoon\Http\Request\Request;
-use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Conjoon\Http\Url;
 use Conjoon\Illuminate\Http\LaravelUrl;
-use Illuminate\Http\Request as IlluminateRequest;
+use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Tests\StringableTestTrait;
+use Tests\TestCase;
 
 /**
- * Adapter for Illuminate\Http\Request providing Request interface.
- *
+ * Tests LaravelUrl.
  */
-class LaravelRequest implements Request
+class LaravelUrlTest extends TestCase
 {
-    /**
-     * @var IlluminateRequest
-     */
-    protected IlluminateRequest $request;
-
+    use StringableTestTrait;
 
     /**
-     * @var LaravelUrl
+     * Class functionality
      */
-    protected ?LaravelUrl $url = null;
-
-
-    /**
-     * Constructor.
-     *
-     * @param IlluminateRequest $request
-     */
-    public function __construct(IlluminateRequest $request)
+    public function testClass()
     {
-        $this->request = $request;
+        $urlString = "http://www.localhost.com:8080/index.php";
+
+        $query = $this->getMockBuilder(LaravelQuery::class)->disableOriginalConstructor()->getMock();
+        $url = new LaravelUrl(
+            $urlString,
+            $query
+        );
+
+        $this->assertInstanceOf(Url::class, $url);
+
+        $this->assertSame($urlString, $url->toString());
+        $this->assertSame($query, $url->getQuery());
     }
 
 
     /**
-     * @inheritdoc
+     * Tests toString()
+     * @return void
      */
-    public function getUrl(): LaravelUrl
+    public function testToString(): void
     {
-        if (!$this->url) {
-            $this->url = new LaravelUrl(
-                $this->request->url(),
-                new LaravelQuery(
-                    $this->request->getQueryString(),
-                    $this->request->query()
-                )
-            );
-        }
-
-        return $this->url;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getMethod(): string
-    {
-        return $this->request->getMethod();
+        $this->runToStringTest(LaravelUrl::class);
     }
 }
