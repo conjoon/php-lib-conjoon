@@ -31,12 +31,15 @@ namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
+use Conjoon\Http\Url as HttpUrl;
+use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request;
 use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -50,19 +53,29 @@ class RequestTest extends TestCase
     public function testClass()
     {
         $resourceTarget = $this->createResourceTarget();
-        $decoratedRequest = $this->createRequest(["getMethod", "getUrl", "getQuery"]);
+        $decoratedRequest = $this->createRequest(["getMethod", "getUrl"]);
+
+        $wrappedQuery = $this->getMockBuilder(HttpQuery::class)->disableOriginalConstructor()->getMock();
 
         $method = "GET";
-        $url = "http://localhost:8080";
+        $decoratedUrl = $this->getMockBuilder(HttpUrl::class)
+                             ->disableOriginalConstructor()
+                             ->onlyMethods(["toString", "getQuery"])
+                             ->getMock();
+        $decoratedUrl->expects($this->any())->method("toString")->willReturn("URL!");
+        $decoratedUrl->expects($this->any())->method("getQuery")->willReturn($wrappedQuery);
 
         $decoratedRequest->expects($this->once())->method("getMethod")->willReturn($method);
-        $decoratedRequest->expects($this->once())->method("getUrl")->willReturn($url);
+        $decoratedRequest->expects($this->any())->method("getUrl")->willReturn($decoratedUrl);
 
         $request = new Request($decoratedRequest, $resourceTarget);
 
         $this->assertNull($request->getQueryValidator());
         $this->assertSame($method, $request->getMethod());
-        $this->assertSame($url, $request->getUrl());
+        $this->assertInstanceOf(JsonApiUrl::class, $request->getUrl());
+        $this->assertInstanceOf(JsonApiQuery::class, $request->getUrl()->getQuery());
+        $this->assertSame($decoratedUrl->toString(), $request->getUrl()->toString());
+
 
         $this->assertInstanceOf(HttpRequest::class, $request);
         $this->assertSame($resourceTarget, $request->getResourceTarget());
@@ -101,7 +114,8 @@ class RequestTest extends TestCase
      */
     public function testValidate()
     {
-        $query = $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock();
+        $url = $this->getMockBuilder(JsonApiUrl::class)->disableOriginalConstructor()->getMock();
+        $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
 
         $resourceTarget   = $this->createResourceTarget();
         $decoratedRequest = $this->createRequest();
@@ -118,9 +132,10 @@ class RequestTest extends TestCase
 
         $request = $this->getMockBuilder(Request::class)->enableOriginalConstructor()->setConstructorArgs(
             [$decoratedRequest, $resourceTarget, $validator]
-        )->onlyMethods(["getQuery"])->getMock();
+        )->onlyMethods(["getUrl"])->getMock();
 
-        $request->expects($this->once())->method("getQuery")->willReturn($query);
+        $request->expects($this->once())->method("getUrl")->willReturn($url);
+        $url->expects($this->once())->method("getQuery")->willReturn($query);
 
         $errors = $request->validate();
 
@@ -132,42 +147,45 @@ class RequestTest extends TestCase
 
 
     /**
-     * tests getQuery()
+     * tests getUrl()
+     * @throws ReflectionException
      */
     public function testGetQuery()
     {
-        $query = $this->createQuery();
+        $httpQuery = $this->createMockForAbstract(HttpQuery::class);
+        $httpUrl = $this->createMockForAbstract(HttpUrl::class, ["getQuery", "toString"]);
+        $httpUrl->expects($this->once())->method("getQuery")->willReturn($httpQuery);
+        $httpUrl->expects($this->once())->method("toString")->willReturn("URL!");
+
         $resourceTarget = $this->createResourceTarget();
 
-        $decoratedRequest = $this->createRequest(["getQuery"]);
-        $decoratedRequest->expects($this->any())->method("getQuery")->willReturn($query);
+        $decoratedRequest = $this->createRequest(["getUrl"]);
+        $decoratedRequest->expects($this->any())->method("getUrl")->willReturn($httpUrl);
 
         $request = new Request($decoratedRequest, $resourceTarget);
 
-        $jsonApiQuery = $request->getQuery();
-        $this->assertInstanceOf(Query::class, $jsonApiQuery);
-        $this->assertSame($jsonApiQuery, $request->getQuery());
+        $jsonApiUrl = $request->getUrl();
+        $this->assertInstanceOf(JsonApiUrl::class, $jsonApiUrl);
+        $this->assertSame($jsonApiUrl, $request->getUrl());
+        $this->assertSame($jsonApiUrl->toString(), $request->getUrl()->toString());
+
+        $jsonApiQuery = $jsonApiUrl->getQuery();
         $this->assertSame($resourceTarget, $jsonApiQuery->getResourceTarget());
 
+        $wrappedQuery = $this->makeAccessible($jsonApiQuery, "query", true);
 
-        // null
-        $decoratedRequest = $this->createRequest(["getQuery"]);
-        $decoratedRequest->expects($this->any())->method("getQuery")->willReturn(null);
+        $this->assertSame($wrappedQuery->getValue($jsonApiQuery), $httpQuery);
 
-        $request = new Request($decoratedRequest, $resourceTarget);
-
-        $jsonApiQuery = $request->getQuery();
-        $this->assertNull($jsonApiQuery);
-        $this->assertSame($jsonApiQuery, $request->getQuery());
+        $this->assertSame($jsonApiUrl, $request->getUrl());
     }
 
 
     /**
      * @return MockObject
      */
-    protected function createQuery(): MockObject
+    protected function createUrl(): MockObject
     {
-        return $this->createMockForAbstract(HttpQuery::class);
+        return $this->createMockForAbstract(HttpUrl::class);
     }
 
 

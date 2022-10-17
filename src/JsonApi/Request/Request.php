@@ -34,6 +34,7 @@ use Conjoon\Http\Query\Query;
 use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
+use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 
 /**
@@ -55,9 +56,9 @@ class Request implements HttpRequest
 
 
     /**
-     * @var JsonApiQuery|null
+     * @var JsonApiUrl
      */
-    protected ?JsonApiQuery $query = null;
+    protected ?JsonApiUrl $url = null;
 
 
     /**
@@ -87,23 +88,21 @@ class Request implements HttpRequest
     /**
      * @inheritdoc
      */
-    public function getQuery(): ?JsonApiQuery
+    public function getUrl(): JsonApiUrl
     {
-        if ($this->query) {
-            return $this->query;
+        if ($this->url) {
+            return $this->url;
         }
 
-        $query = $this->request->getQuery();
+        $this->url = new JsonApiUrl(
+            $this->request->getUrl()->toString(),
+            new JsonApiQuery(
+                $this->request->getUrl()->getQuery(),
+                $this->getResourceTarget()
+            )
+        );
 
-        if (!$query) {
-            return null;
-        }
-
-        $resourceTarget = $this->getResourceTarget();
-
-        $this->query = new JsonApiQuery($query, $resourceTarget);
-
-        return $this->query;
+        return $this->url;
     }
 
 
@@ -113,15 +112,6 @@ class Request implements HttpRequest
     public function getMethod(): string
     {
         return $this->request->getMethod();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getUrl(): string
-    {
-        return $this->request->getUrl();
     }
 
 
@@ -160,7 +150,7 @@ class Request implements HttpRequest
             return $errors;
         }
 
-        $query = $this->getQuery();
+        $query = $this->getUrl()->getQuery();
         $validator->validate($query, $errors);
 
         return $errors;
