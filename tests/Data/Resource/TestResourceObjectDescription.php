@@ -37,19 +37,49 @@ use Conjoon\Data\Resource\ObjectDescriptionList;
  */
 class TestResourceObjectDescription extends ObjectDescription
 {
+    protected ?int $one ;
+    protected ?int $two;
+    protected ?int $three;
+
+    public function __construct($one = null, $two = null, $three = null)
+    {
+        $this->one = $one;
+        $this->two = $two;
+        $this->three = $three;
+    }
+
+    public function getOne()
+    {
+        return $this->one;
+    }
+
+    public function getTwo()
+    {
+        return $this->two;
+    }
+
+    public function getThree()
+    {
+        return $this->three;
+    }
+
     public function getType(): string
     {
+        return "";
     }
 
     public function getRelationships(): ObjectDescriptionList
     {
+        return new ObjectDescriptionList();
     }
 
     public function getFields(): array
     {
+        return [];
     }
 
     public function getDefaultFields(): array
     {
+        return [];
     }
 }

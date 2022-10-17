@@ -45,12 +45,11 @@ class ClassLookup
      *
      * @param string $fqn The fqn of the class that should be loaded
      * @param string $baseClass The base class the class to load must extend
-     *
+     * @param array $args
      * @return mixed
      *
-     * @throws ClassNotFoundException|InvalidTypeException
      */
-    public function load(string $fqn, string $baseClass): mixed
+    public function load(string $fqn, string $baseClass, array $args = []): mixed
     {
         if (!class_exists($fqn)) {
             throw new ClassNotFoundException(
@@ -64,6 +63,6 @@ class ClassLookup
             );
         }
 
-        return new $fqn();
+        return new $fqn(...$args);
     }
 }

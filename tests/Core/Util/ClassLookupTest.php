@@ -76,6 +76,25 @@ class ClassLookupTest extends TestCase
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
             "Conjoon\\Data\\Resource\\ObjectDescription"
         );
+        $this->assertNull($inst->getOne());
+        $this->assertNull($inst->getTwo());
+        $this->assertNull($inst->getThree());
+
+        $this->assertInstanceOf(
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            $inst
+        );
+
+        $lookup = new ClassLookup();
+
+        $inst = $lookup->load(
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            "Conjoon\\Data\\Resource\\ObjectDescription",
+            [1, 2, 3]
+        );
+        $this->assertSame(1, $inst->getOne());
+        $this->assertSame(2, $inst->getTwo());
+        $this->assertSame(3, $inst->getThree());
 
         $this->assertInstanceOf(
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
