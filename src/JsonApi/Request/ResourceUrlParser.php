@@ -127,6 +127,30 @@ class ResourceUrlParser
 
 
     /**
+     * Returns false if the submitted $url could be parsed given the available
+     * $resourceUrlRegexList and represents a request to a single resource, true
+     * if it represents a request to a resource collection.
+     * Returns null if no configured regex matched the url.
+     *
+     * @param string $url
+     *
+     * @return bool|null
+     */
+    public function representsCollection(string $url): bool|null
+    {
+        $matchers = $this->getResourceUrlRegexList();
+
+        foreach ($matchers as $resourceUrlRegex) {
+            if ($resourceUrlRegex->getResourceName($url) !== null) {
+                return !$resourceUrlRegex->isSingleRequest($url);
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
      * @return string
      */
     public function getTemplate(): string

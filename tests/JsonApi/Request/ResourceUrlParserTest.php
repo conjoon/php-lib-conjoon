@@ -99,6 +99,34 @@ class ResourceUrlParserTest extends TestCase
 
 
     /**
+     * Tests representsCollection()
+     * @return void
+     */
+    public function testRepresentsCollection(): void
+    {
+        $list = $this->createList();
+        $template = "{0}Resource";
+        $collectionTemplate = "Collection{0}";
+
+        $parser = new ResourceUrlParser(
+            $list,
+            $template,
+            $collectionTemplate
+        );
+
+        $this->assertNull(
+            $parser->representsCollection("MailAccounts/MailFolders/INBOX")
+        );
+        $this->assertTrue(
+            $parser->representsCollection("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+        );
+        $this->assertFalse(
+            $parser->representsCollection("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+        );
+    }
+
+
+    /**
      * Tests parser without submitting a singeIndex to the reqex
      * @return void
      */
