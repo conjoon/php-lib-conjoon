@@ -45,6 +45,7 @@ class ParameterTraitTest extends TestCase
     {
         $tests = [
             "fields[MailFolder]" => true,
+            "fields[]" => true,
             "fields" => false,
             "parameter" => false,
             "fields[MailFolder.MailAccount]" => true
@@ -63,6 +64,7 @@ class ParameterTraitTest extends TestCase
     {
         $tests = [
             "fields[MailFolder]" => "fields",
+            "foo[]" => "foo",
             "fields" => null,
             "parameter" => null,
             "A[MailFolder.MailAccount]" => "A"
@@ -83,6 +85,7 @@ class ParameterTraitTest extends TestCase
         $tests = [
             "fields[MailFolder]" => "MailFolder",
             "fields" => null,
+            "fields[]" => null,
             "parameter" => null,
             "A[MailFolder.MailAccount]" => "MailFolder.MailAccount"
         ];
@@ -95,7 +98,7 @@ class ParameterTraitTest extends TestCase
 
 
     /**
-     * @return __anonymous@2784
+     * @return __anonymous
      */
     protected function getTrait()
     {

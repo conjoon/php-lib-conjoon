@@ -37,7 +37,7 @@ trait ParameterTrait
     /**
      * @const GROUP_REGEX
      */
-    protected string $GROUP_REGEX = "/(.*)\[(.{1,})\]/m";
+    protected string $GROUP_REGEX = "/(.*)\[(.*)\]/m";
 
 
     /**
@@ -45,6 +45,7 @@ trait ParameterTrait
      *
      * @example
      *    $this->isGroupParameter(new Parameter("fields[TYPE]", ""); // true
+     *    $this->isGroupParameter(new Parameter("fields[]", ""); // true
      *    $this->isGroupParameter(new Parameter("fields", ""); // false
      *
      * @param string|Parameter $parameter
@@ -64,6 +65,7 @@ trait ParameterTrait
      *
      * @example
      *    $this->getGroupName(new Parameter("fields[TYPE]", ""); // "fields"
+     *    $this->getGroupName(new Parameter("fields[]", ""); // "fields"
      *    $this->getGroupName(new Parameter("fields", ""); // null
      *
      * @param string|Parameter $parameter
@@ -115,7 +117,7 @@ trait ParameterTrait
         );
 
         if ($found) {
-            return $matches[0][2];
+            return $matches[0][2] !== "" ? $matches[0][2] : null;
         }
 
         return null;
