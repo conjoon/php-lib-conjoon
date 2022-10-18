@@ -30,7 +30,6 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Query;
 use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
@@ -38,7 +37,7 @@ use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 
 /**
- * Request specific for JSON:API, containing resource target ObjectDescriptions.
+ * Request specific for JSON:API.
  *
  */
 class Request implements HttpRequest
@@ -47,12 +46,6 @@ class Request implements HttpRequest
      * @var HttpRequest
      */
     protected HttpRequest $request;
-
-
-    /**
-     * @var ObjectDescription
-     */
-    protected ObjectDescription $resourceTarget;
 
 
     /**
@@ -76,11 +69,9 @@ class Request implements HttpRequest
      */
     public function __construct(
         HttpRequest $request,
-        ObjectDescription $resourceTarget,
         Validator $queryValidator = null
     ) {
         $this->request = $request;
-        $this->resourceTarget = $resourceTarget;
         $this->queryValidator = $queryValidator;
     }
 
@@ -122,7 +113,7 @@ class Request implements HttpRequest
      */
     public function getResourceTarget(): ObjectDescription
     {
-        return $this->resourceTarget;
+        return $this->getUrl()->getResourceTarget();
     }
 
 

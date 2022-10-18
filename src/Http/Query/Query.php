@@ -29,23 +29,95 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Query;
 
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Data\ParameterBag;
 use Conjoon\Error\ErrorSource;
 
 /**
  * Interface used to control Http-Queries.
  */
-abstract class Query implements ErrorSource
+class Query implements ErrorSource
 {
+    use ParameterTrait;
+
+    /**
+     * @var string
+     */
+    protected string $queryString;
+
+    /**
+     * @var array
+     */
+    protected array $parsedParameters = [];
+
+    /**
+     * @var array
+     */
+    protected array $parameterList = [];
+
+
+    /**
+     * @var ParameterList|null
+     */
+    protected ?ParameterList $list = null;
+
+
+    /**
+     * Constructor.
+     *
+     * @param string $queryString
+     */
+    public function __construct(string $queryString = null)
+    {
+        if ($queryString) {
+            parse_str($queryString, $this->parsedParameters);
+        }
+
+        $this->queryString = $queryString ?? "";
+    }
+
     /**
      * Gets the parameter from this Query. Returns null if no parameter with the
      * name exists with this query.
      *
      * @param string $name
-     *
      * @return Parameter|null
      */
-    abstract public function getParameter(string $name): ?Parameter;
+    public function getParameter(string $name): ?Parameter
+    {
+        if (array_key_exists($name, $this->parameterList)) {
+            return $this->parameterList[$name];
+        }
+        $exists = array_key_exists($name, $this->parsedParameters) ;
+
+        if ($exists && !is_array($this->parsedParameters[$name])) {
+            $this->parameterList[$name] = new Parameter($name, $this->parsedParameters[$name]);
+            return $this->parameterList[$name];
+        }
+
+        if ($this->isGroupParameter($name)) {
+            $groupName = $this->getGroupName($name);
+
+            if ($groupName) {
+                $groups = $this->parsedParameters[$groupName];
+
+                if (is_array($groups)) {
+                    foreach ($groups as $iName => $value) {
+                        if ($name === $groupName . "[" . $iName . "]") {
+                            $this->parameterList[$name] = new Parameter($name, $value);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!array_key_exists($name, $this->parameterList)) {
+            $this->parameterList[$name] = null;
+        }
+
+        return $this->parameterList[$name];
+    }
 
 
     /**
@@ -53,7 +125,28 @@ abstract class Query implements ErrorSource
      *
      * @return ParameterList
      */
-    abstract public function getAllParameters(): ParameterList;
+    public function getAllParameters(): ParameterList
+    {
+        if ($this->list) {
+            return $this->list;
+        }
+
+        $list = new ParameterList();
+
+        foreach ($this->parsedParameters as $key => $value) {
+            if (is_array($value)) {
+                foreach ($value as $groupName => $groupValue) {
+                    $fieldName = $key . "[" . $groupName . "]";
+                    $list[] = $this->getParameter($fieldName);
+                }
+            } else {
+                $list[] = $this->getParameter($key);
+            }
+        }
+
+        $this->list = $list;
+        return $list;
+    }
 
 
     /**
@@ -62,7 +155,10 @@ abstract class Query implements ErrorSource
      *
      * @return array
      */
-    abstract public function getAllParameterNames(): array;
+    public function getAllParameterNames(): array
+    {
+        return $this->getAllParameters()->map(fn ($param) => $param->getName());
+    }
 
 
     /**
@@ -70,8 +166,47 @@ abstract class Query implements ErrorSource
      *
      * @return ParameterBag
      */
-    public function getParameterBag(): ParameterBag
+    function getParameterBag(): ParameterBag
     {
         return new ParameterBag($this->getAllParameters()->toArray());
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function getName(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSource(): object
+    {
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        if ($stringStrategy) {
+            return $stringStrategy->toString($this);
+        }
+
+        return $this->queryString;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function toArray(): array
+    {
+        return [
+            "query" => $this->toString()
+        ];
     }
 }

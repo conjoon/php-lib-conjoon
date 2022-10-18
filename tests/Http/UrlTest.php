@@ -27,18 +27,17 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Illuminate\Http;
+namespace Tests\Conjoon\Http;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Http\Url;
-use Conjoon\Illuminate\Http\LaravelUrl;
-use Conjoon\Illuminate\Http\Query\LaravelQuery;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
  * Tests LaravelUrl.
  */
-class LaravelUrlTest extends TestCase
+class UrlTest extends TestCase
 {
     use StringableTestTrait;
 
@@ -47,18 +46,34 @@ class LaravelUrlTest extends TestCase
      */
     public function testClass()
     {
-        $urlString = "http://www.localhost.com:8080/index.php";
+        $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
+        $url = new Url($urlString);
+        $this->assertInstanceOf(Stringable::class, $url);
+    }
 
-        $query = $this->getMockBuilder(LaravelQuery::class)->disableOriginalConstructor()->getMock();
-        $url = new LaravelUrl(
-            $urlString,
-            $query
-        );
 
-        $this->assertInstanceOf(Url::class, $url);
+    /**
+     * Tests getQuery()
+     * @return void
+     */
+    public function testGetQuery()
+    {
+        $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
+        $url = new Url($urlString);
+        $query = $url->getQuery();
 
-        $this->assertSame($urlString, $url->toString());
+        $this->assertNotNull($query);
+        $this->assertSame("foo=bar", $query->toString());
+        // always yields same result
         $this->assertSame($query, $url->getQuery());
+
+        // null query
+        $urlString = "http://www.localhost.com:8080/index.php?";
+        $url = new Url($urlString);
+        // always yields same result
+        $this->assertNull($url->getQuery());
+        $this->assertNull($url->getQuery());
+
     }
 
 
@@ -68,6 +83,9 @@ class LaravelUrlTest extends TestCase
      */
     public function testToString(): void
     {
-        $this->runToStringTest(LaravelUrl::class);
+        $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
+        $url = new Url($urlString);
+        $this->assertSame($urlString, $url->toString());
+        $this->runToStringTest(Url::class);
     }
 }

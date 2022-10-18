@@ -31,7 +31,9 @@ namespace Tests\Conjoon\Http\Query;
 
 use Conjoon\Http\Query\Parameter;
 use Conjoon\Http\Query\ParameterList;
+use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
+use Tests\StringableTestTrait;
 use Tests\TestCase;
 
 /**
@@ -40,18 +42,149 @@ use Tests\TestCase;
  */
 class QueryTest extends TestCase
 {
+
+    use StringableTestTrait;
+
     /**
      * Class functionality
      */
-    public function testGetParameterBag()
+    public function testClass()
     {
-        $query = $this->createMockForAbstract(Query::class, ["getParameters"]);
+        $query = new Query();
 
-        $parameterList = new ParameterList();
-        $parameterList[] = new Parameter("fields[MessageItem]", "a,b,c");
-        $parameterList[] = new Parameter("sort", "subject,-date");
+        $uses = class_uses(Query::class);
+        $this->assertContains(ParameterTrait::class, $uses);
 
-        $query->expects($this->once())->method("getAllParameters")->willReturn($parameterList);
+        $this->assertInstanceOf(Query::class, $query);
+    }
+
+
+    /**
+     * tests getParameter()
+     * @return void
+     */
+    public function testGetParameter()
+    {
+        $query = new Query("parameter=value");
+
+        $parameter = $query->getParameter("parameter");
+        $this->assertNotNull($parameter);
+
+        // check idempotence
+        $this->assertSame($parameter, $query->getParameter("parameter"));
+
+        $missing = $query->getParameter("missing");
+        $this->assertNull($missing);
+
+        $this->assertSame($missing, $query->getParameter("missing"));
+
+        $this->assertSame("value", $parameter->getValue());
+    }
+
+    /**
+     * tests getParameter() with parameters compiled to arrays
+     * @return void
+     */
+    public function testGetParameterWithBrackets(): void
+    {
+        $query = new Query(
+            "fields[A]=valueA&fields[B]=valueB"
+        );
+
+        $this->assertNull($query->getParameter("fields"));
+
+        $fieldsA = $query->getParameter("fields[A]");
+        $this->assertNotNull($fieldsA);
+        $this->assertSame($fieldsA, $query->getParameter("fields[A]"));
+        $this->assertSame("valueA", $fieldsA->getValue());
+
+        $fieldsB = $query->getParameter("fields[B]");
+        $this->assertNotNull($fieldsB);
+
+        $fieldsC = $query->getParameter("fields[C]");
+        $this->assertNull($fieldsC);
+    }
+
+
+    /**
+     * tests getAllParameterNames() with parameters compiled to arrays
+     * @return void
+     */
+    public function testGetAllParameterNames()
+    {
+        $query = new Query(null, []);
+        $this->assertEquals([], $query->getAllParameterNames());
+
+        $query = new Query(
+            "C=D&fields[A]=valueA&fields[B]=valueB"
+        );
+
+        $this->assertEquals(["C", "fields[A]", "fields[B]"], $query->getAllParameterNames());
+    }
+
+
+    /**
+     * tests getAllParameters()
+     * @return void
+     */
+    public function testGetAllParameters(): void
+    {
+        $query = new Query();
+        $this->assertEquals([], $query->getAllParameters()->toArray());
+
+        $query = new Query(
+            "C=D&fields[A]=valueA&fields[B]=valueB"
+        );
+
+        $list = $query->getAllParameters();
+        $this->assertSame($list, $query->getAllParameters());
+
+        $this->assertEquals([
+            "C" => "D",
+            "fields[A]" => "valueA",
+            "fields[B]" => "valueB"
+        ], $query->getAllParameters()->toArray());
+    }
+
+
+    /**
+     * tests getSource()
+     * @return void
+     */
+    public function testGetSource(): void
+    {
+        $query = new Query();
+        $this->assertSame($query, $query->getSource());
+    }
+
+
+    /**
+     * tests toString() and getName() and toArray()
+     * @return void
+     */
+    public function testToStringAndGetNameAndToArray(): void
+    {
+
+        $query = new Query("query=string");
+
+        $this->assertSame("query=string", $query->toString());
+        $this->assertSame($query->toString(), $query->getName());
+
+        $this->assertSame([
+            "query" => $query->toString()
+        ], $query->toArray());
+
+        $this->runToStringTest(Query::class);
+    }
+    
+    
+    /**
+     * tests getParameterBag()
+     * @return void
+     */
+    public function testGetParameterBag(): void
+    {
+        $query = new Query( "fields[MessageItem]=a,b,c&sort=subject,-date");
 
         $parameterBag = $query->getParameterBag();
 

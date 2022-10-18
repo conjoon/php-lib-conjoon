@@ -27,56 +27,25 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Http;
+namespace Tests\Conjoon\Http;
 
+use Conjoon\Http\Request;
 use Conjoon\Http\Url;
-use Conjoon\Core\Contract\StringStrategy;
-use Conjoon\Illuminate\Http\Query\LaravelQuery;
+use Tests\TestCase;
 
 /**
- * LaravelUrl as an adapter for url-strings.
- * Required by LaravelRequest.
+ * Tests Request..
  */
-class LaravelUrl implements Url
+class RequestTest extends TestCase
 {
     /**
-     * @var string
+     * Class functionality
      */
-    protected string $url;
-
-    /**
-     * @var LaravelQuery
-     */
-    protected LaravelQuery $query;
-
-
-    /**
-     * Constructor.
-     *
-     * @param string $url
-     * @param LaravelQuery $query
-     */
-    public function __construct(string $url, LaravelQuery $query)
+    public function testClass()
     {
-        $this->query = $query;
-        $this->url   = $url;
-    }
+        $url = new Url("http://www.localhost.com:8080/index.php");
+        $request = new Request($url);
 
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(StringStrategy $stringStrategy = null): string
-    {
-        return $stringStrategy ? $stringStrategy->toString($this) : $this->url;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getQuery(): LaravelQuery
-    {
-        return $this->query;
+        $this->assertSame($url, $request->getUrl());
     }
 }

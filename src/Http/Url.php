@@ -30,18 +30,70 @@ declare(strict_types=1);
 namespace Conjoon\Http;
 
 use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Http\Query\Query;
 
 /**
  * Represents an URL.
  *
  */
-interface Url extends Stringable
+class Url implements Stringable
 {
     /**
-     * Returns the Query available with this url, if any.
+     * @var ?Query
+     */
+    protected ?Query $query = null;
+
+
+    /**
+     * @var string
+     */
+    protected string $url;
+
+    /**
+     * @var bool
+     */
+    protected bool $queryBuild = false;
+
+    /**
+     * Constructor.
+     *
+     * @param string $url
+     */
+    public function __construct(string $url)
+    {
+        $this->url = $url;
+    }
+
+
+    /**
+     * Returns the Query for this url.
+     * If no query string was available for this url, null will be returned.
      *
      * @return Query|null
      */
-    public function getQuery(): ?Query;
+    public function getQuery(): ?Query
+    {
+        if ($this->queryBuild) {
+            return $this->query;
+        }
+
+        $this->queryBuild = true;
+        $query = parse_url($this->url, PHP_URL_QUERY);
+        if ($query) {
+            $this->query = new Query($query);
+        }
+
+        return $this->query;
+    }
+
+
+    /**
+     * @inheritdoc
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        return $stringStrategy ? $stringStrategy->toString($this) : $this->url;
+    }
+
 }

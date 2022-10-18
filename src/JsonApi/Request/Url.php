@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Request;
 
 use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Http\Url as HttpUrl;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 
@@ -40,9 +41,15 @@ use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 class Url implements HttpUrl
 {
     /**
-     * @var JsonApiQuery
+     * @var ?JsonApiQuery
      */
-    protected JsonApiQuery $query;
+    protected ?JsonApiQuery $query;
+
+
+    /**
+     * @var ObjectDescription
+     */
+    protected ObjectDescription $resourceTarget;
 
 
     /**
@@ -55,12 +62,12 @@ class Url implements HttpUrl
      * Constructor.
      *
      * @param string $url
-     * @param JsonApiQuery $query
+     * @param ObjectDescription $resourceTarget
      */
-    public function __construct(string $url, JsonApiQuery $query)
+    public function __construct(string $url, ObjectDescription $resourceTarget)
     {
-        $this->query = $query;
         $this->url   = $url;
+        $this->resourceTarget = $resourceTarget;
     }
 
 
@@ -69,7 +76,24 @@ class Url implements HttpUrl
      */
     public function getQuery(): JsonApiQuery
     {
+        if ($this->query) {
+            return $this->query;
+        }
+
+        $query = parse_url($this->url, PHP_URL_QUERY);
+
+        $this->query = new JsonApiQuery(new HttpQuery($query));
+
         return $this->query;
+    }
+
+
+    /**
+     * @return ObjectDescription
+     */
+    public function getResourceTarget(): ObjectDescription
+    {
+        return $this->resourceTarget;
     }
 
 
