@@ -47,7 +47,7 @@ class UrlTest extends TestCase
     public function testClass()
     {
         $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
-        $url = new Url($urlString);
+        $url = $this->createTestInstance($urlString);
         $this->assertInstanceOf(Stringable::class, $url);
     }
 
@@ -59,7 +59,7 @@ class UrlTest extends TestCase
     public function testGetQuery()
     {
         $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
-        $url = new Url($urlString);
+        $url = $this->createTestInstance($urlString);
         $query = $url->getQuery();
 
         $this->assertNotNull($query);
@@ -69,11 +69,10 @@ class UrlTest extends TestCase
 
         // null query
         $urlString = "http://www.localhost.com:8080/index.php?";
-        $url = new Url($urlString);
+        $url = $this->createTestInstance($urlString);
         // always yields same result
         $this->assertNull($url->getQuery());
         $this->assertNull($url->getQuery());
-
     }
 
 
@@ -84,8 +83,27 @@ class UrlTest extends TestCase
     public function testToString(): void
     {
         $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
-        $url = new Url($urlString);
+        $url = $this->createTestInstance($urlString);
         $this->assertSame($urlString, $url->toString());
-        $this->runToStringTest(Url::class);
+        $this->runToStringTest($this->getTestedClass());
+    }
+
+
+    /**
+     * @param string $urlString
+     * @return Url
+     */
+    protected function createTestInstance(string $urlString): Url
+    {
+        return new Url($urlString);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getTestedClass(): string
+    {
+        return Url::class;
     }
 }

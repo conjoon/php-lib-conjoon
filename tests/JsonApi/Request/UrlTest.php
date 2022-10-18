@@ -29,45 +29,56 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
+use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Http\Url;
-use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Request\Url as JsonApiUrl;
-use Tests\StringableTestTrait;
-use Tests\TestCase;
+use Tests\Conjoon\Http\UrlTest as HttpUrlTest;
 
 /**
- * Tests LaravelUrl.
+ * Tests JsonApiUrl.
  */
-class UrlTest extends TestCase
+class UrlTest extends HttpUrlTest
 {
-    use StringableTestTrait;
-
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $urlString = "http://www.localhost.com:8080/index.php";
-
-        $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
-        $url = new JsonApiUrl(
-            $urlString,
-            $query
-        );
-
+        $urlString = "http://www.localhost.com:8080/index.php?foo=bar";
+        $url = $this->createTestInstance($urlString);
         $this->assertInstanceOf(Url::class, $url);
-
-        $this->assertSame($urlString, $url->toString());
-        $this->assertSame($query, $url->getQuery());
     }
 
 
     /**
-     * Tests toString()
+     * Tests getResourceTarget()
      * @return void
      */
-    public function testToString(): void
+    public function testGetResourceTarget(): void
     {
-        $this->runToStringTest(JsonApiUrl::class);
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        $url = new JsonApiUrl("", $resourceTarget);
+
+        $this->assertSame($resourceTarget, $url->getResourceTarget());
+    }
+
+
+    /**
+     * @param string $urlString
+     * @return Url
+     */
+    protected function createTestInstance(string $urlString): Url
+    {
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        return new JsonApiUrl($urlString, $resourceTarget);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getTestedClass(): string
+    {
+        return JsonApiUrl::class;
     }
 }

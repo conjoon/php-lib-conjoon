@@ -29,64 +29,54 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query;
 
-use Conjoon\Http\Query\ParameterList;
 use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\JsonApi\Query\Query;
-use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\Http\Query\Parameter;
-use Tests\StringableTestTrait;
-use Tests\TestCase;
+use Conjoon\Http\Query\Query;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
+use Tests\Conjoon\Http\Query\QueryTest as HttpQueryTest;
 
 /**
- * Tests JsonApi's Query implementation.
+ * Tests QueryParameter.
+ *
  */
-class QueryTest extends TestCase
+class QueryTest extends HttpQueryTest
 {
-    use StringableTestTrait;
-
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $resourceDescription = $this->createMockForAbstract(ObjectDescription::class);
-
-        $parameter = new Parameter("parameter_name", "parameter_value");
-        $parameterList = new ParameterList();
-        $parameterList[] = $parameter;
-
-        $query = $this->createMockForAbstract(HttpQuery::class, [
-            "getParameter", "getAllParameters", "getAllParameterNames", "toString", "getSource", "getName"
-        ]);
-        $jsonApiQuery = new Query($query, $resourceDescription);
-
-        $query->expects($this->once())->method("getParameter")->with("parameter_name")->willReturn($parameter);
-        $query->expects($this->once())->method("getAllParameters")->willReturn($parameterList);
-        $query->expects($this->once())->method("getAllParameterNames")->willReturn(["parameter_name"]);
-        $query->expects($this->once())->method("getName")->willReturn("query_name");
-        $query->expects($this->any())->method("toString")->willReturn("query_to_string");
-
-        $this->assertInstanceOf(HttpQuery::class, $jsonApiQuery);
-        $this->assertSame($resourceDescription, $jsonApiQuery->getResourceTarget());
-
-        $this->assertEquals($parameter, $jsonApiQuery->getParameter("parameter_name"));
-        $this->assertSame($parameterList, $jsonApiQuery->getAllParameters());
-        $this->assertEquals(["parameter_name"], $jsonApiQuery->getAllParameterNames());
-
-        $this->assertSame("query_name", $jsonApiQuery->getName());
-        $this->assertSame("query_to_string", $jsonApiQuery->toString());
-        $this->assertSame($jsonApiQuery, $jsonApiQuery->getSource());
-
-        $this->assertSame([
-            "query" => $jsonApiQuery->toString()
-        ], $jsonApiQuery->toArray());
+        $query = $this->createTestInstance();
+        $this->assertInstanceOf(Query::class, $query);
     }
 
+
     /**
-     * Tests toString()
+     * Tests getResourceTarget()
      */
-    public function testToString()
+    public function testGetResourceTarget()
     {
-        $this->runToStringTest(Query::class);
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        $query = new JsonApiQuery("", $resourceTarget);
+        $this->assertSame($resourceTarget, $query->getResourceTarget());
+    }
+
+
+    /**
+     * @param null $queryString
+     * @return Query
+     */
+    protected function createTestInstance($queryString = null): Query
+    {
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        return new JsonApiQuery($queryString ?? "", $resourceTarget);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getTestedClass(): string
+    {
+        return JsonApiQuery::class;
     }
 }

@@ -29,24 +29,16 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query;
 
-use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterList;
 use Conjoon\Data\Resource\ObjectDescription;
 
 /**
- * Query validated for JSON:API specifications, describing access to a $resourceTarget
- * described by  ObjectDescription.
+ * Query validated for JSON:API specifications, providing access to a $resourceTarget
+ * described by ObjectDescription.
  *
  */
 class Query extends HttpQuery
 {
-    /**
-     * @var HttpQuery $query
-     */
-    protected HttpQuery $query;
-
     /**
      * @var ObjectDescription
      */
@@ -55,12 +47,12 @@ class Query extends HttpQuery
     /**
      * Constructor.
      *
-     * @param HttpQuery $query The original query decorated by this class.
+     * @param string $queryString
      * @param ObjectDescription $resourceTarget The resource object description this query is interested in
      */
-    public function __construct(HttpQuery $query, ObjectDescription $resourceTarget)
+    public function __construct(string $queryString, ObjectDescription $resourceTarget)
     {
-        $this->query          = $query;
+        parent::__construct($queryString);
         $this->resourceTarget = $resourceTarget;
     }
 
@@ -71,74 +63,5 @@ class Query extends HttpQuery
     public function getResourceTarget(): ObjectDescription
     {
         return $this->resourceTarget;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getParameter(string $name): ?Parameter
-    {
-        return $this->query->getParameter($name);
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getAllParameters(): ParameterList
-    {
-        return $this->query->getAllParameters();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getAllParameterNames(): array
-    {
-        return $this->query->getAllParameterNames();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getName(): string
-    {
-        return $this->query->getName();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getSource(): object
-    {
-        return $this;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toString(StringStrategy $stringStrategy = null): string
-    {
-        if ($stringStrategy) {
-            return $stringStrategy->toString($this);
-        }
-
-        return $this->query->toString();
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function toArray(): array
-    {
-        return [
-            "query" => $this->toString()
-        ];
     }
 }

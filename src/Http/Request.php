@@ -35,7 +35,6 @@ namespace Conjoon\Http;
  */
 class Request
 {
-
     /**
      * @var Url
      */

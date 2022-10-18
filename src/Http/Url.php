@@ -95,5 +95,4 @@ class Url implements Stringable
     {
         return $stringStrategy ? $stringStrategy->toString($this) : $this->url;
     }
-
 }

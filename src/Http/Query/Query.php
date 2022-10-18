@@ -65,7 +65,7 @@ class Query implements ErrorSource
     /**
      * Constructor.
      *
-     * @param string $queryString
+     * @param string|null $queryString
      */
     public function __construct(string $queryString = null)
     {

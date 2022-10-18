@@ -29,8 +29,6 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Query;
 
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterList;
 use Conjoon\Http\Query\ParameterTrait;
 use Conjoon\Http\Query\Query;
 use Tests\StringableTestTrait;
@@ -42,20 +40,18 @@ use Tests\TestCase;
  */
 class QueryTest extends TestCase
 {
-
     use StringableTestTrait;
+
 
     /**
      * Class functionality
      */
     public function testClass()
     {
-        $query = new Query();
+        $query = $this->createTestInstance();
 
-        $uses = class_uses(Query::class);
+        $uses = class_uses($this->getTestedClass());
         $this->assertContains(ParameterTrait::class, $uses);
-
-        $this->assertInstanceOf(Query::class, $query);
     }
 
 
@@ -65,7 +61,7 @@ class QueryTest extends TestCase
      */
     public function testGetParameter()
     {
-        $query = new Query("parameter=value");
+        $query = $this->createTestInstance("parameter=value");
 
         $parameter = $query->getParameter("parameter");
         $this->assertNotNull($parameter);
@@ -87,7 +83,7 @@ class QueryTest extends TestCase
      */
     public function testGetParameterWithBrackets(): void
     {
-        $query = new Query(
+        $query = $this->createTestInstance(
             "fields[A]=valueA&fields[B]=valueB"
         );
 
@@ -112,10 +108,10 @@ class QueryTest extends TestCase
      */
     public function testGetAllParameterNames()
     {
-        $query = new Query(null, []);
+        $query = $this->createTestInstance(null, []);
         $this->assertEquals([], $query->getAllParameterNames());
 
-        $query = new Query(
+        $query = $this->createTestInstance(
             "C=D&fields[A]=valueA&fields[B]=valueB"
         );
 
@@ -129,10 +125,10 @@ class QueryTest extends TestCase
      */
     public function testGetAllParameters(): void
     {
-        $query = new Query();
+        $query = $this->createTestInstance();
         $this->assertEquals([], $query->getAllParameters()->toArray());
 
-        $query = new Query(
+        $query = $this->createTestInstance(
             "C=D&fields[A]=valueA&fields[B]=valueB"
         );
 
@@ -153,7 +149,7 @@ class QueryTest extends TestCase
      */
     public function testGetSource(): void
     {
-        $query = new Query();
+        $query = $this->createTestInstance();
         $this->assertSame($query, $query->getSource());
     }
 
@@ -165,7 +161,7 @@ class QueryTest extends TestCase
     public function testToStringAndGetNameAndToArray(): void
     {
 
-        $query = new Query("query=string");
+        $query = $this->createTestInstance("query=string");
 
         $this->assertSame("query=string", $query->toString());
         $this->assertSame($query->toString(), $query->getName());
@@ -176,15 +172,16 @@ class QueryTest extends TestCase
 
         $this->runToStringTest(Query::class);
     }
-    
-    
+
+
     /**
      * tests getParameterBag()
      * @return void
      */
     public function testGetParameterBag(): void
     {
-        $query = new Query( "fields[MessageItem]=a,b,c&sort=subject,-date");
+
+        $query = $this->createTestInstance("fields[MessageItem]=a,b,c&sort=subject,-date");
 
         $parameterBag = $query->getParameterBag();
 
@@ -195,5 +192,24 @@ class QueryTest extends TestCase
             ],
             $parameterBag->toJson()
         );
+    }
+
+
+    /**
+     * @param null $queryString
+     * @return Query
+     */
+    protected function createTestInstance($queryString = null): Query
+    {
+        return new Query($queryString);
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getTestedClass(): string
+    {
+        return Query::class;
     }
 }

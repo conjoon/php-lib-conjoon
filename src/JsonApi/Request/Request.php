@@ -30,9 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Request\Request as HttpRequest;
+use Conjoon\Http\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 
@@ -40,18 +39,12 @@ use Conjoon\JsonApi\Query\Validation\Validator;
  * Request specific for JSON:API.
  *
  */
-class Request implements HttpRequest
+class Request extends HttpRequest
 {
     /**
      * @var HttpRequest
      */
     protected HttpRequest $request;
-
-
-    /**
-     * @var JsonApiUrl
-     */
-    protected ?JsonApiUrl $url = null;
 
 
     /**
@@ -63,37 +56,15 @@ class Request implements HttpRequest
     /**
      * Constructor.
      *
-     * @param Request $request
-     * @param ObjectDescription $resourceTarget
+     * @param JsonApiUrl $url
      * @param Validator|null $queryValidator
      */
     public function __construct(
-        HttpRequest $request,
+        JsonApiUrl $url,
         Validator $queryValidator = null
     ) {
-        $this->request = $request;
+        parent::__construct($url);
         $this->queryValidator = $queryValidator;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getUrl(): JsonApiUrl
-    {
-        if ($this->url) {
-            return $this->url;
-        }
-
-        $this->url = new JsonApiUrl(
-            $this->request->getUrl()->toString(),
-            new JsonApiQuery(
-                $this->request->getUrl()->getQuery(),
-                $this->getResourceTarget()
-            )
-        );
-
-        return $this->url;
     }
 
 
