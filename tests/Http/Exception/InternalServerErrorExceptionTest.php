@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Http\Exception;
 
 use Conjoon\Http\Exception\InternalServerErrorException;
 use Conjoon\Http\Exception\HttpException;
-use Conjoon\Http\Status\StatusCodes;
+use Conjoon\Http\StatusCodes;
 use Tests\TestCase;
 
 /**

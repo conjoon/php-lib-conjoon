@@ -27,28 +27,38 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Request;
-
-use Conjoon\Http\Url;
+namespace Conjoon\Http;
 
 /**
  * Represents an Http Request.
  *
  */
-interface Request
+class Request
 {
-    /**
-     * Returns the HTTP method this request was used with.
-     *
-     * @return string
-     */
-    public function getMethod(): string;
 
+    /**
+     * @var Url
+     */
+    protected Url $url;
+
+
+    /**
+     * Constructor.
+     *
+     * @param Url $url
+     */
+    public function __construct(Url $url)
+    {
+        $this->url = $url;
+    }
 
     /**
      * Get the URL for the request.
      *
      * @return Url
      */
-    public function getUrl(): Url;
+    public function getUrl(): Url
+    {
+        return $this->url;
+    }
 }

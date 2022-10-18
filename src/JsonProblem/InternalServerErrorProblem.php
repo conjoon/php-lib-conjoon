@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonProblem;
 
-use Conjoon\Http\Status\StatusCodes as Status;
+use Conjoon\Http\StatusCodes as Status;
 
 /**
  * Class InternalServerErrorProblem

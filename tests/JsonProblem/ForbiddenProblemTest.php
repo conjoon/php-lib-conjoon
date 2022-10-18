@@ -31,7 +31,7 @@ namespace Tests\Conjoon\JsonProblem;
 
 use Conjoon\JsonProblem\AbstractProblem;
 use Conjoon\JsonProblem\ForbiddenProblem;
-use Conjoon\Http\Status\StatusCodes as Status;
+use Conjoon\Http\StatusCodes as Status;
 use Tests\TestCase;
 
 /**

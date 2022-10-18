@@ -27,35 +27,53 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Status;
-
-use Conjoon\Http\Status\StatusCodes;
-use Tests\TestCase;
+namespace Conjoon\Http;
 
 /**
- * Class StatusCodesTest
- * @package Tests\Conjoon\Http\Status
+ * Class StatusCodes.
+ * @package Conjoon\Http
  */
-class StatusCodesTest extends TestCase
+class StatusCodes
 {
     /**
-     * test class
+     * @var int
      */
-    public function testClass()
-    {
+    public const HTTP_400 = 400;
 
-        $this->assertSame(400, StatusCodes::HTTP_400);
-        $this->assertSame(401, StatusCodes::HTTP_401);
-        $this->assertSame(403, StatusCodes::HTTP_403);
-        $this->assertSame(404, StatusCodes::HTTP_404);
-        $this->assertSame(405, StatusCodes::HTTP_405);
-        $this->assertSame(500, StatusCodes::HTTP_500);
+    /**
+     * @var int
+     */
+    public const HTTP_401 = 401;
 
-        $this->assertIsString(StatusCodes::HTTP_STATUS[400]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[401]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[403]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[404]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[405]);
-        $this->assertIsString(StatusCodes::HTTP_STATUS[500]);
-    }
+    /**
+     * @var int
+     */
+    public const HTTP_403 = 403;
+
+    /**
+     * @var int
+     */
+    public const HTTP_404 = 404;
+
+    /**
+     * @var int
+     */
+    public const HTTP_405 = 405;
+
+    /**
+     * @var int
+     */
+    public const HTTP_500 = 500;
+
+    /**
+     * @var array
+     */
+    public const HTTP_STATUS = [
+        400 => "Bad Request",
+        401 => "Unauthorized",
+        403 => "Forbidden",
+        404 => "Not Found",
+        405 => "Method not allowed",
+        500 => "Internal Server Error"
+    ];
 }

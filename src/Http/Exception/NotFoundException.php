@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Exception;
 
-use Conjoon\Http\Status\StatusCodes;
+use Conjoon\Http\StatusCodes;
 
 /**
  * Class NotFoundException
