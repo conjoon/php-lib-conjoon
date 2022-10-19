@@ -29,14 +29,16 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
+use Conjoon\Data\Resource\ResourceQuery;
 use Conjoon\Data\Sort\SortInfoList;
 use Conjoon\Data\Filter\Filter;
+use Conjoon\MailClient\Data\Resource\MessageItem;
 
 /**
  * ResourceQuery implementation for querying MessageItemList.
  *
  */
-abstract class MessageItemListQuery extends MessageItemQuery
+abstract class MessageItemListQuery extends ResourceQuery
 {
     /**
      * Returns the offset of the first message item requested with the query.
@@ -71,4 +73,22 @@ abstract class MessageItemListQuery extends MessageItemQuery
      * @return Filter|null
      */
     abstract public function getFilter(): ?Filter;
+
+
+    /**
+     * Returns the fields that should be queried. If no fields where specified, this implementation
+     * will return the default fields of the resource target for this query.
+     *
+     * @return array
+     */
+    abstract public function getFields(): array;
+
+
+    /**
+     * This ResourceQuery targets MessageItem.
+     */
+    public function getResourceTarget(): MessageItem
+    {
+        return new MessageItem();
+    }
 }
