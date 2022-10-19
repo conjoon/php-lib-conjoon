@@ -30,16 +30,12 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
-use Conjoon\Http\Url as HttpUrl;
 use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request as JsonApiRequest;
 use Conjoon\Http\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
-use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -54,12 +50,13 @@ class RequestTest extends TestCase
     {
         $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
         $validator = $this->createMockForAbstract(Validator::class);
-        $url = new JsonApiUrl("http://www.localhost.com:8080/index.php", $resourceTarget);
+        $url = new JsonApiUrl("http://www.localhost.com:8080/index.php", $resourceTarget, true);
         $request = new JsonApiRequest($url, $validator);
 
         $this->assertSame($url, $request->getUrl());
         $this->assertSame($validator, $request->getQueryValidator());
         $this->assertSame($resourceTarget, $request->getResourceTarget());
+        $this->assertTrue($request->targetsResourceCollection());
 
         $this->assertInstanceOf(HttpRequest::class, $request);
 

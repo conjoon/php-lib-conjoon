@@ -89,6 +89,17 @@ class Request extends HttpRequest
 
 
     /**
+     * Returns true if the request targets a resource collection.
+     *
+     * @return bool
+     */
+    public function targetsResourceCollection(): bool
+    {
+        return $this->getUrl()->targetsResourceCollection();
+    }
+
+
+    /**
      * Returns the query validator for this request, if any was specified with the constructor.
      */
     public function getQueryValidator(): ?Validator

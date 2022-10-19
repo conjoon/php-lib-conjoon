@@ -64,6 +64,22 @@ class UrlTest extends HttpUrlTest
 
 
     /**
+     * Tests targetsResourceCollection()
+     * @return void
+     */
+    public function testTargetsResourceCollection(): void
+    {
+        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        $url = new JsonApiUrl("", $resourceTarget);
+
+        $this->assertFalse($url->targetsResourceCollection());
+
+        $url = new JsonApiUrl("", $resourceTarget, true);
+        $this->assertTrue($url->targetsResourceCollection());
+    }
+
+
+    /**
      * @param string $urlString
      * @return Url
      */

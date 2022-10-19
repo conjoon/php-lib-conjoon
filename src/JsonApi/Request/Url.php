@@ -36,25 +36,43 @@ use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 /**
  * Url specific for JSON:API requests.
  * Provides information about the targeted resource in form of an ObjectDescription.
+ *
+ * @example
+ *
+ *    // single resource
+ *    $url = new JsonApiUrl("MessageItems/1", new Resource/MessageItem());
+ *
+ *    // collection
+ *    $url = new JsonApiUrl("MessageItems", new Resource/MessageItem(), true);
+ *
  */
 class Url extends HttpUrl
 {
     /**
      * @var ObjectDescription
      */
-    protected ObjectDescription $resourceTarget;
+    protected readonly ObjectDescription $resourceTarget;
 
+    /**
+     * @var bool
+     */
+    protected readonly bool $targetsResourceCollection;
 
     /**
      * Constructor.
      *
      * @param string $url
      * @param ObjectDescription $resourceTarget
+     * @param bool $targetsResourceCollection
      */
-    public function __construct(string $url, ObjectDescription $resourceTarget)
-    {
+    public function __construct(
+        string $url,
+        ObjectDescription $resourceTarget,
+        bool $targetsResourceCollection = false
+    ) {
         parent::__construct($url);
         $this->resourceTarget = $resourceTarget;
+        $this->targetsResourceCollection = $targetsResourceCollection;
     }
 
 
@@ -83,5 +101,14 @@ class Url extends HttpUrl
     public function getResourceTarget(): ObjectDescription
     {
         return $this->resourceTarget;
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function targetsResourceCollection(): bool
+    {
+        return $this->targetsResourceCollection;
     }
 }
