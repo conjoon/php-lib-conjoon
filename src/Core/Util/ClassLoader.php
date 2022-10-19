@@ -37,7 +37,7 @@ use Conjoon\Core\Exception\InvalidTypeException;
  * Allows for specifying required base classes to make sure expected contracts are loaded
  * and available as expected.
  */
-class ClassLookup
+class ClassLoader
 {
     /**
      * Return the resource object description for the resource targeted by the specified

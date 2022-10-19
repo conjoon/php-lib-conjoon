@@ -29,15 +29,15 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Core\Util;
 
-use Conjoon\Core\Util\ClassLookup;
+use Conjoon\Core\Util\ClassLoader;
 use Conjoon\Core\Exception\ClassNotFoundException;
 use Conjoon\Core\Exception\InvalidTypeException;
 use Tests\TestCase;
 
 /**
- * Tests ClassLookup
+ * Tests ClassLoader
  */
-class ClassLookupTest extends TestCase
+class ClassLoaderTest extends TestCase
 {
     /**
      * tests load() with ClassNotFoundException
@@ -46,7 +46,7 @@ class ClassLookupTest extends TestCase
     {
         $this->expectException(ClassNotFoundException::class);
 
-        $lookup = new ClassLookup();
+        $lookup = new ClassLoader();
 
         $lookup->load("RandomClass", "RandomParentClass");
     }
@@ -59,7 +59,7 @@ class ClassLookupTest extends TestCase
     {
         $this->expectException(InvalidTypeException::class);
 
-        $lookup = new ClassLookup();
+        $lookup = new ClassLoader();
 
         $lookup->load("Tests\\Conjoon\\Data\\Resource\\TestResourceStd", "Conjoon\\Core");
     }
@@ -70,7 +70,7 @@ class ClassLookupTest extends TestCase
      */
     public function testGetResourceTarget()
     {
-        $lookup = new ClassLookup();
+        $lookup = new ClassLoader();
 
         $inst = $lookup->load(
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
@@ -85,7 +85,7 @@ class ClassLookupTest extends TestCase
             $inst
         );
 
-        $lookup = new ClassLookup();
+        $lookup = new ClassLoader();
 
         $inst = $lookup->load(
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
