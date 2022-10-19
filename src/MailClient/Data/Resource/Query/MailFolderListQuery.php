@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,48 +27,30 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Data\Resource;
+namespace Conjoon\MailClient\Data\Resource\Query;
 
-use Conjoon\Data\Sort\SortInfoList;
-use Conjoon\Data\Filter\Filter;
+use Conjoon\Data\Resource\ResourceQuery;
+use Conjoon\MailClient\Data\Resource\MailFolder;
 
 /**
- * ResourceQuery implementation for querying MessageItemList.
- *
+ * Class MailFolderListQuery.
  */
-abstract class MessageItemListQuery extends MessageItemQuery
+abstract class MailFolderListQuery extends ResourceQuery
 {
     /**
-     * Returns the offset of the first message item requested with the query.
+     * Returns the fields that should be queried. If no fields where specified, this implementation
+     * will return the default fields of the resource target for this query.
      *
-     * @return int
+     * @return array
      */
-    abstract public function getStart(): int;
+    abstract public function getFields(): array;
 
 
     /**
-     * Returns the limit specified for this query.
-     * Returns "null" if no limit was specified.
-     *
-     * @return int|null
+     * This ResourceQuery targets MessageItems.
      */
-    abstract public function getLimit(): ?int;
-
-
-    /**
-     * Returns sort information for this query.
-     * Returns null if no sort information is available.
-     *
-     * @return SortInfoList|null
-     */
-    abstract public function getSort(): ?SortInfoList;
-
-
-    /**
-     * Returns filter information for this query.
-     * Returns null if no filter information is  available.
-     *
-     * @return Filter|null
-     */
-    abstract public function getFilter(): ?Filter;
+    function getResourceTarget(): MailFolder
+    {
+        return new MailFolder();
+    }
 }

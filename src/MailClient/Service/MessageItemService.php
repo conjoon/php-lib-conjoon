@@ -31,7 +31,7 @@ namespace Conjoon\MailClient\Service;
 
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
-use Conjoon\MailClient\Data\Resource\MessageItemQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemQuery;
 use Conjoon\MailClient\Exception\MailClientException;
 use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\MailClient;
@@ -45,7 +45,7 @@ use Conjoon\MailClient\Message\MessageItemList;
 use Conjoon\MailClient\Message\Text\MessageItemFieldsProcessor;
 use Conjoon\MailClient\Message\Text\PreviewTextProcessor;
 use Conjoon\MailClient\Data\Reader\ReadableMessagePartContentProcessor;
-use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemListQuery;
 use Conjoon\MailClient\Data\Writer\WritableMessagePartContentProcessor;
 
 /**

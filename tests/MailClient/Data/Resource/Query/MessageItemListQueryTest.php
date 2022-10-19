@@ -2,8 +2,8 @@
 
 /**
  * conjoon
- * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * lumen-app-email
+ * Copyright (c) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/lumen-app-email
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,28 +27,27 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Data\Resource;
+namespace Tests\Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\ParameterBag;
-use Conjoon\Data\Resource\ResourceQuery;
 use Conjoon\MailClient\Data\Resource\MessageItem;
-use Conjoon\MailClient\Data\Resource\MessageItemQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemListQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemQuery;
 use Tests\TestCase;
 
 /**
  * Tests MessageItem.
  */
-class MessageItemQueryTest extends TestCase
+class MessageItemListQueryTest extends TestCase
 {
     /**
      * test class
      */
     public function testClass()
     {
-        $inst = $this->createMockForAbstract(MessageItemQuery::class, [], [new ParameterBag()]);
-        $this->assertInstanceOf(ResourceQuery::class, $inst);
+        $inst = $this->createMockForAbstract(MessageItemListQuery::class, [], [new ParameterBag()]);
+        $this->assertInstanceOf(MessageItemQuery::class, $inst);
 
-        $this->assertInstanceOf(MessageItem::class, $inst->getResourceTarget(
-        ));
+        $this->assertInstanceOf(MessageItem::class, $inst->getResourceTarget());
     }
 }

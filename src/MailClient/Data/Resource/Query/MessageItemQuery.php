@@ -27,15 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\MailClient\Data\Resource;
+namespace Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\Resource\ResourceQuery;
+use Conjoon\MailClient\Data\Resource\MessageItem;
 
 /**
  * ResourceQuery implementation for querying a MessageItem.
  *
  */
-abstract class MessageBodyQuery extends ResourceQuery
+abstract class MessageItemQuery extends ResourceQuery
 {
     /**
      * Returns the fields that should be queried. If no fields where specified, this implementation
@@ -47,18 +48,10 @@ abstract class MessageBodyQuery extends ResourceQuery
 
 
     /**
-     * Returns the options configured with this query, or null if no options where configured.
-     *
-     * @return array
+     * This ResourceQuery targets MessageItem.
      */
-    abstract public function getOptions(): ?MessageBodyOptions;
-
-
-    /**
-     * This ResourceQuery targets MessageBody.
-     */
-    public function getResourceTarget(): MessageBody
+    public function getResourceTarget(): MessageItem
     {
-        return new MessageBody();
+        return new MessageItem();
     }
 }

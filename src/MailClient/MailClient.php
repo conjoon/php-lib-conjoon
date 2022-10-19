@@ -35,7 +35,7 @@ use Conjoon\MailClient\Data\CompoundKey\AttachmentKey;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAccount;
-use Conjoon\MailClient\Data\Resource\MessageItemQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemQuery;
 use Conjoon\MailClient\Exception\MailClientException;
 use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\Folder\MailFolderList;
@@ -45,8 +45,8 @@ use Conjoon\MailClient\Message\MessageBodyDraft;
 use Conjoon\MailClient\Message\MessageItem;
 use Conjoon\MailClient\Message\MessageItemDraft;
 use Conjoon\MailClient\Message\MessageItemList;
-use Conjoon\MailClient\Data\Resource\MessageItemListQuery;
-use Conjoon\MailClient\Data\Resource\MailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\Query\MessageItemListQuery;
+use Conjoon\MailClient\Data\Resource\Query\MailFolderListQuery;
 
 /**
  * Interface MailClient
