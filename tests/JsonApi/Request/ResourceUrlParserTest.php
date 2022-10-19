@@ -100,10 +100,10 @@ class ResourceUrlParserTest extends TestCase
 
 
     /**
-     * Tests representsCollection()
+     * Tests targetsResourceCollection()
      * @return void
      */
-    public function testRepresentsCollection(): void
+    public function testRargetsResourceCollection(): void
     {
         $list = $this->createList();
         $template = "{0}Resource";
@@ -116,13 +116,13 @@ class ResourceUrlParserTest extends TestCase
         );
 
         $this->assertNull(
-            $parser->representsCollection(new Url("MailAccounts/MailFolders/INBOX"))
+            $parser->targetsResourceCollection(new Url("MailAccounts/MailFolders/INBOX"))
         );
         $this->assertTrue(
-            $parser->representsCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
+            $parser->targetsResourceCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
         $this->assertFalse(
-            $parser->representsCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
+            $parser->targetsResourceCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
         );
     }
 

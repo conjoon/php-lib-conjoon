@@ -138,7 +138,7 @@ class ResourceUrlParser
      *
      * @return bool|null
      */
-    public function representsCollection(Url $url): bool|null
+    public function targetsResourceCollection(Url $url): bool|null
     {
         $matchers = $this->getResourceUrlRegexList();
 
