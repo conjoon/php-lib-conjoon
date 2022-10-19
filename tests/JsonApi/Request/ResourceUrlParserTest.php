@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
+use Conjoon\Http\Url;
 use Conjoon\JsonApi\Request\ResourceUrlParser;
 use Conjoon\JsonApi\Request\ResourceUrlRegex;
 use Conjoon\JsonApi\Request\ResourceUrlRegexList;
@@ -75,15 +76,15 @@ class ResourceUrlParserTest extends TestCase
             $collectionTemplate
         );
 
-        $this->assertNull($parser->parse("MailAccounts/MailFolders/INBOX"));
+        $this->assertNull($parser->parse(new Url("MailAccounts/MailFolders/INBOX")));
         $this->assertSame(
             "CollectionMessageItem",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
 
         $this->assertSame(
             "MessageItemResource",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
         );
 
         $parser = new ResourceUrlParser(
@@ -93,7 +94,7 @@ class ResourceUrlParserTest extends TestCase
         $this->assertNull($parser->getCollectionTemplate());
         $this->assertSame(
             "MessageItemResource",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
     }
 
@@ -115,13 +116,13 @@ class ResourceUrlParserTest extends TestCase
         );
 
         $this->assertNull(
-            $parser->representsCollection("MailAccounts/MailFolders/INBOX")
+            $parser->representsCollection(new Url("MailAccounts/MailFolders/INBOX"))
         );
         $this->assertTrue(
-            $parser->representsCollection("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $parser->representsCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
         $this->assertFalse(
-            $parser->representsCollection("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+            $parser->representsCollection(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
         );
     }
 
@@ -146,11 +147,11 @@ class ResourceUrlParserTest extends TestCase
 
         $this->assertSame(
             "CollectionMessageItem",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
         $this->assertSame(
             "CollectionMessageItem",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
         );
 
         $parser = new ResourceUrlParser(
@@ -160,11 +161,11 @@ class ResourceUrlParserTest extends TestCase
 
         $this->assertSame(
             "MessageItemResource",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
         $this->assertSame(
             "MessageItemResource",
-            $parser->parse("MailAccounts/dev/MailFolders/INBOX/MessageItems/123")
+            $parser->parse(new Url("MailAccounts/dev/MailFolders/INBOX/MessageItems/123"))
         );
     }
 

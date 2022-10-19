@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Request;
 
+use Conjoon\Http\Url;
+
 /**
  * Class providing functionality for resource urls that require requested resource(s) to be mapped
  * to arbitrary strings.
@@ -94,12 +96,12 @@ class ResourceUrlParser
      * Tries to match the given $url with any regular expressions defined with $resourceUrlRegexList
      * and transforms to a string according to the specified templates, if possible.
      *
-     * @param string $url
+     * @param Url $url
      *
      * @return string|null The computed string, or null if no regular expressions from the given $resourceUrlRegexList
      * matched.
      */
-    public function parse(string $url): ?string
+    public function parse(Url $url): ?string
     {
         $matchers = $this->getResourceUrlRegexList();
         $match    = null;
@@ -132,11 +134,11 @@ class ResourceUrlParser
      * if it represents a request to a resource collection.
      * Returns null if no configured regex matched the url.
      *
-     * @param string $url
+     * @param Url $url
      *
      * @return bool|null
      */
-    public function representsCollection(string $url): bool|null
+    public function representsCollection(Url $url): bool|null
     {
         $matchers = $this->getResourceUrlRegexList();
 

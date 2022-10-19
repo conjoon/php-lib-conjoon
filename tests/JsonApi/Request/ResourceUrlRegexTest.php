@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Http\Url;
 use Conjoon\JsonApi\Request\ResourceUrlRegex;
 use ReflectionException;
 use Tests\TestCase;
@@ -61,15 +62,15 @@ class ResourceUrlRegexTest extends TestCase
         $resourceUrlRegex->expects($this->once())->method("normalizeName")->with("MessageItems");
         $this->assertSame(
             "MessageItem",
-            $resourceUrlRegex->getResourceName("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $resourceUrlRegex->getResourceName(new Url("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1"))
         );
 
         $this->assertTrue(
-            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $resourceUrlRegex->isSingleRequest(new Url("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1"))
         );
 
         $this->assertFalse(
-            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $resourceUrlRegex->isSingleRequest(new Url("/MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
     }
 
@@ -109,11 +110,11 @@ class ResourceUrlRegexTest extends TestCase
         $this->assertNull($resourceUrlRegex->getSingleIndex());
 
         $this->assertFalse(
-            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1")
+            $resourceUrlRegex->isSingleRequest(new Url("/MailAccounts/dev/MailFolders/INBOX/MessageItems/1"))
         );
 
         $this->assertFalse(
-            $resourceUrlRegex->isSingleRequest("/MailAccounts/dev/MailFolders/INBOX/MessageItems")
+            $resourceUrlRegex->isSingleRequest(new Url("/MailAccounts/dev/MailFolders/INBOX/MessageItems"))
         );
     }
 

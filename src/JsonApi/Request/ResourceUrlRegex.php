@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Request;
 
 use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Http\Url;
 
 /**
  * Helper function for URL based operations requiring regular expressions for determining the
@@ -89,13 +90,14 @@ class ResourceUrlRegex implements Arrayable
      * If the $url passed was not matched by THIS regex, null is returned.
      * If no single index is available for this instance, false will be returned.
      *
-     * @param string $url
+     * @param Url $url
      *
      * @return bool|null
      */
-    public function isSingleRequest(string $url): ?bool
+    public function isSingleRequest(Url $url): ?bool
     {
-        preg_match_all($this->regex, $url, $matches, PREG_SET_ORDER, 0);
+        $urlString = $url->toString();
+        preg_match_all($this->regex, $urlString, $matches, PREG_SET_ORDER, 0);
 
         $singleIndex = $this->getSingleIndex();
 
@@ -117,13 +119,14 @@ class ResourceUrlRegex implements Arrayable
     /**
      * Returns the name of the resource object targeted by the specified url. Returns null if none was found.
      *
-     * @param string $url
+     * @param Url $url
      *
      * @return string|null
      */
-    public function getResourceName(string $url): ?string
+    public function getResourceName(Url $url): ?string
     {
-        preg_match_all($this->regex, $url, $matches, PREG_SET_ORDER, 0);
+        $urlString = $url->toString();
+        preg_match_all($this->regex, $urlString, $matches, PREG_SET_ORDER, 0);
 
         if ($matches) {
             return $this->normalizeName($matches[0][$this->nameIndex]);
