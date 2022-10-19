@@ -49,15 +49,18 @@ use Conjoon\Data\ParameterBag;
  */
 abstract class ResourceQuery implements Jsonable
 {
-    protected ParameterBag $parameters;
+    /**
+     * @var ParameterBag
+     */
+    protected ParameterBag $parameterBag;
 
     /**
      * ResourceQuery constructor.
-     * @param ParameterBag $parameters
+     * @param ParameterBag $parameterBag
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct(ParameterBag $parameterBag)
     {
-        $this->parameters = $parameters;
+        $this->parameterBag = $parameterBag;
     }
 
 
@@ -73,7 +76,7 @@ abstract class ResourceQuery implements Jsonable
      */
     public function __call(string $method, $arguments)
     {
-        return $this->parameters->{$method}(...$arguments);
+        return $this->parameterBag->{$method}(...$arguments);
     }
 
 
@@ -85,7 +88,7 @@ abstract class ResourceQuery implements Jsonable
      */
     public function __get($key)
     {
-        return $this->parameters->{$key};
+        return $this->parameterBag->{$key};
     }
 
 
@@ -98,7 +101,7 @@ abstract class ResourceQuery implements Jsonable
      */
     public function has($key): bool
     {
-        return $this->parameters->has($key);
+        return $this->parameterBag->has($key);
     }
 
 
@@ -109,7 +112,7 @@ abstract class ResourceQuery implements Jsonable
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
-        return $this->parameters->toJson($strategy);
+        return $this->parameterBag->toJson($strategy);
     }
 
 
