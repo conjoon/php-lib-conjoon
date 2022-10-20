@@ -33,23 +33,22 @@ use Conjoon\Core\Exception\ClassNotFoundException;
 use Conjoon\Core\Exception\InvalidTypeException;
 
 /**
- * Helper loading classes based on strings representing fqns.
- * Allows for specifying required base classes to make sure expected contracts are loaded
- * and available as expected.
+ * Helper for creating instances of  classes based on strings representing fully qualified names.
+ *
  */
 class ClassLoader
 {
     /**
-     * Return the resource object description for the resource targeted by the specified
-     * $request if this class' $resourceUrlParser parses the request's url successfully.
+     * Return the $fqn is the class exists and is of type $baseClass..
      *
      * @param string $fqn The fqn of the class that should be loaded
      * @param string $baseClass The base class the class to load must extend
-     * @param array $args
-     * @return mixed
      *
+     * @return string
+     *
+     * @throws ClassNotFoundException|InvalidTypeException
      */
-    public function load(string $fqn, string $baseClass, array $args = []): mixed
+    public function load(string $fqn, string $baseClass): string
     {
         if (!class_exists($fqn)) {
             throw new ClassNotFoundException(
@@ -62,6 +61,26 @@ class ClassLoader
                 "$fqn must be an instance of $baseClass, was " . get_parent_class($fqn)
             );
         }
+
+        return $fqn;
+    }
+
+
+    /**
+     * Return the resource object description for the resource targeted by the specified
+     * $request if this class' $resourceUrlParser parses the request's url successfully.
+     *
+     * @param string $fqn The fqn of the class that should be loaded
+     * @param string $baseClass The base class the class to load must extend
+     * @param array<int, mixed> $args
+     *
+     * @return mixed
+     *
+     * @throws ClassNotFoundException|InvalidTypeException
+     */
+    public function create(string $fqn, string $baseClass, array $args = []): mixed
+    {
+        $fqn = $this->load($fqn, $baseClass);
 
         return new $fqn(...$args);
     }

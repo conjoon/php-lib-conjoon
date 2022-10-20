@@ -46,9 +46,9 @@ class ClassLoaderTest extends TestCase
     {
         $this->expectException(ClassNotFoundException::class);
 
-        $lookup = new ClassLoader();
+        $loader = new ClassLoader();
 
-        $lookup->load("RandomClass", "RandomParentClass");
+        $loader->load("RandomClass", "RandomParentClass");
     }
 
 
@@ -59,20 +59,36 @@ class ClassLoaderTest extends TestCase
     {
         $this->expectException(InvalidTypeException::class);
 
-        $lookup = new ClassLoader();
+        $loader = new ClassLoader();
 
-        $lookup->load("Tests\\Conjoon\\Data\\Resource\\TestResourceStd", "Conjoon\\Core");
+        $loader->load("Tests\\Conjoon\\Data\\Resource\\TestResourceStd", "Conjoon\\Core");
+    }
+
+    /**
+     * tests load()
+     */
+    public function testLoad()
+    {
+        $loader = new ClassLoader();
+
+        $this->assertSame(
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            $loader->load(
+                "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+                "Conjoon\\Data\\Resource\\ObjectDescription"
+            )
+        );
     }
 
 
     /**
-     * tests getResourceTarget()
+     * tests create()
      */
     public function testGetResourceTarget()
     {
-        $lookup = new ClassLoader();
+        $loader = new ClassLoader();
 
-        $inst = $lookup->load(
+        $inst = $loader->create(
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
             "Conjoon\\Data\\Resource\\ObjectDescription"
         );
@@ -85,9 +101,9 @@ class ClassLoaderTest extends TestCase
             $inst
         );
 
-        $lookup = new ClassLoader();
+        $loader = new ClassLoader();
 
-        $inst = $lookup->load(
+        $inst = $loader->create(
             "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
             "Conjoon\\Data\\Resource\\ObjectDescription",
             [1, 2, 3]
