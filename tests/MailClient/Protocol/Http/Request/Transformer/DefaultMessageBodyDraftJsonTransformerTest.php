@@ -37,8 +37,7 @@ use Conjoon\Core\Contract\JsonDecodable;
 use Tests\TestCase;
 
 /**
- * Class DefaultMessageBodyDraftJsonFromArrayerTest
- * @package Tests\Conjoon\MailClient\Data\Protocol\Http\Request\Message\FromArrayer
+ * Tests  DefaultMessageBodyDraftJsonTransformer.
  */
 class DefaultMessageBodyDraftJsonTransformerTest extends TestCase
 {

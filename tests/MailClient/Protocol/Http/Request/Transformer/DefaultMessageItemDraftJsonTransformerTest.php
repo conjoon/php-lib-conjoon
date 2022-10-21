@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Data\Protocol\Http\Request\Transformer;
+namespace Tests\Conjoon\MailClient\Data\Protocol\Http\Request\Request\Transformer;
 
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
@@ -41,8 +41,7 @@ use Exception;
 use Tests\TestCase;
 
 /**
- * Class DefaultMessageItemDraftJsonTransformerTest
- * @package Tests\Conjoon\MailClient\Data\Protocol\Http\Request\Transformer
+ * Tests DefaultMessageItemDraftJsonTransformer.
  */
 class DefaultMessageItemDraftJsonTransformerTest extends TestCase
 {
