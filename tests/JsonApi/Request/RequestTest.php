@@ -30,11 +30,12 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
+use Conjoon\Http\Request\Method;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Request\Request as JsonApiRequest;
-use Conjoon\Http\Request as HttpRequest;
+use Conjoon\Http\Request\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
 use Tests\TestCase;
 
@@ -51,8 +52,12 @@ class RequestTest extends TestCase
         $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
         $validator = $this->createMockForAbstract(Validator::class);
         $url = new JsonApiUrl("http://www.localhost.com:8080/index.php", $resourceTarget, true);
-        $request = new JsonApiRequest($url, $validator);
+        $request = new JsonApiRequest(
+            url: $url,
+            queryValidator: $validator
+        );
 
+        $this->assertSame(Method::GET, $request->getMethod());
         $this->assertSame($url, $request->getUrl());
         $this->assertSame($validator, $request->getQueryValidator());
         $this->assertSame($resourceTarget, $request->getResourceTarget());
@@ -60,8 +65,9 @@ class RequestTest extends TestCase
 
         $this->assertInstanceOf(HttpRequest::class, $request);
 
-        $request = new JsonApiRequest($url);
+        $request = new JsonApiRequest($url, method: Method::PATCH);
         $this->assertNull($request->getQueryValidator());
+        $this->assertSame(Method::PATCH, $request->getMethod());
     }
 
 
@@ -91,7 +97,7 @@ class RequestTest extends TestCase
             return true;
         }));
 
-        $request = new JsonApiRequest($url, $validator);
+        $request = new JsonApiRequest(url: $url, queryValidator: $validator);
         $errors = $request->validate();
 
         $this->assertInstanceOf(

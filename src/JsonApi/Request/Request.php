@@ -30,7 +30,8 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Request as HttpRequest;
+use Conjoon\Http\Request\Request as HttpRequest;
+use Conjoon\Http\Request\Method as HttpMethod;
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\JsonApi\Request\Url as JsonApiUrl;
 use Conjoon\JsonApi\Query\Validation\Validator;
@@ -41,12 +42,6 @@ use Conjoon\JsonApi\Query\Validation\Validator;
  */
 class Request extends HttpRequest
 {
-    /**
-     * @var HttpRequest
-     */
-    protected HttpRequest $request;
-
-
     /**
      * @var Validator|null
      */
@@ -61,19 +56,11 @@ class Request extends HttpRequest
      */
     public function __construct(
         JsonApiUrl $url,
+        HttpMethod $method = HttpMethod::GET,
         Validator $queryValidator = null
     ) {
-        parent::__construct($url);
+        parent::__construct($url, $method);
         $this->queryValidator = $queryValidator;
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function getMethod(): string
-    {
-        return $this->request->getMethod();
     }
 
 

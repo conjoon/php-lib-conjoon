@@ -27,37 +27,30 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http;
+namespace Tests\Conjoon\Http;
+
+use Conjoon\Http\Request\Request;
+use Conjoon\Http\Request\Method;
+use Conjoon\Http\Url;
+use Tests\TestCase;
 
 /**
- * Represents an Http Request.
- *
+ * Tests Request..
  */
-class Request
+class RequestTest extends TestCase
 {
     /**
-     * @var Url
+     * Class functionality
      */
-    protected Url $url;
-
-
-    /**
-     * Constructor.
-     *
-     * @param Url $url
-     */
-    public function __construct(Url $url)
+    public function testClass()
     {
-        $this->url = $url;
-    }
+        $url = new Url("http://www.localhost.com:8080/index.php");
+        $request = new Request($url);
 
-    /**
-     * Get the URL for the request.
-     *
-     * @return Url
-     */
-    public function getUrl(): Url
-    {
-        return $this->url;
+        $this->assertSame($url, $request->getUrl());
+        $this->assertSame(Method::GET, $request->getMethod());
+
+        $request = new Request($url, Method::POST);
+        $this->assertSame(Method::POST, $request->getMethod());
     }
 }
