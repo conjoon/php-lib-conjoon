@@ -158,7 +158,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
         if (!is_null($offset) && !is_int($offset)) { // @phpstan-ignore-line
             throw new OutOfBoundsException(
                 "expected integer key for \"offset\", " .
-                "but got \"$offset\" (type: " . (gettype($offset)) .")"
+                "but got \"$offset\" (type: " . (gettype($offset)) . ")"
             );
         }
         $entityType = $this->getEntityType();
