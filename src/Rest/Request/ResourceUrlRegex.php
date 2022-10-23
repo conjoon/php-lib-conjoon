@@ -29,12 +29,16 @@ declare(strict_types=1);
 
 namespace Conjoon\Rest\Request;
 
+use Conjoon\Core\Contract\Arrayable;
+
 /**
  * Provides functionality to map urls to url-templates, for retrieving information about
  * associated resource targets and path parameters.
  *
  * @example
  *    $regex = new ResourceUrlRegex("/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", MessageItem::class);
+ *    $regex->getPathParameterNames();
+ *    // ["mailFolderId", "messageItemId"];
  *
  *    $regex->hasResourceId("http://localhost/MailFolders/INBOX/MessageItems/123"); // true
  *    $regex->getResourceName("http://localhost/MailFolders/INBOX/MessageItems/123"); // "MessageItem"
@@ -42,7 +46,7 @@ namespace Conjoon\Rest\Request;
  *    $regex->getParameters("http://localhost/MailFolders/INBOX/MessageItems/123");
  *    // ["mailFolderId" => "INBOX", "messageItemId" => "123"]
  */
-class ResourceUrlRegex
+class ResourceUrlRegex implements Arrayable
 {
     /**
      * @var ?string
@@ -52,12 +56,12 @@ class ResourceUrlRegex
     /**
      * @var string
      */
-    private string $urlTemplate;
+    private readonly string $urlTemplate;
 
     /**
      * @var string
      */
-    private string $resourceName;
+    private readonly string $resourceName;
 
 
     /**
@@ -161,7 +165,7 @@ class ResourceUrlRegex
      */
     public function hasResourceId(string $url): ?bool
     {
-        $matches = $this->getMatches($url);
+        $matches = $this->getMatch($url);
         if (!$matches) {
             return null;
         }
@@ -195,7 +199,7 @@ class ResourceUrlRegex
      */
     public function getPathParameters(string $url): ?array
     {
-        $matches = $this->getMatches($url);
+        $matches = $this->getMatch($url);
         if (!$matches) {
             return null;
         }
@@ -221,7 +225,7 @@ class ResourceUrlRegex
      */
     public function getResourceName(string $url): ?string
     {
-        if (!$this->getMatches($url)) {
+        if (!$this->getMatch($url)) {
             return null;
         }
 
@@ -256,7 +260,7 @@ class ResourceUrlRegex
      * @param string $url
      * @return array<int, array<int, string>>|null
      */
-    protected function getMatches(string $url): ?array
+    public function getMatch(string $url): ?array
     {
         $regex = $this->getRegexString();
 
@@ -267,5 +271,17 @@ class ResourceUrlRegex
         }
 
         return $matches;
+    }
+
+
+    /**
+     * @inheritdoc
+     * @return array<int, string>
+     */
+    public function toArray(): array
+    {
+        return [
+            $this->getUrlTemplate(), $this->resourceName
+        ];
     }
 }

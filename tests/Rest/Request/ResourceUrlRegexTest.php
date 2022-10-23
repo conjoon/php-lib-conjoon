@@ -29,7 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Rest\Request;
 
+use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Rest\Request\ResourceUrlRegex;
+use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use ReflectionMethod;
 use Tests\TestCase;
@@ -45,7 +47,7 @@ class ResourceUrlRegexTest extends TestCase
     public function testClass(): void
     {
         $resourceUrlRegex = new ResourceUrlRegex("tpl", "Resource");
-
+        $this->assertInstanceOf(Arrayable::class, $resourceUrlRegex);
         $this->assertSame("tpl", $resourceUrlRegex->getUrlTemplate());
     }
 
@@ -62,7 +64,8 @@ class ResourceUrlRegexTest extends TestCase
             ],
             [
                 "input" => "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
-                "output" => "/\/MailAccounts\/(?<mailAccountId>[^\?\/]+)\/MailFolders\/(?<mailFolderId>[^\?\/]+)\/MessageItems(\??[^\/]*$|\/(?<messageItemId>[^\?\/]+))\??[^\/]*$/m"
+                "output" => "/\/MailAccounts\/(?<mailAccountId>[^\?\/]+)\/MailFolders\/(?<mailFolderId>[^\?\/]+)" .
+                            "\/MessageItems(\??[^\/]*$|\/(?<messageItemId>[^\?\/]+))\??[^\/]*$/m"
             ],
             [
                 "input" => "/MailAccounts/{mailAccountId}",
@@ -84,6 +87,68 @@ class ResourceUrlRegexTest extends TestCase
         }
     }
 
+
+    /**
+     * Tests getMatch()
+     * @return void
+     */
+    public function testGetMatch(): void
+    {
+        $tests = [
+            [
+                "input" => ["/MailAccounts/MailFolders", "MailFolders"],
+                "args" => ["MailFolders/3"],
+                "output" => null
+            ],
+            [
+                "input" => ["/MailAccounts/MailFolders/{mailFolderId}", "MailFolders"],
+                "args" => ["https://local.dev/MailAccounts/MailFolders/3"],
+                "output" => []
+            ],
+            [
+                "input" => ["/MailAccounts/MailFolders/{mailFolderId}", "MailFolders"],
+                "args" => ["https://local.dev/MailAccounts/MailFolders/"],
+                "output" => null
+            ],
+            [
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
+                "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts/MessageItems/53432"],
+                "output" => []
+            ],
+            [
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
+                "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts/MessageItems"],
+                "output" => []
+            ],
+            [
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
+                "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts"],
+                "output" => null
+            ]
+        ];
+
+
+        foreach ($tests as $test) {
+            ["input" => $input, "output" => $output, "args" => $args] = $test;
+            $resourceUrlRegex = new ResourceUrlRegex(...$input);
+
+            $match = $resourceUrlRegex->getMatch(...$args);
+            if ($output === null) {
+                $this->assertNull($match);
+            } else {
+                $this->assertIsArray($match);
+            }
+        }
+    }
 
     /**
      * Tests getRegexString()
@@ -136,17 +201,26 @@ class ResourceUrlRegexTest extends TestCase
                 "output" => null
             ],
             [
-                "input" => ["/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", "MessageItem"],
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
                 "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts/MessageItems/53432"],
                 "output" => true
             ],
             [
-                "input" => ["/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", "MessageItem"],
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
                 "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts/MessageItems"],
                 "output" => false
             ],
             [
-                "input" => ["/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", "MessageItem"],
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
                 "args" => ["https://localhost/MailAccounts/dev/MailFolders/Inbox.Sent%20Drafts"],
                 "output" => null
             ]
@@ -200,7 +274,8 @@ class ResourceUrlRegexTest extends TestCase
             ],
 
             [
-                "input" => "/Mail/{mail}/Accounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                "input" => "/Mail/{mail}/Accounts/{mailAccountId}/MailFolders/" .
+                           "{mailFolderId}/MessageItems/{messageItemId}",
                 "output" => ["mail", "mailAccountId", "mailFolderId", "messageItemId"]
             ]
         ];
@@ -209,6 +284,7 @@ class ResourceUrlRegexTest extends TestCase
         foreach ($tests as $test) {
             ["input" => $input, "output" => $output] = $test;
             $resourceUrlRegex = new ResourceUrlRegex($input, "Resource");
+
             $this->assertSame($output, $resourceUrlRegex->getPathParameterNames());
             // always produces same result
             $this->assertSame($output, $resourceUrlRegex->getPathParameterNames());
@@ -237,7 +313,9 @@ class ResourceUrlRegexTest extends TestCase
             [
                 "input" => "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
                 "args" => ["/MailAccounts/dev/MailFolders/Inbox.Drafts%20Sent/MessageItems/randomId"],
-                "output" => ["mailAccountId" => "dev", "mailFolderId" => "Inbox.Drafts%20Sent", "messageItemId" => "randomId"]
+                "output" => [
+                    "mailAccountId" => "dev", "mailFolderId" => "Inbox.Drafts%20Sent", "messageItemId" => "randomId"
+                ]
             ],
 
             [
@@ -250,7 +328,11 @@ class ResourceUrlRegexTest extends TestCase
 
         foreach ($tests as $test) {
             ["input" => $input, "args" => $args, "output" => $output] = $test;
-            $resourceUrlRegex = new ResourceUrlRegex($input, "Resource");
+
+            $resourceUrlRegex = $this->getMockProxy([$input, "Resource"]);
+
+            $resourceUrlRegex->expects($this->exactly(2))->method("getMatch");
+
             $this->assertSame($output, $resourceUrlRegex->getPathParameters(...$args));
             // always produces same result
             $this->assertSame($output, $resourceUrlRegex->getPathParameters(...$args));
@@ -277,23 +359,61 @@ class ResourceUrlRegexTest extends TestCase
                 "output" => "Resource"
             ],
             [
-                "input" => ["/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", "Resource"],
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "Resource"
+                ],
                 "args" => ["/Mail/4/Accounts/dev/MailFolders/Inbox.Drafts%20Sent/MessageItems/randomId"],
                 "output" => null
             ],
 
             [
-                "input" => ["/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}", "MessageItem"],
+                "input" => [
+                    "/MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems/{messageItemId}",
+                    "MessageItem"
+                ],
                 "args" => ["/MailAccounts/dev/MailFolders/Inbox.Drafts%20Sent/MessageItems"],
                 "output" => "MessageItem"
             ]
         ];
 
-
         foreach ($tests as $test) {
             ["input" => $input, "args" => $args, "output" => $output] = $test;
-            $resourceUrlRegex = new ResourceUrlRegex(...$input);
+
+            $resourceUrlRegex = $this->getMockProxy($input);
+            $resourceUrlRegex->expects($this->exactly(1))->method("getMatch")->with($args[0]);
+
             $this->assertSame($output, $resourceUrlRegex->getResourceName(...$args));
         }
+    }
+
+
+    /**
+     * @return void
+     */
+    public function testToArray()
+    {
+        $resourceUrlRegex = new ResourceUrlRegex("/MailAccounts/MailFolders", "Resource");
+
+        $this->assertSame(
+            [
+                "/MailAccounts/MailFolders", "Resource"
+            ],
+            $resourceUrlRegex->toArray()
+        );
+    }
+
+
+    /**
+     * @param array<int, string> $args
+     * @return MockObject&ResourceUrlRegex
+     */
+    protected function getMockProxy(array $args): MockObject&ResourceUrlRegex
+    {
+        return $this->getMockBuilder(ResourceUrlRegex::class)
+            ->onlyMethods(["getMatch"])
+            ->enableProxyingToOriginalMethods()
+            ->setConstructorArgs($args)
+            ->getMock();
     }
 }

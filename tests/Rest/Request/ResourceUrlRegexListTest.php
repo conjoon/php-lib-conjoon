@@ -27,11 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Request;
+namespace Tests\Conjoon\Rest\Request;
 
 use Conjoon\Core\AbstractList;
-use Conjoon\JsonApi\Request\ResourceUrlRegex;
-use Conjoon\JsonApi\Request\ResourceUrlRegexList;
+use Conjoon\Rest\Request\ResourceUrlRegex;
+use Conjoon\Rest\Request\ResourceUrlRegexList;
+use Conjoon\Http\Url;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -41,8 +44,9 @@ class ResourceUrlRegexListTest extends TestCase
 {
     /**
      * Tests constructor
+     * @return void
      */
-    public function testClass()
+    public function testClass(): void
     {
         $list = $this->createList();
         $this->assertInstanceOf(AbstractList::class, $list);
@@ -52,14 +56,70 @@ class ResourceUrlRegexListTest extends TestCase
 
 
     /**
-     * Tests toArray
+     * Tests getMatch()
+     * @return void
+     * @throws ReflectionException
+     */
+    public function testGetMatch(): void
+    {
+        $list = $this->createList();
+        $url  = new Url("url");
+        $urlStr = $url->toString();
+
+        $matches = $this->makeAccessible($list, "matches", true);
+
+        $getRegexMock = function ($returnValue, $numCalls) use ($urlStr) {
+            $regex = $this->getMockBuilder(ResourceUrlRegex::class)
+                ->disableOriginalConstructor()
+                ->onlyMethods(["getMatch"])
+                ->getMock();
+            $regex->expects($this->exactly($numCalls))
+                ->method("getMatch")
+                ->with($urlStr)->willReturn($returnValue);
+
+            return $regex;
+        };
+        $regex1 = $getRegexMock(null, 2);
+        $regex2 = $getRegexMock([], 2);
+        $regex3 = $getRegexMock(null, 0);
+        $regex4 = $getRegexMock(null, 0);
+
+        $list[] = $regex1;
+        $list[] = $regex2;
+        $list[] = $regex3;
+
+        $this->assertSame($regex2, $list->getMatch($url));
+        // force re-call to make sure cache is used
+        $this->assertSame($regex2, $list->getMatch($url));
+
+        /** @phpstan-ignore-next-line */
+        $this->assertNotEmpty($matches->getValue($list));
+
+        $list[] = $regex4;
+        /** @phpstan-ignore-next-line */
+        $this->assertEmpty($matches->getValue($list));
+
+        $this->assertSame(
+            $regex2,
+            $list->getMatch($url)
+        );
+
+        unset($list[4]);
+        /** @phpstan-ignore-next-line */
+        $this->assertEmpty($matches->getValue($list));
+    }
+
+
+    /**
+     * Tests toArray()
      * @return void
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $list = new ResourceUrlRegexList();
         $this->assertEquals([], $list->toArray());
 
+        /** @var ResourceUrlRegex&MockObject $resourceUrlRegex */
         $resourceUrlRegex = $this->createMockForAbstract(
             ResourceUrlRegex::class,
             ["toArray"],
