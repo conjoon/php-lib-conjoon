@@ -33,16 +33,21 @@ use ArrayAccess;
 use Conjoon\Core\Contract\Arrayable;
 use Countable;
 use Iterator;
+use OutOfBoundsException;
 use TypeError;
 
 /**
  * Class AbstractList.
  * Type-safe approach for maintaining lists holding element of a specific data type.
+ *
+ * @template TValue
+ * @implements Iterator<int, TValue>
+ * @implements  ArrayAccess<int, TValue>
  */
 abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countable
 {
     /**
-     * @var array
+     * @var array<int, TValue>
      */
     protected array $data = [];
 
@@ -54,13 +59,24 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 
 
     /**
+     * Constructor.
+     * Final to allow new static();
+     *
+     * @see make
+     */
+    final public function __construct()
+    {
+    }
+
+
+    /**
      * Factory method for easily creating instances of the implementing class.
      *
      * @param mixed ...$items
      *
-     * @return AbstractList
+     * @return static
      */
-    public static function make(...$items): AbstractList
+    public static function make(...$items): static
     {
         $self = new static();
 
@@ -87,7 +103,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
      * @param callable $mapFn The callable to pass to the callback submitted to
      * array_map()
      *
-     * @return array
+     * @return array<int, TValue>
      */
     public function map(callable $mapFn): array
     {
@@ -101,7 +117,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
      * @param callable $findFn A callback. Return true in the function to indicate a match. First match will
      * be returned. The callback is passed the current entry.
      *
-     * @return mixed
+     * @return ?TValue
      */
     public function findBy(callable $findFn): mixed
     {
@@ -118,7 +134,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * Returns the element at the head of the AbstractList, or null if the list is empty.
      *
-     * @return mixed
+     * @return ?TValue
      */
     public function peek(): mixed
     {
@@ -134,17 +150,24 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      *
-     * @throws TypeError if $value is not of the type MessageItem
+     * @throws TypeError|OutOfBoundsException if $value is not of the type defined
+     * with this getEntityType, or f $offset is not an int
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
-
+        if (!is_null($offset) && !is_int($offset)) { // @phpstan-ignore-line
+            throw new OutOfBoundsException(
+                "expected integer key for \"offset\", " .
+                "but got \"$offset\" (type: " . (gettype($offset)) .")"
+            );
+        }
         $entityType = $this->getEntityType();
 
         // instanceof has higher precedence, do
         // (!$value instanceof $entityType)
         // would also be a valid expression
         if (!($value instanceof $entityType)) {
+            /** @var object $value */
             throw new TypeError(
                 "Expected type \"$entityType\" for value-argument, got " . get_class($value)
             );
@@ -171,7 +194,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         unset($this->data[$offset]);
     }
@@ -180,7 +203,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->data[$offset] ?? null;
     }
@@ -193,16 +216,15 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function rewind()
+    public function rewind(): void
     {
-
         $this->position = 0;
     }
 
     /**
      * @inheritdoc
      */
-    public function key()
+    public function key(): mixed
     {
         return $this->position;
     }
@@ -210,7 +232,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function current()
+    public function current(): mixed
     {
         return $this->data[$this->position];
     }
@@ -218,7 +240,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function next()
+    public function next(): void
     {
         $this->position++;
     }
@@ -236,9 +258,9 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 // --------------------------
 
     /**
-     * @return int|void
+     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->data);
     }
@@ -249,7 +271,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 // --------------------------
 
     /**
-     * @return array
+     * @return array<int, mixed>
      */
     public function toArray(): array
     {

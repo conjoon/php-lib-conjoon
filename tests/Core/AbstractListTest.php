@@ -33,6 +33,8 @@ use ArrayAccess;
 use Conjoon\Core\AbstractList;
 use Countable;
 use Iterator;
+use OutOfBoundsException;
+use PHPUnit\Framework\MockObject\MockObject;
 use stdClass;
 use Tests\TestCase;
 use TypeError;
@@ -49,8 +51,9 @@ class AbstractListTest extends TestCase
 
     /**
      * Tests constructor
+     * @return void
      */
-    public function testConstructor()
+    public function testConstructor(): void
     {
 
         $abstractList = $this->getMockForAbstractList();
@@ -60,11 +63,24 @@ class AbstractListTest extends TestCase
         $this->assertInstanceOf(Iterator::class, $abstractList);
     }
 
+    /**
+     * Tests OutOfBoundsException /w string as key
+     * @return void
+     */
+    public function testOffsetSetWithStringAndOutOfBoundsException(): void
+    {
+        $this->expectException(OutOfBoundsException::class);
+
+        $abstractList = $this->getMockForAbstractList();
+        $abstractList["1"] = "foo";
+    }
+
 
     /**
      * Tests ArrayAccess /w type exception
+     * @return void
      */
-    public function testArrayAccessException()
+    public function testArrayAccessException(): void
     {
         $this->expectException(TypeError::class);
 
@@ -75,8 +91,9 @@ class AbstractListTest extends TestCase
 
     /**
      * Tests ArrayAccess
+     * @return void
      */
-    public function testArrayAccessAndCountable()
+    public function testArrayAccessAndCountable(): void
     {
         $abstractList = $this->getMockForAbstractList();
 
@@ -98,8 +115,9 @@ class AbstractListTest extends TestCase
 
     /**
      * Tests Arrayable
+     * @return void
      */
-    public function testToArray()
+    public function testToArray(): void
     {
         $abstractList = $this->getMockForAbstractList();
 
@@ -122,7 +140,7 @@ class AbstractListTest extends TestCase
      * Tests map()
      * @return void
      */
-    public function testMap()
+    public function testMap(): void
     {
         $abstractList = $this->getMockForAbstractList();
 
@@ -139,19 +157,19 @@ class AbstractListTest extends TestCase
         $abstractList[] = $cmpList[0];
         $abstractList[] = $cmpList[1];
 
-        $foo = new class () {
-        };
-
         $mock = $this->getMockBuilder(stdClass::class)
-            ->addMethods(["mapCallback"])->getMock();
+                     ->addMethods(["mapCallback"])->getMock();
 
         $mock->expects($this->exactly(2))
             ->method("mapCallback")->withConsecutive([$cmpList[0]], [$cmpList[1]])
             ->willReturnOnConsecutiveCalls($cmpList[0]->foo * 2, $cmpList[1]->foo * 2);
 
+
+        /** @phpstan-ignore-next-line */
+        $cb = $mock->mapCallback(...);
         $this->assertEquals(
             [2, 6],
-            $abstractList->map(array($mock, "mapCallback"))
+            $abstractList->map($cb)
         );
     }
 
@@ -160,7 +178,7 @@ class AbstractListTest extends TestCase
      * Tests findBy()
      * @return void
      */
-    public function testFindBy()
+    public function testFindBy(): void
     {
         $abstractList = $this->getMockForAbstractList();
 
@@ -177,9 +195,6 @@ class AbstractListTest extends TestCase
         $abstractList[] = $cmpList[0];
         $abstractList[] = $cmpList[1];
 
-        $foo = new class () {
-        };
-
         $mock = $this->getMockBuilder(stdClass::class)
             ->addMethods(["findCallback"])->getMock();
 
@@ -187,9 +202,11 @@ class AbstractListTest extends TestCase
             ->method("findCallback")->withConsecutive([$cmpList[0]], [$cmpList[1]])
             ->willReturnOnConsecutiveCalls(false, true);
 
+        /** @phpstan-ignore-next-line */
+        $cb = $mock->findCallback(...);
         $this->assertSame(
             $cmpList[1],
-            $abstractList->findBy(array($mock, "findCallback"))
+            $abstractList->findBy($cb)
         );
     }
 
@@ -197,7 +214,7 @@ class AbstractListTest extends TestCase
      * Tests peek()
      * @return void
      */
-    public function testPeek()
+    public function testPeek(): void
     {
         $abstractList = $this->getMockForAbstractList();
 
@@ -217,7 +234,7 @@ class AbstractListTest extends TestCase
      * Tests make()
      * @return void
      */
-    public function testMake()
+    public function testMake(): void
     {
         $abstractList = new class extends AbstractList {
             public function getEntityType(): string
@@ -237,11 +254,15 @@ class AbstractListTest extends TestCase
         $this->assertSame($list[1], $two);
     }
 
+
 // ---------------------
 //    Helper Functions
 // ---------------------
 
-    protected function getMockForAbstractList()
+    /**
+     * @return MockObject&AbstractList<stdClass>
+     */
+    protected function getMockForAbstractList(): AbstractList&MockObject
     {
 
         $mock = $this->getMockForAbstractClass(AbstractList::class);
