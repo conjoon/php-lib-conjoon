@@ -92,11 +92,9 @@ class ResourceUrlRegexListTest extends TestCase
         // force re-call to make sure cache is used
         $this->assertSame($regex2, $list->getMatch($url));
 
-        /** @phpstan-ignore-next-line */
         $this->assertNotEmpty($matches->getValue($list));
 
         $list[] = $regex4;
-        /** @phpstan-ignore-next-line */
         $this->assertEmpty($matches->getValue($list));
 
         $this->assertSame(
@@ -105,7 +103,6 @@ class ResourceUrlRegexListTest extends TestCase
         );
 
         unset($list[4]);
-        /** @phpstan-ignore-next-line */
         $this->assertEmpty($matches->getValue($list));
     }
 

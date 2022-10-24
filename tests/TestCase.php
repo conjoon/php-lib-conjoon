@@ -61,11 +61,11 @@ abstract class TestCase extends PHPUnitTestCase
      * @param $name
      * @param bool $isProperty
      *
-     * @return ReflectionMethod|ReflectionProperty
+     * @return ($isProperty is true ? ReflectionProperty : ReflectionMethod)
      *
      * @throws ReflectionException
      */
-    protected function makeAccessible($inst, $name, bool $isProperty = false)
+    protected function makeAccessible($inst, $name, bool $isProperty = false): ReflectionMethod|ReflectionProperty
     {
         $refl = new ReflectionClass($inst);
 
