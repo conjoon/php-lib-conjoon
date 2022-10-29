@@ -27,15 +27,15 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Request;
+namespace Tests\Conjoon\Http;
 
-use Conjoon\Http\Request\Method;
+use Conjoon\Http\RequestMethod;
 use Tests\TestCase;
 
 /**
- * Tests Method.
+ * Tests RequestMethod.
  */
-class MethodTest extends TestCase
+class RequestMethodTest extends TestCase
 {
 // ---------------------
 //    Tests
@@ -51,23 +51,23 @@ class MethodTest extends TestCase
     {
         $values = $this->getValues();
 
-        $this->assertSame(count($values), count(Method::cases()));
+        $this->assertSame(count($values), count(RequestMethod::cases()));
 
         $this->assertEqualsCanonicalizing(
             array_map(
                 function ($method) {
-                    return constant(Method::class . "::$method");
+                    return constant(RequestMethod::class . "::$method");
                 },
                 $this->getValues()
             ),
-            Method::cases()
+            RequestMethod::cases()
         );
 
         foreach ($values as $method) {
             /**
-             * @var Method $enum
+             * @var RequestMethod $enum
              */
-            $enum = constant(Method::class . "::$method");
+            $enum = constant(RequestMethod::class . "::$method");
             $this->assertSame($method, $enum->value);
         }
     }

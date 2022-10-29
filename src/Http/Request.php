@@ -27,10 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Request;
+namespace Conjoon\Http;
 
-use Conjoon\Http\Url;
-use Conjoon\Http\Request\Method as HttpMethod;
+use Conjoon\Net\Url;
 
 /**
  * Represents an Http Request.
@@ -45,18 +44,18 @@ class Request
 
 
     /**
-     * @var HttpMethod
+     * @var RequestMethod
      */
-    protected readonly HttpMethod $method;
+    protected readonly RequestMethod $method;
 
 
     /**
      * Constructor.
      *
      * @param Url $url
-     * @param HttpMethod $method
+     * @param RequestMethod $method
      */
-    public function __construct(Url $url, HttpMethod $method = HttpMethod::GET)
+    public function __construct(Url $url, RequestMethod $method = RequestMethod::GET)
     {
         $this->url = $url;
         $this->method = $method;
@@ -77,9 +76,9 @@ class Request
     /**
      * Get the URL for the request.
      *
-     * @return HttpMethod
+     * @return RequestMethod
      */
-    public function getMethod(): HttpMethod
+    public function getMethod(): RequestMethod
     {
         return $this->method;
     }

@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http;
 
-use Conjoon\Http\Request\Request;
-use Conjoon\Http\Request\Method;
-use Conjoon\Http\Url;
+use Conjoon\Http\Request;
+use Conjoon\Http\RequestMethod;
+use Conjoon\Net\Url;
 use Tests\TestCase;
 
 /**
@@ -44,13 +44,13 @@ class RequestTest extends TestCase
      */
     public function testClass()
     {
-        $url = new Url("http://www.localhost.com:8080/index.php");
+        $url = new Url("https://www.localhost.com:8080/index.php");
         $request = new Request($url);
 
         $this->assertSame($url, $request->getUrl());
-        $this->assertSame(Method::GET, $request->getMethod());
+        $this->assertSame(RequestMethod::GET, $request->getMethod());
 
-        $request = new Request($url, Method::POST);
-        $this->assertSame(Method::POST, $request->getMethod());
+        $request = new Request($url, RequestMethod::POST);
+        $this->assertSame(RequestMethod::POST, $request->getMethod());
     }
 }

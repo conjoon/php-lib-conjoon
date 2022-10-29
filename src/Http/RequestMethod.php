@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Request;
+namespace Conjoon\Http;
 
 /**
  * HTTP request methods.
@@ -35,7 +35,7 @@ namespace Conjoon\Http\Request;
  *
  * @see https://httpwg.org/specs/rfc9110.html#methods
  */
-enum Method: string
+enum RequestMethod: string
 {
     /**
      * The GET method requests a representation of the specified resource.
