@@ -27,33 +27,47 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Net\Uri;
+namespace Conjoon\Net;
 
 use BadMethodCallException;
 use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Contract\StringStrategy;
-use Conjoon\Net\Uri\Exception\UriSyntaxException;
+use Conjoon\Net\Exception\UriSyntaxException;
 
 /**
  * Represents a Uniform Resource Identifier (URI).
+ *
+ * @method getScheme()
+ * @method getUser()
+ * @method getPass()
+ * @method getHost()
+ * @method getPort()
+ * @method getPath()
+ * @method getQuery()
+ * @method getFragment()
+ *
+ * @phpstan-consistent-constructor
  */
 class Uri implements Stringable
 {
     /**
      * @var string
      */
-    protected readonly string $uri;
-
+    private readonly string $uri;
 
     /**
      * After successfully parsing the $uri into it's parts, an array with the name of the parts
-     * mapped to their value is available. @see parse_url()
-     * is available:
+     * mapped to their value is available.
      *
      * @var array<string, string|int>
      */
-    protected readonly array $parts;
+    private readonly array $parts;
 
+
+    public static function create(string $uri): static
+    {
+        return new static($uri);
+    }
 
     /**
      * @param string $uri
@@ -74,6 +88,16 @@ class Uri implements Stringable
         $this->parts = $parts;
     }
 
+
+    /**
+     * An URI is considered to be absolute if it has a scheme specified.
+     *
+     * @return bool true if this URI is absolute, otherwise false.
+     */
+    public function isAbsolute(): bool
+    {
+        return $this->getScheme() !== null;
+    }
 
     /**
      * Delegates to various getters available for the components of a URI.
@@ -107,7 +131,7 @@ class Uri implements Stringable
      * @param StringStrategy|null $stringStrategy
      * @return string
      */
-    public function toString(?StringStrategy $stringStrategy = null): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
         return $stringStrategy ? $stringStrategy->toString($this) : $this->uri;
     }

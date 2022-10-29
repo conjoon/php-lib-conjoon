@@ -27,54 +27,50 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net;
+namespace Tests\Conjoon\Net\Uri;
 
-use Conjoon\Net\UriTemplateRegex;
+use Conjoon\Net\Uri\PathTemplateRegex;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
  * tests UriTemplateRegex
  */
-class UriTemplateRegexTest extends TestCase
+class PathTemplateRegexTest extends TestCase
 {
-    /**
-     * Tests getTemplateString()
-     *
-     * @return void
-     */
-    public function testGetTemplateString(): void
-    {
-        $uriTemplateRegex = new UriTemplateRegex("tpl");
-        $this->assertSame("tpl", $uriTemplateRegex->getTemplateString());
-    }
-
-
     /**
      * Tests getRegexString()
      * @return void
+     * @throws ReflectionException
      */
     public function testGetRegexString(): void
     {
         $tests = [[
             "input" => "tpl",
-            "output" => "/tpl/m"
+            "output" => "/tpl\??[^\/]*$/m"
         ], [
             "input" => "/tpl/{resourceId}",
-            "output" => "/\/tpl(\??[^\/]*$|\/(?<resourceId>[^\?\/]+))\??[^\/]*$/m"
+            "output" => "/^\/tpl\/(?<resourceId>[^\?\/]+)\??[^\/]*$/m"
         ], [
             "input" => "tpl/resource/{resourceId}/hierarchy/{subItemId}",
             "output" => "/tpl\/resource\/(?<resourceId>[^\?\/]+)\/" .
-                        "hierarchy(\??[^\/]*$|\/(?<subItemId>[^\?\/]+))\??[^\/]*$/m"
+                "hierarchy\/(?<subItemId>[^\?\/]+)\??[^\/]*$/m"
+        ], [
+            "input" => "tpl/resource/{resourceId}/hierarchy/{subItemId}/index.php?query=foo",
+            "output" => "/tpl\/resource\/(?<resourceId>[^\?\/]+)\/hierarchy" .
+                        "\/(?<subItemId>[^\?\/]+)\/index.php\?query=foo\??[^\/]*$/m"
         ], [
             "input" => "tpl/{resourceId}",
-            "output" => "/tpl(\??[^\/]*$|\/(?<resourceId>[^\?\/]+))\??[^\/]*$/m"
+            "output" => "/tpl\/(?<resourceId>[^\?\/]+)\??[^\/]*$/m"
         ]];
 
         foreach ($tests as $test) {
             ["input" => $input, "output" => $output] = $test;
 
-            $uriTemplateRegex = new UriTemplateRegex($input);
-            $this->assertSame($output, $uriTemplateRegex->getRegexString());
+            $pathTemplateRegex = new PathTemplateRegex($input);
+            $getRegexString = $this->makeAccessible($pathTemplateRegex, "getRegexString");
+
+            $this->assertSame($output, $getRegexString->invokeArgs($pathTemplateRegex, []));
         }
     }
 
@@ -94,15 +90,22 @@ class UriTemplateRegexTest extends TestCase
             "input" => "someUri",
             "output" => null
         ], [
+            "cArg" => "/Resources/{resourceId}",
+            "input" => "/Resources",
+            "output" => null
+        ], [
             "cArg" => "/tpl/{resourceId}",
             "input" => "/tpl/1?someParam=someValue",
             "output" => [
                 "resourceId" => "1"
             ]
         ], [
-            "cArg" => "tpl/resource/{resourceId}/hierarchy/{subItemId}",
+            "cArg" => "tpl/resource/{resourceId}/hierarchy/{subItemId}/subpart",
             "input" => "tpl/resource/123/hierarchy/456/subpart",
-            "output" => null
+            "output" => [
+                "resourceId" => "123",
+                "subItemId" => "456"
+            ]
         ], [
             "cArg" => "tpl/resource/{resourceId}/hierarchy/{subItemId}",
             "input" => "tpl/resource/123/hierarchy/456",
@@ -110,16 +113,23 @@ class UriTemplateRegexTest extends TestCase
                 "resourceId" => "123",
                 "subItemId" => "456"
             ]
+        ], [
+            "cArg" => "tpl/resource/{resourceId}/hierarchy/{subItemId}/index.php",
+            "input" => "tpl/resource/123/hierarchy/456/index.php?query=foo",
+            "output" => [
+                "resourceId" => "123",
+                "subItemId" => "456"
+            ],
         ]];
 
         foreach ($tests as $test) {
             ["cArg" => $cArg, "input" => $input, "output" => $output] = $test;
 
-            $uriTemplateRegex = new UriTemplateRegex($cArg);
+            $pathTemplateRegex = new PathTemplateRegex($cArg);
             if ($output === null) {
-                $this->assertNull($uriTemplateRegex->match($input));
+                $this->assertNull($pathTemplateRegex->match($input));
             } else {
-                $this->assertEquals($output, $uriTemplateRegex->match($input));
+                $this->assertEquals($output, $pathTemplateRegex->match($input));
             }
         }
     }

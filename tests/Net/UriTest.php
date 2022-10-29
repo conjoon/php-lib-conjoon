@@ -27,11 +27,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri;
+namespace Tests\Conjoon\Net;
 
 use BadMethodCallException;
-use Conjoon\Net\Uri\Exception\UriSyntaxException;
-use Conjoon\Net\Uri\Uri;
+use Conjoon\Net\Exception\UriSyntaxException;
+use Conjoon\Net\Uri;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
@@ -46,7 +46,7 @@ class UriTest extends TestCase
     {
         $this->expectException(UriSyntaxException::class);
 
-        new Uri("https://host:port");
+        $this->createInstanceToTest(["https://host:port"]);
     }
 
 
@@ -54,7 +54,42 @@ class UriTest extends TestCase
     {
         $parts = ["scheme", "user", "pass", "host", "port", "path", "query", "fragment"];
 
-        $tests = [[
+        $tests = $this->getTestsForMagicCallToGetters();
+
+        foreach ($tests as $test) {
+            ["input" => $input, "output" => $output, "isAbsolute" => $isAbsolute] = $test;
+
+            $uri = $this->createInstanceToTest([$input]);
+
+            foreach ($parts as $part) {
+                $method = "get" . ucfirst($part);
+                $this->assertSame($output[$part] ?? null, $uri->{$method}());
+            }
+
+            $this->assertSame($isAbsolute, $uri->isAbsolute());
+        }
+    }
+
+
+    public function testMagicCallWithBadMethodCallException(): void
+    {
+        $this->expectException(BadMethodCallException::class);
+
+        $uri = $this->createInstanceToTest(["https://uri.com"]);
+
+        $uri->methodDoesNotExist();
+    }
+
+
+    public function testToString(): void
+    {
+        $this->runToStringTest($this->getClassToTest());
+    }
+
+
+    protected function getTestsForMagicCallToGetters()
+    {
+        return [[
             "input" => "scheme://user:pass@host:8080/path?query#fragment",
             "output" => [
                 "scheme" => "scheme",
@@ -65,40 +100,43 @@ class UriTest extends TestCase
                 "path" => "/path",
                 "query" => "query",
                 "fragment" => "fragment"
-            ]
+            ],
+            "isAbsolute" => true
         ], [
             "input" => "./path?query=string",
             "output" => [
                 "path" => "./path",
                 "query" => "query=string"
-            ]
+            ],
+            "isAbsolute" => false
+        ], [
+            "input" => "https://localhost/../path",
+            "output" => [
+                "scheme" => "https",
+                "host" => "localhost",
+                "path" => "/../path"
+            ],
+            "isAbsolute" => true
+        ], [
+            "input" => "//localhost/../path",
+            "output" => [
+                "host" => "localhost",
+                "path" => "/../path"
+            ],
+            "isAbsolute" => false
         ]];
-
-        foreach ($tests as $test) {
-            ["input" => $input, "output" => $output] = $test;
-
-            $uri = new Uri($input);
-
-            foreach ($parts as $part) {
-                $method = "get" . ucfirst($part);
-                $this->assertSame($output[$part] ?? null, $uri->{$method}(), );
-            }
-        }
     }
 
 
-    public function testMagicCallWithBadMethodCallException(): void
+    protected function createInstanceToTest(array $arguments): Uri
     {
-        $this->expectException(BadMethodCallException::class);
-
-        $uri = new Uri("");
-        /*@phpstan-ignore-next-line*/
-        $uri->methodDoesNotExist();
+        $className = $this->getClassToTest();
+        return new $className(...$arguments);
     }
 
 
-    public function testToString(): void
+    protected function getClassToTest()
     {
-        $this->runToStringTest(Uri::class);
+        return Uri::class;
     }
 }
