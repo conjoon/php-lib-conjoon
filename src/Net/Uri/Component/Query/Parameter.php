@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Conjoon\Net\Uri\Component\Query;
 
 use Conjoon\Error\ErrorSource;
 use Conjoon\Core\Contract\StringStrategy;
@@ -99,6 +99,8 @@ class Parameter implements ErrorSource
 
     /**
      * @inheritdoc
+     *
+     * @return array<string, string>
      */
     public function toArray(): array
     {

@@ -27,17 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri;
+namespace Tests\Conjoon\Net\Uri\Component\Path;
 
-use Conjoon\Net\Uri\PathTemplate;
+use Conjoon\Net\Uri\Component\Path\Template;
 use Conjoon\Net\Uri;
-use Conjoon\Net\Uri\PathTemplateRegex;
 use Tests\TestCase;
 
 /**
  * tests UriTemplate
  */
-class PathTemplateTest extends TestCase
+class TemplateTest extends TestCase
 {
     /**
      * Tests getTemplateString()
@@ -79,7 +78,7 @@ class PathTemplateTest extends TestCase
         foreach ($tests as $test) {
             ["input" => $input, "output" => $output] = $test;
 
-            $uriTemplate = new PathTemplate($input);
+            $uriTemplate = new Template($input);
             $this->assertEquals($output, $uriTemplate->getVariableNames());
         }
     }
@@ -91,7 +90,7 @@ class PathTemplateTest extends TestCase
      */
     public function testMatch(): void
     {
-        $tpl = new PathTemplate("/MailFolder/{mailFolderId}");
+        $tpl = new Template("/MailFolder/{mailFolderId}");
 
         $this->assertSame(
             ["mailFolderId" => "2"],
@@ -103,7 +102,7 @@ class PathTemplateTest extends TestCase
         );
 
         // relative path
-        $tpl = new PathTemplate("MailFolder/{mailFolderId}");
+        $tpl = new Template("MailFolder/{mailFolderId}");
         $this->assertSame(
             ["mailFolderId" => "2"],
             $tpl->match(Uri::create("https://localhost:8080/pathMailFolder/2?query=value"))

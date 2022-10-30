@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Net\Uri\Component;
 
-use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Query;
+use Conjoon\Net\Uri\Component\Query\ParameterTrait;
+use Conjoon\Net\Uri\Component\Query;
 use Tests\StringableTestTrait;
 use Tests\TestCase;
 
@@ -46,11 +46,10 @@ class QueryTest extends TestCase
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
-        $query = $this->createTestInstance();
-
         $uses = class_uses($this->getTestedClass());
+        /** @phpstan-ignore-next-line */
         $this->assertContains(ParameterTrait::class, $uses);
     }
 
@@ -59,7 +58,7 @@ class QueryTest extends TestCase
      * tests getParameter()
      * @return void
      */
-    public function testGetParameter()
+    public function testGetParameter(): void
     {
         $query = $this->createTestInstance("parameter=value");
 
@@ -106,9 +105,9 @@ class QueryTest extends TestCase
      * tests getAllParameterNames() with parameters compiled to arrays
      * @return void
      */
-    public function testGetAllParameterNames()
+    public function testGetAllParameterNames(): void
     {
-        $query = $this->createTestInstance(null, []);
+        $query = $this->createTestInstance();
         $this->assertEquals([], $query->getAllParameterNames());
 
         $query = $this->createTestInstance(
@@ -167,7 +166,7 @@ class QueryTest extends TestCase
         $this->assertSame($query->toString(), $query->getName());
 
         $this->assertSame([
-            "query" => $query->toString()
+            "query" => "string"
         ], $query->toArray());
 
         $this->runToStringTest(Query::class);
@@ -196,10 +195,10 @@ class QueryTest extends TestCase
 
 
     /**
-     * @param null $queryString
+     * @param string|null $queryString
      * @return Query
      */
-    protected function createTestInstance($queryString = null): Query
+    protected function createTestInstance(string $queryString = null): Query
     {
         return new Query($queryString);
     }

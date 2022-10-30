@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Net\Uri\Component\Query;
 
 use Conjoon\Error\ErrorSource;
-use Conjoon\Http\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query\Parameter;
 use Tests\TestCase;
 
 /**
@@ -42,7 +42,7 @@ class ParameterTest extends TestCase
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
         $mock = $this->getQueryParameter("name", "value");
 
@@ -57,11 +57,11 @@ class ParameterTest extends TestCase
 
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param string $value
      * @return Parameter
      */
-    protected function getQueryParameter($name, $value): Parameter
+    protected function getQueryParameter(string $name, string $value): Parameter
     {
         return new Parameter($name, $value);
     }

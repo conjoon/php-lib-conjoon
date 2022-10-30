@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Net\Uri\Exception;
+namespace Conjoon\Net\Exception;
 
 use RuntimeException;
 

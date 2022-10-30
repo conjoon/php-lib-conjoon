@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Net\Uri;
+namespace Conjoon\Net\Uri\Component\Path;
 
 /**
  * Internal class used by PathTemplate to provide a regular expression to be used with PathTemplate.
@@ -50,7 +50,7 @@ namespace Conjoon\Net\Uri;
  *    $pathTemplateRegex->match("/Resources?fields[Resources]=4"); // null
  *
  */
-class PathTemplateRegex
+class TemplateRegex
 {
     /**
      * @var string|null

@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Conjoon\Net\Uri\Component\Query;
 
 /**
  * Trait for parameter utilities.
@@ -41,7 +41,7 @@ trait ParameterTrait
 
 
     /**
-     * Returns true if the the passed string matches the grouped query parameters pattern, otherwise false.
+     * Returns true if the passed string matches the grouped query parameters pattern, otherwise false.
      *
      * @example
      *    $this->isGroupParameter(new Parameter("fields[TYPE]", ""); // true

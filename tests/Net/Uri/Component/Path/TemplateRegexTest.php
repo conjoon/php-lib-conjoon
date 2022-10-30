@@ -27,16 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri;
+namespace Tests\Conjoon\Net\Uri\Component\Path;
 
-use Conjoon\Net\Uri\PathTemplateRegex;
+use Conjoon\Net\Uri\Component\Path\TemplateRegex;
 use ReflectionException;
 use Tests\TestCase;
 
 /**
  * tests UriTemplateRegex
  */
-class PathTemplateRegexTest extends TestCase
+class TemplateRegexTest extends TestCase
 {
     /**
      * Tests getRegexString()
@@ -67,7 +67,7 @@ class PathTemplateRegexTest extends TestCase
         foreach ($tests as $test) {
             ["input" => $input, "output" => $output] = $test;
 
-            $pathTemplateRegex = new PathTemplateRegex($input);
+            $pathTemplateRegex = new TemplateRegex($input);
             $getRegexString = $this->makeAccessible($pathTemplateRegex, "getRegexString");
 
             $this->assertSame($output, $getRegexString->invokeArgs($pathTemplateRegex, []));
@@ -125,7 +125,7 @@ class PathTemplateRegexTest extends TestCase
         foreach ($tests as $test) {
             ["cArg" => $cArg, "input" => $input, "output" => $output] = $test;
 
-            $pathTemplateRegex = new PathTemplateRegex($cArg);
+            $pathTemplateRegex = new TemplateRegex($cArg);
             if ($output === null) {
                 $this->assertNull($pathTemplateRegex->match($input));
             } else {

@@ -27,58 +27,39 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Conjoon\Net\Uri\Component\Query;
 
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterList;
 use Conjoon\Core\AbstractList;
-use Tests\TestCase;
 
 /**
- * Tests QueryParameterList.
+ * Class ParameterList organizes a list of QueryParameters.
+ *
+ * @extends AbstractList<Parameter>
  */
-class ParameterListTest extends TestCase
+class ParameterList extends AbstractList
 {
-// ---------------------
-//    Tests
-// ---------------------
-
     /**
-     * Tests constructor
+     * @inheritdoc
      */
-    public function testClass()
+    public function getEntityType(): string
     {
-
-        $list = $this->createList();
-        $this->assertInstanceOf(AbstractList::class, $list);
-
-        $this->assertSame(Parameter::class, $list->getEntityType());
+        return Parameter::class;
     }
 
 
     /**
-     * Tests to array
+     * @inheritdoc
+     *
+     * @return array<string, string>
      */
-    public function testToArray()
+    public function toArray(): array
     {
-        $list = $this->createList();
+        $data = [];
 
-        $this->assertEquals([
-            "A" => "B",
-            "C" => "D"
-        ], $list->toArray());
-    }
+        foreach ($this->data as $parameter) {
+            $data[$parameter->getName()] = $parameter->getValue();
+        }
 
-
-    /**
-     * @return QueryParameterList
-     */
-    protected function createList(): ParameterList
-    {
-        $list = new ParameterList();
-        $list[] = new Parameter("A", "B");
-        $list[] = new Parameter("C", "D");
-
-        return $list;
+        return $data;
     }
 }

@@ -27,10 +27,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Http\Query;
+namespace Tests\Conjoon\Net\Uri\Component\Query;
 
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterTrait;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query\ParameterTrait;
 use Tests\TestCase;
 
 /**
@@ -41,7 +41,7 @@ class ParameterTraitTest extends TestCase
     /**
      * tests isGroupParameter()
      */
-    public function testIsGroupParameter()
+    public function testIsGroupParameter(): void
     {
         $tests = [
             "fields[MailFolder]" => true,
@@ -52,7 +52,9 @@ class ParameterTraitTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->isGroupParameter($input));
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->isGroupParameter(new Parameter($input, "")));
         }
     }
@@ -60,7 +62,7 @@ class ParameterTraitTest extends TestCase
     /**
      * tests getGroupName()
      */
-    public function testGetGroupName()
+    public function testGetGroupName(): void
     {
         $tests = [
             "fields[MailFolder]" => "fields",
@@ -71,7 +73,9 @@ class ParameterTraitTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->getGroupName($input));
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->getGroupName(new Parameter($input, "")));
         }
     }
@@ -80,7 +84,7 @@ class ParameterTraitTest extends TestCase
     /**
      * tests getGroupKey()
      */
-    public function testGetGroupKey()
+    public function testGetGroupKey(): void
     {
         $tests = [
             "fields[MailFolder]" => "MailFolder",
@@ -91,16 +95,18 @@ class ParameterTraitTest extends TestCase
         ];
 
         foreach ($tests as $input => $expected) {
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->getGroupKey($input));
+            /** @phpstan-ignore-next-line */
             $this->assertSame($expected, $this->getTrait()->getGroupKey(new Parameter($input, "")));
         }
     }
 
 
     /**
-     * @return __anonymous
+     * @return object
      */
-    protected function getTrait()
+    protected function getTrait(): object
     {
         return new class () {
             use ParameterTrait;

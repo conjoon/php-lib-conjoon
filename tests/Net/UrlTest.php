@@ -45,7 +45,10 @@ class UrlTest extends UriTest
     }
 
 
-    protected function getTestsForMagicCallToGetters()
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    protected function getTestsForMagicCallToGetters(): array
     {
         return [[
             "input" => "scheme://user:pass@host:8080/path?query#fragment",
@@ -71,14 +74,23 @@ class UrlTest extends UriTest
         ]];
     }
 
+
+    /**
+     * @param array<int, string> $arguments
+     * @return Url
+     */
     protected function createInstanceToTest(array $arguments): Url
     {
         $className = $this->getClassToTest();
-        return new $className(...$arguments);
+        /**
+         * @var Url $ret
+         */
+        $ret = new $className(...$arguments);
+        return $ret;
     }
 
 
-    protected function getClassToTest()
+    protected function getClassToTest(): string
     {
         return Url::class;
     }

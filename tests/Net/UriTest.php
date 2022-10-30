@@ -77,6 +77,7 @@ class UriTest extends TestCase
 
         $uri = $this->createInstanceToTest(["https://uri.com"]);
 
+        /** @phpstan-ignore-next-line */
         $uri->methodDoesNotExist();
     }
 
@@ -87,7 +88,10 @@ class UriTest extends TestCase
     }
 
 
-    protected function getTestsForMagicCallToGetters()
+    /**
+     * @return array<int, array<string, string|array<string, int|string>|bool>>
+     */
+    protected function getTestsForMagicCallToGetters(): array
     {
         return [[
             "input" => "scheme://user:pass@host:8080/path?query#fragment",
@@ -128,14 +132,22 @@ class UriTest extends TestCase
     }
 
 
+    /**
+     * @param array<int, mixed> $arguments
+     * @return Uri
+     */
     protected function createInstanceToTest(array $arguments): Uri
     {
         $className = $this->getClassToTest();
-        return new $className(...$arguments);
+        /**
+         * @var Uri $ret
+         */
+        $ret =  new $className(...$arguments);
+        return $ret;
     }
 
 
-    protected function getClassToTest()
+    protected function getClassToTest(): string
     {
         return Uri::class;
     }

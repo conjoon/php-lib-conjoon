@@ -27,11 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Http\Query;
+namespace Conjoon\Net\Uri\Component;
 
 use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Data\ParameterBag;
 use Conjoon\Error\ErrorSource;
+use Conjoon\Net\Uri\Component\Query\ParameterTrait;
+use Conjoon\Net\Uri\Component\Query\ParameterList;
+use Conjoon\Net\Uri\Component\Query\Parameter;
 
 /**
  * Interface used to control Http-Queries.
@@ -43,23 +46,23 @@ class Query implements ErrorSource
     /**
      * @var string
      */
-    protected string $queryString;
+    private string $queryString;
 
     /**
-     * @var array
+     * @var array<string, array<string, string>|string>
      */
-    protected array $parsedParameters = [];
+    private array $parsedParameters = [];
 
     /**
-     * @var array
+     * @var array<string, ?Parameter>
      */
-    protected array $parameterList = [];
+    private array $parameterList = [];
 
 
     /**
      * @var ParameterList|null
      */
-    protected ?ParameterList $list = null;
+    private ?ParameterList $list = null;
 
 
     /**
@@ -137,10 +140,16 @@ class Query implements ErrorSource
             if (is_array($value)) {
                 foreach ($value as $groupName => $groupValue) {
                     $fieldName = $key . "[" . $groupName . "]";
-                    $list[] = $this->getParameter($fieldName);
+                    $currentParam = $this->getParameter($fieldName);
+                    if ($currentParam) {
+                        $list[] = $currentParam;
+                    }
                 }
             } else {
-                $list[] = $this->getParameter($key);
+                $currentParam = $this->getParameter($key);
+                if ($currentParam) {
+                    $list[] = $currentParam;
+                }
             }
         }
 
@@ -153,7 +162,7 @@ class Query implements ErrorSource
      * Returns an array containing all available parameter names of this query.
      * Returns an empty array if no parameters are available.
      *
-     * @return array
+     * @return array<int|string, mixed>
      */
     public function getAllParameterNames(): array
     {
@@ -166,7 +175,7 @@ class Query implements ErrorSource
      *
      * @return ParameterBag
      */
-    function getParameterBag(): ParameterBag
+    public function getParameterBag(): ParameterBag
     {
         return new ParameterBag($this->getAllParameters()->toArray());
     }
@@ -193,20 +202,16 @@ class Query implements ErrorSource
      */
     public function toString(StringStrategy $stringStrategy = null): string
     {
-        if ($stringStrategy) {
-            return $stringStrategy->toString($this);
-        }
-
-        return $this->queryString;
+        return $stringStrategy ? $stringStrategy->toString($this) : $this->queryString;
     }
 
     /**
      * @inheritdoc
+     *
+     * @return array<string, string>
      */
     public function toArray(): array
     {
-        return [
-            "query" => $this->toString()
-        ];
+        return $this->getAllParameters()->toArray();
     }
 }

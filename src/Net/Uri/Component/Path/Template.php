@@ -27,7 +27,7 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Net\Uri;
+namespace Conjoon\Net\Uri\Component\Path;
 
 use Conjoon\Net\Uri;
 
@@ -51,7 +51,7 @@ use Conjoon\Net\Uri;
  *    // ["mailFolderId" => "2"]
  *
  */
-class PathTemplate
+class Template
 {
     /**
      * @var string
@@ -64,9 +64,9 @@ class PathTemplate
     private ?array $pathParameterNames = null;
 
     /**
-     * @var PathTemplateRegex|null
+     * @var TemplateRegex|null
      */
-    private ?PathTemplateRegex $uriTemplateRegex = null;
+    private ?TemplateRegex $uriTemplateRegex = null;
 
     /**
      * Constructor.
@@ -122,7 +122,7 @@ class PathTemplate
             return $this->pathParameterNames;
         }
 
-        $prepReg = "/\{(.+?)\}/m";
+        $prepReg = "/{(.+?)}/m";
 
         $this->pathParameterNames = [];
 
@@ -137,12 +137,12 @@ class PathTemplate
 
 
     /**
-     * @return PathTemplateRegex
+     * @return TemplateRegex
      */
-    private function getUriTemplateRegex(): PathTemplateRegex
+    private function getUriTemplateRegex(): TemplateRegex
     {
         if (!$this->uriTemplateRegex) {
-            $this->uriTemplateRegex = new PathTemplateRegex($this->templateString);
+            $this->uriTemplateRegex = new TemplateRegex($this->templateString);
         }
         return $this->uriTemplateRegex;
     }
