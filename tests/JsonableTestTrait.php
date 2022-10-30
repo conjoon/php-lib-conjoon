@@ -42,7 +42,7 @@ trait JsonableTestTrait
     /**
      * Test toJson
      */
-    public function runToJsonTest($target)
+    public function runToJsonTest($target): void
     {
 
         $this->assertInstanceOf(Arrayable::class, $target);

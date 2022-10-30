@@ -84,7 +84,8 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      */
     public function listToTree(
         MailFolderList $mailFolderList,
-        array $root, MailFolderListQuery $query
+        array $root,
+        MailFolderListQuery $query
     ): MailFolderChildList {
         $folders = [];
 

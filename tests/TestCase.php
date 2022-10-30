@@ -42,11 +42,18 @@ use ReflectionProperty;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
+    /**
+     *
+     * @param string $originalClassName
+     * @param array $mockedMethods
+     * @param array $args
+     * @return mixed
+     */
     protected function createMockForAbstract(
         string $originalClassName,
         array $mockedMethods = [],
         array $args = []
-    ): MockObject {
+    ): mixed {
         return parent::getMockForAbstractClass(
             $originalClassName,
             $args,
