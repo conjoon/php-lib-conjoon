@@ -29,13 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\Core\Contract;
 
-use Conjoon\Core\Contract\Stringable;
 use Conjoon\Core\Exception\UnexpectedTypeException;
 
 /**
- * Interface StringStrategy.
+ * Interface StringVisitor.
  */
-interface StringStrategy
+interface StringVisitor
 {
     /**
      * Returns a String representation of the data passed to this method.
