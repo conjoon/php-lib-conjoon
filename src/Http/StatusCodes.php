@@ -66,7 +66,7 @@ class StatusCodes
     public const HTTP_500 = 500;
 
     /**
-     * @var array
+     * @var array<int, string>
      */
     public const HTTP_STATUS = [
         400 => "Bad Request",

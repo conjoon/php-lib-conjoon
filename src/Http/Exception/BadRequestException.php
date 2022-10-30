@@ -37,5 +37,8 @@ use Conjoon\Http\StatusCodes;
  */
 class BadRequestException extends HttpException
 {
+    /**
+     * @var int
+     */
     protected $code = StatusCodes::HTTP_400;
 }

@@ -42,7 +42,7 @@ class RequestTest extends TestCase
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
         $url = new Url("https://www.localhost.com:8080/index.php");
         $request = new Request($url);
@@ -52,5 +52,20 @@ class RequestTest extends TestCase
 
         $request = new Request($url, RequestMethod::POST);
         $this->assertSame(RequestMethod::POST, $request->getMethod());
+    }
+
+
+    public function testGetQuery(): void
+    {
+        $request = new Request(Url::create("https://www.localhost.com:8080/index.php"));
+        $this->assertNull($request->getQuery());
+
+        $request = new Request(Url::create("https://www.localhost.com:8080/index.php?query=value"));
+        $query = $request->getQuery();
+        $this->assertNotNull($query);
+        $this->assertSame(
+            ["query" => "value"],
+            $query->toArray()
+        );
     }
 }

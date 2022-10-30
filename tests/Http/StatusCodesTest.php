@@ -41,7 +41,7 @@ class StatusCodesTest extends TestCase
     /**
      * test class
      */
-    public function testClass()
+    public function testClass(): void
     {
 
         $this->assertSame(400, StatusCodes::HTTP_400);

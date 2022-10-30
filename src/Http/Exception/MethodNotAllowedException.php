@@ -37,5 +37,8 @@ use Conjoon\Http\StatusCodes;
  */
 class MethodNotAllowedException extends HttpException
 {
+    /**
+     * @var int
+     */
     protected $code = StatusCodes::HTTP_405;
 }

@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http;
 
+use Conjoon\Net\Uri\Component\Query;
 use Conjoon\Net\Url;
 
 /**
@@ -40,13 +41,19 @@ class Request
     /**
      * @var Url
      */
-    protected readonly Url $url;
+    private readonly Url $url;
+
+
+    /**
+     * @var Query|null
+     */
+    private ?Query $query = null;
 
 
     /**
      * @var RequestMethod
      */
-    protected readonly RequestMethod $method;
+    private readonly RequestMethod $method;
 
 
     /**
@@ -74,12 +81,34 @@ class Request
 
 
     /**
-     * Get the URL for the request.
+     * Get the HTTP request method used with this request.
      *
      * @return RequestMethod
      */
     public function getMethod(): RequestMethod
     {
         return $this->method;
+    }
+
+
+    /**
+     * Returns the Query-component of the url of this request, or null
+     * if no query is available.
+     *
+     * @return Query|null
+     */
+    public function getQuery(): ?Query
+    {
+        if ($this->query) {
+            return $this->query;
+        }
+
+        $query = $this->url->getQuery();
+        if (!$query) {
+            return null;
+        }
+
+        $this->query = new Query($query);
+        return $this->query;
     }
 }

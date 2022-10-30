@@ -37,5 +37,8 @@ use Conjoon\Http\StatusCodes;
  */
 class NotFoundException extends HttpException
 {
+    /**
+     * @var int
+     */
     protected $code = StatusCodes::HTTP_404;
 }

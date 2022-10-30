@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http\Exception;
 
-use Conjoon\Http\Exception\InternalServerErrorException;
 use Conjoon\Http\Exception\HttpException;
+use Conjoon\Http\Exception\InternalServerErrorException;
 use Conjoon\Http\StatusCodes;
 use Tests\TestCase;
 
@@ -43,7 +43,7 @@ class InternalServerErrorExceptionTest extends TestCase
     /**
      * test instance
      */
-    public function testInstance()
+    public function testInstance(): void
     {
 
         $exception = new InternalServerErrorException();

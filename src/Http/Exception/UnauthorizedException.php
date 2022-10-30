@@ -37,5 +37,8 @@ use Conjoon\Http\StatusCodes;
  */
 class UnauthorizedException extends HttpException
 {
+    /**
+     * @var int
+     */
     protected $code = StatusCodes::HTTP_401;
 }
