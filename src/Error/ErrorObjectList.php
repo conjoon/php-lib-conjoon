@@ -33,6 +33,8 @@ use Conjoon\Core\AbstractList;
 
 /**
  * A list for managing errors.
+ *
+ * @extends AbstractList<ErrorObject>
  */
 class ErrorObjectList extends AbstractList
 {

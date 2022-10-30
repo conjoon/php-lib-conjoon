@@ -96,14 +96,13 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
      */
     abstract public function getEntityType(): string;
 
-
     /**
      * Applies the map function to this data and returns it.
      *
      * @param callable $mapFn The callable to pass to the callback submitted to
      * array_map()
      *
-     * @return array<int, TValue>
+     * @return array<mixed, mixed>
      */
     public function map(callable $mapFn): array
     {
@@ -224,7 +223,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     /**
      * @inheritdoc
      */
-    public function key(): mixed
+    public function key(): int
     {
         return $this->position;
     }
@@ -271,7 +270,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 // --------------------------
 
     /**
-     * @return array<int, mixed>
+     * @return array<mixed, mixed>
      */
     public function toArray(): array
     {

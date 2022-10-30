@@ -40,7 +40,7 @@ trait StringableTestTrait
     /**
      * Test toJson
      */
-    public function runToStringTest($className)
+    public function runToStringTest($className): void
     {
 
         $expected = $className;
