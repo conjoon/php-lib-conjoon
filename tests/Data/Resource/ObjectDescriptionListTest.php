@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Data\Resource;
 
+use Conjoon\Core\AbstractList;
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
-use Conjoon\Core\AbstractList;
 use Tests\TestCase;
 
 /**
@@ -42,7 +42,7 @@ class ObjectDescriptionListTest extends TestCase
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
         $list = new ObjectDescriptionList();
 

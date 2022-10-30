@@ -29,11 +29,11 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Data\Resource;
 
+use BadMethodCallException;
+use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Data\ParameterBag;
-use BadMethodCallException;
 use Conjoon\Data\Resource\ResourceQuery;
-use Conjoon\Core\Contract\Jsonable;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
@@ -47,7 +47,7 @@ class ResourceQueryTest extends TestCase
      * @noinspection PhpUndefinedFieldInspection
      * @noinspection PhpUndefinedMethodInspection
      */
-    public function testDelegates()
+    public function testDelegates(): void
     {
         $bag = $this
                 ->getMockBuilder(ParameterBag::class)
@@ -82,7 +82,9 @@ class ResourceQueryTest extends TestCase
                 ["some" ]
             )->willReturnOnConsecutiveCalls(1, 2, null);
 
-
+        /**
+         * @var ResourceQuery $resourceQuery
+         */
         $resourceQuery = $this->getResourceQuery($bag);
 
         $this->assertInstanceOf(Jsonable::class, $resourceQuery);
@@ -95,8 +97,12 @@ class ResourceQueryTest extends TestCase
         $this->assertSame(2, $resourceQuery->getString("foo"));
         $this->assertNull($resourceQuery->getBool("some"));
 
+        /** @see  https://github.com/phpstan/phpstan/discussions/4901 */
+        /** @phpstan-ignore-next-line */
         $this->assertSame(1, $resourceQuery->bar);
+        /** @phpstan-ignore-next-line */
         $this->assertSame(2, $resourceQuery->foo);
+        /** @phpstan-ignore-next-line */
         $this->assertNull($resourceQuery->some);
     }
 
@@ -105,9 +111,10 @@ class ResourceQueryTest extends TestCase
      * No method available
      * @noinspection PhpUndefinedMethodInspection
      */
-    public function testDelegateCallException()
+    public function testDelegateCallException(): void
     {
         $this->expectException(BadMethodCallException::class);
+        /** @phpstan-ignore-next-line */
         $this->getResourceQuery(new ParameterBag())->getSomeThing("d");
     }
 
@@ -115,7 +122,7 @@ class ResourceQueryTest extends TestCase
     /**
      * tests toJson()
      */
-    public function testToJsonWithStrategy()
+    public function testToJsonWithStrategy(): void
     {
         $json = [];
         $bag = $this
@@ -123,6 +130,9 @@ class ResourceQueryTest extends TestCase
             ->disableOriginalConstructor()
             ->onlyMethods(["toJson"])->getMock();
 
+        /**
+         * @var MockObject&JsonStrategy $strategy
+         */
         $strategy = $this->createMockForAbstract(JsonStrategy::class);
 
         $query = $this->getResourceQuery($bag);
@@ -137,9 +147,9 @@ class ResourceQueryTest extends TestCase
 
     /**
      * @param ParameterBag $bag
-     * @return ResourceQuery|MockObject
+     * @return ResourceQuery&MockObject
      */
-    protected function getResourceQuery(ParameterBag $bag)
+    protected function getResourceQuery(ParameterBag $bag): MockObject&ResourceQuery
     {
         return $this->getMockForAbstractClass(
             ResourceQuery::class,

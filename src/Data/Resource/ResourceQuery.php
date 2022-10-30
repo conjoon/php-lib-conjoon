@@ -46,6 +46,9 @@ use Conjoon\Data\ParameterBag;
  * This ResourceQuery delegates all method calls involving getters to the ParameterBag
  * using __call, including querying the properties using __get.
  *
+ * @method string|null getString(string $name)
+ * @method int|null getInt(string $name)
+ * @method bool|null getBool(string $name)
  */
 abstract class ResourceQuery implements Jsonable
 {
@@ -68,13 +71,13 @@ abstract class ResourceQuery implements Jsonable
      * Delegates to the ParameterBag's __call.
      *
      * @param string $method
-     * @param $arguments
+     * @param array<int, mixed> $arguments
      *
      * @return mixed
      *
      * @throws BadMethodCallException
      */
-    public function __call(string $method, $arguments)
+    public function __call(string $method, array $arguments)
     {
         return $this->parameterBag->{$method}(...$arguments);
     }
@@ -83,10 +86,10 @@ abstract class ResourceQuery implements Jsonable
     /**
      * Delegates to the ParameterBag's __get.
      *
-     * @param $key
+     * @param string $key
      * @return mixed|null
      */
-    public function __get($key)
+    public function __get(string $key)
     {
         return $this->parameterBag->{$key};
     }
@@ -95,11 +98,11 @@ abstract class ResourceQuery implements Jsonable
     /**
      * Delegates to the ParameterBag's has().
      *
-     * @param $key
+     * @param string $key
      *
      * @return bool
      */
-    public function has($key): bool
+    public function has(string $key): bool
     {
         return $this->parameterBag->has($key);
     }
@@ -108,7 +111,7 @@ abstract class ResourceQuery implements Jsonable
     /**
      * Delegates to the ParameterBag's toJson().
      *
-     * @return array
+     * @return array<mixed, mixed>
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
@@ -120,5 +123,5 @@ abstract class ResourceQuery implements Jsonable
      * Returns the ObjectDescription this resource query targets.
      * @return ObjectDescription
      */
-    abstract function getResourceTarget(): ObjectDescription;
+    abstract public function getResourceTarget(): ObjectDescription;
 }

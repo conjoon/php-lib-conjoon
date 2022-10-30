@@ -44,7 +44,7 @@ class ObjectDescriptionTest extends TestCase
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
         $resource = $this->getObjectDescriptionMock();
 
@@ -57,7 +57,7 @@ class ObjectDescriptionTest extends TestCase
      * @return void
      * @throws ReflectionException
      */
-    public function testGetAllRelationshipTypes()
+    public function testGetAllRelationshipTypes(): void
     {
         $translator = $this->getObjectDescriptionMock(["getAllRelationshipResourceDescriptions"]);
         $reflection = new ReflectionClass($translator);
@@ -102,11 +102,11 @@ class ObjectDescriptionTest extends TestCase
 
 
     /**
-     * tests getAllRelationshipPaths() with dotnotation
+     * tests getAllRelationshipPaths() with dot-notation
      * @return void
      * @throws ReflectionException
      */
-    public function testGetAllRelationshipPaths()
+    public function testGetAllRelationshipPaths(): void
     {
         $relationships = new ObjectDescriptionList();
 
@@ -186,12 +186,10 @@ class ObjectDescriptionTest extends TestCase
     /**
      * Tests getAllRelationshipResourceDescriptions
      * @return void
-     * @throws ReflectionException
      */
     public function testGetAllRelationshipResourceDescriptions(): void
     {
         $resourceTarget = $this->getObjectDescriptionMock(["getRelationships"], "A");
-        $reflection = new ReflectionClass($resourceTarget);
 
         $resourceTarget_1_1 = $this->getObjectDescriptionMock(["getRelationships"], "B");
         $resourceTarget_1_2 = $this->getObjectDescriptionMock(["getRelationships"], "C");
@@ -246,15 +244,21 @@ class ObjectDescriptionTest extends TestCase
 
 
     /**
-     * @param array $methods
-     * @return MockObject
+     * @param array<int, string> $methods
+     * @param string $type
+     * @return MockObject&ObjectDescription
      */
-    protected function getObjectDescriptionMock(array $methods = [], $type = ""): MockObject
-    {
+    protected function getObjectDescriptionMock(
+        array $methods = [],
+        string $type = ""
+    ): MockObject&ObjectDescription {
         if (!in_array("getType", $methods)) {
             $methods[] = "getType";
         }
 
+        /**
+         * @var MockObject&ObjectDescription $mock
+         */
         $mock = $this->createMockForAbstract(
             ObjectDescription::class,
             $methods

@@ -33,6 +33,8 @@ use Conjoon\Core\AbstractList;
 
 /**
  * An abstract list maintaining entities of the type ObjectDescription.
+ *
+ * @extends AbstractList<ObjectDescription>
  */
 class ObjectDescriptionList extends AbstractList
 {

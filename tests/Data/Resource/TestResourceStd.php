@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Data\Resource;
 
 /**
- * Test class loaded with tests for Locator
+ * Test class. Required by \Conjoon\Core\Util\ClassLoader
  */
 class TestResourceStd
 {

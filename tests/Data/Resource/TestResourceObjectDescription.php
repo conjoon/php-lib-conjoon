@@ -31,6 +31,7 @@ namespace Tests\Conjoon\Data\Resource;
 
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
  * Test class loaded with tests for Locator
@@ -41,24 +42,29 @@ class TestResourceObjectDescription extends ObjectDescription
     protected ?int $two;
     protected ?int $three;
 
-    public function __construct($one = null, $two = null, $three = null)
+    public function __construct(?int $one = null, ?int $two = null, ?int $three = null)
     {
         $this->one = $one;
         $this->two = $two;
         $this->three = $three;
     }
 
-    public function getOne()
+    public function getPath(): Template
+    {
+        return new Template("/path/{id}");
+    }
+
+    public function getOne(): ?int
     {
         return $this->one;
     }
 
-    public function getTwo()
+    public function getTwo(): ?int
     {
         return $this->two;
     }
 
-    public function getThree()
+    public function getThree(): ?int
     {
         return $this->three;
     }

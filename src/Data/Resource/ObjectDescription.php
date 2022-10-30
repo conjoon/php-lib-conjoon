@@ -29,14 +29,26 @@ declare(strict_types=1);
 
 namespace Conjoon\Data\Resource;
 
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\Net\Uri\Component\Path\Template;
+
 /**
- * Description for a Resource Object that can be used by servers and clients
- * to discover structure, optional and default fields of resource object that
- * are requested from the server.
+ * Description for Resource Objects used as conceptually representatives for
+ * discoverable entities.
  *
  */
-abstract class ObjectDescription
+abstract class ObjectDescription implements Stringable
 {
+    /**
+     * Returns the template for a URI path where the data this instance describes
+     * can be found.
+     *
+     * @return Template
+     */
+    abstract public function getPath(): Template;
+
+
     /**
      * Returns the type of this entity used as an identifier with clients and
      * requests, e.g. its class-name.
@@ -55,7 +67,7 @@ abstract class ObjectDescription
 
 
     /**
-     * Returns all discoverable fields for this entity.
+     * Returns all discoverable fields for this Resource.
      *
      * @return string[]
      */
@@ -63,20 +75,9 @@ abstract class ObjectDescription
 
 
     /**
-     * Returns the default configuration for fields. If fields are mapped with
-     * options in a query, default options can be provided with this method.
-     * The following provides the structure for a resource object representing
-     * a message, where the "subject" field is considered as included by default
-     * (if not requested otherwise), and where the "text" field should be trimmed
-     * to a length of 200 characters, if not requested otherwise.
+     * Returns the default fields this Resource exposes.
      *
-     * @example
-     *    [
-     *       "subject" => true,
-     *       "text" => ["length" : 200]
-     *    ]
-     *
-     * @return array
+     * @return array<int, string>
      *
      * @see ResourceQuery
      */
@@ -84,21 +85,25 @@ abstract class ObjectDescription
 
 
     /**
-     * Returns the getType() value of all of the relationships available for this
-     * resource description, along with all children of the resource object represented by
-     * an relationship.
+     * Returns the getType() value of all the relationships available for this
+     * resource description, along with all associated children.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
      * *this* ObjectDescription describes
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getAllRelationshipTypes(
         bool $withResourceTarget = false
     ): array {
         $list = $this->getAllRelationshipResourceDescriptions($withResourceTarget);
 
-        return $list->map(fn($rel) => $rel->getType());
+        $res = $list->map(fn(ObjectDescription $rel) => $rel->getType());
+
+        /**
+         * @var array<int, string> $res
+         */
+        return $res;
     }
 
 
@@ -126,13 +131,13 @@ abstract class ObjectDescription
      *
      * @param bool $withResourceTarget If true, returns the list including *this*
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getAllRelationshipPaths(bool $withResourceTarget = false): array
     {
         $tree = [];
         $visited = [];
-        $traverse = function ($resourceTarget, array $path = []) use (&$traverse, $withResourceTarget, &$visited, &$tree) {
+        $traverse = function ($resourceTarget, array $path = []) use (&$traverse, &$visited, &$tree) {
 
             $path[] = $resourceTarget->getType();
 
@@ -142,7 +147,7 @@ abstract class ObjectDescription
             foreach ($relationships as $child) {
                 if (in_array($child, $visited)) {
                     continue;
-                };
+                }
                 $visited[] = $child;
                 $traverse($child, $path);
             }
@@ -200,5 +205,15 @@ abstract class ObjectDescription
         $traverse($this);
 
         return $list;
+    }
+
+
+    /**
+     * @param StringStrategy|null $stringStrategy
+     * @return string
+     */
+    public function toString(?StringStrategy $stringStrategy = null): string
+    {
+        return $stringStrategy ? $stringStrategy->toString($this) : $this->getType();
     }
 }
