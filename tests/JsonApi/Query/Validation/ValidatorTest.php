@@ -29,11 +29,11 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
-use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
+use Conjoon\Web\Validation\Exception\UnexpectedQueryParameterException;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
+use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
+use Conjoon\Web\Validation\Query\Rule\OnlyParameterNamesRule;
 use Conjoon\Data\Resource\ObjectDescriptionList;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
@@ -41,7 +41,7 @@ use Conjoon\JsonApi\Query\Validation\Validator;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\Data\Resource\ObjectDescription;
 use ReflectionException;
-use Conjoon\Http\Query\Validation\Query\RequiredParameterNamesRule;
+use Conjoon\Web\Validation\Query\Rule\RequiredParameterNamesRule;
 use Tests\TestCase;
 
 /**

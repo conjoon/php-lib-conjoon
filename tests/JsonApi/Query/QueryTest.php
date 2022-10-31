@@ -30,9 +30,9 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Query;
 
 use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Http\Query\Query;
+use Conjoon\Net\Uri\Component\Query;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
-use Tests\Conjoon\Http\Query\QueryTest as HttpQueryTest;
+use Tests\Conjoon\Net\Uri\Component\QueryTest as HttpQueryTest;
 
 /**
  * Tests QueryParameter.
@@ -43,7 +43,7 @@ class QueryTest extends HttpQueryTest
     /**
      * Class functionality
      */
-    public function testClass()
+    public function testClass(): void
     {
         $query = $this->createTestInstance();
         $this->assertInstanceOf(Query::class, $query);

@@ -30,11 +30,11 @@ namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
 use Conjoon\Math\Expression\Operator\FunctionalOperator;
 use Conjoon\Math\Expression\Operator\LogicalOperator;
 use Conjoon\Math\Expression\Operator\RelationalOperator;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
 
 /**
  * This parameter rule supports validation of filters provided as json encoded objects containing
@@ -53,7 +53,7 @@ use Conjoon\Math\Expression\Operator\RelationalOperator;
 class PnFilterRule extends JsonEncodedRule
 {
     /**
-     * @var array
+     * @var array<int, string>
      */
     protected array $attributes;
 
@@ -61,7 +61,7 @@ class PnFilterRule extends JsonEncodedRule
     /**
      * Constructor.
      *
-     * @param array $attributes The list of valid attributes this rule considers.
+     * @param array<int, string> $attributes The list of valid attributes this rule considers.
      */
     public function __construct(array $attributes)
     {
@@ -99,11 +99,9 @@ class PnFilterRule extends JsonEncodedRule
                 }
 
                 //{"OR" : [{"==": ...}, {">=" : ...}}]
-                if ($this->isLogicalOperator($operator)) {
-                    if (count($filter) <= 1) {
-                        return "Logical operator \"$operator\" " .
-                            "expects at least 2 operands, " . count($filter) . " given";
-                    }
+                if (count($filter) <= 1) {
+                    return "Logical operator \"$operator\" " .
+                        "expects at least 2 operands, " . count($filter) . " given";
                 }
 
                 foreach ($filter as $operand) {
@@ -196,7 +194,8 @@ class PnFilterRule extends JsonEncodedRule
     /**
      * Returns all the attribute names this rule considers. The list of rules is dynamic and must be
      * specified with the constructor.
-     * @return void
+     *
+     * @return array<int, string>
      */
     public function getAttributes(): array
     {

@@ -29,11 +29,11 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
-use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
-use Conjoon\Http\Query\Query as HttpQuery;
-use Conjoon\JsonApi\Query\Query;
 use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\JsonApi\Query\Query;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
+use Conjoon\Web\Validation\Parameter\ParameterRuleList;
+use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
 
 /**
  * Class for validating queries that target resource collections(!) according to JSON:API
@@ -70,9 +70,9 @@ class CollectionValidator extends Validator
     /**
      * Returns all the parameter names for a collection query, including sorting parameter options.
      *
-     * @param HttpQuery $query
+     * @param Query $query
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
@@ -89,7 +89,7 @@ class CollectionValidator extends Validator
      * first part of the name is the type of the resource target.
      *
      * @param ObjectDescription $resourceTarget
-     * @return array
+     * @return array<int, string>
      */
     protected function getAvailableSortFields(ObjectDescription $resourceTarget): array
     {
@@ -105,7 +105,7 @@ class CollectionValidator extends Validator
      * first part of the name is the type of the resource target, or the related resource target.
      *
      * @param ObjectDescription $resourceTarget
-     * @return array
+     * @return array<int, string>
      */
     protected function getAvailableFields(ObjectDescription $resourceTarget): array
     {

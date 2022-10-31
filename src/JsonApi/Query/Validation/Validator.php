@@ -29,17 +29,17 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Http\Query\Exception\UnexpectedQueryParameterException;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\Parameter\ParameterRuleList;
-use Conjoon\Http\Query\Validation\Query\OnlyParameterNamesRule;
-use Conjoon\Http\Query\Validation\Query\QueryRuleList;
-use Conjoon\Http\Query\Validation\Query\RequiredParameterNamesRule;
-use Conjoon\Http\Query\Validation\Validator as HttpQueryValidator;
-use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Exception\UnexpectedQueryParameterException;
+use Conjoon\Web\Validation\Parameter\ParameterRuleList;
+use Conjoon\Web\Validation\Query\QueryRuleList;
+use Conjoon\Web\Validation\Query\Rule\OnlyParameterNamesRule;
+use Conjoon\Web\Validation\Query\Rule\RequiredParameterNamesRule;
+use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
 
 /**
  * Class for validating queries that target resource objects. Queries are checked for
@@ -105,7 +105,7 @@ class Validator extends HttpQueryValidator
      *
      * @param Query $query
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
@@ -123,6 +123,8 @@ class Validator extends HttpQueryValidator
 
     /**
      * @inheritdoc
+     *
+     * @return array<int, string>
      */
     public function getRequiredParameterNames(HttpQuery $query): array
     {
@@ -143,7 +145,7 @@ class Validator extends HttpQueryValidator
      *
      * @param Parameter $parameter
      *
-     * @return array
+     * @return array<int, string>
      *
      * @throws UnexpectedQueryParameterException
      */
@@ -173,10 +175,10 @@ class Validator extends HttpQueryValidator
      *    // $res: ["MailFolder", "MessageItem"]
      *
      *
-     * @param $relationships
-     * @return array
+     * @param array<int, string> $relationships
+     * @return array<int, string>
      */
-    protected function unfoldRelationships($relationships): array
+    protected function unfoldRelationships(array $relationships): array
     {
         $res = [];
 

@@ -31,7 +31,7 @@ namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query\Parameter;
 use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\Data\Resource\ObjectDescription;

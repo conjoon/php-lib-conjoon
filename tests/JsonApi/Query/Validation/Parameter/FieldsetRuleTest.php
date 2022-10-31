@@ -29,14 +29,14 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 
-use Conjoon\Data\Validation\ValidationError;
-use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Validation\ValidationError;
+use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query\ParameterTrait;
+use Conjoon\Web\Validation\Parameter\ParameterRule;
 use ReflectionException;
 use Tests\TestCase;
 

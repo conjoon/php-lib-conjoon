@@ -28,12 +28,12 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
+use Conjoon\Data\Resource\ObjectDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\ParameterTrait;
-use Conjoon\Http\Query\Validation\Parameter\ParameterRule;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Net\Uri\Component\Query\ParameterTrait;
+use Conjoon\Web\Validation\Parameter\ParameterRule;
 
 /**
  * Validates fieldset parameters of the type "fields[TYPE]=field,field2,field3" given the
@@ -62,7 +62,7 @@ class FieldsetRule extends ParameterRule
     protected ObjectDescriptionList $resourceDescriptionList;
 
     /**
-     * @var array $includes
+     * @var array<int, string> $includes
      */
     protected array $includes;
 
@@ -72,8 +72,8 @@ class FieldsetRule extends ParameterRule
      * and the includes the rule should consider.
      *
      * @param ObjectDescriptionList $resourceDescriptionList
-     * @param array $includes An array with all resource object types requested, against which a parameter's
-     * fieldset must be validated
+     * @param array<int, string> $includes An array with all resource object types requested,
+     * against which a parameter's fieldset must be validated
      */
     public function __construct(ObjectDescriptionList $resourceDescriptionList, array $includes)
     {
@@ -96,7 +96,7 @@ class FieldsetRule extends ParameterRule
     /**
      * Returns the list of includes this rule was configures with
      *
-     * @return array
+     * @return array<int, string>
      */
     public function getIncludes(): array
     {
@@ -109,6 +109,9 @@ class FieldsetRule extends ParameterRule
      */
     public function supports(object $obj): bool
     {
+        /**
+         * @var Parameter $obj
+         */
         return parent::supports($obj) &&
                $this->isGroupParameter($obj) &&
                $this->getGroupName($obj) === "fields";
@@ -127,7 +130,7 @@ class FieldsetRule extends ParameterRule
             return false;
         }
 
-        $resourceFields = $this->getFields($type);
+        $resourceFields = $type ? $this->getFields($type) : null;
 
         if (!$resourceFields) {
             $errors[] = new ValidationError(
@@ -152,7 +155,7 @@ class FieldsetRule extends ParameterRule
      *
      * @param string $type
      *
-     * @return array|null
+     * @return array<int, string>|null
      */
     protected function getFields(string $type): ?array
     {
@@ -164,7 +167,7 @@ class FieldsetRule extends ParameterRule
     /**
      * Validates the key for the specified fieldset group parameter.
      *
-     * @param $parameter
+     * @param Parameter $parameter
      * @param ValidationErrors $errors
      *
      * @return bool
@@ -201,9 +204,9 @@ class FieldsetRule extends ParameterRule
     {
         $value = $parameter->getValue();
         $type = $this->getGroupKey($parameter);
-        $resourceFields = $this->getFields($type);
+        $resourceFields = ($type ? $this->getFields($type) : []) ?? [];
 
-        if ($value === "" || $value === null) {
+        if ($value === "") {
             return true;
         }
 
@@ -216,12 +219,12 @@ class FieldsetRule extends ParameterRule
     /**
      * Helper function for validating that the $actualFields appear in $allowedFields.
      *
-     * @param array $actualFields
-     * @param array $allowedFields
+     * @param array<int, string> $actualFields
+     * @param array<int, string> $allowedFields
      * @param Parameter $parameter
      * @param ValidationErrors $errors
      *
-     * @return array
+     * @return bool
      */
     protected function checkFieldList(
         array $actualFields,

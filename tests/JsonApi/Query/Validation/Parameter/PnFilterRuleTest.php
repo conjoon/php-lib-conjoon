@@ -30,9 +30,9 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Query\Parameter\Validation;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\Parameter\JsonEncodedRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\PnFilterRule;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
 use Tests\TestCase;
 
 /**

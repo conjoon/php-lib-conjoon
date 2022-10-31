@@ -28,11 +28,11 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Extensions\Query\Validation\Parameter;
 
+use Conjoon\Data\Resource\ObjectDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Query\Parameter;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Query\Parameter;
 
 /**
  * An extension on sparse fieldset as specified with https://conjoon.org/json-api/ext/relfield.
@@ -54,7 +54,7 @@ class RelfieldRule extends FieldsetRule
      * this server supports wildcards.
      *
      * @param ObjectDescriptionList $resourceDescriptionList
-     * @param array $includes
+     * @param array<int, string> $includes
      * @param bool $wildcardEnabled
      */
     public function __construct(
@@ -84,13 +84,13 @@ class RelfieldRule extends FieldsetRule
     protected function validateValue(Parameter $parameter, ValidationErrors $errors): bool
     {
         $value          = $parameter->getValue();
-        $name           = $parameter->getName();
-        $type           = $this->getGroupKey($parameter);
-        $resourceFields = $this->getFields($type);
-
-        if ($value === "" || $value === null) {
+        if ($value === "") {
             return true;
         }
+
+        $name   = $parameter->getName();
+        $type   = $this->getGroupKey($parameter);
+        $resourceFields = ($type ? $this->getFields($type) : []) ?? [];
 
         $fields = explode(",", $value);
 

@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\Parameter\ValuesInWhitelistRule;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
 use Conjoon\Data\Resource\ObjectDescriptionList;
 use Conjoon\JsonApi\Query\Validation\CollectionValidator;
 use Conjoon\JsonApi\Query\Validation\Validator;

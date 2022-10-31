@@ -29,8 +29,8 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Core\Util\ArrayUtil;
-use Conjoon\Http\Query\Parameter;
-use Conjoon\Http\Query\Validation\Parameter\ValueInWhitelistRule;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Parameter\Rule\ValueInWhitelistRule;
 
 /**
  * Class providing functionality for making sure a query's include parameter contains only valid
@@ -66,7 +66,7 @@ class IncludeRule extends ValueInWhitelistRule
      * Returns an empty array for an array string.
      *
      * @param string $value
-     * @return array
+     * @return array<int, string>
      */
     protected function parse(string $value): array
     {
@@ -89,8 +89,8 @@ class IncludeRule extends ValueInWhitelistRule
      * quoted above, the "MailFolder"-value is redundant, so the includes can be merged from
      * ["MailFolder", "MailFolder.MailAccount"] into ["MailFolder.MailAccount"].
      *
-     * @param array $includes
-     * @return array
+     * @param array<int, string> $includes
+     * @return array<int, string>
      */
     protected function merge(array $includes): array
     {

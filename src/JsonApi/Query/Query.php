@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query;
 
-use Conjoon\Http\Query\Query as HttpQuery;
 use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
 
 /**
  * Query validated for JSON:API specifications, providing access to a $resourceTarget

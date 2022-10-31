@@ -30,11 +30,11 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Request;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\RequestMethod;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
-use Conjoon\JsonApi\Request\Url as JsonApiUrl;
+use Conjoon\Net\Url;
+use Conjoon\Http\RequestMethod as Method;
 use Conjoon\JsonApi\Query\Validation\Validator;
-use Conjoon\JsonApi\Request\Request as JsonApiRequest;
+use Conjoon\JsonApi\Request as JsonApiRequest;
 use Conjoon\Http\Request as HttpRequest;
 use Conjoon\Data\Resource\ObjectDescription;
 use Tests\TestCase;
@@ -49,9 +49,8 @@ class RequestTest extends TestCase
      */
     public function testClass()
     {
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
         $validator = $this->createMockForAbstract(Validator::class);
-        $url = new JsonApiUrl("http://www.localhost.com:8080/index.php", $resourceTarget, true);
+        $url = new Url("http://www.localhost.com:8080/index.php");
         $request = new JsonApiRequest(
             url: $url,
             queryValidator: $validator
@@ -59,14 +58,15 @@ class RequestTest extends TestCase
 
         $this->assertSame(Method::GET, $request->getMethod());
         $this->assertSame($url, $request->getUrl());
-        $this->assertSame($validator, $request->getQueryValidator());
-        $this->assertSame($resourceTarget, $request->getResourceTarget());
-        $this->assertTrue($request->targetsResourceCollection());
+
+        $getQueryValidator = $this->makeAccessible($request, "getQueryValidator");
+        $this->assertSame($validator, $getQueryValidator->invokeArgs($request, []));
 
         $this->assertInstanceOf(HttpRequest::class, $request);
 
         $request = new JsonApiRequest($url, method: Method::PATCH);
-        $this->assertNull($request->getQueryValidator());
+        $getQueryValidator = $this->makeAccessible($request, "getQueryValidator");
+        $this->assertNull($getQueryValidator->invokeArgs($request, []));
         $this->assertSame(Method::PATCH, $request->getMethod());
     }
 
@@ -76,16 +76,12 @@ class RequestTest extends TestCase
      */
     public function testValidate()
     {
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
 
         $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
 
-        $url = $this->getMockBuilder(JsonApiUrl::class)
+        $url = $this->getMockBuilder(Url::class)
                     ->disableOriginalConstructor()
-                    ->onlyMethods(["getResourceTarget", "getQuery"])
                     ->getMock();
-        $url->expects($this->any())->method("getResourceTarget")->willReturn($resourceTarget);
-        $url->expects($this->any())->method("getQuery")->willReturn($query);
 
         $validator = $this->createMockForAbstract(Validator::class, ["validate"]);
 
@@ -97,12 +93,12 @@ class RequestTest extends TestCase
             return true;
         }));
 
-        $request = new JsonApiRequest(url: $url, queryValidator: $validator);
-        $errors = $request->validate();
+        $request = $this->getMockBuilder(JsonApiRequest::class)
+                        ->setConstructorArgs([$url, Method::GET, $validator])
+                        ->onlyMethods(["getQuery"])
+                        ->getMock();
+        $request->expects($this->once())->method("getQuery")->willReturn($query);
 
-        $this->assertInstanceOf(
-            ValidationErrors::class,
-            $errors
-        );
+        $request->validate();
     }
 }

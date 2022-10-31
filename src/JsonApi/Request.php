@@ -27,17 +27,16 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Request;
+namespace Conjoon\JsonApi;
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\Request\Request as HttpRequest;
-use Conjoon\Http\Request\Method as HttpMethod;
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\JsonApi\Request\Url as JsonApiUrl;
+use Conjoon\Http\Request as HttpRequest;
+use Conjoon\Http\RequestMethod as HttpMethod;
 use Conjoon\JsonApi\Query\Validation\Validator;
+use Conjoon\Net\Url;
 
 /**
- * Request specific for JSON:API.
+ * Request specific for JSON:API requests.
  *
  */
 class Request extends HttpRequest
@@ -51,11 +50,12 @@ class Request extends HttpRequest
     /**
      * Constructor.
      *
-     * @param JsonApiUrl $url
+     * @param Url $url
+     * @param HttpMethod $method
      * @param Validator|null $queryValidator
      */
     public function __construct(
-        JsonApiUrl $url,
+        Url $url,
         HttpMethod $method = HttpMethod::GET,
         Validator $queryValidator = null
     ) {
@@ -65,31 +65,9 @@ class Request extends HttpRequest
 
 
     /**
-     * Returns the resource target this request is interested in.
-     *
-     * @return ObjectDescription
-     */
-    public function getResourceTarget(): ObjectDescription
-    {
-        return $this->getUrl()->getResourceTarget();
-    }
-
-
-    /**
-     * Returns true if the request targets a resource collection.
-     *
-     * @return bool
-     */
-    public function targetsResourceCollection(): bool
-    {
-        return $this->getUrl()->targetsResourceCollection();
-    }
-
-
-    /**
      * Returns the query validator for this request, if any was specified with the constructor.
      */
-    public function getQueryValidator(): ?Validator
+    private function getQueryValidator(): ?Validator
     {
         return $this->queryValidator;
     }
@@ -105,12 +83,12 @@ class Request extends HttpRequest
     {
         $errors = new ValidationErrors();
         $validator = $this->getQueryValidator();
+        $query = $this->getQuery();
 
-        if (!$validator) {
+        if (!$validator || !$query) {
             return $errors;
         }
 
-        $query = $this->getUrl()->getQuery();
         $validator->validate($query, $errors);
 
         return $errors;
