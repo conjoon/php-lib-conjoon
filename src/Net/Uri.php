@@ -64,7 +64,7 @@ class Uri implements Stringable
     private readonly array $parts;
 
 
-    public static function create(string $uri): static
+    public static function make(string $uri): static
     {
         return new static($uri);
     }
