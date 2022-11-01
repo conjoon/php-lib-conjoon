@@ -120,6 +120,10 @@ class TemplateRegexTest extends TestCase
                 "resourceId" => "123",
                 "subItemId" => "456"
             ],
+        ], [
+            "cArg" => "tpl/resource",
+            "input" => "tpl/resource",
+            "output" => [],
         ]];
 
         foreach ($tests as $test) {

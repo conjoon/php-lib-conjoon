@@ -29,6 +29,10 @@ declare(strict_types=1);
 
 namespace Conjoon\Net\Uri\Component\Path;
 
+use Conjoon\Core\Contract\Equatable;
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\Core\Exception\InvalidTypeException;
 use Conjoon\Net\Uri;
 
 /**
@@ -51,7 +55,7 @@ use Conjoon\Net\Uri;
  *    // ["mailFolderId" => "2"]
  *
  */
-class Template
+class Template implements Stringable, Equatable
 {
     /**
      * @var string
@@ -97,7 +101,7 @@ class Template
         $uriRegex = $this->getUriTemplateRegex();
         $matches = $uriRegex->match($uri->getPath());
 
-        if (!$matches) {
+        if ($matches === null) {
             return null;
         }
 
@@ -145,5 +149,31 @@ class Template
             $this->uriTemplateRegex = new TemplateRegex($this->templateString);
         }
         return $this->uriTemplateRegex;
+    }
+
+
+    /**
+     * @param StringStrategy|null $stringStrategy
+     * @return string
+     */
+    public function toString(StringStrategy $stringStrategy = null): string
+    {
+        return $stringStrategy ? $stringStrategy->toString($this) : $this->templateString;
+    }
+
+
+    /**
+     * @param object $target
+     * @return bool
+     */
+    public function equals(object $target): bool
+    {
+        if (!($target instanceof Template)) {
+            throw new InvalidTypeException(
+                "\"target\" must be an instance of " . static::class . ", is " . get_class($target)
+            );
+        }
+
+        return strtolower($this->toString()) === strtolower($target->toString());
     }
 }

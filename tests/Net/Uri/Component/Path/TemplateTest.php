@@ -29,6 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Net\Uri\Component\Path;
 
+use Conjoon\Core\Contract\Equatable;
+use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Exception\InvalidTypeException;
 use Conjoon\Net\Uri\Component\Path\Template;
 use Conjoon\Net\Uri;
 use Tests\TestCase;
@@ -38,6 +41,52 @@ use Tests\TestCase;
  */
 class TemplateTest extends TestCase
 {
+    /**
+     * Tests class & types
+     * @return void
+     */
+    public function testClass(): void
+    {
+        $tpl = new Template("/MailFolder/{mailFolderId}");
+        $this->assertInstanceOf(Stringable::class, $tpl);
+        $this->assertInstanceOf(Equatable::class, $tpl);
+    }
+
+    /**
+     * Tests equals() with InvalidTypeException
+     * @return void
+     */
+    public function testEqualsWithException(): void
+    {
+        $this->expectException(InvalidTypeException::class);
+
+        $tplLft = new Template("/MailFolder/{mailFolderId}");
+
+        $equatable = new class implements Equatable {
+            public function equals(object $target): bool
+            {
+                return true;
+            }
+        };
+
+        $tplLft->equals($equatable);
+    }
+
+
+    /**
+     * Tests equals()
+     * @return void
+     */
+    public function testEquals(): void
+    {
+        $tplLft = new Template("/MailFolder/{mailFolderId}");
+        $tplYes = new Template("/MAILFOLDER/{mailFolderId}");
+        $tplNo = new Template("/SnailFolder/{mailFolderId}");
+
+        $this->assertTrue($tplLft->equals($tplYes));
+        $this->assertFalse($tplLft->equals($tplNo));
+    }
+
     /**
      * Tests getTemplateString()
      *
@@ -94,18 +143,24 @@ class TemplateTest extends TestCase
 
         $this->assertSame(
             ["mailFolderId" => "2"],
-            $tpl->match(Uri::create("https://localhost:8080/MailFolder/2?query=value"))
+            $tpl->match(Uri::make("https://localhost:8080/MailFolder/2?query=value"))
         );
 
         $this->assertNull(
-            $tpl->match(Uri::create("https://localhost:8080/path/MailFolder/2?query=value"))
+            $tpl->match(Uri::make("https://localhost:8080/path/MailFolder/2?query=value"))
         );
 
         // relative path
         $tpl = new Template("MailFolder/{mailFolderId}");
         $this->assertSame(
             ["mailFolderId" => "2"],
-            $tpl->match(Uri::create("https://localhost:8080/pathMailFolder/2?query=value"))
+            $tpl->match(Uri::make("https://localhost:8080/pathMailFolder/2?query=value"))
+        );
+
+        $tpl = new Template("/employees");
+        $this->assertSame(
+            [],
+            $tpl->match(Uri::make("https://localhost:8080/employees"))
         );
     }
 }
