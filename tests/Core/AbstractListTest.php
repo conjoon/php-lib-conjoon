@@ -72,7 +72,7 @@ class AbstractListTest extends TestCase
         $this->expectException(OutOfBoundsException::class);
 
         $abstractList = $this->getMockForAbstractList();
-        $abstractList["1"] = "foo";
+        $abstractList["1"] = new stdClass();
     }
 
 

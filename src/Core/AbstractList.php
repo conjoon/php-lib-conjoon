@@ -142,24 +142,37 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
     }
 
 
-// -------------------------
-//  ArrayAccess Interface
-// -------------------------
-
     /**
-     * @inheritdoc
+     * @param mixed $offset
+     * @param mixed $value
+     * @return void
      *
-     * @throws TypeError|OutOfBoundsException if $value is not of the type defined
-     * with this getEntityType, or f $offset is not an int
+     * @throws OutOfBoundsException
      */
-    public function offsetSet(mixed $offset, mixed $value): void
+    protected function doInsert(mixed $offset, mixed $value)
     {
-        if (!is_null($offset) && !is_int($offset)) { // @phpstan-ignore-line
+        if (!is_null($offset) && !is_int($offset)) {
             throw new OutOfBoundsException(
                 "expected integer key for \"offset\", " .
-                "but got \"$offset\" (type: " . (gettype($offset)) . ")"
+                "but got type: " . (gettype($offset))
             );
         }
+
+        if (is_null($offset)) {
+            $this->data[] = $value;
+        } else {
+            $this->data[$offset] = $value;
+        }
+    }
+
+    /**
+     * @param mixed  $value
+     * @return bool
+     *
+     * @throws TypeError
+     */
+    protected function assertTypeFor(mixed $value): bool
+    {
         $entityType = $this->getEntityType();
 
         // instanceof has higher precedence, do
@@ -172,13 +185,25 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
             );
         }
 
-        if (is_null($offset)) {
-            $this->data[] = $value;
-        } else {
-            $this->data[$offset] = $value;
-        }
+        return true;
     }
 
+
+// -------------------------
+//  ArrayAccess Interface
+// -------------------------
+
+    /**
+     * @inheritdoc
+     *
+     * @throws TypeError|OutOfBoundsException if $value is not of the type defined
+     * with this getEntityType, or f $offset is not an int
+     */
+    public function offsetSet(mixed $offset, mixed $value): void
+    {
+        $this->assertTypeFor($value);
+        $this->doInsert($offset, $value);
+    }
 
 
     /**
