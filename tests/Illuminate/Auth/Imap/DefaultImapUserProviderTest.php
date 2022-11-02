@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Illuminate\Auth\Imap;
 use Conjoon\Illuminate\Auth\Imap\DefaultImapUserProvider;
 use Conjoon\Illuminate\Auth\Imap\ImapUser;
 use Conjoon\Illuminate\Auth\Imap\ImapUserProvider;
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 use Tests\TestCase;
 
 /**
@@ -56,7 +56,7 @@ class DefaultImapUserProviderTest extends TestCase
                 "inbox_ssl"       => true,
                 "outbox_address"  => "234.2.2.2",
                 "outbox_port"     => 993,
-                "outbox_secure"      => "ssl",
+                "outbox_ssl"      => true,
                 "match"           => ["/\@(conjoon.)(org|de|com|info)$/mi"]
             ], [
                 "id"              => "imap_test",
@@ -66,7 +66,7 @@ class DefaultImapUserProviderTest extends TestCase
                 "inbox_ssl"       => true,
                 "outbox_address"  => "1.1.1.0",
                 "outbox_port"     => 993,
-                "outbox_secure"      => "ssl",
+                "outbox_ssl"      => true,
                 "match"           => ["/\@(snafu)$/i"]
             ]];
 

@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Illuminate\Auth\Imap;
 
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 
 /**
  * Class Util
@@ -49,7 +49,7 @@ class Util
      *                          "inbox_ssl"       => true,
      *                          "outbox_address"  => "234.2.2.2",
      *                          "outbox_port"     => 993,
-     *                          "outbox_secure"   => "ssl",
+     *                          "outbox_ssl"      => true,
      *                          "match"           => ["/\@(conjoon.)(org|de|com|info)$/mi"]]
      *       );
      *
@@ -68,7 +68,7 @@ class Util
      *       //  'outbox_port'     => 993,
      *       //  'outbox_user'     => "dev@conjoon.org",
      *       //  'outbox_password' => 'foo',
-     *       //  'outbox_secure'   => "ssl"
+     *       //  'outbox_ssl'      => true
      *
      *
      * @param string $username

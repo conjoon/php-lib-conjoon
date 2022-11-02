@@ -29,15 +29,12 @@ declare(strict_types=1);
 
 namespace Conjoon\Illuminate\Auth\Imap;
 
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
 
 /**
  * Class ImapUser encapsulates a user for the php-lib-conjoon package, containing
  * associated MailAccount-information.
- *
- * An ImapUser is considered to be be associated with ONE ImapAccount. E.g. for the email-address
- * "address@domain.org" must be one ImapServer in the configuration existing that manages THIS email-address.
  *
  * @package Conjoon\Illuminate\Auth\Imap
  */
@@ -74,11 +71,6 @@ class ImapUser implements Authenticatable
         $this->mailAccount = $mailAccount;
     }
 
-    /**
-     * Returns the mail account that is connected with the ImapUser's username, whereas
-     * the username is considered to be the email-adress. The mail-account managing this email-address
-     * will be returned.
-     */
 
     /**
      * @return string
@@ -125,24 +117,6 @@ class ImapUser implements Authenticatable
     public function getMailAccounts(): array
     {
         return [$this->mailAccount];
-    }
-
-
-    /**
-     * Returns the mail account configured for the specified userId (e.g. the email-address, or the user name),
-     * or null if not available.
-     *
-     * @param string $userId
-     *
-     * @return MailAccount
-     */
-    public function getMailAccountForUserId(string $userId): ?MailAccount
-    {
-        if (strtolower($this->mailAccount->getInboxUser()) !== strtolower($userId)) {
-            return null;
-        }
-
-        return $this->mailAccount;
     }
 
 

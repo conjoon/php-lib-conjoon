@@ -32,7 +32,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Auth\Imap;
 
 use Conjoon\Illuminate\Auth\Imap\Util;
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 use Tests\TestCase;
 
 class UtilTest extends TestCase
@@ -45,7 +45,7 @@ class UtilTest extends TestCase
         "inbox_ssl"       => true,
         "outbox_address"  => "sfsffs.ffssf.sffs",
         "outbox_port"     => 993,
-        "outbox_secure"   => "ssl"
+        "outbox_ssl"      => true
     ];
 
     public function testMake()

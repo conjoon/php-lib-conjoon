@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
@@ -117,7 +117,7 @@ trait TestTrait
             "outbox_port"     => 993,
             "outbox_user"     => "outboxUser",
             "outbox_password" => "outboxPassword",
-            "outbox_secure"   => "ssl"
+            "outbox_ssl"      => true
         ]);
     }
 }
