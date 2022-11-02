@@ -32,7 +32,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Auth\Imap;
 
 use Conjoon\Illuminate\Auth\Imap\Util;
-use Conjoon\Mail\Client\Data\MailAccount;
+use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
 
 class UtilTest extends TestCase

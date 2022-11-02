@@ -32,7 +32,7 @@ namespace Tests\Conjoon\Illuminate\Auth\Imap;
 use Conjoon\Illuminate\Auth\Imap\DefaultImapUserProvider;
 use Conjoon\Illuminate\Auth\Imap\ImapUser;
 use Conjoon\Illuminate\Auth\Imap\ImapUserProvider;
-use Conjoon\Mail\Client\Data\MailAccount;
+use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
 
 /**

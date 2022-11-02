@@ -27,19 +27,19 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer;
+namespace Tests\Conjoon\Illuminate\MailClient\Data\Protocol\Http\Request\Transformer;
 
-use Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer\LaravelAttachmentListJsonTransformer;
-use Conjoon\Mail\Client\Attachment\FileAttachmentList;
-use Conjoon\Mail\Client\Request\Attachment\Transformer\AttachmentListJsonTransformer;
-use Conjoon\Util\JsonDecodable;
+use Conjoon\Illuminate\MailClient\Data\Protocol\Http\Request\Transformer\LaravelAttachmentListJsonTransformer;
+use Conjoon\MailClient\Message\Attachment\FileAttachmentList;
+use Conjoon\MailClient\Data\Protocol\Http\Request\Transformer\AttachmentListJsonTransformer;
+use Conjoon\Core\Contract\JsonDecodable;
 use Illuminate\Http\UploadedFile;
 use RuntimeException;
 use Tests\TestCase;
 
 /**
  * Class LaravelAttachmentListJsonTransformerTest
- * @package Tests\Conjoon\Illuminate\Mail\Client\Request\Attachment\Transformer
+ * @package Tests\Conjoon\Illuminate\MailClient\Data\Protocol\Http\Request\Transformer
  */
 class LaravelAttachmentListJsonTransformerTest extends TestCase
 {
