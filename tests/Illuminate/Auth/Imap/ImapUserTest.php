@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Auth\Imap;
 
 use Conjoon\Illuminate\Auth\Imap\ImapUser;
-use Conjoon\Mail\Client\Data\MailAccount;
+use Conjoon\MailClient\Data\MailAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tests\TestCase;
 
@@ -81,6 +81,26 @@ class ImapUserTest extends TestCase
         $this->assertNull($user->getAuthPassword());
         $this->assertNull($user->getRememberToken());
         $this->assertNull($user->getRememberTokenName());
+    }
+
+
+    /**
+     * Tests getMailAccountForEmailAddress
+     * @return void
+     */
+    public function testGetMailAccountForEmailAddress()
+    {
+        $mailAccount = new MailAccount(["id" => "foo", "inbox_user" => "user", "inbox_password" => "password"]);
+
+        $user = $this->createUser(
+            $mailAccount->getInboxUser(),
+            $mailAccount->getInboxPassword(),
+            $mailAccount
+        );
+
+        $this->assertNull($user->getMailAccountForUserId("random"));
+
+        $this->assertSame($mailAccount, $user->getMailAccountForUserId($mailAccount->getInboxUser()));
     }
 
 
