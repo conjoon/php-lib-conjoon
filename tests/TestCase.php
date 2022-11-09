@@ -29,12 +29,13 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionClass;
+use App\Exceptions\Handler;
+use Exception;
+use Illuminate\Support\Facades\Config;
+use Laravel\Lumen\Application;
+use RuntimeException;
+use Illuminate\Http\Response;
 use PHPUnit\Framework\TestCase as PHPUnitTestCase;
-use ReflectionException;
-use ReflectionMethod;
-use ReflectionProperty;
 
 /**
  * Class TestCase
@@ -42,50 +43,4 @@ use ReflectionProperty;
  */
 abstract class TestCase extends PHPUnitTestCase
 {
-    /**
-     *
-     * @param string $originalClassName
-     * @param array $mockedMethods
-     * @param array $args
-     * @return mixed
-     */
-    protected function createMockForAbstract(
-        string $originalClassName,
-        array $mockedMethods = [],
-        array $args = []
-    ): mixed {
-        return parent::getMockForAbstractClass(
-            $originalClassName,
-            $args,
-            '',
-            true,
-            true,
-            true,
-            $mockedMethods
-        );
-    }
-
-
-    /**
-     * @param mixed $inst
-     * @param $name
-     * @param bool $isProperty
-     *
-     * @return ($isProperty is true ? ReflectionProperty : ReflectionMethod)
-     *
-     * @throws ReflectionException
-     */
-    protected function makeAccessible($inst, $name, bool $isProperty = false): ReflectionMethod|ReflectionProperty
-    {
-        $refl = new ReflectionClass($inst);
-
-        $name = match ($isProperty) {
-            true => $refl->getProperty($name),
-            default => $refl->getMethod($name),
-        };
-
-        $name->setAccessible(true);
-
-        return $name;
-    }
 }
