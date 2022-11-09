@@ -45,7 +45,7 @@ class UtilTest extends TestCase
         "inbox_ssl"       => true,
         "outbox_address"  => "sfsffs.ffssf.sffs",
         "outbox_port"     => 993,
-        "outbox_ssl"      => true
+        "outbox_secure"   => "ssl"
     ];
 
     public function testMake()

@@ -54,7 +54,7 @@ class MailAccountTest extends TestCase
         "outbox_port"     => 993,
         "outbox_user"     => "user",
         "outbox_password" => "password outbox",
-        "outbox_ssl"      => true,
+        "outbox_secure"   => "ssl",
         "root"            => ["[Gmail]"]
     ];
 

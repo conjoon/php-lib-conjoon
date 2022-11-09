@@ -51,17 +51,16 @@ use BadMethodCallException;
  *        "outbox_port"     => 993,
  *        "outbox_user"     => "outboxuser",
  *        "outbox_password" => "outboxpassword',
- *        'outbox_ssl'      => true,
+ *        'outbox_secure'   => "tls",
  *        'root'            => "INBOX"
  *    ]);
  *
- *    $account->getOutboxSsl(); // true
+ *    $account->getOutboxSecure(); // true
  *    $account->getInboxPort(); // 993
  *    $account->getReplyTo();   // ['name' => 'John Smith', 'address' => 'dev@conjoon.org'],
  *
  * The property "root" allows for specifying a root mailbox and defaults to "INBOX".
  *
- * @package Conjoon\Mail\Client\Data
  *
  * @method string getName()
  * @method array getFrom()
@@ -77,7 +76,7 @@ use BadMethodCallException;
  * @method bool getInboxSsl()
  * @method string getOutboxAddress()
  * @method int getOutboxPort()
- * @method bool getOutboxSsl()
+ * @method string getOutboxSecure()
  * @method array getRoot()
  *
  * @noinspection SpellCheckingInspection
@@ -155,9 +154,9 @@ class MailAccount
     protected string $outbox_password;
 
     /**
-     * @var boolean
+     * @var string
      */
-    protected bool $outbox_ssl;
+    protected string $outbox_secure;
 
     /**
      * @var array
@@ -194,7 +193,7 @@ class MailAccount
     public function __call(string $method, $arguments)
     {
 
-        if (strpos($method, 'get') === 0) {
+        if (str_starts_with($method, 'get')) {
             if ($method !== 'getReplyTo') {
                 $method = substr($method, 3);
                 $property = strtolower(preg_replace('/([a-z])([A-Z])/', "$1_$2", $method));
@@ -234,7 +233,7 @@ class MailAccount
             "outbox_port" => $this->getOutboxPort(),
             "outbox_user" => $this->getOutboxUser(),
             "outbox_password" => $this->getOutboxPassword(),
-            "outbox_ssl" => $this->getOutboxSsl(),
+            "outbox_secure" => $this->getOutboxSecure(),
             "root" => $this->getRoot()
         ];
     }

@@ -56,7 +56,7 @@ class DefaultImapUserProviderTest extends TestCase
                 "inbox_ssl"       => true,
                 "outbox_address"  => "234.2.2.2",
                 "outbox_port"     => 993,
-                "outbox_ssl"      => true,
+                "outbox_secure"   => "ssl",
                 "match"           => ["/\@(conjoon.)(org|de|com|info)$/mi"]
             ], [
                 "id"              => "imap_test",
@@ -66,7 +66,7 @@ class DefaultImapUserProviderTest extends TestCase
                 "inbox_ssl"       => true,
                 "outbox_address"  => "1.1.1.0",
                 "outbox_port"     => 993,
-                "outbox_ssl"      => true,
+                "outbox_secure"   => "ssl",
                 "match"           => ["/\@(snafu)$/i"]
             ]];
 
