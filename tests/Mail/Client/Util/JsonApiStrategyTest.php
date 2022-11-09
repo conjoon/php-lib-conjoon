@@ -89,6 +89,5 @@ class JsonApiStrategyTest extends TestCase
                 ]
             ]
         ], $strategy->toJson($arrayMock));
-
     }
 }

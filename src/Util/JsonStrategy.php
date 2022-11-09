@@ -35,7 +35,6 @@ namespace Conjoon\Util;
  */
 interface JsonStrategy
 {
-
     /**
      * Returns a JSON representation of the data passed to this method.
      *

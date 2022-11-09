@@ -38,7 +38,6 @@ use Conjoon\Util\Arrayable;
  */
 class JsonApiStrategy implements JsonStrategy
 {
-
     /**
      * Transforms the $data to a format that matches the JSON:API specifications by considering
      * attributes and relationships.
@@ -81,8 +80,7 @@ class JsonApiStrategy implements JsonStrategy
                 continue;
             }
 
-            $result["attributes"][$field] =$value;
-
+            $result["attributes"][$field] = $value;
         }
 
         return $result;

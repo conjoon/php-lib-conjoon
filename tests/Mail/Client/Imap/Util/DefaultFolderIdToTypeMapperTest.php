@@ -80,7 +80,6 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
         $this->assertSame(
             MailFolder::TYPE_DRAFT,
             $mapper->getFolderType($this->createListMailFolder("INBOX.Drafts", "."))
-
         );
         $this->assertSame(
             MailFolder::TYPE_DRAFT,
@@ -156,7 +155,8 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
 
 
         // FOLDER
-        foreach ([
+        foreach (
+            [
                 ["SomeRandomFolder/Draft", "/"],
                 ["SomeRandomFolder/Draft/Test", "/"],
                 ["SomeRandom", "."],
@@ -164,7 +164,8 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
                 ["INBOX.Trash.Deep.Deeper.Folder", "."],
                 ["Junk/Draft", "/"],
                 ["TRASH.Draft.folder", "."]
-            ] as $folder) {
+            ] as $folder
+        ) {
             $this->assertSame(
                 MailFolder::TYPE_FOLDER,
                 $mapper->getFolderType($this->createListMailFolder($folder[0], $folder[1]))
@@ -207,7 +208,6 @@ class DefaultFolderIdToTypeMapperTest extends TestCase
                 $mapper->getFolderType($this->createListMailFolder("[$label]/Trash", "."))
             );
         }
-
     }
 
 
