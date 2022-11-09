@@ -42,7 +42,7 @@ class HttpExceptionTest extends TestCase
     /**
      * test instance
      */
-    public function testInstance()
+    public function testInstance(): void
     {
 
         $exception = new HttpException();

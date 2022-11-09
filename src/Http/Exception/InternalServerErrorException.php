@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Http\Exception;
 
-use Conjoon\Http\Status\StatusCodes;
+use Conjoon\Http\StatusCodes;
 
 /**
  * Class BadRequestException
@@ -37,5 +37,8 @@ use Conjoon\Http\Status\StatusCodes;
  */
 class InternalServerErrorException extends HttpException
 {
+    /**
+     * @var int
+     */
     protected $code = StatusCodes::HTTP_500;
 }

@@ -6,17 +6,18 @@
         {"url": "https://horde-satis.maintaina.com", "type": "composer"}
     ],
     "require": {
-        "php": ">=7.4",
         "ezyang/htmlpurifier": "^4.11",
-        "laravel/lumen-framework": "5.8.*",
         "horde/imap_client": "dev-FRAMEWORK_6_0",
-        "horde/smtp": "dev-FRAMEWORK_6_0"
+        "horde/smtp": "dev-FRAMEWORK_6_0",
+        "php": ">=8.1",
+        "laravel/lumen-framework": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
         "mockery/mockery": "^1.3.1",
         "phpunit/phpunit": "^9.3",
-        "squizlabs/php_codesniffer": "*"
+        "squizlabs/php_codesniffer": "*",
+        "phpstan/phpstan": "1.8.9"
     },
     "license": "MIT",
     "autoload": {

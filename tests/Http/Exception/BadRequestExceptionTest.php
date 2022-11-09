@@ -31,7 +31,7 @@ namespace Tests\Conjoon\Http\Exception;
 
 use Conjoon\Http\Exception\BadRequestException;
 use Conjoon\Http\Exception\HttpException;
-use Conjoon\Http\Status\StatusCodes;
+use Conjoon\Http\StatusCodes;
 use Tests\TestCase;
 
 /**
@@ -43,7 +43,7 @@ class BadRequestExceptionTest extends TestCase
     /**
      * test instance
      */
-    public function testInstance()
+    public function testInstance(): void
     {
 
         $exception = new BadRequestException();
