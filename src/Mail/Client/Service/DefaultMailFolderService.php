@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -92,10 +92,10 @@ class DefaultMailFolderService implements MailFolderService
     /**
      * @inheritdoc
      */
-    public function getMailFolderChildList(MailAccount $mailAccount): MailFolderChildList
+    public function getMailFolderChildList(MailAccount $mailAccount, array $subscriptions = []): MailFolderChildList
     {
         $mailFolderList = $this->getMailClient()->getMailFolderList($mailAccount);
 
-        return $this->getMailFolderTreeBuilder()->listToTree($mailFolderList, $mailAccount->getRoot());
+        return $this->getMailFolderTreeBuilder()->listToTree($mailFolderList, $subscriptions);
     }
 }

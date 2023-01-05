@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -40,6 +40,7 @@ interface MailFolderService
      * MailAccount.
      *
      * @param MailAccount $mailAccount
+     * @param array $subscriptions
      *
      * @return MailFolderChildList An MailFolderChildList of the Mailbox-structure
      * found on the server.
@@ -55,7 +56,7 @@ interface MailFolderService
      *
      * @see \Horde_Imap_Client_Socket
      */
-    public function getMailFolderChildList(MailAccount $mailAccount): MailFolderChildList;
+    public function getMailFolderChildList(MailAccount $mailAccount, array $subscriptions = []): MailFolderChildList;
 
 
     /**
