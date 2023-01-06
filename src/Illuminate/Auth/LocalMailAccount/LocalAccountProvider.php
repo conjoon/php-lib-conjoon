@@ -61,16 +61,18 @@ class LocalAccountProvider extends DefaultImapUserProvider
     public function getUser(string $username, string $password): ?ImapUser
     {
         $config = $this->decodePayload($this->payload);
-        $mailAccount = $this->createMailAccount($config);
+        $mailAccount = $this->createMailAccount($username, $password, $config);
 
         return new ImapUser($username, $password, $mailAccount);
     }
 
-    private function createMailAccount(array $config): MailAccount
+    private function createMailAccount(string $username, string $password, array $config): MailAccount
     {
         $merged = array_merge($config, [
             "id" => $this->mailAccountId,
             "name" => $this->mailAccountId,
+            "inbox_user" => $username,
+            "inbox_password" => $password
         ]);
         return new MailAccount($merged);
     }

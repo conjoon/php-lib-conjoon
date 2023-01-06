@@ -88,8 +88,8 @@ class LocalAccountProviderTest extends TestCase
             "replyTo" => ["address" => "", "name" => "name"],
             "inbox_address" => "address",
             "inbox_port" => 8080,
-            "inbox_user" => "user",
-            "inbox_password" => "pw",
+            "inbox_user" => "inboxUsername",
+            "inbox_password" => "inboxPassword",
             "outbox_address" => "address",
             "outbox_port" => 8080,
             "outbox_user" => "user",
@@ -104,7 +104,7 @@ class LocalAccountProviderTest extends TestCase
 
         $provider = new LocalAccountProvider($request);
 
-        $user = $provider->getUser("username", "password");
+        $user = $provider->getUser("inboxUsername", "inboxPassword");
         $this->assertInstanceOf(ImapUser::class, $user);
 
         $this->assertNull($user->getMailAccount("routeIdNotAvailable"));
