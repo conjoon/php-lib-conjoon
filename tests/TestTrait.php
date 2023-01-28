@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 use Illuminate\Contracts\Auth\Authenticatable;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionClass;
