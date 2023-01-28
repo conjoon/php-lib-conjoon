@@ -81,5 +81,4 @@ class LocalAccountProvider extends DefaultImapUserProvider
     {
         return json_decode(base64_decode($payload), true);
     }
-
 }

@@ -118,7 +118,6 @@ class LocalAccountProviderTest extends TestCase
 
         $this->assertSame("routeId", $toArray["id"]);
         $this->assertSame("routeId", $toArray["name"]);
-
     }
 
 
@@ -134,6 +133,4 @@ class LocalAccountProviderTest extends TestCase
 
         return $name;
     }
-
-
 }
