@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,8 +27,9 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Illuminate\Auth\Imap;
+namespace Conjoon\Illuminate\Auth;
 
+use Conjoon\Illuminate\Auth\Imap\Conjoon;
 use Illuminate\Contracts\Auth\UserProvider;
 
 /**
@@ -45,7 +46,7 @@ interface ImapUserProvider extends UserProvider
      * @param string $username
      * @param string $password
      *
-     * @return  Conjoon\Illuminate\Auth\Imap\ImapUser|null
+     * @return  ImapUser|null
      */
     public function getUser(string $username, string $password): ?ImapUser;
 }

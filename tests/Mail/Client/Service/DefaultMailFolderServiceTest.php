@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -90,7 +90,7 @@ class DefaultMailFolderServiceTest extends TestCase
                 ->with($mailFolderList, ["INBOX"])
                 ->andReturn($resultList);
 
-        $this->assertSame($resultList, $service->getMailFolderChildList($mailAccount));
+        $this->assertSame($resultList, $service->getMailFolderChildList($mailAccount, ["INBOX"]));
     }
 
 

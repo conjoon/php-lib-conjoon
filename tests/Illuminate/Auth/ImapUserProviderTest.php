@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,15 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Illuminate\Auth\Imap;
+namespace Tests\Conjoon\Illuminate\Auth;
 
-use Conjoon\Illuminate\Auth\Imap\ImapUserProvider;
+use Conjoon\Illuminate\Auth\ImapUserProvider;
 use Illuminate\Contracts\Auth\UserProvider;
 use Tests\TestCase;
 
 /**
- * Class ImapUserProviderTest
- * @package Tests\Conjoon\Illuminate\Auth\Imap
+ * Tests ImapUserProvider.
  */
 class ImapUserProviderTest extends TestCase
 {

@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -56,14 +56,14 @@ use Conjoon\Util\JsonStrategy;
  *        "outbox_user"     => "outboxuser",
  *        "outbox_password" => "outboxpassword',
  *        'outbox_secure'   => "tls",
- *        'root'            => "INBOX"
+ *        'subscriptions'   => ["INBOX"]
  *    ]);
  *
  *    $account->getOutboxSecure(); // true
  *    $account->getInboxPort(); // 993
  *    $account->getReplyTo();   // ['name' => 'John Smith', 'address' => 'dev@conjoon.org'],
  *
- * The property "root" allows for specifying a root mailbox and defaults to "INBOX".
+ * The property "subscriptions" allows for specifying mailbox the account is subscribed to.
  *
  * @package Conjoon\Mail\Client\Data
  *
@@ -82,7 +82,7 @@ use Conjoon\Util\JsonStrategy;
  * @method string getOutboxAddress()
  * @method int getOutboxPort()
  * @method string getOutboxSecure()
- * @method array getRoot()
+ * @method array getSubscriptions()
  *
  * @noinspection SpellCheckingInspection
  */
@@ -166,7 +166,7 @@ class MailAccount implements Jsonable, Arrayable
     /**
      * @var array
      */
-    protected array $root = ["INBOX"];
+    protected array $subscriptions = ["INBOX"];
 
     /**
      * MailAccount constructor.
@@ -240,7 +240,7 @@ class MailAccount implements Jsonable, Arrayable
             "outbox_user" => $this->getOutboxUser(),
             "outbox_password" => $this->getOutboxPassword(),
             "outbox_secure" => $this->getOutboxSecure(),
-            "root" => $this->getRoot()
+            "subscriptions" => $this->getSubscriptions()
         ];
     }
 

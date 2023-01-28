@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -59,7 +59,7 @@ class MailAccountTest extends TestCase
         "outbox_user"     => "user",
         "outbox_password" => "password outbox",
         "outbox_secure"   => "ssl",
-        "root"            => ["[Gmail]"]
+        "subscriptions"    => ["[Gmail]"]
     ];
 
 
@@ -81,14 +81,14 @@ class MailAccountTest extends TestCase
     {
         $config = $this->accountConfig;
 
-        $oldRoot = $config["root"];
+        $oldRoot = $config["subscriptions"];
         $this->assertSame(["[Gmail]"], $oldRoot);
-        unset($config["root"]);
+        unset($config["subscriptions"]);
 
         $account = new MailAccount($config);
-        $this->assertSame(["INBOX"], $account->getRoot());
+        $this->assertSame(["INBOX"], $account->getSubscriptions());
 
-        $config["root"] = $oldRoot;
+        $config["subscriptions"] = $oldRoot;
         $account = new MailAccount($config);
 
         foreach ($config as $property => $value) {
