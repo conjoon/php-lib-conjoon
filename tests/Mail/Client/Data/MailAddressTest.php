@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -163,5 +163,42 @@ class MailAddressTest extends TestCase
         $this->assertSame($address1->getAddress(), $mailAddress->getAddress());
         $this->assertSame($address1->getName(), $mailAddress->getName());
         $this->assertNotSame($address1, $mailAddress);
+    }
+
+
+    /**
+     * @see conjoon/php-lib-conjoon#12
+     */
+    public function testForAddressThatNeedToBeSanitized()
+    {
+        $tests = [
+            [
+                ["Parker, Peter", "peter.parker@newyork.com"],
+                ["\"Parker, Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker Peter", "peter.parker@newyork.com"],
+                ["Parker Peter", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \" Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\" Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker ' Peter", "peter.parker@newyork.com"],
+                ["\"Parker \' Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \"Parker, Peter Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\"Parker, Peter Peter\"", "peter.parker@newyork.com"],
+            ]
+        ];
+
+        foreach ($tests as $test) {
+            [$input, $output] = $test;
+            $mailAddress = new MailAddress($input[1], $input[0]);
+            $this->assertSame($output[1], $mailAddress->getAddress());
+            $this->assertSame($output[0], $mailAddress->getName());
+        }
     }
 }

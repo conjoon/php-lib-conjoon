@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -83,7 +83,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
             throw new InvalidArgumentException("\"address\" must be set for a MailAddress");
         }
         $this->address = $address;
-        $this->name = $name;
+        $this->name = $this->escapeName($name);
     }
 
 
@@ -205,5 +205,16 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
             'address' => $this->getAddress(),
             'name' => $this->getName()
         ];
+    }
+
+
+    private function escapeName(string $name): string
+    {
+        $regex = '/(,|"|\')/m';
+
+        if (preg_match($regex, $name) === 1) {
+            return "\"" . addslashes($name) . "\"";
+        }
+        return $name;
     }
 }
