@@ -217,6 +217,4 @@ class MailAddressTest extends TestCase
         $this->assertSame($address1->getName(), $mailAddress->getName());
         $this->assertNotSame($address1, $mailAddress);
     }
-
-
 }
