@@ -83,7 +83,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
             throw new InvalidArgumentException("\"address\" must be set for a MailAddress");
         }
         $this->address = $address;
-        $this->name = $this->escapeName($name);
+        $this->name = $name;
     }
 
 
@@ -150,7 +150,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
         }
 
         $address = $val["address"];
-        $name = $val["name"] ?? $val["address"];
+        $name = isset($val["name"]) ? self::escapeName($val["name"]) : $val["address"];
 
         try {
             return new self($address, $name);
@@ -200,7 +200,6 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
      */
     public function toJson(JsonStrategy $strategy = null): array
     {
-
         return [
             'address' => $this->getAddress(),
             'name' => $this->getName()
@@ -208,12 +207,12 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Jsonable
     }
 
 
-    private function escapeName(string $name): string
+    private static function escapeName(string $name): string
     {
         $regex = '/(,|"|\')/m';
 
         if (preg_match($regex, $name) === 1) {
-            return "\"" . addslashes($name) . "\"";
+            return  '"'.addslashes($name).'"' ;
         }
         return $name;
     }
