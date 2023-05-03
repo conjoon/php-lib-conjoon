@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Illuminate\Auth\Imap;
 
-use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Mail\Client\Data\MailAccount;
 
 /**
  * Class Util
