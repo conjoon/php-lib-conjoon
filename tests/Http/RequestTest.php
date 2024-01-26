@@ -57,10 +57,10 @@ class RequestTest extends TestCase
 
     public function testGetQuery(): void
     {
-        $request = new Request(Url::create("https://www.localhost.com:8080/index.php"));
+        $request = new Request(Url::make("https://www.localhost.com:8080/index.php"));
         $this->assertNull($request->getQuery());
 
-        $request = new Request(Url::create("https://www.localhost.com:8080/index.php?query=value"));
+        $request = new Request(Url::make("https://www.localhost.com:8080/index.php?query=value"));
         $query = $request->getQuery();
         $this->assertNotNull($query);
         $this->assertSame(

@@ -31,6 +31,7 @@ namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
  * ResourceDescription for a MessageItem.
@@ -46,6 +47,10 @@ class MessageItem extends ObjectDescription
         return "MessageItem";
     }
 
+    public function getPath(): Template
+    {
+        // TODO: Implement getPath() method.
+    }
 
     /**
      * @return ObjectDescriptionList

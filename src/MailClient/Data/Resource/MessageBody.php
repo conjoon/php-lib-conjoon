@@ -31,6 +31,7 @@ namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
  * ResourceDescription for a MessageBody.
@@ -89,5 +90,10 @@ class MessageBody extends ObjectDescription
             "textPlain",
             "textHtml"
         ];
+    }
+
+    public function getPath(): Template
+    {
+        // TODO: Implement getPath() method.
     }
 }

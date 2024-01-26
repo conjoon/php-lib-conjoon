@@ -45,7 +45,7 @@ interface ImapUserProvider extends UserProvider
      * @param string $username
      * @param string $password
      *
-     * @return  Conjoon\Illuminate\Auth\Imap\ImapUser|null
+     * @return  ImapUser|null
      */
     public function getUser(string $username, string $password): ?ImapUser;
 }

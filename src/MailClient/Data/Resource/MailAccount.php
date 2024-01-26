@@ -31,6 +31,7 @@ namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Data\Resource\ObjectDescriptionList;
 use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
  * ResourceDescription for a MailAccount.
@@ -105,5 +106,10 @@ class MailAccount extends ObjectDescription
             "outbox_password",
             "outbox_secure"
         ];
+    }
+
+    public function getPath(): Template
+    {
+        // TODO: Implement getPath() method.
     }
 }

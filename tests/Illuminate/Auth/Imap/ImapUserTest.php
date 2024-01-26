@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Illuminate\Auth\Imap;
 
-use Conjoon\Illuminate\Auth\Imap\ImapUser;
 use Conjoon\MailClient\Data\MailAccount;
+use Conjoon\Illuminate\Auth\Imap\ImapUser;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Tests\TestCase;
 
