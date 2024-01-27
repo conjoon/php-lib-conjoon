@@ -67,9 +67,6 @@ class ClassLoader
 
 
     /**
-     * Return the resource object description for the resource targeted by the specified
-     * $request if this class' $resourceUrlParser parses the request's url successfully.
-     *
      * @param string $fqn The fqn of the class that should be loaded
      * @param string $baseClass The base class the class to load must extend
      * @param array<int, mixed> $args
