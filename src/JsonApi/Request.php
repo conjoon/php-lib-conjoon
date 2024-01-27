@@ -1,39 +1,27 @@
 <?php
 
 /**
- * conjoon
- * php-lib-conjoon
- * Copyright (C) 2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * This file is part of the conjoon/php-lib-conjoon project.
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * (c) 2022-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * For full copyright and license information, please consult the LICENSE-file distributed
+ * with this source code.
  */
+
 
 declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
 
+use Conjoon\Data\Resource\ObjectDescription;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Request as HttpRequest;
 use Conjoon\Http\RequestMethod as HttpMethod;
 use Conjoon\JsonApi\Query\Validation\Validator;
+use Conjoon\Net\Uri\Component\Query;
 use Conjoon\Net\Url;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 
 /**
  * Request specific for JSON:API requests.
@@ -47,6 +35,8 @@ class Request extends HttpRequest
     private ?Validator $queryValidator;
 
 
+    private ObjectDescription $objectDescription;
+
     /**
      * Constructor.
      *
@@ -56,10 +46,12 @@ class Request extends HttpRequest
      */
     public function __construct(
         Url $url,
-        HttpMethod $method = HttpMethod::GET,
+        HttpMethod $method,
+        ObjectDescription $objectDescription,
         Validator $queryValidator = null
     ) {
         parent::__construct($url, $method);
+        $this->objectDescription = $objectDescription;
         $this->queryValidator = $queryValidator;
     }
 
@@ -67,7 +59,7 @@ class Request extends HttpRequest
     /**
      * Returns the query validator for this request, if any was specified with the constructor.
      */
-    private function getQueryValidator(): ?Validator
+    protected function getQueryValidator(): ?Validator
     {
         return $this->queryValidator;
     }
@@ -85,6 +77,7 @@ class Request extends HttpRequest
         $validator = $this->getQueryValidator();
         $query = $this->getQuery();
 
+
         if (!$validator || !$query) {
             return $errors;
         }
@@ -92,5 +85,16 @@ class Request extends HttpRequest
         $validator->validate($query, $errors);
 
         return $errors;
+    }
+
+    /**
+     * @return JsonApiQuery|null
+     */
+    public function getQuery(): ?JsonApiQuery
+    {
+        if (!$this->url->getQuery()) {
+            return null;
+        }
+        return new JsonApiQuery($this->url->getQuery(), $this->objectDescription);
     }
 }
