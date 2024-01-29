@@ -39,8 +39,14 @@ class MessageItemTest extends TestCase
         );
 
         $this->assertSame(0, $request->validate()->count());
-
         $this->assertNull($request->getQuery());
+
+        $parameterBag = $request->getQuery()?->getParameterBag();
+
+      //  MessageItemQuery = new MessageItemQuery($parameterBag);
+
+
+
     }
 
 

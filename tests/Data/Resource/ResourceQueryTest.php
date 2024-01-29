@@ -33,12 +33,12 @@ use BadMethodCallException;
 use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Data\ParameterBag;
-use Conjoon\Data\Resource\ResourceQuery;
+use Conjoon\Data\Resource\RepositoryQuery;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 /**
- * Tests ResourceQuery
+ * Tests RepositoryQuery
  */
 class ResourceQueryTest extends TestCase
 {
@@ -83,7 +83,7 @@ class ResourceQueryTest extends TestCase
             )->willReturnOnConsecutiveCalls(1, 2, null);
 
         /**
-         * @var ResourceQuery $resourceQuery
+         * @var RepositoryQuery $resourceQuery
          */
         $resourceQuery = $this->getResourceQuery($bag);
 
@@ -147,12 +147,12 @@ class ResourceQueryTest extends TestCase
 
     /**
      * @param ParameterBag $bag
-     * @return ResourceQuery&MockObject
+     * @return RepositoryQuery&MockObject
      */
-    protected function getResourceQuery(ParameterBag $bag): MockObject&ResourceQuery
+    protected function getResourceQuery(ParameterBag $bag): MockObject&RepositoryQuery
     {
         return $this->getMockForAbstractClass(
-            ResourceQuery::class,
+            RepositoryQuery::class,
             [$bag]
         );
     }

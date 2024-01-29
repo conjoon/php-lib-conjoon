@@ -54,7 +54,7 @@ abstract class ResourceDescription implements Stringable
      *
      * @return array<int, string>
      *
-     * @see ResourceQuery
+     * @see RepositoryQuery
      */
     abstract public function getDefaultFields(): array;
 

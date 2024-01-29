@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
-use Conjoon\Data\Resource\ResourceQuery;
+use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\MailClient\Data\Resource\MailFolder;
 
 /**
  * Class MailFolderListQuery.
  */
-abstract class MailFolderListQuery extends ResourceQuery
+abstract class MailFolderListQuery extends RepositoryQuery
 {
     /**
      * Returns the fields that should be queried. If no fields where specified, this implementation
@@ -47,7 +47,7 @@ abstract class MailFolderListQuery extends ResourceQuery
 
 
     /**
-     * This ResourceQuery targets MessageItems.
+     * This RepositoryQuery targets MessageItems.
      */
     function getResourceTarget(): MailFolder
     {

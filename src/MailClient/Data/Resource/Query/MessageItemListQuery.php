@@ -29,16 +29,16 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
-use Conjoon\Data\Resource\ResourceQuery;
+use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\Data\Sort\SortInfoList;
 use Conjoon\Data\Filter\Filter;
 use Conjoon\MailClient\Data\Resource\MessageItem;
 
 /**
- * ResourceQuery implementation for querying MessageItemList.
+ * RepositoryQuery implementation for querying MessageItemList.
  *
  */
-abstract class MessageItemListQuery extends ResourceQuery
+abstract class MessageItemListQuery extends RepositoryQuery
 {
     /**
      * Returns the offset of the first message item requested with the query.
@@ -85,7 +85,7 @@ abstract class MessageItemListQuery extends ResourceQuery
 
 
     /**
-     * This ResourceQuery targets MessageItem.
+     * This RepositoryQuery targets MessageItem.
      */
     public function getResourceTarget(): MessageItem
     {

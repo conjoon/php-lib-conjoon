@@ -35,22 +35,22 @@ use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\Data\ParameterBag;
 
 /**
- * A ResourceQuery provides an interface for a validated and certified collection
+ * A RepositoryQuery provides an interface for a validated and certified collection
  * of parameters that can safely be passed to the low level API.
  * The origin of the parameters is arbitrary and not of interest to this class,
  * as they are validated and sanitized before they end up with a ParameterBag in an instance
  * of this class.
- * Any class working with a ResourceQuery can rely on the validity, mutually exclusivity
+ * Any class working with a RepositoryQuery can rely on the validity, mutually exclusivity
  * and key-/value-pair-correctness of the wrapped ParameterBag this class guarantees.
  * Note:
- * This ResourceQuery delegates all method calls involving getters to the ParameterBag
+ * This RepositoryQuery delegates all method calls involving getters to the ParameterBag
  * using __call, including querying the properties using __get.
  *
  * @method string|null getString(string $name)
  * @method int|null getInt(string $name)
  * @method bool|null getBool(string $name)
  */
-abstract class ResourceQuery implements Jsonable
+abstract class RepositoryQuery implements Jsonable
 {
     /**
      * @var ParameterBag
@@ -58,7 +58,7 @@ abstract class ResourceQuery implements Jsonable
     protected ParameterBag $parameterBag;
 
     /**
-     * ResourceQuery constructor.
+     * RepositoryQuery constructor.
      * @param ParameterBag $parameterBag
      */
     public function __construct(ParameterBag $parameterBag)
