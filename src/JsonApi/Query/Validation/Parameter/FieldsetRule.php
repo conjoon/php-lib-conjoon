@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Net\Uri\Component\Query\Parameter;
@@ -37,16 +37,16 @@ use Conjoon\Web\Validation\Parameter\ParameterRule;
 
 /**
  * Validates fieldset parameters of the type "fields[TYPE]=field,field2,field3" given the
- * ObjectDescriptionList containing ObjectDesciptions that can be identified with TYPE.
+ * ResourceDescriptionList containing ObjectDesciptions that can be identified with TYPE.
  * The fields found as values for "fields[TYPE]" are compared against the list of fields
- * defined with the ObjectDescriptions. TYPE itself must be found in any of the $includes this class was configured
+ * defined with the ResourceDescriptions. TYPE itself must be found in any of the $includes this class was configured
  * with.
  *
  * This validator supports all parameters given the name "fields[TYPE]", whereas "TYPE" represents
- * an ObjectDescription's getType().
+ * an ResourceDescription's getType().
  * Validating will fail
  *   - if the fields specified with "fields[TYPE]" contain entries that do not exist
- *      in the list of fields defined with the ObjectDescription
+ *      in the list of fields defined with the ResourceDescription
  *   - if TYPE is not found in the list of $includes this class was configured with
 
  * Empty fieldsets in the form of "fields[TYPE]=" are treated as valid.
@@ -57,9 +57,9 @@ class FieldsetRule extends ParameterRule
     use ParameterTrait;
 
     /**
-     * @var ObjectDescriptionList
+     * @var ResourceDescriptionList
      */
-    protected ObjectDescriptionList $resourceDescriptionList;
+    protected ResourceDescriptionList $resourceDescriptionList;
 
     /**
      * @var array<int, string> $includes
@@ -71,11 +71,11 @@ class FieldsetRule extends ParameterRule
      * Creates a new instance of this rule configured with the available resource object descriptions
      * and the includes the rule should consider.
      *
-     * @param ObjectDescriptionList $resourceDescriptionList
+     * @param ResourceDescriptionList $resourceDescriptionList
      * @param array<int, string> $includes An array with all resource object types requested,
      * against which a parameter's fieldset must be validated
      */
-    public function __construct(ObjectDescriptionList $resourceDescriptionList, array $includes)
+    public function __construct(ResourceDescriptionList $resourceDescriptionList, array $includes)
     {
         $this->resourceDescriptionList = $resourceDescriptionList;
         $this->includes                = $includes;
@@ -83,11 +83,11 @@ class FieldsetRule extends ParameterRule
 
 
     /**
-     * Returns the ObjectDescriptionList this rule uses.
+     * Returns the ResourceDescriptionList this rule uses.
      *
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    public function getResourceObjectDescriptions(): ObjectDescriptionList
+    public function getResourceResourceDescriptions(): ResourceDescriptionList
     {
         return $this->resourceDescriptionList;
     }
@@ -151,7 +151,7 @@ class FieldsetRule extends ParameterRule
 
 
     /**
-     * Returns the field for the ObjectDescription identified by $type.
+     * Returns the field for the ResourceDescription identified by $type.
      *
      * @param string $type
      *
@@ -159,7 +159,7 @@ class FieldsetRule extends ParameterRule
      */
     protected function getFields(string $type): ?array
     {
-        return $this->getResourceObjectDescriptions()
+        return $this->getResourceResourceDescriptions()
                     ->findBy(fn ($resource) => $resource->getType() === $type)?->getFields();
     }
 

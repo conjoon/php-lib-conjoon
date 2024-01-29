@@ -21,7 +21,7 @@ use Conjoon\Core\Contract\StringStrategy;
  * discoverable entities.
  *
  */
-abstract class ObjectDescription implements Stringable
+abstract class ResourceDescription implements Stringable
 {
 
     /**
@@ -36,9 +36,9 @@ abstract class ObjectDescription implements Stringable
     /**
      * Returns all relationships of the resource object described by this class.
      *
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    abstract public function getRelationships(): ObjectDescriptionList;
+    abstract public function getRelationships(): ResourceDescriptionList;
 
 
     /**
@@ -64,7 +64,7 @@ abstract class ObjectDescription implements Stringable
      * resource description, along with all associated children.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
-     * *this* ObjectDescription describes
+     * *this* ResourceDescription describes
      *
      * @return array<int, string>
      */
@@ -73,7 +73,7 @@ abstract class ObjectDescription implements Stringable
     ): array {
         $list = $this->getAllRelationshipResourceDescriptions($withResourceTarget);
 
-        $res = $list->map(fn(ObjectDescription $rel) => $rel->getType());
+        $res = $list->map(fn(ResourceDescription $rel) => $rel->getType());
 
         /**
          * @var array<int, string> $res
@@ -148,16 +148,16 @@ abstract class ObjectDescription implements Stringable
      * has previously been visited.
      *
      * @param bool $withResourceTarget If true, returns the list including the resource
-     * *this* ObjectDescription describes
+     * *this* ResourceDescription describes
      *
      *
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
     public function getAllRelationshipResourceDescriptions(
         bool $withResourceTarget = false
-    ): ObjectDescriptionList {
+    ): ResourceDescriptionList {
 
-        $list = new ObjectDescriptionList();
+        $list = new ResourceDescriptionList();
 
 
         if ($withResourceTarget === true) {
@@ -169,7 +169,7 @@ abstract class ObjectDescription implements Stringable
             $t = $resourceObject->getRelationships();
 
             foreach ($t as $rel) {
-                if ($list->findBy(fn(ObjectDescription $item) => $item->getType() === $rel->getType())) {
+                if ($list->findBy(fn(ResourceDescription $item) => $item->getType() === $rel->getType())) {
                     continue;
                 }
                 $list[] = $rel;

@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
@@ -50,7 +50,7 @@ class FieldsetRuleTest extends TestCase
      */
     public function testClass()
     {
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $includes = $this->getIncludes();
         $rule = new FieldsetRule($list, $includes);
         $this->assertInstanceOf(ParameterRule::class, $rule);
@@ -58,7 +58,7 @@ class FieldsetRuleTest extends TestCase
         $uses = class_uses(FieldsetRule::class);
         $this->assertContains(ParameterTrait::class, $uses);
 
-        $this->assertSame($list, $rule->getResourceObjectDescriptions());
+        $this->assertSame($list, $rule->getResourceResourceDescriptions());
         $this->assertSame($includes, $rule->getIncludes());
     }
 
@@ -69,7 +69,7 @@ class FieldsetRuleTest extends TestCase
     public function testSupports()
     {
         $includes = $this->getIncludes();
-        $rule = new FieldsetRule($this->getResourceObjectDescriptionList(), $includes);
+        $rule = new FieldsetRule($this->getResourceResourceDescriptionList(), $includes);
 
         $this->assertTrue($rule->supports(new Parameter("fields[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("field[MessageItem]", "")));
@@ -83,7 +83,7 @@ class FieldsetRuleTest extends TestCase
     public function testGetFields()
     {
         $includes = $this->getIncludes();
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $rule = new FieldsetRule($list, $includes);
         $getFields = $this->makeAccessible($rule, "getFields");
 
@@ -121,7 +121,7 @@ class FieldsetRuleTest extends TestCase
     {
         $errors = new ValidationErrors();
         $includes = array_merge(["unknown"], $this->getIncludes());
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $rule = new FieldsetRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 
@@ -227,19 +227,19 @@ class FieldsetRuleTest extends TestCase
 
 
     /**
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    protected function getResourceObjectDescriptionList(): ObjectDescriptionList
+    protected function getResourceResourceDescriptionList(): ResourceDescriptionList
     {
-        $list = new ObjectDescriptionList();
+        $list = new ResourceDescriptionList();
 
-        $messageItem = $this->createMockForAbstract(ObjectDescription::class, ["getType", "getFields"]);
+        $messageItem = $this->createMockForAbstract(ResourceDescription::class, ["getType", "getFields"]);
         $messageItem->expects($this->any())->method("getType")->willReturn("MessageItem");
         $messageItem->expects($this->any())->method("getFields")->willReturn([
             "subject", "date", "from", "to", "previewText"
         ]);
 
-        $mailFolder = $this->createMockForAbstract(ObjectDescription::class, ["getType", "getFields"]);
+        $mailFolder = $this->createMockForAbstract(ResourceDescription::class, ["getType", "getFields"]);
         $mailFolder->expects($this->any())->method("getType")->willReturn("MailFolder");
         $mailFolder->expects($this->any())->method("getFields")->willReturn([
             "name", "type", "id"
@@ -269,7 +269,7 @@ class FieldsetRuleTest extends TestCase
     {
         $errors = new ValidationErrors();
         $includes = $this->getIncludes();
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $rule = new FieldsetRule($list, $includes);
         $validate = $this->makeAccessible($rule, "validate");
 

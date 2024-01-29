@@ -120,8 +120,8 @@ abstract class ResourceQuery implements Jsonable
 
 
     /**
-     * Returns the ObjectDescription this resource query targets.
-     * @return ObjectDescription
+     * Returns the ResourceDescription this resource query targets.
+     * @return ResourceDescription
      */
-    abstract public function getResourceTarget(): ObjectDescription;
+    abstract public function getResourceTarget(): ResourceDescription;
 }

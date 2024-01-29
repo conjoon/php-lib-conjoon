@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\MailClient\Data\Resource\MailFolder;
 use Conjoon\MailClient\Data\Resource\MessageBody;
 use Conjoon\MailClient\Data\Resource\MessageItem;
@@ -46,7 +46,7 @@ class MessageBodyTest extends TestCase
     public function testClass()
     {
         $inst = new MessageBody();
-        $this->assertInstanceOf(ObjectDescription::class, $inst);
+        $this->assertInstanceOf(ResourceDescription::class, $inst);
     }
 
 

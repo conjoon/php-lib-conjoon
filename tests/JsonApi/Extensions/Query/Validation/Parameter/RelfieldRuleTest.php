@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation\Parameter;
 
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Net\Uri\Component\Query\Parameter;
 use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Net\Uri\Component\Query\Parameter;
 use ReflectionException;
 use Tests\TestCase;
 
@@ -49,7 +49,7 @@ class RelfieldRuleTest extends TestCase
      */
     public function testClass()
     {
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $includes = $this->getIncludes();
         $rule = new RelfieldRule($list, $includes);
         $this->assertInstanceOf(FieldsetRule::class, $rule);
@@ -66,7 +66,7 @@ class RelfieldRuleTest extends TestCase
     public function testSupports()
     {
         $includes = $this->getIncludes();
-        $rule = new RelfieldRule($this->getResourceObjectDescriptionList(), $includes);
+        $rule = new RelfieldRule($this->getResourceResourceDescriptionList(), $includes);
 
         $this->assertTrue($rule->supports(new Parameter("relfield:fields[MessageItem]", "")));
         $this->assertFalse($rule->supports(new Parameter("field[MessageItem]", "")));
@@ -247,19 +247,19 @@ class RelfieldRuleTest extends TestCase
 
 
     /**
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    protected function getResourceObjectDescriptionList(): ObjectDescriptionList
+    protected function getResourceResourceDescriptionList(): ResourceDescriptionList
     {
-        $list = new ObjectDescriptionList();
+        $list = new ResourceDescriptionList();
 
-        $messageItem = $this->createMockForAbstract(ObjectDescription::class, ["getType", "getFields"]);
+        $messageItem = $this->createMockForAbstract(ResourceDescription::class, ["getType", "getFields"]);
         $messageItem->expects($this->any())->method("getType")->willReturn("MessageItem");
         $messageItem->expects($this->any())->method("getFields")->willReturn([
             "subject", "date", "from", "to", "previewText"
         ]);
 
-        $mailFolder = $this->createMockForAbstract(ObjectDescription::class, ["getType", "getFields"]);
+        $mailFolder = $this->createMockForAbstract(ResourceDescription::class, ["getType", "getFields"]);
         $mailFolder->expects($this->any())->method("getType")->willReturn("MailFolder");
         $mailFolder->expects($this->any())->method("getFields")->willReturn([
             "name", "type", "id"
@@ -289,7 +289,7 @@ class RelfieldRuleTest extends TestCase
     {
         $errors = new ValidationErrors();
         $includes = $this->getIncludes();
-        $list = $this->getResourceObjectDescriptionList();
+        $list = $this->getResourceResourceDescriptionList();
         $rule = new RelfieldRule($list, $includes, $enableWildcard);
         $validate = $this->makeAccessible($rule, "validate");
 

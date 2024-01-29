@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data\Resource;
 
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\MailClient\Data\Resource\MailAccount;
-use Conjoon\Data\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**
@@ -44,7 +44,7 @@ class MailAccountTest extends TestCase
     public function testClass()
     {
         $inst = new MailAccount();
-        $this->assertInstanceOf(ObjectDescription::class, $inst);
+        $this->assertInstanceOf(ResourceDescription::class, $inst);
     }
 
 

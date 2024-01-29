@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation\Query;
 
-use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Query\JsonApiQuery;
 use Conjoon\JsonApi\Query\Validation\Query\QueryRule;
 use Conjoon\Web\Validation\Query\QueryRule as HttpQueryRule;
 use stdClass;
@@ -59,7 +59,7 @@ class QueryRuleTest extends TestCase
         $this->assertFalse($rule->supports(new stdClass()));
         $this->assertTrue(
             $rule->supports(
-                $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock()
+                $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock()
             )
         );
     }

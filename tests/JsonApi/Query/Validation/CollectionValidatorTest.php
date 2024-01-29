@@ -29,13 +29,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation;
 
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
+use Conjoon\JsonApi\Query\JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\Net\Uri\Component\Query\Parameter;
 use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
-use Conjoon\Data\Resource\ObjectDescriptionList;
-use Conjoon\JsonApi\Query\Validation\CollectionValidator;
-use Conjoon\JsonApi\Query\Validation\Validator;
-use Conjoon\JsonApi\Query\Query;
-use Conjoon\Data\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**
@@ -48,8 +48,8 @@ class CollectionValidatorTest extends TestCase
      */
     public function testClass()
     {
-        $validator = new CollectionValidator();
-        $this->assertInstanceOf(Validator::class, $validator);
+        $validator = new CollectionQueryValidator();
+        $this->assertInstanceOf(JsonApiQueryValidator::class, $validator);
     }
 
     /**
@@ -57,17 +57,17 @@ class CollectionValidatorTest extends TestCase
      */
     public function testGetAvailableFields()
     {
-        $validator = new CollectionValidator();
+        $validator = new CollectionQueryValidator();
         $getAvailableFields = $this->makeAccessible($validator, "getAvailableFields");
         $resourceTarget = $this->createMockForAbstract(
-            ObjectDescription::class,
+            ResourceDescription::class,
             [
                 "getType", "getFields", "getAllRelationshipResourceDescriptions"
             ]
         );
 
         $resourceTargetChild = $this->createMockForAbstract(
-            ObjectDescription::class,
+            ResourceDescription::class,
             ["getFields", "getType"]
         );
         $resourceTarget->expects($this->once())->method("getType")->willReturn("MessageItem");
@@ -80,7 +80,7 @@ class CollectionValidatorTest extends TestCase
             ["unreadMessages", "totalMessages"]
         );
 
-        $resourceTargetList = new ObjectDescriptionList();
+        $resourceTargetList = new ResourceDescriptionList();
         $resourceTargetList[] = $resourceTarget;
         $resourceTargetList[] = $resourceTargetChild;
 
@@ -116,7 +116,7 @@ class CollectionValidatorTest extends TestCase
 
         $sortFields = array_merge($fields, array_map(fn ($field) => "-" . $field, $fields));
 
-        $validator = $this->getMockBuilder(CollectionValidator::class)
+        $validator = $this->getMockBuilder(CollectionQueryValidator::class)
                           ->disableOriginalConstructor()
                           ->onlyMethods(["getAvailableFields"])
                           ->getMock();
@@ -126,7 +126,7 @@ class CollectionValidatorTest extends TestCase
             $fields
         );
 
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class);
+        $resourceTarget = $this->createMockForAbstract(ResourceDescription::class);
 
         $this->assertEqualsCanonicalizing(
             $sortFields,
@@ -140,13 +140,13 @@ class CollectionValidatorTest extends TestCase
      */
     public function getAllowedParameterNames()
     {
-        $validator = new CollectionValidator();
+        $validator = new CollectionQueryValidator();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getResourceTarget"])->getMock();
 
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class, [
+        $resourceTarget = $this->createMockForAbstract(ResourceDescription::class, [
         ]);
         $query->expects($this->any())->method("getResourceTarget")->willReturn($resourceTarget);
 
@@ -165,15 +165,15 @@ class CollectionValidatorTest extends TestCase
     {
         $sort = ["date", "subject", "size"];
         $sortParameter = new Parameter("sort", "-date,subject");
-        $objectDescriptionList = new ObjectDescriptionList();
+        $ResourceDescriptionList = new ResourceDescriptionList();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getParameter", "getResourceTarget"])
             ->getMock();
 
         $resourceTarget = $this->createMockForAbstract(
-            ObjectDescription::class,
+            ResourceDescription::class,
             ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
 
@@ -183,7 +183,7 @@ class CollectionValidatorTest extends TestCase
             ->withConsecutive(["sort"], ["include"])
             ->willReturnOnConsecutiveCalls($sortParameter, new Parameter("include", ""));
 
-        $validator = $this->createMockForAbstract(CollectionValidator::class, ["getAvailableSortFields"]);
+        $validator = $this->createMockForAbstract(CollectionQueryValidator::class, ["getAvailableSortFields"]);
         $validator->expects($this->once())->method("getAvailableSortFields")->willReturn($sort);
 
         $rules = $validator->getParameterRules($query);

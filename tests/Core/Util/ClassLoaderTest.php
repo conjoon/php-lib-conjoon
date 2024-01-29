@@ -72,10 +72,10 @@ class ClassLoaderTest extends TestCase
         $loader = new ClassLoader();
 
         $this->assertSame(
-            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
             $loader->load(
-                "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
-                "Conjoon\\Data\\Resource\\ObjectDescription"
+                "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
+                "Conjoon\\Data\\Resource\\ResourceDescription"
             )
         );
     }
@@ -89,23 +89,23 @@ class ClassLoaderTest extends TestCase
         $loader = new ClassLoader();
 
         $inst = $loader->create(
-            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
-            "Conjoon\\Data\\Resource\\ObjectDescription"
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
+            "Conjoon\\Data\\Resource\\ResourceDescription"
         );
         $this->assertNull($inst->getOne());
         $this->assertNull($inst->getTwo());
         $this->assertNull($inst->getThree());
 
         $this->assertInstanceOf(
-            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
             $inst
         );
 
         $loader = new ClassLoader();
 
         $inst = $loader->create(
-            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
-            "Conjoon\\Data\\Resource\\ObjectDescription",
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
+            "Conjoon\\Data\\Resource\\ResourceDescription",
             [1, 2, 3]
         );
         $this->assertSame(1, $inst->getOne());
@@ -113,7 +113,7 @@ class ClassLoaderTest extends TestCase
         $this->assertSame(3, $inst->getThree());
 
         $this->assertInstanceOf(
-            "Tests\\Conjoon\\Data\\Resource\\TestResourceObjectDescription",
+            "Tests\\Conjoon\\Data\\Resource\\TestResourceResourceDescription",
             $inst
         );
     }

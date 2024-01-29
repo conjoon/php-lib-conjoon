@@ -27,22 +27,26 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Data\Resource;
+namespace Tests\Conjoon\Data\Resource;
 
 use Conjoon\Core\AbstractList;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
+use Tests\TestCase;
 
 /**
- * An abstract list maintaining entities of the type ObjectDescription.
- *
- * @extends AbstractList<ObjectDescription>
+ * Tests ResourceDescriptionList
  */
-class ObjectDescriptionList extends AbstractList
+class ResourceDescriptionListTest extends TestCase
 {
     /**
-     * @return string
+     * Class functionality
      */
-    public function getEntityType(): string
+    public function testClass(): void
     {
-        return ObjectDescription::class;
+        $list = new ResourceDescriptionList();
+
+        $this->assertInstanceOf(AbstractList::class, $list);
+        $this->assertSame(ResourceDescription::class, $list->getEntityType());
     }
 }

@@ -13,13 +13,13 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Data\Resource;
 
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 
 /**
  * Test class loaded with tests for Locator
  */
-class TestResourceObjectDescription extends ObjectDescription
+class TestResourceResourceDescription extends ResourceDescription
 {
     protected ?int $one ;
     protected ?int $two;
@@ -52,9 +52,9 @@ class TestResourceObjectDescription extends ObjectDescription
         return "";
     }
 
-    public function getRelationships(): ObjectDescriptionList
+    public function getRelationships(): ResourceDescriptionList
     {
-        return new ObjectDescriptionList();
+        return new ResourceDescriptionList();
     }
 
     public function getFields(): array

@@ -29,9 +29,9 @@ declare(strict_types=1);
 
 namespace Tests\App\Http\V0\JsonApi\Resource;
 
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\MailClient\Data\Resource\MailAccount;
 use Conjoon\MailClient\Data\Resource\MailFolder;
-use Conjoon\Data\Resource\ObjectDescription;
 use Tests\TestCase;
 
 /**
@@ -45,7 +45,7 @@ class MailFolderTest extends TestCase
     public function testClass()
     {
         $inst = new MailFolder();
-        $this->assertInstanceOf(ObjectDescription::class, $inst);
+        $this->assertInstanceOf(ResourceDescription::class, $inst);
     }
 
 

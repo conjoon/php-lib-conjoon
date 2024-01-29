@@ -27,13 +27,41 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\JsonApi\Query\Validation;
+namespace Conjoon\JsonApi\Query;
 
-use Conjoon\JsonApi\Query\Validation\Validator;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
 
 /**
- * Test class loaded with tests for Locator
+ * Query validated for JSON:API specifications, providing access to a $resourceTarget
+ * described by ResourceDescription.
+ *
  */
-class TestQueryValidator extends Validator
+class JsonApiQuery extends HttpQuery
 {
+    /**
+     * @var ResourceDescription
+     */
+    protected ResourceDescription $resourceTarget;
+
+    /**
+     * Constructor.
+     *
+     * @param string $queryString
+     * @param ResourceDescription $resourceTarget The resource object description this query is interested in
+     */
+    public function __construct(string $queryString, ResourceDescription $resourceTarget)
+    {
+        parent::__construct($queryString);
+        $this->resourceTarget = $resourceTarget;
+    }
+
+
+    /**
+     * @return ResourceDescription
+     */
+    public function getResourceTarget(): ResourceDescription
+    {
+        return $this->resourceTarget;
+    }
 }

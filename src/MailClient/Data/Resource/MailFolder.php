@@ -29,15 +29,15 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
  * ResourceDescription for a MailFolder.
  *
  */
-class MailFolder extends ObjectDescription
+class MailFolder extends ResourceDescription
 {
     /**
      * @return string
@@ -49,11 +49,11 @@ class MailFolder extends ObjectDescription
 
 
     /**
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    public function getRelationships(): ObjectDescriptionList
+    public function getRelationships(): ResourceDescriptionList
     {
-        $list = new ObjectDescriptionList();
+        $list = new ResourceDescriptionList();
         $list[] = new MailAccount();
 
         return $list;

@@ -32,7 +32,7 @@ class Request
     /**
      * @var Query|null
      */
-    protected ?Query $query = null;
+    protected ?Query $query;
 
 
     /**
@@ -84,7 +84,7 @@ class Request
      */
     public function getQuery(): ?Query
     {
-        if ($this->query) {
+        if (isset($this->query)) {
             return $this->query;
         }
 

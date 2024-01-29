@@ -29,19 +29,19 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Web\Validation\Exception\UnexpectedQueryParameterException;
-use Conjoon\Net\Uri\Component\Query\Parameter;
-use Conjoon\Net\Uri\Component\Query as HttpQuery;
-use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
-use Conjoon\Web\Validation\Query\Rule\OnlyParameterNamesRule;
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
+use Conjoon\JsonApi\Query\JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
-use Conjoon\JsonApi\Query\Validation\Validator;
-use Conjoon\JsonApi\Query\Query;
-use Conjoon\Data\Resource\ObjectDescription;
-use ReflectionException;
+use Conjoon\Net\Uri\Component\Query as HttpQuery;
+use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Web\Validation\Exception\UnexpectedQueryParameterException;
+use Conjoon\Web\Validation\Query\Rule\OnlyParameterNamesRule;
 use Conjoon\Web\Validation\Query\Rule\RequiredParameterNamesRule;
+use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
+use ReflectionException;
 use Tests\TestCase;
 
 /**
@@ -54,7 +54,7 @@ class ValidatorTest extends TestCase
      */
     public function testClass()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
         $this->assertInstanceOf(HttpQueryValidator::class, $validator);
     }
 
@@ -64,7 +64,7 @@ class ValidatorTest extends TestCase
      */
     public function testUnfoldWithUnexpectedQueryParameterException()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
         $unfold = $this->makeAccessible($validator, "unfoldInclude");
         $this->expectException(UnexpectedQueryParameterException::class);
 
@@ -78,7 +78,7 @@ class ValidatorTest extends TestCase
      */
     public function testUnfold()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
         $unfold = $this->makeAccessible($validator, "unfoldInclude");
         $parameter = new Parameter("include", "MailFolder.MailAccount,MailFolder.MailAccount.Server,MailFolder");
 
@@ -101,13 +101,13 @@ class ValidatorTest extends TestCase
      */
     public function testGetAllowedParameterNames()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getResourceTarget"])->getMock();
 
-        $resourceTarget = $this->createMockForAbstract(ObjectDescription::class, [
+        $resourceTarget = $this->createMockForAbstract(ResourceDescription::class, [
             "getType", "getAllRelationshipPaths"]);
         $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
 
@@ -131,9 +131,9 @@ class ValidatorTest extends TestCase
      */
     public function testGetRequiredParameterNames()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
                       ->disableOriginalConstructor()
                       ->getMock();
 
@@ -149,11 +149,11 @@ class ValidatorTest extends TestCase
      */
     public function testSupports()
     {
-        $validator = new Validator();
+        $validator = new JsonApiQueryValidator();
 
         $this->assertTrue(
             $validator->supports(
-                $this->getMockBuilder(Query::class)->disableOriginalConstructor()->getMock()
+                $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock()
             )
         );
 
@@ -174,11 +174,11 @@ class ValidatorTest extends TestCase
         $allowedParameterNames = ["include"];
         $requiredParameterNames = ["include"];
 
-        $validator = $this->getMockBuilder(Validator::class)
+        $validator = $this->getMockBuilder(JsonApiQueryValidator::class)
                           ->onlyMethods(["getAllowedParameterNames", "getRequiredParameterNames"])
                           ->getMock();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
                       ->disableOriginalConstructor()->getMock();
 
         $validator->expects($this->once())->method("getAllowedParameterNames")
@@ -210,15 +210,15 @@ class ValidatorTest extends TestCase
         $includes = ["MessageItem", "MailFolder"];
         $includeParameter = new Parameter("include", "MessageItem,MailFolder");
         $whitelist = ["fields[MessageItem]"];
-        $objectDescriptionList = new ObjectDescriptionList();
+        $ResourceDescriptionList = new ResourceDescriptionList();
 
-        $query = $this->getMockBuilder(Query::class)
+        $query = $this->getMockBuilder(JsonApiQuery::class)
                       ->disableOriginalConstructor()
                       ->onlyMethods(["getParameter", "getResourceTarget"])
                       ->getMock();
 
         $resourceTarget = $this->createMockForAbstract(
-            ObjectDescription::class,
+            ResourceDescription::class,
             ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
 
@@ -235,9 +235,9 @@ class ValidatorTest extends TestCase
         $resourceTarget->expects($this->once())
                        ->method("getAllRelationshipResourceDescriptions")
                        ->with(true)
-                       ->willReturn($objectDescriptionList);
+                       ->willReturn($ResourceDescriptionList);
 
-        $validator = $this->createMockForAbstract(Validator::class, ["getAvailableSortFields"]);
+        $validator = $this->createMockForAbstract(JsonApiQueryValidator::class, ["getAvailableSortFields"]);
 
         $rules = $validator->getParameterRules($query);
 
@@ -245,7 +245,7 @@ class ValidatorTest extends TestCase
         $this->assertInstanceOf(IncludeRule::class, $rules[0]);
         $this->assertInstanceOf(FieldsetRule::class, $rules[1]);
         $this->assertSame($whitelist, $rules[0]->getWhitelist());
-        $this->assertSame($objectDescriptionList, $rules[1]->getResourceObjectDescriptions());
+        $this->assertSame($ResourceDescriptionList, $rules[1]->getResourceResourceDescriptions());
         $this->assertSame($includes, $rules[1]->getIncludes());
     }
 }

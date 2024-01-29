@@ -29,15 +29,14 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource;
 
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\Data\Resource\ObjectDescriptionList;
-use Conjoon\Net\Uri\Component\Path\Template;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 
 /**
  * ResourceDescription for a MessageItem.
  *
  */
-class MessageItem extends ObjectDescription
+class MessageItem extends ResourceDescription
 {
     /**
      * @return string
@@ -47,17 +46,13 @@ class MessageItem extends ObjectDescription
         return "MessageItem";
     }
 
-    public function getPath(): Template
-    {
-        // TODO: Implement getPath() method.
-    }
 
     /**
-     * @return ObjectDescriptionList
+     * @return ResourceDescriptionList
      */
-    public function getRelationships(): ObjectDescriptionList
+    public function getRelationships(): ResourceDescriptionList
     {
-        $list = new ObjectDescriptionList();
+        $list = new ResourceDescriptionList();
         $list[] = new MailFolder();
         $list[] = new MessageBody();
 

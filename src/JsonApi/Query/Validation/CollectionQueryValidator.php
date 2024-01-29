@@ -29,8 +29,8 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\Data\Resource\ObjectDescription;
-use Conjoon\JsonApi\Query\Query;
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\JsonApi\Query\JsonApiQuery;
 use Conjoon\Net\Uri\Component\Query as HttpQuery;
 use Conjoon\Web\Validation\Parameter\ParameterRuleList;
 use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
@@ -42,12 +42,12 @@ use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
  * Additionally, the "sort"-query parameter will be
  * considered for validation.
  */
-class CollectionValidator extends Validator
+class CollectionQueryValidator extends JsonApiQueryValidator
 {
     /**
      * Returns the ParameterRules for the specified Query.
      *
-     * @param Query $query
+     * @param JsonApiQuery $query
      *
      * @return ParameterRuleList
      */
@@ -70,7 +70,7 @@ class CollectionValidator extends Validator
     /**
      * Returns all the parameter names for a collection query, including sorting parameter options.
      *
-     * @param Query $query
+     * @param JsonApiQuery $query
      *
      * @return array<int, string>
      */
@@ -88,10 +88,10 @@ class CollectionValidator extends Validator
      * The list returned will be an array containing the field names, and dot-separated field names where the
      * first part of the name is the type of the resource target.
      *
-     * @param ObjectDescription $resourceTarget
+     * @param ResourceDescription $resourceTarget
      * @return array<int, string>
      */
-    protected function getAvailableSortFields(ObjectDescription $resourceTarget): array
+    protected function getAvailableSortFields(ResourceDescription $resourceTarget): array
     {
         $res = $this->getAvailableFields($resourceTarget);
 
@@ -104,10 +104,10 @@ class CollectionValidator extends Validator
      * The list returned will be an array containing the field names, and dot-separated field names where the
      * first part of the name is the type of the resource target, or the related resource target.
      *
-     * @param ObjectDescription $resourceTarget
+     * @param ResourceDescription $resourceTarget
      * @return array<int, string>
      */
-    protected function getAvailableFields(ObjectDescription $resourceTarget): array
+    protected function getAvailableFields(ResourceDescription $resourceTarget): array
     {
         $res = $resourceTarget->getFields();
 

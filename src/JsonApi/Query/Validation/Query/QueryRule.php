@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation\Query;
 
-use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Query\JsonApiQuery;
 use Conjoon\Web\Validation\Query\QueryRule as HttpQueryRule;
 
 /**
@@ -41,6 +41,6 @@ abstract class QueryRule extends HttpQueryRule
      */
     public function supports(object $obj): bool
     {
-        return $obj instanceof Query;
+        return $obj instanceof JsonApiQuery;
     }
 }

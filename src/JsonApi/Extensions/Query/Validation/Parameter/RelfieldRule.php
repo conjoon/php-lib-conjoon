@@ -28,7 +28,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Extensions\Query\Validation\Parameter;
 
-use Conjoon\Data\Resource\ObjectDescriptionList;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
@@ -53,12 +53,12 @@ class RelfieldRule extends FieldsetRule
      * Overrides parent constructor by allowing for passing a boolean $wildcardEnabled for indicating
      * this server supports wildcards.
      *
-     * @param ObjectDescriptionList $resourceDescriptionList
+     * @param ResourceDescriptionList $resourceDescriptionList
      * @param array<int, string> $includes
      * @param bool $wildcardEnabled
      */
     public function __construct(
-        ObjectDescriptionList $resourceDescriptionList,
+        ResourceDescriptionList $resourceDescriptionList,
         array $includes,
         bool $wildcardEnabled = false
     ) {
