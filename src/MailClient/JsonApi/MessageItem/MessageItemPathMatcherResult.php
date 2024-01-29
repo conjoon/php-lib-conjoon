@@ -25,6 +25,7 @@ use Conjoon\MailClient\Data\Resource\MessageItem;
 final class MessageItemPathMatcherResult extends PathMatcherResult
 {
     private CompoundKey $compoundKey;
+    private bool $collection;
 
     public function __construct(
         array $pathParameters
