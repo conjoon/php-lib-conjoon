@@ -53,7 +53,7 @@ class JsonApiQueryValidator extends HttpQueryValidator
         /**
          * @type JsonApiQuery $query
          */
-        $resourceTarget = $query->getResourceTarget();
+        $resourceTarget = $query->getResourceDescription();
 
         $include  = $query->getParameter("include");
         $includes = $include
@@ -100,7 +100,7 @@ class JsonApiQueryValidator extends HttpQueryValidator
         /**
          * @type JsonApiQuery $query
          */
-        $resourceTarget = $query->getResourceTarget();
+        $resourceTarget = $query->getResourceDescription();
 
         $exp = [];
         $list = $this->unfoldRelationships($resourceTarget->getAllRelationshipPaths(true));

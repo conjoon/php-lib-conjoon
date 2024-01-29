@@ -105,11 +105,11 @@ class ValidatorTest extends TestCase
 
         $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getResourceTarget"])->getMock();
+            ->onlyMethods(["getResourceDescription"])->getMock();
 
         $resourceTarget = $this->createMockForAbstract(ResourceDescription::class, [
             "getType", "getAllRelationshipPaths"]);
-        $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
+        $query->expects($this->once())->method("getResourceDescription")->willReturn($resourceTarget);
 
         $resourceTarget->expects($this->once())->method("getAllRelationshipPaths")->with(true)->willReturn([
             "path", "entity", "path.entity2", "path.entity2.entity3"
@@ -214,7 +214,7 @@ class ValidatorTest extends TestCase
 
         $query = $this->getMockBuilder(JsonApiQuery::class)
                       ->disableOriginalConstructor()
-                      ->onlyMethods(["getParameter", "getResourceTarget"])
+                      ->onlyMethods(["getParameter", "getResourceDescription"])
                       ->getMock();
 
         $resourceTarget = $this->createMockForAbstract(
@@ -222,7 +222,7 @@ class ValidatorTest extends TestCase
             ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
 
-        $query->expects($this->once())->method("getResourceTarget")->willReturn($resourceTarget);
+        $query->expects($this->once())->method("getResourceDescription")->willReturn($resourceTarget);
         $query->expects($this->exactly(1))
               ->method("getParameter")
               ->withConsecutive(["include"])

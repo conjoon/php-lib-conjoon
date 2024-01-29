@@ -32,7 +32,7 @@ namespace Conjoon\MailClient\Data\Resource\Query;
 use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\Data\Sort\SortInfoList;
 use Conjoon\Data\Filter\Filter;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 
 /**
  * RepositoryQuery implementation for querying MessageItemList.
@@ -87,8 +87,8 @@ abstract class MessageItemListQuery extends RepositoryQuery
     /**
      * This RepositoryQuery targets MessageItem.
      */
-    public function getResourceTarget(): MessageItem
+    public function getResourceDescription(): MessageItemDescription
     {
-        return new MessageItem();
+        return new MessageItemDescription();
     }
 }

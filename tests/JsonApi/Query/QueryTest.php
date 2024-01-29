@@ -51,13 +51,13 @@ class QueryTest extends HttpQueryTest
 
 
     /**
-     * Tests getResourceTarget()
+     * Tests getResourceDescription()
      */
-    public function testGetResourceTarget()
+    public function testGetResourceDescription()
     {
         $resourceTarget = $this->createMockForAbstract(ResourceDescription::class);
         $query = new JsonApiQuery("", $resourceTarget);
-        $this->assertSame($resourceTarget, $query->getResourceTarget());
+        $this->assertSame($resourceTarget, $query->getResourceDescription());
     }
 
 

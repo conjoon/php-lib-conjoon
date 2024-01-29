@@ -49,7 +49,7 @@ abstract class MailFolderListQuery extends RepositoryQuery
     /**
      * This RepositoryQuery targets MessageItems.
      */
-    function getResourceTarget(): MailFolder
+    function getResourceDescription(): MailFolder
     {
         return new MailFolder();
     }

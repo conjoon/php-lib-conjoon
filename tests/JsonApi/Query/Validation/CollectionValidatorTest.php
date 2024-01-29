@@ -144,11 +144,11 @@ class CollectionValidatorTest extends TestCase
 
         $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getResourceTarget"])->getMock();
+            ->onlyMethods(["getResourceDescription"])->getMock();
 
         $resourceTarget = $this->createMockForAbstract(ResourceDescription::class, [
         ]);
-        $query->expects($this->any())->method("getResourceTarget")->willReturn($resourceTarget);
+        $query->expects($this->any())->method("getResourceDescription")->willReturn($resourceTarget);
 
 
         $this->assertContains(
@@ -169,7 +169,7 @@ class CollectionValidatorTest extends TestCase
 
         $query = $this->getMockBuilder(JsonApiQuery::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(["getParameter", "getResourceTarget"])
+            ->onlyMethods(["getParameter", "getResourceDescription"])
             ->getMock();
 
         $resourceTarget = $this->createMockForAbstract(
@@ -177,7 +177,7 @@ class CollectionValidatorTest extends TestCase
             ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
 
-        $query->expects($this->any())->method("getResourceTarget")->willReturn($resourceTarget);
+        $query->expects($this->any())->method("getResourceDescription")->willReturn($resourceTarget);
         $query->expects($this->any())
             ->method("getParameter")
             ->withConsecutive(["sort"], ["include"])

@@ -46,7 +46,7 @@ class MailFolderListQueryTest extends TestCase
     {
         $inst = $this->createMockForAbstract(MailFolderListQuery::class, [], [new ParameterBag()]);
 
-        $this->assertInstanceOf(MailFolder::class, $inst->getResourceTarget(
+        $this->assertInstanceOf(MailFolder::class, $inst->getResourceDescription(
         ));
     }
 }

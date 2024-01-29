@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\Resource\RepositoryQuery;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 
 /**
  * RepositoryQuery implementation for querying a MessageItem.
@@ -50,8 +50,8 @@ abstract class MessageItemQuery extends RepositoryQuery
     /**
      * This RepositoryQuery targets MessageItem.
      */
-    public function getResourceTarget(): MessageItem
+    public function getResourceDescription(): MessageItemDescription
     {
-        return new MessageItem();
+        return new MessageItemDescription();
     }
 }

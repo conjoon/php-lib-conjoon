@@ -53,7 +53,7 @@ class CollectionQueryValidator extends JsonApiQueryValidator
      */
     public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
-        $resourceTarget = $query->getResourceTarget();
+        $resourceTarget = $query->getResourceDescription();
 
         $sort = $query->getParameter("sort");
         $sort = $sort

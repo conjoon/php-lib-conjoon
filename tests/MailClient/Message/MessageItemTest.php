@@ -36,7 +36,7 @@ use Tests\TestCase;
 use TypeError;
 
 /**
- * Class MessageItemTest
+ * Class MessageItemDescriptionTest
  * @package Tests\Conjoon\MailClient\Message
  */
 class MessageItemTest extends TestCase

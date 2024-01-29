@@ -59,7 +59,7 @@ abstract class MessageBodyQuery extends RepositoryQuery
     /**
      * This RepositoryQuery targets MessageBody.
      */
-    public function getResourceTarget(): MessageBody
+    public function getResourceDescription(): MessageBody
     {
         return new MessageBody();
     }

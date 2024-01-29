@@ -55,7 +55,7 @@ class MessageBody extends ResourceDescription
     {
         $list = new ResourceDescriptionList();
         $list[] = new MailFolder();
-        $list[] = new MessageItem();
+        $list[] = new MessageItemDescription();
 
         // MessageBody.MailFolder
         // MessageBody.MessageItem

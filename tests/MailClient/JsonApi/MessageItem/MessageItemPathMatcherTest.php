@@ -17,7 +17,7 @@ use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
 use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Conjoon\MailClient\JsonApi\MessageItem\MessageItemPathMatcher;
 use Conjoon\Net\Uri;
 use Tests\TestCase;
@@ -49,7 +49,7 @@ class MessageItemPathMatcherTest extends TestCase
         $uri = Uri::make("https://localhost:8080/rest-api/MailAccounts/1/MailFolders/2/MessageItems/3?query=value");
         $result = $matcher->match($uri);
         $this->assertNotNull($result);
-        $this->assertInstanceOf(MessageItem::class, $result->getResourceDescription());
+        $this->assertInstanceOf(MessageItemDescription::class, $result->getResourceDescription());
         $this->assertInstanceOf(JsonApiQueryValidator::class, $result->getQueryValidator());
 
         $this->assertFalse($result->isCollection());
@@ -65,7 +65,7 @@ class MessageItemPathMatcherTest extends TestCase
         $result = $matcher->match($uri);
         $this->assertNotNull($result);
         $this->assertTrue($result->isCollection());
-        $this->assertInstanceOf(MessageItem::class, $result->getResourceDescription());
+        $this->assertInstanceOf(MessageItemDescription::class, $result->getResourceDescription());
         $this->assertInstanceOf(CollectionQueryValidator::class, $result->getQueryValidator());
         $this->assertInstanceOf(FolderKey::class, $result->getCompoundKey());
         $this->assertEquals([

@@ -123,5 +123,5 @@ abstract class RepositoryQuery implements Jsonable
      * Returns the ResourceDescription this resource query targets.
      * @return ResourceDescription
      */
-    abstract public function getResourceTarget(): ResourceDescription;
+    abstract public function getResourceDescription(): ResourceDescription;
 }

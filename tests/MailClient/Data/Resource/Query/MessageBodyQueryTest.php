@@ -48,7 +48,7 @@ class MessageBodyQueryTest extends TestCase
         $inst = $this->createMockForAbstract(MessageBodyQuery::class, [], [new ParameterBag()]);
         $this->assertInstanceOf(RepositoryQuery::class, $inst);
 
-        $this->assertInstanceOf(MessageBody::class, $inst->getResourceTarget(
+        $this->assertInstanceOf(MessageBody::class, $inst->getResourceDescription(
         ));
     }
 }

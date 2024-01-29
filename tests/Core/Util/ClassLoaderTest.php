@@ -42,7 +42,7 @@ class ClassLoaderTest extends TestCase
     /**
      * tests load() with ClassNotFoundException
      */
-    public function testGetResourceTargetWithClassNotFoundException()
+    public function testGetResourceDescriptionWithClassNotFoundException()
     {
         $this->expectException(ClassNotFoundException::class);
 
@@ -55,7 +55,7 @@ class ClassLoaderTest extends TestCase
     /**
      * tests load() with InvalidTypeException
      */
-    public function testGetResourceTargetWithInvalidTypeException()
+    public function testGetResourceDescriptionWithInvalidTypeException()
     {
         $this->expectException(InvalidTypeException::class);
 
@@ -84,7 +84,7 @@ class ClassLoaderTest extends TestCase
     /**
      * tests create()
      */
-    public function testGetResourceTarget()
+    public function testGetResourceDescription()
     {
         $loader = new ClassLoader();
 

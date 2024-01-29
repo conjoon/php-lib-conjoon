@@ -56,6 +56,10 @@ class JsonApiRequest extends HttpRequest
         return $this->pathMatcherResult;
     }
 
+    public function getPathMatcherResult(): ?PathMatcherResult {
+        return $this->resolvePath();
+    }
+
     /**
      * Returns the Validator resolved for this request.
      */

@@ -32,7 +32,7 @@ namespace Tests\Conjoon\MailClient\Data\Resource;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\MailClient\Data\Resource\MailFolder;
 use Conjoon\MailClient\Data\Resource\MessageBody;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Tests\TestCase;
 
 /**
@@ -68,7 +68,7 @@ class MessageBodyTest extends TestCase
         $this->assertSame(2, count($list));
 
         $this->assertInstanceOf(MailFolder::class, $list[0]);
-        $this->assertInstanceOf(MessageItem::class, $list[1]);
+        $this->assertInstanceOf(MessageItemDescription::class, $list[1]);
 
         $this->assertSame(
             ["MessageBody", "MessageBody.MailFolder", "MessageBody.MailFolder.MailAccount", "MessageBody.MessageItem"],

@@ -20,7 +20,7 @@ use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\MailClient\Data\CompoundKey\CompoundKey;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 
 final class MessageItemPathMatcherResult extends PathMatcherResult
 {
@@ -59,7 +59,7 @@ final class MessageItemPathMatcherResult extends PathMatcherResult
 
     public function getResourceDescription(): ResourceDescription
     {
-        return new MessageItem();
+        return new MessageItemDescription();
     }
 
     public function getQueryValidator(): JsonApiQueryValidator

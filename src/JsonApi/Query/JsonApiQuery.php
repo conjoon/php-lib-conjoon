@@ -42,26 +42,26 @@ class JsonApiQuery extends HttpQuery
     /**
      * @var ResourceDescription
      */
-    protected ResourceDescription $resourceTarget;
+    protected ResourceDescription $resourceDescription;
 
     /**
      * Constructor.
      *
      * @param string $queryString
-     * @param ResourceDescription $resourceTarget The resource object description this query is interested in
+     * @param ResourceDescription $resourceDescription The resource object description this query is interested in
      */
-    public function __construct(string $queryString, ResourceDescription $resourceTarget)
+    public function __construct(string $queryString, ResourceDescription $resourceDescription)
     {
         parent::__construct($queryString);
-        $this->resourceTarget = $resourceTarget;
+        $this->resourceDescription = $resourceDescription;
     }
 
 
     /**
      * @return ResourceDescription
      */
-    public function getResourceTarget(): ResourceDescription
+    public function getResourceDescription(): ResourceDescription
     {
-        return $this->resourceTarget;
+        return $this->resourceDescription;
     }
 }

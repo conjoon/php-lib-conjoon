@@ -60,7 +60,7 @@ use Conjoon\MailClient\Message\MessageItemList;
 use Conjoon\MailClient\Message\MessagePart;
 use Conjoon\MailClient\Data\Resource\Query\MailFolderListQuery;
 use Conjoon\MailClient\Data\Resource\Query\MessageItemListQuery;
-use Conjoon\MailClient\Data\Resource\MessageItem as MessageItemResource;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription as MessageItemResource;
 use Conjoon\Math\Expression\FunctionalExpression;
 use Conjoon\Math\Value;
 use Conjoon\Math\VariableName;

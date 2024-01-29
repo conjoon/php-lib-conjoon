@@ -31,7 +31,7 @@ namespace Tests\Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Resource\RepositoryQuery;
-use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Conjoon\MailClient\Data\Resource\Query\MessageItemListQuery;
 use Tests\TestCase;
 
@@ -48,6 +48,6 @@ class MessageItemListQueryTest extends TestCase
         $inst = $this->createMockForAbstract(MessageItemListQuery::class, [], [new ParameterBag()]);
         $this->assertInstanceOf(RepositoryQuery::class, $inst);
 
-        $this->assertInstanceOf(MessageItem::class, $inst->getResourceTarget());
+        $this->assertInstanceOf(MessageItemDescription::class, $inst->getResourceDescription());
     }
 }
