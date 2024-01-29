@@ -36,7 +36,6 @@ use Conjoon\MailClient\Exception\MailClientException;
 use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\MailClient;
 use Conjoon\MailClient\Message\Flag\FlagList;
-use Conjoon\MailClient\Message\ListMessageItem;
 use Conjoon\MailClient\Message\MessageBody;
 use Conjoon\MailClient\Message\MessageBodyDraft;
 use Conjoon\MailClient\Message\MessageItem;
