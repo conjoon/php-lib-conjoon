@@ -14,56 +14,63 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
 
-use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Request as HttpRequest;
 use Conjoon\Http\RequestMethod as HttpMethod;
-use Conjoon\JsonApi\Query\Validation\Validator;
-use Conjoon\Net\Uri\Component\Query;
+use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\Net\Url;
-use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 
 /**
  * Request specific for JSON:API requests.
  *
  */
-class Request extends HttpRequest
+class JsonApiRequest extends HttpRequest
 {
-    /**
-     * @var Validator|null
-     */
-    private ?Validator $queryValidator;
+    private ?PathMatcherResult $pathMatcherResult;
+    private PathMatcher $pathMatcher;
 
-
-    private ObjectDescription $objectDescription;
 
     /**
      * Constructor.
      *
      * @param Url $url
      * @param HttpMethod $method
-     * @param Validator|null $queryValidator
+     * @param PathMatcher $pathMatcher
      */
     public function __construct(
         Url $url,
         HttpMethod $method,
-        ObjectDescription $objectDescription,
-        Validator $queryValidator = null
+        PathMatcher $pathMatcher
     ) {
         parent::__construct($url, $method);
-        $this->objectDescription = $objectDescription;
-        $this->queryValidator = $queryValidator;
+        $this->pathMatcher = $pathMatcher;
     }
 
+    protected function resolvePath() : ?PathMatcherResult {
+        if (!isset($this->pathMatcherResult)) {
+            $this->pathMatcherResult = $this->pathMatcher->match($this->getUrl());
+        }
+
+        return $this->pathMatcherResult;
+    }
 
     /**
-     * Returns the query validator for this request, if any was specified with the constructor.
+     * Returns the Validator resolved for this request.
      */
-    protected function getQueryValidator(): ?Validator
+    protected function getQueryValidator(): ?JsonApiQueryValidator
     {
-        return $this->queryValidator;
+        return $this->resolvePath()?->getQueryValidator();
     }
 
+    /**
+     * Returns the ResourceDescription resolved for this request.
+     */
+    protected function getResourceDescription(): ?ResourceDescription
+    {
+        return $this->resolvePath()?->getResourceDescription();
+    }
 
     /**
      * Validates the request.
@@ -92,9 +99,19 @@ class Request extends HttpRequest
      */
     public function getQuery(): ?JsonApiQuery
     {
-        if (!$this->url->getQuery()) {
-            return null;
+        if (isset($this->query)) {
+            /**
+             * @type JsonApiQuery|null
+             */
+            return $this->query;
         }
-        return new JsonApiQuery($this->url->getQuery(), $this->objectDescription);
+
+        if (!$this->url->getQuery()) {
+            $this->query = null;
+        } else {
+            $this->query = new JsonApiQuery($this->url->getQuery(), $this->getResourceDescription());
+        }
+
+        return $this->query;
     }
 }

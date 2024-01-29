@@ -14,15 +14,17 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
 
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Http\RequestMethod;
-use Conjoon\JsonApi\Query\Query as JsonApiQuery;
-use Conjoon\Net\Url;
-use Conjoon\Http\RequestMethod as Method;
-use Conjoon\JsonApi\Query\Validation\Validator;
-use Conjoon\JsonApi\Request as JsonApiRequest;
 use Conjoon\Http\Request as HttpRequest;
-use Conjoon\Data\Resource\ObjectDescription;
+use Conjoon\Http\RequestMethod;
+use Conjoon\Http\RequestMethod as Method;
+use Conjoon\JsonApi\JsonApiRequest;
+use Conjoon\JsonApi\PathMatcher;
+use Conjoon\JsonApi\PathMatcherResult;
+use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
+use Conjoon\Net\Url;
 use Tests\TestCase;
 
 /**
@@ -35,14 +37,18 @@ class RequestTest extends TestCase
      */
     public function testClass()
     {
-        $validator = $this->createMockForAbstract(Validator::class);
-        $objectDescription = $this->createMockForAbstract(ObjectDescription::class);
+        $pathMatcher = $this->createMockForAbstract(PathMatcher::class);
+        $validator = $this->createMockForAbstract(JsonApiQueryValidator::class);
+        $resourceDescription = $this->createMockForAbstract(ResourceDescription::class);
         $url = new Url("http://www.localhost.com:8080/index.php?foo=bar");
         $request = new JsonApiRequest(
             url: $url,
             method: RequestMethod::GET,
-            objectDescription: $objectDescription,
-            queryValidator: $validator
+            pathMatcher: $pathMatcher,
+        );
+
+        $pathMatcher->expects($this->any())->method("match")->with($url)->willReturn(
+            $this->getPathMatcherResult($resourceDescription, $validator)
         );
 
         $this->assertSame(Method::GET, $request->getMethod());
@@ -55,10 +61,15 @@ class RequestTest extends TestCase
 
         $this->assertInstanceOf(HttpRequest::class, $request);
 
-        $request = new JsonApiRequest(url: $url, method: Method::PATCH, objectDescription: $objectDescription);
+        // no query
+        $url = new Url("http://www.localhost.com:8080/index.php");
+        $pathMatcher = $this->createMockForAbstract(PathMatcher::class);
+        $request = new JsonApiRequest(url: $url, method: Method::PATCH, pathMatcher: $pathMatcher);
         $getQueryValidator = $this->makeAccessible($request, "getQueryValidator");
         $this->assertNull($getQueryValidator->invokeArgs($request, []));
         $this->assertSame(Method::PATCH, $request->getMethod());
+
+        $this->assertSame(0, $request->validate()->count());
     }
 
 
@@ -67,15 +78,14 @@ class RequestTest extends TestCase
      */
     public function testValidate()
     {
-        $objectDescription = $this->createMockForAbstract(ObjectDescription::class);
-
+        $pathMatcher = $this->createMockForAbstract(PathMatcher::class);
+        $url = new Url("http://www.localhost.com:8080/index.php?foo=bar");
+        $resourceDescription = $this->createMockForAbstract(ResourceDescription::class);
+        $validator = $this->createMockForAbstract(JsonApiQueryValidator::class, ["validate"]);
+        $pathMatcher->expects($this->any())->method("match")->with($url)->willReturn(
+            $this->getPathMatcherResult($resourceDescription, $validator)
+        );
         $query = $this->getMockBuilder(JsonApiQuery::class)->disableOriginalConstructor()->getMock();
-
-        $url = $this->getMockBuilder(Url::class)
-                    ->disableOriginalConstructor()
-                    ->getMock();
-
-        $validator = $this->createMockForAbstract(Validator::class, ["validate"]);
 
         $validator->expects($this->once())->method("validate")->with($query, $this->callback(function ($arg) {
             $this->assertInstanceOf(
@@ -86,11 +96,30 @@ class RequestTest extends TestCase
         }));
 
         $request = $this->getMockBuilder(JsonApiRequest::class)
-                        ->setConstructorArgs([$url, Method::GET, $objectDescription, $validator])
+                        ->setConstructorArgs([$url, Method::GET, $pathMatcher])
                         ->onlyMethods(["getQuery"])
                         ->getMock();
         $request->expects($this->once())->method("getQuery")->willReturn($query);
 
         $request->validate();
     }
+
+    protected function getPathMatcherResult(
+        ResourceDescription $description,
+        ?JsonApiQueryValidator $validator
+    ): PathMatcherResult {
+
+        $pathMatcherResult = $this->createMockForAbstract(PathMatcherResult::class);
+
+        $pathMatcherResult->expects($this->any())->method("getResourceDescription")->willReturn(
+            $description
+        );
+
+        $pathMatcherResult->expects($this->any())->method("getQueryValidator")->willReturn(
+            $validator
+        );
+
+        return $pathMatcherResult;
+    }
+
 }

@@ -16,10 +16,11 @@ namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 
 use Conjoon\Http\RequestMethod;
-use Conjoon\JsonApi\Request as JsonApiRequest;
+use Conjoon\JsonApi\JsonApiRequest as JsonApiRequest;
 use Conjoon\MailClient\Data\Resource\MessageItem;
+use Conjoon\MailClient\JsonApi\MessageItem\MessageItemPathMatcher;
 use Conjoon\MailClient\JsonApi\MessageItem\PathMatcher;
-use Conjoon\MailClient\JsonApi\MessageItem\MessageItemQueryValidator;
+use Conjoon\MailClient\JsonApi\MessageItem\MessageItemQueryJsonApiQueryValidator;
 use Conjoon\Net\Url;
 use Tests\TestCase;
 
@@ -34,8 +35,7 @@ class MessageItemTest extends TestCase
         $request = new JsonApiRequest(
             $url, 
             RequestMethod::GET, 
-            new MessageItem(),
-            new MessageItemQueryValidator()
+            new MessageItemPathMatcher()
         );
 
         $this->assertSame(0, $request->validate()->count());

@@ -13,10 +13,14 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi\MessageItem;
 
+use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\JsonApi\PathMatcherResult;
+use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
 use Conjoon\MailClient\Data\CompoundKey\CompoundKey;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\CompoundKey\MessageKey;
+use Conjoon\MailClient\Data\Resource\MessageItem;
 
 final class MessageItemPathMatcherResult extends PathMatcherResult
 {
@@ -50,5 +54,15 @@ final class MessageItemPathMatcherResult extends PathMatcherResult
     public function getCompoundKey(): MessageKey|FolderKey
     {
         return $this->compoundKey;
+    }
+
+    public function getResourceDescription(): ResourceDescription
+    {
+        return new MessageItem();
+    }
+
+    public function getQueryValidator(): JsonApiQueryValidator
+    {
+        return $this->collection ? new CollectionQueryValidator() : new JsonApiQueryValidator();
     }
 }

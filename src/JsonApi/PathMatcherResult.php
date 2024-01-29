@@ -13,8 +13,15 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
 
+use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
+
 abstract class PathMatcherResult
 {
 
     public abstract function isCollection() :bool;
+
+    public abstract function getResourceDescription(): ResourceDescription;
+
+    public abstract function getQueryValidator(): ?JsonApiQueryValidator;
 }
