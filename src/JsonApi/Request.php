@@ -32,7 +32,7 @@ class Request extends HttpRequest
     use AccessorTrait;
 
     #[Getter]
-    private ?PathParameters $pathParameters;
+    private PathParameters $pathParameters;
 
     #[Getter]
     private ?QueryValidator $queryValidator;
@@ -44,13 +44,13 @@ class Request extends HttpRequest
      * Constructor.
      *
      * @param HttpRequest $request
-     * @param PathParameters|null $pathParameters
+     * @param PathParameters $pathParameters
      * @param ResourceDescription|null $resourceDescription
      * @param QueryValidator|null $queryValidator
      */
     public function __construct(
         HttpRequest          $request,
-        ?PathParameters      $pathParameters = null,
+        PathParameters       $pathParameters,
         ?ResourceDescription $resourceDescription = null,
         ?QueryValidator      $queryValidator = null,
      ) {
