@@ -17,17 +17,17 @@ namespace Conjoon\JsonApi;
 use Conjoon\Http\Request;
 
 /**
- * A RequestMatcher resolves a Conjoon\Http\Request to a JsonApiRequest.
+ * A RequestMatcher resolves a Conjoon\Http\Request to a Request.
  */
 abstract class RequestMatcher
 {
 
     /**
-     * Tries to match the specified $request and returns a JsonApiRequest if matching was successful.
+     * Tries to match the specified $request and returns a Request if matching was successful.
      *
      * @param Request $request
-     * @return JsonApiRequest|null
+     * @return Request|null
      */
-    public abstract function match(Request $request) : ?JsonApiRequest;
+    public abstract function match(Request $request) : ?Request;
 
 }
