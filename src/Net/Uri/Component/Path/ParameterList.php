@@ -11,13 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\Net\Uri\Component\Query;
+namespace Conjoon\Net\Uri\Component\Path;
 
 use Conjoon\Data\ParameterList as DataParameterList;
 
 
 /**
- * Class ParameterList organizes a list of QueryParameters.
+ * Class ParameterList organizes a list of PathParameters.
  *
  * @extends ParameterList<Parameter>
  */
@@ -30,5 +30,4 @@ class ParameterList extends DataParameterList
     {
         return Parameter::class;
     }
-
 }

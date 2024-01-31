@@ -11,18 +11,37 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri\Component\Query;
+namespace Tests\Conjoon\Data;
 
 use Conjoon\Data\Parameter as DataParameter;
+
 use Conjoon\Net\Uri\Component\Query\Parameter;
 use Tests\TestCase;
 
+/**
+ * Tests QueryParameter.
+ *
+ */
 class ParameterTest extends TestCase
 {
+    /**
+     * Class functionality
+     */
     public function testClass(): void
     {
-        $param = new Parameter("A", "B");
-        $this->assertInstanceOf(DataParameter::class, $param);
+        $mock = $this->getQueryParameter("name", "value");
+
+        $this->assertInstanceOf(DataParameter::class, $mock);
     }
 
+
+    /**
+     * @param string $name
+     * @param string $value
+     * @return Parameter
+     */
+    protected function getQueryParameter(string $name, string $value): Parameter
+    {
+        return new Parameter($name, $value);
+    }
 }

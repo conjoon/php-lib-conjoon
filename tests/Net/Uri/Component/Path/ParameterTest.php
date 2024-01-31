@@ -11,10 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri\Component\Query;
+namespace Tests\Conjoon\Net\Uri\Component\Path;
 
 use Conjoon\Data\Parameter as DataParameter;
-use Conjoon\Net\Uri\Component\Query\Parameter;
+use Conjoon\Net\Uri\Component\Path\Parameter;
 use Tests\TestCase;
 
 class ParameterTest extends TestCase

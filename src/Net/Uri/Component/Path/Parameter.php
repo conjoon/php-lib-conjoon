@@ -11,18 +11,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Net\Uri\Component\Query;
+namespace Conjoon\Net\Uri\Component\Path;
 
 use Conjoon\Data\Parameter as DataParameter;
-use Conjoon\Net\Uri\Component\Query\Parameter;
-use Tests\TestCase;
 
-class ParameterTest extends TestCase
+/**
+ * Represents the Parameter of a Path.
+ */
+class Parameter extends DataParameter
 {
-    public function testClass(): void
-    {
-        $param = new Parameter("A", "B");
-        $this->assertInstanceOf(DataParameter::class, $param);
-    }
 
 }
