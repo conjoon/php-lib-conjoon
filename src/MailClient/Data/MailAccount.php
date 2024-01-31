@@ -55,16 +55,15 @@ use Conjoon\Core\Contract\JsonStrategy;
  *        "outbox_user"     => "outboxuser",
  *        "outbox_password" => "outboxpassword',
  *        'outbox_secure'   => "tls",
- *        'root'            => "INBOX"
+ *        'subscriptions'   => ["INBOX"]
  *    ]);
  *
  *    $account->getOutboxSecure(); // true
  *    $account->getInboxPort(); // 993
  *    $account->getReplyTo();   // ['name' => 'John Smith', 'address' => 'dev@conjoon.org'],
  *
- * The property "root" allows for specifying a root mailbox and defaults to "INBOX".
+ * The property "subscriptions" allows for specifying mailbox the account is subscribed to.
  *
- * @package Conjoon\MailClient\Data
  *
  * @method string getName()
  * @method array getFrom()
@@ -81,7 +80,7 @@ use Conjoon\Core\Contract\JsonStrategy;
  * @method string getOutboxAddress()
  * @method int getOutboxPort()
  * @method string getOutboxSecure()
- * @method array getRoot()
+ * @method array getSubscriptions()
  *
  * @noinspection SpellCheckingInspection
  */
@@ -165,7 +164,7 @@ class MailAccount implements Jsonable, Arrayable
     /**
      * @var array
      */
-    protected array $root = ["INBOX"];
+    protected array $subscriptions = ["INBOX"];
 
     /**
      * MailAccount constructor.
@@ -239,7 +238,7 @@ class MailAccount implements Jsonable, Arrayable
             "outbox_user" => $this->getOutboxUser(),
             "outbox_password" => $this->getOutboxPassword(),
             "outbox_secure" => $this->getOutboxSecure(),
-            "root" => $this->getRoot()
+            "subscriptions" => $this->getSubscriptions()
         ];
     }
 
