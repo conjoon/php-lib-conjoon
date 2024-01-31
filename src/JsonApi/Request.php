@@ -17,63 +17,59 @@ namespace Conjoon\JsonApi;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Request as HttpRequest;
-use Conjoon\Http\RequestMethod as HttpMethod;
 use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
 use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
-use Conjoon\Net\Url;
+use Quant\Core\Attribute\Getter;
+use Quant\Core\Trait\AccessorTrait;
+use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
 
 /**
  * Request specific for JSON:API requests.
- *
  */
-class JsonApiRequest extends HttpRequest
+class Request extends HttpRequest
 {
-    private ?PathMatcherResult $pathMatcherResult;
-    private PathMatcher $pathMatcher;
+    use AccessorTrait;
 
+    #[Getter]
+    private ?PathParameters $pathParameters;
+
+    #[Getter]
+    private ?JsonApiQueryValidator $queryValidator;
+
+    #[Getter]
+    private ?ResourceDescription $resourceDescription;
 
     /**
      * Constructor.
      *
-     * @param Url $url
-     * @param HttpMethod $method
-     * @param PathMatcher $pathMatcher
+     * @param HttpRequest $request
+     * @param PathParameters|null $pathParameters
+     * @param ResourceDescription|null $resourceDescription
+     * @param JsonApiQueryValidator|null $queryValidator
      */
     public function __construct(
-        Url $url,
-        HttpMethod $method,
-        PathMatcher $pathMatcher
-    ) {
-        parent::__construct($url, $method);
-        $this->pathMatcher = $pathMatcher;
+        HttpRequest $request,
+        ?PathParameters $pathParameters = null,
+        ?ResourceDescription $resourceDescription = null,
+        ?JsonApiQueryValidator $queryValidator = null,
+     ) {
+        parent::__construct($request->getUrl(), $request->getMethod());
+
+        $this->pathParameters = $pathParameters;
+        $this->request = $request;
+        $this->resourceDescription = $resourceDescription;
+        $this->queryValidator = $queryValidator;
     }
 
-    protected function resolvePath() : ?PathMatcherResult {
-        if (!isset($this->pathMatcherResult)) {
-            $this->pathMatcherResult = $this->pathMatcher->match($this->getUrl());
-        }
-
-        return $this->pathMatcherResult;
-    }
-
-    public function getPathMatcherResult(): ?PathMatcherResult {
-        return $this->resolvePath();
-    }
 
     /**
-     * Returns the Validator resolved for this request.
+     * Returns true if this request targets a collection of the specified ResourceDescription.
+     * @return bool
      */
-    protected function getQueryValidator(): ?JsonApiQueryValidator
-    {
-        return $this->resolvePath()?->getQueryValidator();
-    }
-
-    /**
-     * Returns the ResourceDescription resolved for this request.
-     */
-    protected function getResourceDescription(): ?ResourceDescription
-    {
-        return $this->resolvePath()?->getResourceDescription();
+    public function targetsCollection(): bool {
+        return $this->queryValidator &&
+            ($this->queryValidator instanceof CollectionQueryValidator);
     }
 
     /**
@@ -88,7 +84,6 @@ class JsonApiRequest extends HttpRequest
         $validator = $this->getQueryValidator();
         $query = $this->getQuery();
 
-
         if (!$validator || !$query) {
             return $errors;
         }
@@ -99,7 +94,7 @@ class JsonApiRequest extends HttpRequest
     }
 
     /**
-     * @return JsonApiQuery|null
+     * @Override
      */
     public function getQuery(): ?JsonApiQuery
     {
@@ -113,7 +108,10 @@ class JsonApiRequest extends HttpRequest
         if (!$this->url->getQuery()) {
             $this->query = null;
         } else {
-            $this->query = new JsonApiQuery($this->url->getQuery(), $this->getResourceDescription());
+            $this->query = new JsonApiQuery(
+                $this->url->getQuery(),
+                $this->getResourceDescription()
+            );
         }
 
         return $this->query;
