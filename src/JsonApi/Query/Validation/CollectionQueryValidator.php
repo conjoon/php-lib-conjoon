@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Conjoon\JsonApi\Query\Validation;
 
 use Conjoon\Data\Resource\ResourceDescription;
-use Conjoon\JsonApi\Query\JsonApiQuery;
+use Conjoon\JsonApi\Query\Query;
 use Conjoon\Net\Uri\Component\Query as HttpQuery;
 use Conjoon\Web\Validation\Parameter\ParameterRuleList;
 use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
@@ -42,12 +42,12 @@ use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
  * Additionally, the "sort"-query parameter will be
  * considered for validation.
  */
-class CollectionQueryValidator extends JsonApiQueryValidator
+class CollectionQueryValidator extends QueryValidator
 {
     /**
      * Returns the ParameterRules for the specified Query.
      *
-     * @param JsonApiQuery $query
+     * @param Query $query
      *
      * @return ParameterRuleList
      */
@@ -70,7 +70,7 @@ class CollectionQueryValidator extends JsonApiQueryValidator
     /**
      * Returns all the parameter names for a collection query, including sorting parameter options.
      *
-     * @param JsonApiQuery $query
+     * @param Query $query
      *
      * @return array<int, string>
      */

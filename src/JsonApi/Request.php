@@ -17,9 +17,9 @@ namespace Conjoon\JsonApi;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Request as HttpRequest;
-use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
-use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
+use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Quant\Core\Attribute\Getter;
 use Quant\Core\Trait\AccessorTrait;
 use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
@@ -35,7 +35,7 @@ class Request extends HttpRequest
     private ?PathParameters $pathParameters;
 
     #[Getter]
-    private ?JsonApiQueryValidator $queryValidator;
+    private ?QueryValidator $queryValidator;
 
     #[Getter]
     private ?ResourceDescription $resourceDescription;
@@ -46,13 +46,13 @@ class Request extends HttpRequest
      * @param HttpRequest $request
      * @param PathParameters|null $pathParameters
      * @param ResourceDescription|null $resourceDescription
-     * @param JsonApiQueryValidator|null $queryValidator
+     * @param QueryValidator|null $queryValidator
      */
     public function __construct(
-        HttpRequest $request,
-        ?PathParameters $pathParameters = null,
+        HttpRequest          $request,
+        ?PathParameters      $pathParameters = null,
         ?ResourceDescription $resourceDescription = null,
-        ?JsonApiQueryValidator $queryValidator = null,
+        ?QueryValidator      $queryValidator = null,
      ) {
         parent::__construct($request->getUrl(), $request->getMethod());
 
@@ -100,7 +100,7 @@ class Request extends HttpRequest
     {
         if (isset($this->query)) {
             /**
-             * @type JsonApiQuery|null
+             * @type Query|null
              */
             return $this->query;
         }

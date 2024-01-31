@@ -30,7 +30,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\JsonApi\Query;
 
 use Conjoon\Data\Resource\ResourceDescription;
-use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\Net\Uri\Component\Query;
 use Tests\Conjoon\Net\Uri\Component\QueryTest as HttpQueryTest;
 
@@ -65,7 +65,7 @@ class QueryTest extends HttpQueryTest
      * @param null $queryString
      * @return Query
      */
-    protected function createTestInstance($queryString = null): Query
+    protected function createTestInstance($queryString = null): JsonApiQuery
     {
         $resourceTarget = $this->createMockForAbstract(ResourceDescription::class);
         return new JsonApiQuery($queryString ?? "", $resourceTarget);

@@ -31,9 +31,9 @@ namespace Tests\Conjoon\JsonApi\Query\Validation;
 
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
-use Conjoon\JsonApi\Query\JsonApiQuery;
+use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
-use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
+use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\Net\Uri\Component\Query\Parameter;
 use Conjoon\Web\Validation\Parameter\Rule\ValuesInWhitelistRule;
 use Tests\TestCase;
@@ -49,7 +49,7 @@ class CollectionValidatorTest extends TestCase
     public function testClass()
     {
         $validator = new CollectionQueryValidator();
-        $this->assertInstanceOf(JsonApiQueryValidator::class, $validator);
+        $this->assertInstanceOf(QueryValidator::class, $validator);
     }
 
     /**
@@ -142,7 +142,7 @@ class CollectionValidatorTest extends TestCase
     {
         $validator = new CollectionQueryValidator();
 
-        $query = $this->getMockBuilder(JsonApiQuery::class)
+        $query = $this->getMockBuilder(Query::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getResourceDescription"])->getMock();
 
@@ -167,7 +167,7 @@ class CollectionValidatorTest extends TestCase
         $sortParameter = new Parameter("sort", "-date,subject");
         $ResourceDescriptionList = new ResourceDescriptionList();
 
-        $query = $this->getMockBuilder(JsonApiQuery::class)
+        $query = $this->getMockBuilder(Query::class)
             ->disableOriginalConstructor()
             ->onlyMethods(["getParameter", "getResourceDescription"])
             ->getMock();

@@ -37,7 +37,7 @@ use Conjoon\Net\Uri\Component\Query as HttpQuery;
  * described by ResourceDescription.
  *
  */
-class JsonApiQuery extends HttpQuery
+class Query extends HttpQuery
 {
     /**
      * @var ResourceDescription

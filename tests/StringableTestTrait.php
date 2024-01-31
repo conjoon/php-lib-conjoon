@@ -29,9 +29,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use Conjoon\Core\Contract\Stringable;
-use Conjoon\Core\Contract\StringStrategy;
-
+use \Stringable;
 /**
  * Class StringableTestTrait
  */
@@ -47,30 +45,14 @@ trait StringableTestTrait
 
         // w/o strategy
         $targetWithoutStrategy = $this->getMockBuilder($className)
-            ->onlyMethods(["toString"])
+            ->onlyMethods(["__toString"])
             ->disableOriginalConstructor()
             ->getMock();
         $targetWithoutStrategy->expects($this->once())
-                              ->method("toString")
-                              ->with(null)
+                              ->method("__toString")
                               ->willReturn($expected);
         $this->assertInstanceOf(Stringable::class, $targetWithoutStrategy);
 
-        $this->assertSame($expected, $targetWithoutStrategy->toString(null));
-
-        // w/ strategy
-        $target = $this->getMockBuilder($className)
-            ->onlyMethods([])
-            ->disableOriginalConstructor()
-            ->getMock();
-        $expectedFromStrategy = $expected . "_fromStrategy";
-        $strategyStub = $this->createMockForAbstract(StringStrategy::class);
-
-        $strategyStub
-            ->expects($this->once())
-            ->method("toString")
-            ->with($target)
-            ->willReturn($expectedFromStrategy);
-        $this->assertSame($expectedFromStrategy, $target->toString($strategyStub));
+        $this->assertSame($expected, $targetWithoutStrategy->__toString());
     }
 }

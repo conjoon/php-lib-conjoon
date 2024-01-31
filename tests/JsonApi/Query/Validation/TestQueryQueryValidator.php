@@ -29,11 +29,11 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\JsonApi\Query\Validation\JsonApiQueryValidator;
+use Conjoon\JsonApi\Query\Validation\QueryValidator;
 
 /**
  * Test class loaded with tests for Locator
  */
-class TestQueryJsonApiQueryValidator extends JsonApiQueryValidator
+class TestQueryQueryValidator extends QueryValidator
 {
 }

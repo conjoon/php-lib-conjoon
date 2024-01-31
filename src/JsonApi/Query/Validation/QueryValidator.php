@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Query\Validation;
 
-use Conjoon\JsonApi\Query\JsonApiQuery as JsonApiQuery;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
 use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
 use Conjoon\Net\Uri\Component\Query as HttpQuery;
@@ -30,7 +30,7 @@ use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
  * Class for validating queries that target resource objects. Queries are checked for
  * validity according to JSON:API specifications.
  */
-class JsonApiQueryValidator extends HttpQueryValidator
+class QueryValidator extends HttpQueryValidator
 {
     /**
      * @inheritdoc
@@ -51,7 +51,7 @@ class JsonApiQueryValidator extends HttpQueryValidator
     public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
         /**
-         * @type JsonApiQuery $query
+         * @type Query $query
          */
         $resourceTarget = $query->getResourceDescription();
 
@@ -98,7 +98,7 @@ class JsonApiQueryValidator extends HttpQueryValidator
     public function getAllowedParameterNames(HttpQuery $query): array
     {
         /**
-         * @type JsonApiQuery $query
+         * @type Query $query
          */
         $resourceTarget = $query->getResourceDescription();
 
