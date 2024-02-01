@@ -108,6 +108,11 @@ class HordeHeaderComposerTest extends TestCase
      */
     public function testWrite2()
     {
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $composer = new HordeHeaderComposer();
 
@@ -141,6 +146,8 @@ class HordeHeaderComposerTest extends TestCase
         ];
         $msgText = implode("\n", $msgText);
         $this->assertEquals($result, explode("\n", $composer->compose($msgText, $messageItemDraft)));
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
