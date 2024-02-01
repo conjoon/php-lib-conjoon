@@ -1,28 +1,12 @@
 <?php
 
 /**
- * conjoon
- * php-lib-conjoon
- * Copyright (C) 2021-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * This file is part of the conjoon/php-lib-conjoon project.
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * (c) 2021-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * For full copyright and license information, please consult the LICENSE-file distributed
+ * with this source code.
  */
 
 declare(strict_types=1);
@@ -201,6 +185,11 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItemList()
     {
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
@@ -278,6 +267,8 @@ class HordeClientTest extends TestCase
 
         $this->assertSame($references[111], $messageItemList[0]->getReferences());
         $this->assertSame($references[222], $messageItemList[1]->getReferences());
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
@@ -289,6 +280,11 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItemListWithSpecifiedAttributes()
     {
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
@@ -339,6 +335,8 @@ class HordeClientTest extends TestCase
             "references" => $references[111],
             "from" => ["name" => "dev@conjoon.org", "address" => "dev@conjoon.org"]
         ], $messageItemList[0]->toJson());
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
@@ -348,8 +346,13 @@ class HordeClientTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testGetMessageItemListWidthIdSpecified()
+    public function testGetMessageItemListWithIdSpecified()
     {
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
@@ -415,6 +418,8 @@ class HordeClientTest extends TestCase
         );
 
         $this->assertSame("<foo>", $messageItemList[0]->getReferences());
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
@@ -425,7 +430,11 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItem()
     {
-
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $client = $this->createClient();
 
@@ -458,6 +467,9 @@ class HordeClientTest extends TestCase
         $this->assertSame(null, $item->getFrom());
         $this->assertSame(1600, $item->getSize());
         $this->assertSame(true, $item->getHasAttachments());
+
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
@@ -468,7 +480,11 @@ class HordeClientTest extends TestCase
      */
     public function testGetMessageItemDraft()
     {
-
+        /**
+         * @see https://github.com/maintaina-com/Mail/pull/4
+         */
+        $PREVIOUS_ERROR_REPORTING = error_reporting(0);
+        error_reporting($PREVIOUS_ERROR_REPORTING & ~E_WARNING);
 
         $client = $this->createClient();
 
@@ -510,6 +526,8 @@ class HordeClientTest extends TestCase
         $this->assertEquals($bcc, $item->getBcc());
         $this->assertEquals($replyTo, $item->getReplyTo());
         $this->assertSame($messageId, $item->getMessageId());
+
+        error_reporting($PREVIOUS_ERROR_REPORTING);
     }
 
 
