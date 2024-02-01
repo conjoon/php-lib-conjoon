@@ -17,12 +17,14 @@ namespace Conjoon\JsonApi;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\Http\Request as HttpRequest;
+use Conjoon\Http\RequestMethod;
 use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Quant\Core\Attribute\Getter;
 use Quant\Core\Trait\AccessorTrait;
 use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
+use RuntimeException;
 
 /**
  * Request specific for JSON:API requests.
@@ -54,6 +56,11 @@ class Request extends HttpRequest
         ?ResourceDescription $resourceDescription = null,
         ?QueryValidator      $queryValidator = null,
      ) {
+
+        if ($request->getMethod() !== RequestMethod::GET) {
+            throw new RuntimeException("unexpected request method " . $request->getMethod());
+        }
+
         parent::__construct($request->getUrl(), $request->getMethod());
 
         $this->pathParameters = $pathParameters;
