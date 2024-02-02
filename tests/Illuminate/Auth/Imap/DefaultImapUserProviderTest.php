@@ -30,8 +30,8 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Illuminate\Auth\Imap;
 
 use Conjoon\Illuminate\Auth\Imap\DefaultImapUserProvider;
-use Conjoon\Illuminate\Auth\Imap\ImapUser;
-use Conjoon\Illuminate\Auth\Imap\ImapUserProvider;
+use Conjoon\Illuminate\Auth\ImapUser;
+use Conjoon\Illuminate\Auth\ImapUserProvider;
 use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
 
