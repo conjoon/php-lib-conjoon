@@ -92,5 +92,4 @@ class MailAccountDescription extends ResourceDescription
             "subscriptions"
         ];
     }
-
 }

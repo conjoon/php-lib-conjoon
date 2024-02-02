@@ -66,5 +66,4 @@ class TestResourceResourceDescription extends ResourceDescription
     {
         return [];
     }
-
 }

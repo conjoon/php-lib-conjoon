@@ -67,8 +67,10 @@ abstract class CompoundKey implements Jsonable, Stringable
      */
     public function __construct($mailAccountId, string $id)
     {
-        if (($mailAccountId instanceof MailAccount) ||
-            ($mailAccountId instanceof LegacyMailAccount)) {
+        if (
+            ($mailAccountId instanceof MailAccount) ||
+            ($mailAccountId instanceof LegacyMailAccount)
+        ) {
             $mailAccountId = $mailAccountId->getId();
         }
         $this->mailAccountId = (string)$mailAccountId;
@@ -115,5 +117,4 @@ abstract class CompoundKey implements Jsonable, Stringable
     {
         return json_encode($this->toJson());
     }
-
 }

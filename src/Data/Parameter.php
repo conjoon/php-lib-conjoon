@@ -16,7 +16,6 @@ namespace Conjoon\Data;
 use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Error\ErrorSource;
 
-
 class Parameter implements ErrorSource
 {
     /**

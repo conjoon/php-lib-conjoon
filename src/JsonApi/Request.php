@@ -9,7 +9,6 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
@@ -51,11 +50,11 @@ class Request extends HttpRequest
      * @param QueryValidator|null $queryValidator
      */
     public function __construct(
-        HttpRequest          $request,
-        PathParameters       $pathParameters,
+        HttpRequest $request,
+        PathParameters $pathParameters,
         ?ResourceDescription $resourceDescription = null,
-        ?QueryValidator      $queryValidator = null,
-     ) {
+        ?QueryValidator $queryValidator = null,
+    ) {
 
         if ($request->getMethod() !== RequestMethod::GET) {
             throw new RuntimeException("unexpected request method " . $request->getMethod());
@@ -74,7 +73,8 @@ class Request extends HttpRequest
      * Returns true if this request targets a collection of the specified ResourceDescription.
      * @return bool
      */
-    public function targetsCollection(): bool {
+    public function targetsCollection(): bool
+    {
         return $this->queryValidator &&
             ($this->queryValidator instanceof CollectionQueryValidator);
     }

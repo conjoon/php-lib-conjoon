@@ -23,7 +23,6 @@ use Conjoon\Core\Contract\StringStrategy;
  */
 abstract class ResourceDescription implements Stringable
 {
-
     /**
      * Returns the type of this entity used as an identifier with clients and
      * requests, e.g. its class-name.

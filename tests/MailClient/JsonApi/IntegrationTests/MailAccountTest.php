@@ -9,11 +9,9 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
-
 
 use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
@@ -22,10 +20,8 @@ use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\Net\Url;
 use Tests\TestCase;
 
-
 class MailAccountTest extends TestCase
 {
-
     use IntegrationTestTrait;
 
     /**
@@ -33,7 +29,8 @@ class MailAccountTest extends TestCase
      *
      * @return void
      */
-    public function testGetMailAccounts() {
+    public function testGetMailAccounts()
+    {
 
         $url = Url::make("https://localhost:8080/rest-api/v1/MailAccounts");
 
@@ -42,12 +39,11 @@ class MailAccountTest extends TestCase
         $jsonApiRequest = $this->getRequestMatcher()->match($httpRequest);
 
         $this->assertNotNull($jsonApiRequest);
-
     }
 
 
-    protected function getRequestMatcher(): RequestMatcher {
+    protected function getRequestMatcher(): RequestMatcher
+    {
         return new RequestMatcher();
     }
-
 }

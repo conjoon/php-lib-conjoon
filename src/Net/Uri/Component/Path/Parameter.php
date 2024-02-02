@@ -20,5 +20,4 @@ use Conjoon\Data\Parameter as DataParameter;
  */
 class Parameter extends DataParameter
 {
-
 }

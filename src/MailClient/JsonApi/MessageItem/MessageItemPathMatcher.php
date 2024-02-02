@@ -9,7 +9,6 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi\MessageItem;
@@ -30,13 +29,14 @@ final class MessageItemPathMatcher extends PathMatcher
 
     private Template $collection;
 
-    public function __construct(
-    ) {
+    public function __construct()
+    {
         $this->single = new Template(self::TEMPLATE);
         $this->collection = new Template(substr(self::TEMPLATE, 0, strrpos(self::TEMPLATE, "/")));
     }
 
-    public function match(Uri $uri) : ?MessageItemPathMatcherResult {
+    public function match(Uri $uri): ?MessageItemPathMatcherResult
+    {
 
         $match = $this->single->match($uri) ?? $this->collection->match($uri);
 
@@ -46,5 +46,4 @@ final class MessageItemPathMatcher extends PathMatcher
 
         return null;
     }
-
 }

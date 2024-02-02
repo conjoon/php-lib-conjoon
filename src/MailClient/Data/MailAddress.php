@@ -231,7 +231,7 @@ class MailAddress implements Stringable, JsonDecodable, Copyable, Arrayable, Jso
         $regex = '/(,|"|\')/m';
 
         if (preg_match($regex, $name) === 1) {
-            return  '"'.addslashes($name).'"' ;
+            return  '"' . addslashes($name) . '"' ;
         }
         return $name;
     }

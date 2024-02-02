@@ -22,7 +22,6 @@ use Tests\TestCase;
  */
 class MailAccountDescriptionTest extends TestCase
 {
-
     protected $defaultFields = [
         "name",
         "folderType",

@@ -9,7 +9,6 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi;
@@ -34,20 +33,20 @@ final class RequestMatcher extends JsonApiRequestMatcher
     ];
 
 
-    public function __construct(
-    ) {
-
+    public function __construct()
+    {
     }
 
-    public function match(Request $request) : ?JsonApiRequest {
+    public function match(Request $request): ?JsonApiRequest
+    {
 
         $template = new Template(self::TEMPLATES[MailAccountDescription::class]);
 
         $pathParameters = $template->match($request->getUrl());
         if ($pathParameters !== null) {
-
             return $this->mailAccountApiRequest(
-                $request, $this->toPathParameterList($pathParameters),
+                $request,
+                $this->toPathParameterList($pathParameters),
             );
         }
         return null;
@@ -64,7 +63,8 @@ final class RequestMatcher extends JsonApiRequestMatcher
         );
     }
 
-    private function toPathParameterList(array $parameters): PathParameters {
+    private function toPathParameterList(array $parameters): PathParameters
+    {
         $pathParameters = new PathParameters();
         foreach ($parameters as $key => $value) {
             $pathParameters[] = new Parameter($key, $value);

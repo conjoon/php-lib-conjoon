@@ -15,7 +15,6 @@ namespace Conjoon\Net\Uri\Component\Path;
 
 use Conjoon\Data\ParameterList as DataParameterList;
 
-
 /**
  * Class ParameterList organizes a list of PathParameters.
  *

@@ -21,10 +21,8 @@ use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\Net\Url;
 use Tests\TestCase;
 
-
 class RequestMatcherTest extends TestCase
 {
-
     public function testClass(): void
     {
         $this->assertInstanceOf(JsonApiRequestMatcher::class, new RequestMatcher());

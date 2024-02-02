@@ -9,7 +9,6 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
@@ -21,13 +20,11 @@ use Conjoon\Http\Request;
  */
 abstract class RequestMatcher
 {
-
     /**
      * Tries to match the specified $request and returns a Request if matching was successful.
      *
      * @param Request $request
      * @return Request|null
      */
-    public abstract function match(Request $request) : ?Request;
-
+    abstract public function match(Request $request): ?Request;
 }

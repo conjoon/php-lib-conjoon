@@ -15,7 +15,6 @@ namespace Conjoon\Net\Uri\Component\Query;
 
 use Conjoon\Data\ParameterList as DataParameterList;
 
-
 /**
  * Class ParameterList organizes a list of QueryParameters.
  *
@@ -30,5 +29,4 @@ class ParameterList extends DataParameterList
     {
         return Parameter::class;
     }
-
 }

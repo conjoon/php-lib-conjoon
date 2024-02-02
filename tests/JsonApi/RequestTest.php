@@ -9,7 +9,6 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Tests\Conjoon\JsonApi\Request;
@@ -25,7 +24,6 @@ use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
 use Conjoon\Net\Url;
 use Tests\TestCase;
-
 
 class RequestTest extends TestCase
 {
@@ -66,14 +64,18 @@ class RequestTest extends TestCase
         $this->assertTrue($jsonApiRequest->targetsCollection());
     }
 
-    protected function makeJsonApiRequest(Url $url, QueryValidator $validator): Request {
+    protected function makeJsonApiRequest(Url $url, QueryValidator $validator): Request
+    {
         $resourceDescription = $this->createMockForAbstract(ResourceDescription::class);
         $request = new HttpRequest($url, Method::GET);
 
         $pathParameters = new ParameterList();
 
         $jsonApiRequest = new Request(
-            $request, $pathParameters, $resourceDescription, $validator
+            $request,
+            $pathParameters,
+            $resourceDescription,
+            $validator
         );
         $this->assertTrue($url->equals($jsonApiRequest->getUrl()));
         $this->assertTrue($request->getMethod() === $jsonApiRequest->getMethod());
@@ -83,5 +85,4 @@ class RequestTest extends TestCase
 
         return $jsonApiRequest;
     }
-
 }

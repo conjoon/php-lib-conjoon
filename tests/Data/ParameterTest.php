@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Tests\Conjoon\Data;
 
 use Conjoon\Data\Parameter as DataParameter;
-
 use Conjoon\Net\Uri\Component\Query\Parameter;
 use Tests\TestCase;
 

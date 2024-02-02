@@ -24,5 +24,4 @@ class ParameterTest extends TestCase
         $param = new Parameter("A", "B");
         $this->assertInstanceOf(DataParameter::class, $param);
     }
-
 }

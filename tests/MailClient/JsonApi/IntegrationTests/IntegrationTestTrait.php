@@ -9,21 +9,16 @@
  * with this source code.
  */
 
-
 declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 
-
 trait IntegrationTestTrait
 {
-
-
-
-    protected function getRequestMatcher(): RequestMatcher {
+    protected function getRequestMatcher(): RequestMatcher
+    {
         return new RequestMatcher();
     }
-
 }
