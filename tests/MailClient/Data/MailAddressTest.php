@@ -27,14 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\Mail\Client\Data;
+namespace Tests\Conjoon\MailClient\Data;
 
-use Conjoon\Mail\Client\Data\MailAddress;
-use Conjoon\Util\Copyable;
-use Conjoon\Util\Jsonable;
-use Conjoon\Util\JsonDecodable;
-use Conjoon\Util\JsonDecodeException;
-use Conjoon\Util\Stringable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\MailClient\Data\MailAddress;
+use Conjoon\Core\Contract\Copyable;
+use Conjoon\Core\Contract\JsonDecodable;
+use Conjoon\Core\Exception\JsonDecodeException;
+use Conjoon\Core\Contract\Stringable;
 use InvalidArgumentException;
 use Tests\TestCase;
 
