@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\Data;
 
+use Conjoon\Core\Contract\StringStrategy;
 use Conjoon\Error\ErrorSource;
 
 
@@ -71,9 +72,10 @@ class Parameter implements ErrorSource
 
 
     /**
+     * @param StringStrategy|null $stringStrategy
      * @Override
      */
-    public function __toString(): string
+    public function toString(StringStrategy $stringStrategy = null): string
     {
         return $this->getName() . "=" . $this->getValue();
     }

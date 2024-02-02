@@ -162,8 +162,8 @@ class QueryTest extends TestCase
 
         $query = $this->createTestInstance("query=string");
 
-        $this->assertSame("query=string", $query->__toString());
-        $this->assertSame($query->__toString(), $query->getName());
+        $this->assertSame("query=string", $query->toString());
+        $this->assertSame($query->toString(), $query->getName());
 
         $this->assertSame([
             "query" => "string"

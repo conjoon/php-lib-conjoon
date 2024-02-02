@@ -31,6 +31,7 @@ namespace Tests\App\Http\V0\JsonApi\Resource;
 
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\MailClient\Data\Resource\MailAccount;
+use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolder;
 use Tests\TestCase;
 
@@ -66,7 +67,7 @@ class MailFolderTest extends TestCase
         $list = $this->createDescription()->getRelationships();
         $this->assertSame(1, count($list));
 
-        $this->assertInstanceOf(MailAccount::class, $list[0]);
+        $this->assertInstanceOf(MailAccountDescription::class, $list[0]);
 
         $this->assertSame(
             ["MailFolder", "MailFolder.MailAccount"],

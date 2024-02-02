@@ -97,6 +97,6 @@ class DefaultMailFolderService implements MailFolderService
     {
         $mailFolderList = $this->getMailClient()->getMailFolderList($mailAccount, $query);
 
-        return $this->getMailFolderTreeBuilder()->listToTree($mailFolderList, $mailAccount->getRoot(), $query);
+        return $this->getMailFolderTreeBuilder()->listToTree($mailFolderList, $mailAccount->getSubscriptions(), $query);
     }
 }

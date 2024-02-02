@@ -54,7 +54,7 @@ class MailFolder extends ResourceDescription
     public function getRelationships(): ResourceDescriptionList
     {
         $list = new ResourceDescriptionList();
-        $list[] = new MailAccount();
+        $list[] = new MailAccountDescription();
 
         return $list;
     }
