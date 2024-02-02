@@ -184,4 +184,40 @@ class MailAddressTest extends TestCase
 
         $this->runToJsonTest($mailAddress);
     }
+
+    /**
+     * @see conjoon/php-lib-conjoon#12
+     */
+    public function testForAddressThatNeedToBeSanitized()
+    {
+        $tests = [
+            [
+                ["Parker, Peter", "peter.parker@newyork.com"],
+                ["\"Parker, Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker Peter", "peter.parker@newyork.com"],
+                ["Parker Peter", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \" Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\" Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker ' Peter", "peter.parker@newyork.com"],
+                ["\"Parker \' Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \"Parker, Peter Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\"Parker, Peter Peter\"", "peter.parker@newyork.com"],
+            ]
+        ];
+
+        foreach ($tests as $test) {
+            [$input, $output] = $test;
+            $mailAddress = new MailAddress($input[1], $input[0]);
+            $this->assertSame($output[1], $mailAddress->getAddress());
+            $this->assertSame($output[0], $mailAddress->getName());
+        }
+    }
 }
