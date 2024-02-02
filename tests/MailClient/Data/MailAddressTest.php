@@ -3,7 +3,7 @@
 /**
  * conjoon
  * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * Copyright (C) 2019-2023 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -27,28 +27,23 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Data;
+namespace Tests\Conjoon\Mail\Client\Data;
 
-use Conjoon\Core\Contract\Arrayable;
-use Conjoon\MailClient\Data\MailAddress;
-use Conjoon\Core\Contract\Copyable;
-use Conjoon\Core\Contract\JsonDecodable;
-use Conjoon\Core\Exception\JsonDecodeException;
-use Conjoon\Core\Contract\Stringable;
+use Conjoon\Mail\Client\Data\MailAddress;
+use Conjoon\Util\Copyable;
+use Conjoon\Util\Jsonable;
+use Conjoon\Util\JsonDecodable;
+use Conjoon\Util\JsonDecodeException;
+use Conjoon\Util\Stringable;
 use InvalidArgumentException;
-use Tests\StringableTestTrait;
 use Tests\TestCase;
-use Tests\JsonableTestTrait;
 
 /**
  * Class MailAddressTest
- * @package Tests\Conjoon\MailClient\Data
+ * @package Tests\Conjoon\Mail\Client\Data
  */
 class MailAddressTest extends TestCase
 {
-    use JsonableTestTrait;
-    use StringableTestTrait;
-
 // ---------------------
 //    Tests
 // ---------------------
@@ -63,13 +58,14 @@ class MailAddressTest extends TestCase
         $address = "peter.parker@newyork.com";
         $mailAddress = new MailAddress($address, $name);
 
+        $this->assertInstanceOf(Jsonable::class, $mailAddress);
         $this->assertInstanceOf(Stringable::class, $mailAddress);
         $this->assertInstanceOf(JsonDecodable::class, $mailAddress);
         $this->assertInstanceOf(Copyable::class, $mailAddress);
         $this->assertSame($address, $mailAddress->getAddress());
         $this->assertSame($name, $mailAddress->getName());
 
-        $this->assertEquals(["name" => $name, "address" => $address], $mailAddress->toArray());
+        $this->assertEquals(["name" => $name, "address" => $address], $mailAddress->toJson());
     }
 
 
@@ -107,8 +103,6 @@ class MailAddressTest extends TestCase
         $mailAddress = new MailAddress($address, $name);
 
         $this->assertSame("Peter Parker <peter.parker@newyork.com>", $mailAddress->toString());
-
-        $this->runToStringTest(MailAddress::class);
     }
 
     /**
@@ -117,11 +111,64 @@ class MailAddressTest extends TestCase
     public function testFromString()
     {
 
+        /**
+         * @see conjoon/php-lib-conjoon#12
+         */
+        $tests = [
+            [
+                ["Peter, Parker", "peter.parker@newyork.com"],
+                ["\"Peter, Parker\"", "peter.parker@newyork.com"]
+            ],
+            [
+                ["Parker Peter", "peter.parker@newyork.com"],
+                ["Parker Peter", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \" Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\" Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker ' Peter", "peter.parker@newyork.com"],
+                ["\"Parker \' Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Parker \"Parker, Peter Peter", "peter.parker@newyork.com"],
+                ["\"Parker \\\"Parker, Peter Peter\"", "peter.parker@newyork.com"],
+            ],
+            [
+                ["Schäfer, Peter", "pschaefer@tld.tld.de"],
+                ["\"Schäfer, Peter\"", "pschaefer@tld.tld.de"]
+            ],
+            [
+                ['"Schäfer, Peter"', "pschaefer@tld.tld.de"],
+                ['"\"Schäfer, Peter\""', "pschaefer@tld.tld.de"]
+            ],
+            [
+                ['"Schä"fer, Pe"ter"', "pschaefer@tld.tld.de"],
+                ['"\"Schä\"fer, Pe\"ter\""', "pschaefer@tld.tld.de"]
+            ]
+
+        ];
+
+        foreach ($tests as $test) {
+            [$input, $output] = $test;
+
+            $mailAddress = new MailAddress($input[1], $input[0]);
+
+            $jsonString = json_encode($mailAddress->toJson());
+            $fromStringMailAddress = MailAddress::fromString($jsonString);
+
+            $this->assertSame($output[1], $fromStringMailAddress->getAddress());
+            $this->assertSame($output[0], $fromStringMailAddress->getName());
+        }
+
+
+
         $name = "Peter Parker";
         $address = "peter.parker@newyork.com";
         $mailAddress = new MailAddress($address, $name);
 
-        $jsonString = json_encode($mailAddress->toArray());
+        $jsonString = json_encode($mailAddress->toJson());
         $this->assertEquals($mailAddress, MailAddress::fromString($jsonString));
 
         $jsonString = json_encode(["address" => "foo"]);
@@ -169,55 +216,5 @@ class MailAddressTest extends TestCase
         $this->assertSame($address1->getAddress(), $mailAddress->getAddress());
         $this->assertSame($address1->getName(), $mailAddress->getName());
         $this->assertNotSame($address1, $mailAddress);
-    }
-
-
-    /**
-     * tests toJson()
-     */
-    public function testToJson()
-    {
-        $mailAddress = new MailAddress(
-            "peter.parker@newyork.com",
-            "Peter Parker"
-        );
-
-        $this->runToJsonTest($mailAddress);
-    }
-
-    /**
-     * @see conjoon/php-lib-conjoon#12
-     */
-    public function testForAddressThatNeedToBeSanitized()
-    {
-        $tests = [
-            [
-                ["Parker, Peter", "peter.parker@newyork.com"],
-                ["\"Parker, Peter\"", "peter.parker@newyork.com"],
-            ],
-            [
-                ["Parker Peter", "peter.parker@newyork.com"],
-                ["Parker Peter", "peter.parker@newyork.com"],
-            ],
-            [
-                ["Parker \" Peter", "peter.parker@newyork.com"],
-                ["\"Parker \\\" Peter\"", "peter.parker@newyork.com"],
-            ],
-            [
-                ["Parker ' Peter", "peter.parker@newyork.com"],
-                ["\"Parker \' Peter\"", "peter.parker@newyork.com"],
-            ],
-            [
-                ["Parker \"Parker, Peter Peter", "peter.parker@newyork.com"],
-                ["\"Parker \\\"Parker, Peter Peter\"", "peter.parker@newyork.com"],
-            ]
-        ];
-
-        foreach ($tests as $test) {
-            [$input, $output] = $test;
-            $mailAddress = new MailAddress($input[1], $input[0]);
-            $this->assertSame($output[1], $mailAddress->getAddress());
-            $this->assertSame($output[0], $mailAddress->getName());
-        }
     }
 }
