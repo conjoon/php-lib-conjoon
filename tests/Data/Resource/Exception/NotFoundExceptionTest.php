@@ -13,17 +13,17 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Exception;
 
-use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\Data\Resource\Exception\NotFoundException as ResourceNotFoundException;
+use RuntimeException;
 use Tests\TestCase;
 
-class MailFolderNotFoundExceptionTest extends TestCase
+class NotFoundExceptionTest extends TestCase
 {
     public function testInstance()
     {
 
-        $exception = new MailFolderNotFoundException();
+        $exception = $this->getMockForAbstractClass(ResourceNotFoundException::class);
 
-        $this->assertInstanceOf(ResourceNotFoundException::class, $exception);
+        $this->assertInstanceOf(RuntimeException::class, $exception);
     }
 }

@@ -29,12 +29,14 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Exception;
 
+use Conjoon\Data\Resource\Exception\NotFoundException;
+
 /**
  * Indicates a mail folder was not found.
  *
  *
  * @package Conjoon\MailClient\Exception
  */
-class MailFolderNotFoundException extends ResourceNotFoundException
+class MailFolderNotFoundException extends NotFoundException
 {
 }
