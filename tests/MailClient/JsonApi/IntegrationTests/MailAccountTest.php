@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
-use Conjoon\Http\Request;
-use Conjoon\Http\RequestMethod;
-use Conjoon\MailClient\JsonApi\MessageItem\MessageItemRequestMatcher;
-use Conjoon\MailClient\JsonApi\RequestMatcher;
-use Conjoon\Net\Url;
+use Conjoon\Http\Exception\NotFoundException;
+use Conjoon\JsonApi\Exception\BadRequestException;
+use Conjoon\JsonApi\Resource\Resource;
+use Conjoon\JsonApi\Resource\ResourceResolver;
+use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
 
 class MailAccountTest extends TestCase
@@ -25,25 +25,72 @@ class MailAccountTest extends TestCase
     use IntegrationTestTrait;
 
     /**
-     * Returning all MailAccounts is tied to the User, not a repository.
+     * Test NotFoundException.
      *
      * @return void
      */
-    public function testGetMailAccounts()
+    public function testGetMailAccountNotFoundException()
     {
+        $this->expectException(NotFoundException::class);
+        $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MaisaflAccounts");
+    }
 
-        $url = Url::make("https://localhost:8080/rest-api/v1/MailAccounts");
-
-
-        $httpRequest = new Request($url, RequestMethod::GET);
-        $jsonApiRequest = $this->getRequestMatcher()->match($httpRequest);
-
+    /**
+     * Test BadRequestException.
+     *
+     * @return void
+     */
+    public function testGetMailAccountBadRequestException()
+    {
+        $this->expectException(BadRequestException::class);
+        $jsonApiRequest = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts?include=me");
         $this->assertNotNull($jsonApiRequest);
+        $resourceResolver = $this->createMockForAbstract(ResourceResolver::class);
+
+        $resourceResolver->resolve($jsonApiRequest);
+    }
+
+    /**
+     * Test getMailAccount.
+     *
+     * @return void
+     */
+    public function testGetMailAccount()
+    {
+        $request = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts");
+        $this->assertNotNull($request);
+
+        $resourceResolver = $this->createMockForAbstract(ResourceResolver::class);
+        $resourceResolver->expects(
+            $this->once())->method("resolveToResource")->willReturn(
+                new Resource($this->getMailAccount()));
+
+        $resource = $resourceResolver->resolve($request);
+
+        $this->assertEquals(
+            $this->getMailAccount()->toJson($this->getJsonApiStrategy()),
+            $resource->toJson($this->getJsonApiStrategy())
+        );
     }
 
 
-    protected function getRequestMatcher(): RequestMatcher
-    {
-        return new RequestMatcher();
+    protected function getMailAccount(): MailAccount {
+        return new MailAccount([
+            "id"              => "1",
+            "name"            => "conjoon developer",
+            "from"            => ["name" => "John Smith", "address" => "dev@conjoon.org"],
+            "replyTo"         => ["name" => "John Smith", "address" => "dev@conjoon.org"],
+            "inbox_type"      => "IMAP",
+            "inbox_address"   => "server.inbox.com",
+            "inbox_port"      => 993,
+            "inbox_user"      => "inboxUser",
+            "inbox_password"  => "inboxPassword",
+            "inbox_ssl"       => true,
+            "outbox_address"  => "server.outbox.com",
+            "outbox_port"     => 993,
+            "outbox_user"     => "outboxUser",
+            "outbox_password" => "outboxPassword",
+            "outbox_secure"   => "ssl"
+        ]);
     }
 }
