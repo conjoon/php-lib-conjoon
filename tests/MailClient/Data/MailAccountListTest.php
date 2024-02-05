@@ -14,7 +14,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\Data;
 
-use Conjoon\Mail\Client\Data\MailAccount as LegacyMailAccount;
+use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\MailAccountList;
 use Conjoon\Core\AbstractList;
 use Tests\JsonableTestTrait;
@@ -34,7 +34,7 @@ class MailAccountListTest extends TestCase
         $mailAddressList = new MailAccountList();
         $this->assertInstanceOf(AbstractList::class, $mailAddressList);
 
-        $this->assertSame(LegacyMailAccount::class, $mailAddressList->getEntityType());
+        $this->assertSame(MailAccount::class, $mailAddressList->getEntityType());
     }
 
 
@@ -86,8 +86,8 @@ class MailAccountListTest extends TestCase
         ];
 
         $mailAccountList = new MailAccountList();
-        $mailAccountList[] = new LegacyMailAccount($cfg);
-        $mailAccountList[] = new LegacyMailAccount($cfg);
+        $mailAccountList[] = new MailAccount($cfg);
+        $mailAccountList[] = new MailAccount($cfg);
 
         return $mailAccountList;
     }

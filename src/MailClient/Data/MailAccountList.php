@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data;
 
-use Conjoon\Mail\Client\Data\MailAccount as LegacyMailAccount;
 use Conjoon\Core\AbstractList;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\Jsonable;
@@ -50,6 +49,6 @@ class MailAccountList extends AbstractList implements Arrayable, Jsonable
      */
     public function getEntityType(): string
     {
-        return LegacyMailAccount::class;
+        return MailAccount::class;
     }
 }

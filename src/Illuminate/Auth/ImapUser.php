@@ -15,6 +15,7 @@ declare(strict_types=1);
 namespace Conjoon\Illuminate\Auth;
 
 use Conjoon\Mail\Client\Data\MailAccount as LegacyMailAccount;
+use Conjoon\Mail\Client\Data\MailAccountList as LegacyMailAccountList;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\MailAccountList;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -105,13 +106,19 @@ class ImapUser implements Authenticatable
     }
 
     /**
-     * Returns MailAccountLists containg the MailAccounts of this user.
+     * Returns MailAccountLists containing the MailAccounts of this user.
      *
-     * @return array
+     * @return MailAccountList|LegacyMailAccountList
      */
-    public function getMailAccounts(): MailAccountList
+    public function getMailAccounts(): MailAccountList|LegacyMailAccountList
     {
-        return MailAccountList::make($this->mailAccount);
+        $mailAccount = $this->mailAccount;
+        if ($mailAccount instanceof LegacyMailAccount) {
+            $list = new LegacyMailAccountList();
+            $list[] = $mailAccount;
+            return $list;
+        }
+        return MailAccountList::make($mailAccount);
     }
 
 
