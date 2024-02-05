@@ -29,17 +29,24 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Resource;
 
-use Conjoon\Net\Uri\Component\Path\Template;
+use Conjoon\Core\Contract\Arrayable;
+use Conjoon\Core\Contract\Jsonable;
+use Conjoon\Core\Contract\JsonStrategy;
 
 /**
  * Interface for Resources that serve as conceptually representatives for discoverable entities.
  */
-interface Resource
+class Resource implements Jsonable
 {
-    /**
-     * Returns the URI template where this resource is located  found.
-     *
-     * @return Template
-     */
-    public function getUri(): Template;
+    private Arrayable&Jsonable $target;
+
+    public function __construct(Arrayable&Jsonable $target) {
+        $this->target = $target;
+    }
+
+    public function toJson(JsonStrategy $strategy = null): array
+    {
+        return $strategy ? $strategy->toJson($this->target) : $this->target->toArray();
+    }
+
 }
