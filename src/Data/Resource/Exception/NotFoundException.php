@@ -17,9 +17,6 @@ use RuntimeException;
 
 /**
  * Indicates a resource was not found.
- *
- *
- * @package Conjoon\MailClient\Exception
  */
 abstract class NotFoundException extends RuntimeException
 {
