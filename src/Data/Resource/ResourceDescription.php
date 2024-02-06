@@ -13,15 +13,16 @@ declare(strict_types=1);
 
 namespace Conjoon\Data\Resource;
 
-use Conjoon\Core\Contract\Stringable;
+use Conjoon\Core\Contract\Stringable as ConjoonStringable;
 use Conjoon\Core\Contract\StringStrategy;
+use Stringable;
 
 /**
  * Description for Resource Objects used as conceptually representatives for
  * discoverable entities.
  *
  */
-abstract class ResourceDescription implements Stringable
+abstract class ResourceDescription implements ConjoonStringable, Stringable
 {
     /**
      * Returns the type of this entity used as an identifier with clients and
@@ -189,5 +190,13 @@ abstract class ResourceDescription implements Stringable
     public function toString(?StringStrategy $stringStrategy = null): string
     {
         return $stringStrategy ? $stringStrategy->toString($this) : $this->getType();
+    }
+
+
+    /**
+     * @Override
+     */
+    public function __toString() {
+        return $this->toString();
     }
 }

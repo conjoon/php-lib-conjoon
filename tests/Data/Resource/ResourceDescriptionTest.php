@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Data\Resource;
 
+use Conjoon\Core\Contract\Stringable;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -32,7 +33,8 @@ class ResourceDescriptionTest extends TestCase
     {
         $resource = $this->getResourceDescriptionMock();
 
-        $this->assertInstanceOf(ResourceDescription::class, $resource);
+        $this->assertInstanceOf(Stringable::class, $resource);
+        $this->assertInstanceOf(\Stringable::class, $resource);
     }
 
 
