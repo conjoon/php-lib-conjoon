@@ -116,7 +116,7 @@ class Uri implements Stringable, Equatable
         if (!($target instanceof Uri)) {
             return false;
         }
-        return strtolower($this->toString()) === strtolower($target->toString());
+        return strtolower((string) $this) === strtolower((string) $target);
     }
 
 
