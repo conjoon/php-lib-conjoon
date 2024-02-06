@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi;
 
+use Conjoon\Http\Exception\BadRequestException;
 use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\Http\Request;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
@@ -48,6 +49,12 @@ final class RequestMatcher extends JsonApiRequestMatcher
      */
     public function match(Request $request): JsonApiRequest
     {
+        if ($request->getHeader("Accept") != "application/vnd.api+json;ext=\"https://conjoon.org/json-api/ext/relfield\"") {
+            throw new BadRequestException(
+                "missing \"Accept\"-Header with value " .
+                "`application/vnd.api+json;ext=\"https://conjoon.org/json-api/ext/relfield\"`");
+        }
+
         foreach(self::TEMPLATES as $descriptionClass => $pathTemplate) {
 
             $template = new Template($pathTemplate);
