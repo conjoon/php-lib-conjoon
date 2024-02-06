@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi;
 
+use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\Http\Request;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\JsonApi\Request as JsonApiRequest;
@@ -39,7 +40,7 @@ final class RequestMatcher extends JsonApiRequestMatcher
     /**
      * @Override
      */
-    public function match(Request $request): ?JsonApiRequest
+    public function match(Request $request): JsonApiRequest
     {
         foreach(self::TEMPLATES as $descriptionClass => $pathTemplate) {
 
@@ -56,7 +57,7 @@ final class RequestMatcher extends JsonApiRequestMatcher
 
         }
 
-        return null;
+        throw new NotFoundException((string)$request->getUrl());
     }
 
     private function toJsonApiRequest(Request $request, PathParameters $pathParameters, string $descriptionClass): JsonApiRequest

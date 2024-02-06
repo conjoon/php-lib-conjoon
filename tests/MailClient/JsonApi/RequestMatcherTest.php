@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi;
 
+use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\Http\Request;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
@@ -30,8 +31,9 @@ class RequestMatcherTest extends TestCase
     }
 
 
-    public function testNullMatch(): void
+    public function testNotFoundException(): void
     {
+        $this->expectException(NotFoundException::class);
         $matcher = new RequestMatcher();
         $url = Url::make("https://localhost:8080/rest-api/MailAccounts/3?query=value");
         $request = new Request($url);

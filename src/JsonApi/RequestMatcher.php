@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi;
 
+use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\Http\Request;
 
 /**
@@ -24,7 +25,10 @@ abstract class RequestMatcher
      * Tries to match the specified $request and returns a Request if matching was successful.
      *
      * @param Request $request
-     * @return Request|null
+     * @return Request
+     *
+     * @throws NotFoundException if the specified $request contains information that could
+     * not be utilized to create as JsonApi-Request.
      */
-    abstract public function match(Request $request): ?Request;
+    abstract public function match(Request $request): Request;
 }
