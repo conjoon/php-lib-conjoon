@@ -11,12 +11,12 @@
 
 declare(strict_types=1);
 
-namespace Conjoon\JsonApi\Exception;
+namespace Conjoon\Web\Validation\Exception;
 
 use Conjoon\Error\ErrorObjectList;
-use Conjoon\Http\Exception\BadRequestException as HttpBadRequestExxception;
+use Conjoon\Http\Exception\BadRequestException as HttpBadRequestException;
 
-class BadRequestException extends HttpBadRequestExxception
+class ValidationException extends HttpBadRequestException
 {
     protected ErrorObjectList $errors;
 
