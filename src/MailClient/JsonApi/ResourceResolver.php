@@ -33,7 +33,7 @@ class ResourceResolver extends JsonApiResourceResolver {
     /**
      * @Override
      */
-    public function resolveToResource(
+    protected function resolveToResource(
         ResourceDescription $resourceDescription,
         ParameterList $pathParameters,
         ?ParameterBag $parameterBag

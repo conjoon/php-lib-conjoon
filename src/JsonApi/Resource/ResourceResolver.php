@@ -65,7 +65,7 @@ abstract class ResourceResolver {
      *
      * @throws ResourceNotFoundException|RepositoryException|UnknownResourceException
      */
-    abstract public function resolveToResource(
+    abstract protected function resolveToResource(
         ResourceDescription $resourceDescription,
         ParameterList $pathParameters,
         ?ParameterBag $parameterBag
