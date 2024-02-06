@@ -32,7 +32,7 @@ abstract class ResourceResolver {
      * @param Request $jsonApiRequest
      * @return Resource
      *
-     * @throws ResourceNotFoundException|RepositoryException
+     * @throws ResourceNotFoundException|RepositoryException|UnknownResourceException
      */
     public function resolve(Request $jsonApiRequest): Resource {
 

@@ -16,15 +16,17 @@ namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
-use Conjoon\Http\StatusCodes;
-use Conjoon\JsonProblem\ProblemFactory;
+use Conjoon\Illuminate\Auth\ImapUser;
+use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Transformer\Response\JsonApiStrategy as MailClientJsonApiStrategy;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
+use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
 use Conjoon\Net\Url;
 use Conjoon\JsonApi\Request as JsonApiRequest;
 
 trait IntegrationTestTrait
 {
+
     protected function getRequestMatcher(): RequestMatcher
     {
         return new RequestMatcher();
@@ -52,5 +54,37 @@ trait IntegrationTestTrait
 
     protected function getJsonApiStrategy(): MailClientJsonApiStrategy {
         return new MailClientJsonApiStrategy();
+    }
+
+    protected function getResourceResolver(): MailClientResourceResolver {
+        $imapUser = $this->getIntegrationTestUser();
+
+        return new MailClientResourceResolver($imapUser);
+    }
+
+    protected function getIntegrationTestUser(): ImapUser {
+        return $this->getMockForAbstractClass(ImapUser::class, [
+            "", "", $this->getMailAccount()
+        ]);
+    }
+
+    protected function getMailAccount(): MailAccount {
+        return new MailAccount([
+            "id"              => "1",
+            "name"            => "conjoon developer",
+            "from"            => ["name" => "John Smith", "address" => "dev@conjoon.org"],
+            "replyTo"         => ["name" => "John Smith", "address" => "dev@conjoon.org"],
+            "inbox_type"      => "IMAP",
+            "inbox_address"   => "server.inbox.com",
+            "inbox_port"      => 993,
+            "inbox_user"      => "inboxUser",
+            "inbox_password"  => "inboxPassword",
+            "inbox_ssl"       => true,
+            "outbox_address"  => "server.outbox.com",
+            "outbox_port"     => 993,
+            "outbox_user"     => "outboxUser",
+            "outbox_password" => "outboxPassword",
+            "outbox_secure"   => "ssl"
+        ]);
     }
 }

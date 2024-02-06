@@ -14,15 +14,18 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 use Conjoon\Http\Exception\NotFoundException;
+use Conjoon\Illuminate\Auth\ImapUser;
 use Conjoon\JsonApi\Exception\BadRequestException;
 use Conjoon\JsonApi\Resource\Resource;
-use Conjoon\JsonApi\Resource\ResourceResolver;
+use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
 use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
+use Tests\TestTrait;
 
 class MailAccountTest extends TestCase
 {
     use IntegrationTestTrait;
+    use TestTrait;
 
     /**
      * Test NotFoundException.
@@ -45,8 +48,8 @@ class MailAccountTest extends TestCase
         $this->expectException(BadRequestException::class);
         $jsonApiRequest = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts?include=me");
         $this->assertNotNull($jsonApiRequest);
-        $resourceResolver = $this->createMockForAbstract(ResourceResolver::class);
 
+        $resourceResolver = $this->getResourceResolver();
         $resourceResolver->resolve($jsonApiRequest);
     }
 
@@ -60,37 +63,13 @@ class MailAccountTest extends TestCase
         $request = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts");
         $this->assertNotNull($request);
 
-        $resourceResolver = $this->createMockForAbstract(ResourceResolver::class);
-        $resourceResolver->expects(
-            $this->once())->method("resolveToResource")->willReturn(
-                new Resource($this->getMailAccount()));
-
+        $resourceResolver = $this->getResourceResolver();
         $resource = $resourceResolver->resolve($request);
 
         $this->assertEquals(
-            $this->getMailAccount()->toJson($this->getJsonApiStrategy()),
+            $this->getIntegrationTestUser()->getMailAccounts()->toJson($this->getJsonApiStrategy()),
             $resource->toJson($this->getJsonApiStrategy())
         );
     }
 
-
-    protected function getMailAccount(): MailAccount {
-        return new MailAccount([
-            "id"              => "1",
-            "name"            => "conjoon developer",
-            "from"            => ["name" => "John Smith", "address" => "dev@conjoon.org"],
-            "replyTo"         => ["name" => "John Smith", "address" => "dev@conjoon.org"],
-            "inbox_type"      => "IMAP",
-            "inbox_address"   => "server.inbox.com",
-            "inbox_port"      => 993,
-            "inbox_user"      => "inboxUser",
-            "inbox_password"  => "inboxPassword",
-            "inbox_ssl"       => true,
-            "outbox_address"  => "server.outbox.com",
-            "outbox_port"     => 993,
-            "outbox_user"     => "outboxUser",
-            "outbox_password" => "outboxPassword",
-            "outbox_secure"   => "ssl"
-        ]);
-    }
 }
