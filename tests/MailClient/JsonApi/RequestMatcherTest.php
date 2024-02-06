@@ -18,6 +18,8 @@ use Conjoon\Http\Request;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\MailClient\JsonApi\Query\MailAccountListQueryValidator;
+use Conjoon\MailClient\JsonApi\Query\MailFolderListQueryValidator;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\Net\Url;
@@ -51,8 +53,8 @@ class RequestMatcherTest extends TestCase
 
         $this->assertNotNull($jsonApiRequest);
         $this->assertInstanceOf(MailAccountDescription::class, $jsonApiRequest->getResourceDescription());
-        $this->assertInstanceOf(QueryValidator::class, $jsonApiRequest->getQueryValidator());
-        $this->assertFalse($jsonApiRequest->targetsCollection());
+        $this->assertInstanceOf(MailAccountListQueryValidator::class, $jsonApiRequest->getQueryValidator());
+        $this->assertTrue($jsonApiRequest->targetsCollection());
 
         $this->assertEquals([], $jsonApiRequest->getPathParameters()->toArray());
     }
@@ -68,8 +70,8 @@ class RequestMatcherTest extends TestCase
 
         $this->assertNotNull($jsonApiRequest);
         $this->assertInstanceOf(MailFolderDescription::class, $jsonApiRequest->getResourceDescription());
-        $this->assertInstanceOf(QueryValidator::class, $jsonApiRequest->getQueryValidator());
-        $this->assertFalse($jsonApiRequest->targetsCollection());
+        $this->assertInstanceOf(MailFolderListQueryValidator::class, $jsonApiRequest->getQueryValidator());
+        $this->assertTrue($jsonApiRequest->targetsCollection());
 
         $this->assertEquals(["mailAccountId" => "1"], $jsonApiRequest->getPathParameters()->toArray());
     }

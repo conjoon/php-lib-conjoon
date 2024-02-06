@@ -23,6 +23,8 @@ use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\Net\Uri\Component\Path\Parameter;
 use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
 use Conjoon\Net\Uri\Component\Path\Template;
+use Conjoon\MailClient\JsonApi\Query\MailAccountListQueryValidator;
+use Conjoon\MailClient\JsonApi\Query\MailFolderListQueryValidator;
 
 /**
  * Query Validator for MessageItem collection requests.
@@ -33,7 +35,11 @@ final class RequestMatcher extends JsonApiRequestMatcher
     public const TEMPLATES = [
         MailAccountDescription::class => "MailAccounts",
         MailFolderDescription::class => "MailAccounts/{mailAccountId}/MailFolders"
+    ];
 
+    public const VALIDATORS = [
+        MailAccountDescription::class => MailAccountListQueryValidator::class,
+        MailFolderDescription::class => MailFolderListQueryValidator::class
     ];
 
 
@@ -60,13 +66,17 @@ final class RequestMatcher extends JsonApiRequestMatcher
         throw new NotFoundException((string)$request->getUrl());
     }
 
-    private function toJsonApiRequest(Request $request, PathParameters $pathParameters, string $descriptionClass): JsonApiRequest
+    private function toJsonApiRequest(
+        Request $request,
+        PathParameters $pathParameters,
+        string $descriptionClass
+    ): JsonApiRequest
     {
         return new JsonApiRequest(
             $request,
             $pathParameters,
             new $descriptionClass,
-            new QueryValidator()
+            $this->toQueryValidator($descriptionClass)
         );
     }
 
@@ -78,5 +88,14 @@ final class RequestMatcher extends JsonApiRequestMatcher
             $pathParameters[] = new Parameter($key, $value);
         }
         return $pathParameters;
+    }
+
+    private function toQueryValidator(string $className): QueryValidator {
+        if (array_key_exists($className, self::VALIDATORS)) {
+            $queryClass = self::VALIDATORS[$className];
+            return new $queryClass();
+        }
+
+        return new QueryValidator();
     }
 }
