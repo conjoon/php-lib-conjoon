@@ -18,6 +18,7 @@ use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\JsonApi\Request as JsonApiRequest;
 use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
+use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\Net\Uri\Component\Path\Parameter;
 use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
 use Conjoon\Net\Uri\Component\Path\Template;
@@ -29,39 +30,45 @@ use Conjoon\Net\Uri\Component\Path\Template;
 final class RequestMatcher extends JsonApiRequestMatcher
 {
     public const TEMPLATES = [
-        MailAccountDescription::class => "MailAccounts"
+        MailAccountDescription::class => "MailAccounts",
+        MailFolderDescription::class => "MailAccounts/{mailAccountId}/MailFolders"
+
     ];
 
 
-    public function __construct()
-    {
-    }
-
+    /**
+     * @Override
+     */
     public function match(Request $request): ?JsonApiRequest
     {
+        foreach(self::TEMPLATES as $descriptionClass => $pathTemplate) {
 
-        $template = new Template(self::TEMPLATES[MailAccountDescription::class]);
+            $template = new Template($pathTemplate);
+            $pathParameters = $template->match($request->getUrl());
 
-        $pathParameters = $template->match($request->getUrl());
-        if ($pathParameters !== null) {
-            return $this->mailAccountApiRequest(
-                $request,
-                $this->toPathParameterList($pathParameters),
-            );
+            if ($pathParameters !== null) {
+                return $this->toJsonApiRequest(
+                    $request,
+                    $this->toPathParameterList($pathParameters),
+                    $descriptionClass
+                );
+            }
+
         }
+
         return null;
     }
 
-
-    private function mailAccountApiRequest(Request $request, PathParameters $pathParameters): JsonApiRequest
+    private function toJsonApiRequest(Request $request, PathParameters $pathParameters, string $descriptionClass): JsonApiRequest
     {
         return new JsonApiRequest(
             $request,
             $pathParameters,
-            new MailAccountDescription(),
+            new $descriptionClass,
             new QueryValidator()
         );
     }
+
 
     private function toPathParameterList(array $parameters): PathParameters
     {

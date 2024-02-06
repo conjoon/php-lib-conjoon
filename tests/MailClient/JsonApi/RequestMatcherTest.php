@@ -16,6 +16,7 @@ namespace Tests\Conjoon\MailClient\JsonApi;
 use Conjoon\Http\Request;
 use Conjoon\JsonApi\Query\Validation\QueryValidator;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
+use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\Net\Url;
@@ -46,11 +47,28 @@ class RequestMatcherTest extends TestCase
         $request = new Request($url);
         $jsonApiRequest  = $matcher->match($request);
 
-        $this->assertNotNull($request);
+        $this->assertNotNull($jsonApiRequest);
         $this->assertInstanceOf(MailAccountDescription::class, $jsonApiRequest->getResourceDescription());
         $this->assertInstanceOf(QueryValidator::class, $jsonApiRequest->getQueryValidator());
         $this->assertFalse($jsonApiRequest->targetsCollection());
 
         $this->assertEquals([], $jsonApiRequest->getPathParameters()->toArray());
+    }
+
+
+    public function testMailFolderMatch(): void
+    {
+        $matcher = new RequestMatcher();
+
+        $url = Url::make("https://localhost:8080/rest-api/MailAccounts/1/MailFolders?query=value");
+        $request = new Request($url);
+        $jsonApiRequest  = $matcher->match($request);
+
+        $this->assertNotNull($jsonApiRequest);
+        $this->assertInstanceOf(MailFolderDescription::class, $jsonApiRequest->getResourceDescription());
+        $this->assertInstanceOf(QueryValidator::class, $jsonApiRequest->getQueryValidator());
+        $this->assertFalse($jsonApiRequest->targetsCollection());
+
+        $this->assertEquals(["mailAccountId" => "1"], $jsonApiRequest->getPathParameters()->toArray());
     }
 }
