@@ -14,11 +14,7 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 use Conjoon\Http\Exception\NotFoundException;
-use Conjoon\Illuminate\Auth\ImapUser;
 use Conjoon\JsonApi\Exception\BadRequestException;
-use Conjoon\JsonApi\Resource\Resource;
-use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
-use Conjoon\MailClient\Data\MailAccount;
 use Tests\TestCase;
 use Tests\TestTrait;
 
