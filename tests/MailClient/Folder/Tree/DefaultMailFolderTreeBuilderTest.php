@@ -31,7 +31,7 @@ namespace Tests\Conjoon\MailClient\Folder\Tree;
 
 use Conjoon\Data\ParameterBag;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
-use Conjoon\MailClient\Data\Resource\MailFolder as MailFolderResource;
+use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
@@ -379,7 +379,7 @@ class DefaultMailFolderTreeBuilderTest extends TestCase
             $query->expects($this->any())->method("getFields")->willReturn($fields);
         } else {
             $query->expects($this->any())->method("getFields")->willReturn(
-                (new MailFolderResource())->getFields()
+                (new MailFolderDescription())->getFields()
             );
         }
 
