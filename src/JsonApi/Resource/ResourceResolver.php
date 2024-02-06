@@ -33,6 +33,8 @@ abstract class ResourceResolver {
      * @return Resource
      *
      * @throws ResourceNotFoundException|RepositoryException|UnknownResourceException
+     *
+     * @see resolveToResource
      */
     public function resolve(Request $jsonApiRequest): Resource {
 
