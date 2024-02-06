@@ -15,19 +15,20 @@ namespace Conjoon\MailClient\Data\Resource;
 
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
+use Conjoon\Net\Uri\Component\Path\Template;
 
 /**
- * ResourceDescription for a MessageItem.
+ * ResourceDescription for a MailFolder.
  *
  */
-class MessageItemDescription extends ResourceDescription
+class MailFolderDescription extends ResourceDescription
 {
     /**
      * @return string
      */
     public function getType(): string
     {
-        return "MessageItem";
+        return "MailFolder";
     }
 
 
@@ -37,8 +38,7 @@ class MessageItemDescription extends ResourceDescription
     public function getRelationships(): ResourceDescriptionList
     {
         $list = new ResourceDescriptionList();
-        $list[] = new MailFolderDescription();
-        $list[] = new MessageBodyDescription();
+        $list[] = new MailAccountDescription();
 
         return $list;
     }
@@ -52,24 +52,11 @@ class MessageItemDescription extends ResourceDescription
     public function getFields(): array
     {
         return [
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId",
-            "size",
-            "hasAttachments",
-            "cc",
-            "bcc",
-            "replyTo",
-            "draftInfo"
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ];
     }
 
@@ -82,20 +69,11 @@ class MessageItemDescription extends ResourceDescription
     public function getDefaultFields(): array
     {
         return [
-            "from",
-            "to",
-            "subject",
-            "date",
-            "seen",
-            "answered",
-            "draft",
-            "flagged",
-            "recent",
-            "charset",
-            "references",
-            "messageId",
-            "size",
-            "hasAttachments"
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ];
     }
 }

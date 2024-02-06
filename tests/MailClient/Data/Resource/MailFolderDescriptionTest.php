@@ -11,45 +11,46 @@
 
 declare(strict_types=1);
 
-namespace Tests\Conjoon\MailClient\Data\Resource;
+namespace Tests\App\Http\V0\JsonApi\Resource;
 
 use Conjoon\Data\Resource\ResourceDescription;
+use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
-use Conjoon\MailClient\Data\Resource\MessageBodyDescription;
-use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Tests\TestCase;
 
-
-class MessageBodyTest extends TestCase
+/**
+ * Tests MailFolder.
+ */
+class MailFolderDescriptionTest extends TestCase
 {
+
     public function testClass()
     {
-        $inst = new MessageBodyDescription();
+        $inst = $this->createDescription();
         $this->assertInstanceOf(ResourceDescription::class, $inst);
     }
 
 
     public function testGetType(): void
     {
-        $this->assertSame("MessageBody", $this->createDescription()->getType());
+        $this->assertSame("MailFolder", $this->createDescription()->getType());
     }
 
 
     public function testGetRelationships(): void
     {
         $list = $this->createDescription()->getRelationships();
-        $this->assertSame(2, count($list));
+        $this->assertSame(1, count($list));
 
-        $this->assertInstanceOf(MailFolderDescription::class, $list[0]);
-        $this->assertInstanceOf(MessageItemDescription::class, $list[1]);
+        $this->assertInstanceOf(MailAccountDescription::class, $list[0]);
 
         $this->assertSame(
-            ["MessageBody", "MessageBody.MailFolder", "MessageBody.MailFolder.MailAccount", "MessageBody.MessageItem"],
+            ["MailFolder", "MailFolder.MailAccount"],
             $this->createDescription()->getAllRelationshipPaths(true)
         );
 
         $this->assertEqualsCanonicalizing(
-            ["MessageItem", "MailFolder", "MessageBody", "MailAccount"],
+            ["MailFolder", "MailAccount"],
             $this->createDescription()->getAllRelationshipTypes(true)
         );
     }
@@ -57,9 +58,12 @@ class MessageBodyTest extends TestCase
 
     public function testGetFields(): void
     {
-        $this->assertEqualsCanonicalizing([
-            "textPlain",
-            "textHtml"
+        $this->assertEquals([
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ], $this->createDescription()->getFields());
     }
 
@@ -67,14 +71,17 @@ class MessageBodyTest extends TestCase
     public function testGetDefaultFields(): void
     {
         $this->assertEquals([
-            "textPlain",
-            "textHtml"
+            "name",
+            "data",
+            "folderType",
+            "unreadMessages",
+            "totalMessages"
         ], $this->createDescription()->getDefaultFields());
     }
 
 
-    protected function createDescription(): MessageBodyDescription
+    private function createDescription(): MailFolderDescription
     {
-        return new MessageBodyDescription();
+        return new MailFolderDescription();
     }
 }
