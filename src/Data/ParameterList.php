@@ -42,6 +42,12 @@ class ParameterList extends AbstractList
         $data = [];
 
         foreach ($this->data as $parameter) {
+            if (array_key_exists($parameter->getName(), $data)) {
+                /**
+                 * @see https://github.com/conjoon/php-lib-conjoon/issues/25
+                 */
+                throw new RuntimeException("\"" . $parameter->getName() . "\" already in list");
+            }
             $data[$parameter->getName()] = $parameter->getValue();
         }
 
