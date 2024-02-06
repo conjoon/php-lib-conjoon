@@ -28,6 +28,9 @@ class Parameter implements ErrorSource
      */
     private string $name;
 
+    public static function make(string $name, string $value): static {
+        return new static($name, $value);
+    }
 
     /**
      * @param string $name

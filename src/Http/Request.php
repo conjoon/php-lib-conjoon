@@ -39,19 +39,35 @@ class Request
      */
     private readonly RequestMethod $method;
 
+    private readonly HeaderList $headerList;
 
     /**
      * Constructor.
      *
      * @param Url $url
      * @param RequestMethod $method
+     * @param HeaderList|null $header
      */
-    public function __construct(Url $url, RequestMethod $method = RequestMethod::GET)
+    public function __construct(Url $url, RequestMethod $method = RequestMethod::GET, ?HeaderList $header = null)
     {
         $this->url = $url;
         $this->method = $method;
+
+        if ($header === null) {
+            $this->headerList = new HeaderList();
+        } else {
+            $this->headerList = $header;
+        }
     }
 
+    public function getHeader(string $name): ?string {
+        $match = $this->headerList->findBy(fn(Header $header) => strtolower($header->getName()) === strtolower($name));
+        /**
+         * @type Header $match
+         */
+        return $match?->getValue();
+
+    }
 
     /**
      * Get the URL for the request.

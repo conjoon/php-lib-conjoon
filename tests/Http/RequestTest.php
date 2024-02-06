@@ -29,6 +29,8 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\Http;
 
+use Conjoon\Http\Header;
+use Conjoon\Http\HeaderList;
 use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
 use Conjoon\Net\Url;
@@ -52,6 +54,16 @@ class RequestTest extends TestCase
 
         $request = new Request($url, RequestMethod::POST);
         $this->assertSame(RequestMethod::POST, $request->getMethod());
+    }
+
+    public function testHeader(): void
+    {
+        $url = new Url("https://www.localhost.com:8080/index.php");
+        $request = new Request($url, RequestMethod::GET,
+            HeaderList::make(Header::make("accept", "application/vnd.api")));
+
+        $this->assertSame("application/vnd.api", $request->getHeader("accept"));
+        $this->assertNull($request->getHeader("keep-alive"));
     }
 
 
