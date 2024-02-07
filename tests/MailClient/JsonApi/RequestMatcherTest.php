@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi;
 
+use Conjoon\Http\Exception\BadRequestException;
 use Conjoon\Http\Exception\NotFoundException;
+use Conjoon\Http\Header;
+use Conjoon\Http\HeaderList;
 use Conjoon\Http\Request;
-use Conjoon\JsonApi\Query\Validation\QueryValidator;
+use Conjoon\Http\RequestMethod;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\MailClient\JsonApi\Query\MailAccountListQueryValidator;
@@ -32,13 +35,20 @@ class RequestMatcherTest extends TestCase
         $this->assertInstanceOf(JsonApiRequestMatcher::class, new RequestMatcher());
     }
 
+    public function testBadRequestExceptionDueToMissingHeader(): void
+    {
+        $this->expectException(BadRequestException::class);
+        $matcher = new RequestMatcher();
+        $url = Url::make("https://localhost:8080/rest-api/MailAccounts/3?query=value");
+        $request = new Request($url);
+        $this->assertNull($matcher->match($request));
+    }
 
     public function testNotFoundException(): void
     {
         $this->expectException(NotFoundException::class);
         $matcher = new RequestMatcher();
-        $url = Url::make("https://localhost:8080/rest-api/MailAccounts/3?query=value");
-        $request = new Request($url);
+        $request = $this->makeRequest("https://localhost:8080/rest-api/MailAccounts/3?query=value");
         $this->assertNull($matcher->match($request));
     }
 
@@ -47,8 +57,7 @@ class RequestMatcherTest extends TestCase
     {
         $matcher = new RequestMatcher();
 
-        $url = Url::make("https://localhost:8080/rest-api/MailAccounts?query=value");
-        $request = new Request($url);
+        $request = $this->makeRequest("https://localhost:8080/rest-api/MailAccounts?query=value");
         $jsonApiRequest  = $matcher->match($request);
 
         $this->assertNotNull($jsonApiRequest);
@@ -64,8 +73,7 @@ class RequestMatcherTest extends TestCase
     {
         $matcher = new RequestMatcher();
 
-        $url = Url::make("https://localhost:8080/rest-api/MailAccounts/1/MailFolders?query=value");
-        $request = new Request($url);
+        $request = $this->makeRequest("https://localhost:8080/rest-api/MailAccounts/1/MailFolders?query=value");
         $jsonApiRequest  = $matcher->match($request);
 
         $this->assertNotNull($jsonApiRequest);
@@ -74,5 +82,18 @@ class RequestMatcherTest extends TestCase
         $this->assertTrue($jsonApiRequest->targetsCollection());
 
         $this->assertEquals(["mailAccountId" => "1"], $jsonApiRequest->getPathParameters()->toArray());
+    }
+
+
+    private function makeRequest(string $url) {
+
+        $url = Url::make($url);
+        $headerList = HeaderList::make(Header::make(
+            "Accept",
+            "application/vnd.api+json;ext=\"https://conjoon.org/json-api/ext/relfield\""
+        ));
+        return new Request($url, RequestMethod::GET, $headerList);
+
+
     }
 }
