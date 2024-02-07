@@ -92,25 +92,25 @@ class RelfieldRuleTest extends TestCase
 
 
     /**
-     * tests validate() with wildcard and valid fields "relfield:fields[MessageItem]=*,+previewText,+date"
+     * tests validate() with wildcard and valid fields "relfield:fields[MessageItem]=*,previewText,date"
      */
     public function testValidateWithWildcardAndValidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+previewText,+date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,previewText,date");
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
 
     /**
-     * tests validate() with wildcard and invalid fields "relfield:fields[MessageItem]=+MailFolder,*,-date"
+     * tests validate() with wildcard and invalid fields "relfield:fields[MessageItem]=MailFolder,*,-date"
      */
     public function testValidateWithWildcardAndInvalidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+MailFolder,-date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,MailFolder,-date");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
 
         $this->assertInstanceOf(ValidationError::class, $errors[0]);
@@ -124,13 +124,13 @@ class RelfieldRuleTest extends TestCase
 
 
     /**
-     * tests validate() with invalid fields "relfield:fields[MessageItem]=+MailFolder,-date"
+     * tests validate() with invalid fields "relfield:fields[MessageItem]=MailFolder,-date"
      */
     public function testValidateWithInvalidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "+MailFolder,-date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "MailFolder,-date");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
 
         $this->assertInstanceOf(ValidationError::class, $errors[0]);
@@ -144,31 +144,28 @@ class RelfieldRuleTest extends TestCase
 
 
     /**
-     * tests validate() with valid fields "relfield:fields[MessageItem]=+subject,+date"
+     * tests validate() with valid fields "relfield:fields[MessageItem]=subject,date"
      */
     public function testValidateWithValidFields()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "+subject,+date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "subject,date");
         $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
     }
 
 
     /**
-     * tests validate() with missing prefix "relfield:fields[MessageItem]=+subject,date"
+     * tests validate() with excluding one field "relfield:fields[MessageItem]=subject,-date"
      */
     public function testValidateWithValidFieldsButMissingPrefix()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "+subject,date");
-        $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
+        $parameter = new Parameter("relfield:fields[MessageItem]", "subject,-date");
+        $this->assertTrue($validate->invokeArgs($rule, [$parameter, $errors]));
 
-        $this->assertStringContainsString(
-            "expects each field to be prefixed",
-            $errors[0]->getDetails()
-        );
+        $this->assertSame(0, $errors->count());
     }
 
 
@@ -181,14 +178,11 @@ class RelfieldRuleTest extends TestCase
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
         $parameter = new Parameter("relfield:fields[MessageItem]", "subject,date");
-        $this->assertFalse(
+        $this->assertTrue(
             $validate->invokeArgs($rule, [$parameter, $errors])
         );
 
-        $this->assertStringContainsString(
-            "expects each field to be prefixed",
-            $errors[0]->getDetails()
-        );
+        $this->assertSame(0, $errors->count());
     }
 
 
@@ -201,24 +195,21 @@ class RelfieldRuleTest extends TestCase
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
         $parameter = new Parameter("relfield:fields[MessageItem]", "*,subject,date");
-        $this->assertFalse(
+        $this->assertTrue(
             $validate->invokeArgs($rule, [$parameter, $errors])
         );
-        $this->assertStringContainsString(
-            "each field to be prefixed",
-            $errors[0]->getDetails()
-        );
+        $this->assertSame(0, $errors->count());
     }
 
 
     /**
-     * tests validate() with multiple wildcards "relfield:fields[MessageItem]=*,+subject,*,-date"
+     * tests validate() with multiple wildcards "relfield:fields[MessageItem]=*,subject,*,-date"
      */
     public function testValidateWithMultipleWildcards()
     {
         list("errors" => $errors, "rule" => $rule, "validate" => $validate) = $this->getValidateTestSetup();
 
-        $parameter = new Parameter("relfield:fields[MessageItem]", "*,+subject,*,-date");
+        $parameter = new Parameter("relfield:fields[MessageItem]", "*,subject,*,-date");
         $this->assertFalse($validate->invokeArgs($rule, [$parameter, $errors]));
 
         $this->assertStringContainsString(
