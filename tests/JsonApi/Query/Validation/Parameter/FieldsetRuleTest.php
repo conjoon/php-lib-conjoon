@@ -58,7 +58,7 @@ class FieldsetRuleTest extends TestCase
         $uses = class_uses(FieldsetRule::class);
         $this->assertContains(ParameterTrait::class, $uses);
 
-        $this->assertSame($list, $rule->getResourceResourceDescriptions());
+        $this->assertSame($list, $rule->getResourceDescriptionList());
         $this->assertSame($includes, $rule->getIncludes());
     }
 

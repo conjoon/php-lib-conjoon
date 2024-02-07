@@ -87,7 +87,7 @@ class FieldsetRule extends ParameterRule
      *
      * @return ResourceDescriptionList
      */
-    public function getResourceResourceDescriptions(): ResourceDescriptionList
+    public function getResourceDescriptionList(): ResourceDescriptionList
     {
         return $this->resourceDescriptionList;
     }
@@ -159,7 +159,7 @@ class FieldsetRule extends ParameterRule
      */
     protected function getFields(string $type): ?array
     {
-        return $this->getResourceResourceDescriptions()
+        return $this->getResourceDescriptionList()
                     ->findBy(fn ($resource) => $resource->getType() === $type)?->getFields();
     }
 

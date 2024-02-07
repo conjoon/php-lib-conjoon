@@ -245,7 +245,7 @@ class ValidatorTest extends TestCase
         $this->assertInstanceOf(IncludeRule::class, $rules[0]);
         $this->assertInstanceOf(FieldsetRule::class, $rules[1]);
         $this->assertSame($whitelist, $rules[0]->getWhitelist());
-        $this->assertSame($ResourceDescriptionList, $rules[1]->getResourceResourceDescriptions());
+        $this->assertSame($ResourceDescriptionList, $rules[1]->getResourceDescriptionList());
         $this->assertSame($includes, $rules[1]->getIncludes());
     }
 }

@@ -50,14 +50,14 @@ class QueryValidator extends HttpQueryValidator
     public function getParameterRules(HttpQuery $query): ParameterRuleList
     {
         /**
-         * @type Query $query
+         * @type JsonApiQuery $query
          */
         $resourceTarget = $query->getResourceDescription();
 
         $include  = $query->getParameter("include");
         $includes = $include
             ? $this->unfoldInclude($include)
-            : [];
+            : [$resourceTarget];
 
         $list = new ParameterRuleList();
         $list[] = new IncludeRule($resourceTarget->getAllRelationshipPaths());
@@ -107,6 +107,7 @@ class QueryValidator extends HttpQueryValidator
         foreach ($list as $type) {
             $exp[] = "fields[$type]";
         }
+
         return array_merge(["include"], $exp);
     }
 
