@@ -68,8 +68,9 @@ class ExclusiveGroupKeyRule extends QueryRule
     {
         $this->groups = $groups;
     }
-
-
+    public function getGroups():array {
+        return $this->groups;
+    }
     /**
      * @inheritdoc
      */
