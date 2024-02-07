@@ -15,6 +15,8 @@ namespace Conjoon\MailClient\JsonApi\Query;
 
 use Conjoon\JsonApi\Query\Query;
 use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
+use Conjoon\JsonApi\Query\Validation\Parameter\FieldsetRule;
+use Conjoon\JsonApi\Query\Validation\Parameter\IncludeRule;
 use Conjoon\Web\Validation\Query\Rule\ExclusiveGroupKeyRule;
 use Conjoon\Web\Validation\Query\QueryRuleList;
 use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
@@ -34,24 +36,42 @@ class MailAccountListQueryValidator extends CollectionQueryValidator
          */
         $resourceTarget = $query->getResourceDescription();
 
-        $list = parent::getParameterRules($query);
+        $include  = $query->getParameter("include");
+        $includes = $include
+            ? $this->unfoldInclude($include)
+            : [$resourceTarget];
+
+        $list = new ParameterRuleList();
+       $list[] = new FieldsetRule(
+            $resourceTarget->getAllRelationshipResourceDescriptions(true),
+            $includes
+        );
         $list[] = new RelfieldRule(
-            $resourceTarget->getAllRelationshipResourceDescriptions(true), [], false
+            $resourceTarget->getAllRelationshipResourceDescriptions(true),
+            [$resourceTarget],
+            false
         );
 
         return $list;
     }
 
 
+    /**
+     * @Override
+     */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
         $names = parent::getAllowedParameterNames($query);
+
+        $res = [];
         foreach ($names as $param) {
+            if ($param == "sort") {
+                continue;
+            }
             if (str_starts_with($param, "fields[")) {
                 $res[] = "relfield:$param";
-            } else {
-                $res[] = $param;
             }
+            $res[] = $param;
         }
 
         return $res;
