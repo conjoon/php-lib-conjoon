@@ -54,13 +54,15 @@ class QueryValidator extends HttpQueryValidator
          */
         $resourceTarget = $query->getResourceDescription();
 
-        $include  = $query->getParameter("include");
-        $includes = $include
-            ? $this->unfoldInclude($include)
-            : [$resourceTarget];
-
         $list = new ParameterRuleList();
-        $list[] = new IncludeRule($resourceTarget->getAllRelationshipPaths());
+        $includes = [$resourceTarget->getType()];
+
+        if ($this->isAllowedParameterName("include", $query)) {
+            $list[] = new IncludeRule($resourceTarget->getAllRelationshipPaths(true));
+            $incParam = $query->getParameter("include") ?? null;
+            $includes = array_merge($includes, $incParam ? $this->unfoldInclude($incParam) : []);
+        }
+
         $list[] = new FieldsetRule(
             $resourceTarget->getAllRelationshipResourceDescriptions(true),
             $includes

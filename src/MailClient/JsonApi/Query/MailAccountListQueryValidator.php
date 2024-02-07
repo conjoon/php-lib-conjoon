@@ -36,16 +36,7 @@ class MailAccountListQueryValidator extends CollectionQueryValidator
          */
         $resourceTarget = $query->getResourceDescription();
 
-        $include  = $query->getParameter("include");
-        $includes = $include
-            ? $this->unfoldInclude($include)
-            : [$resourceTarget];
-
-        $list = new ParameterRuleList();
-       $list[] = new FieldsetRule(
-            $resourceTarget->getAllRelationshipResourceDescriptions(true),
-            $includes
-        );
+        $list = parent::getParameterRules($query);
         $list[] = new RelfieldRule(
             $resourceTarget->getAllRelationshipResourceDescriptions(true),
             [$resourceTarget],
@@ -65,6 +56,7 @@ class MailAccountListQueryValidator extends CollectionQueryValidator
 
         $res = [];
         foreach ($names as $param) {
+            // remove "sort" for MailAccountListQuery
             if ($param == "sort") {
                 continue;
             }

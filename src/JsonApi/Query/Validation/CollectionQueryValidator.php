@@ -55,14 +55,13 @@ class CollectionQueryValidator extends QueryValidator
     {
         $resourceTarget = $query->getResourceDescription();
 
-        $sort = $query->getParameter("sort");
-        $sort = $sort
-            ? $this->getAvailableSortFields($resourceTarget)
-            : [];
-
         $list = parent::getParameterRules($query);
-        $list[] = new ValuesInWhitelistRule("sort", $sort);
 
+        $sort = $query->getParameter("sort");
+        if ($sort && $this->isAllowedParameterName("sort", $query)) {
+            $sort = $this->getAvailableSortFields($resourceTarget);
+            $list[] = new ValuesInWhitelistRule("sort", $sort);
+        }
         return $list;
     }
 

@@ -83,7 +83,7 @@ class MailAccountListQueryValidatorTest extends TestCase
         $names = $validator->getAllowedParameterNames($this->getJsonApiQuery());
 
         $this->assertEquals([
-            "relfield:fields[MailAccount]", "fields[MailAccount]"
+            "include", "relfield:fields[MailAccount]", "fields[MailAccount]"
         ], $names);
     }
 
