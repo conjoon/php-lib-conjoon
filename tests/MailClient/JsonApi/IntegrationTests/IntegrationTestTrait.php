@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 use Conjoon\Http\Exception\NotFoundException;
+use Conjoon\Http\Header;
+use Conjoon\Http\HeaderList;
 use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
 use Conjoon\Illuminate\Auth\ImapUser;
@@ -21,6 +23,7 @@ use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Transformer\Response\JsonApiStrategy as MailClientJsonApiStrategy;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
+use Conjoon\MailClient\Service\MailFolderService;
 use Conjoon\Net\Url;
 use Conjoon\JsonApi\Request as JsonApiRequest;
 
@@ -42,12 +45,12 @@ trait IntegrationTestTrait
     protected function buildJsonApiRequest(string $url): JsonApiRequest|array {
         $url = Url::make($url);
 
-        $httpRequest = new Request($url, RequestMethod::GET);
+        $httpRequest = new Request($url, RequestMethod::GET, HeaderList::make(
+            Header::make(
+                "accept",
+                "application/vnd.api+json;ext=\"https://conjoon.org/json-api/ext/relfield\""
+            )));
         $jsonApiRequest = $this->getRequestMatcher()->match($httpRequest);
-
-        if ($jsonApiRequest == null) {
-             throw new NotFoundException("https://localhost:8080/rest-api/v1/MailAccounts");
-        }
 
         return $jsonApiRequest;
     }
@@ -59,7 +62,10 @@ trait IntegrationTestTrait
     protected function getResourceResolver(): MailClientResourceResolver {
         $imapUser = $this->getIntegrationTestUser();
 
-        return new MailClientResourceResolver($imapUser);
+        return new MailClientResourceResolver(
+            $imapUser,
+            $this->createMockForAbstract(MailFolderService::class)
+        );
     }
 
     protected function getIntegrationTestUser(): ImapUser {
