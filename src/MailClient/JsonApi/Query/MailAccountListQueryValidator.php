@@ -27,25 +27,8 @@ use Conjoon\Web\Validation\Parameter\ParameterRuleList;
  * Query Validator for MailFolder collection requests.
  *
  */
-class MailAccountListQueryValidator extends CollectionQueryValidator
+class MailAccountListQueryValidator extends BaseListQueryValidator
 {
-    public function getParameterRules(HttpQuery $query): ParameterRuleList
-    {
-        /**
-         * @type Query $query
-         */
-        $resourceTarget = $query->getResourceDescription();
-
-        $list = parent::getParameterRules($query);
-        $list[] = new RelfieldRule(
-            $resourceTarget->getAllRelationshipResourceDescriptions(true),
-            [$resourceTarget],
-            false
-        );
-
-        return $list;
-    }
-
 
     /**
      * @Override
@@ -54,27 +37,7 @@ class MailAccountListQueryValidator extends CollectionQueryValidator
     {
         $names = parent::getAllowedParameterNames($query);
 
-        $res = [];
-        foreach ($names as $param) {
-            // remove "sort" for MailAccountListQuery
-            if ($param == "sort") {
-                continue;
-            }
-            if (str_starts_with($param, "fields[")) {
-                $res[] = "relfield:$param";
-            }
-            $res[] = $param;
-        }
-
-        return $res;
+        return array_filter($names, fn($name) => !in_array($name, ["sort", "include"]));
     }
 
-
-    public function getQueryRules(HttpQuery $query): QueryRuleList
-    {
-        $list = parent::getQueryRules($query);
-        $list[] = new ExclusiveGroupKeyRule(["fields", "relfield:fields"]);
-
-        return $list;
-    }
 }

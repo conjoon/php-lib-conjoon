@@ -15,12 +15,10 @@ namespace Tests\Conjoon\MailClient\JsonApi\Query;
 
 
 use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
 use Conjoon\JsonApi\Query\Query;
-use Conjoon\JsonApi\Query\Validation\CollectionQueryValidator;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
+use Conjoon\MailClient\JsonApi\Query\BaseListQueryValidator;
 use Conjoon\MailClient\JsonApi\Query\MailAccountListQueryValidator;
-use Conjoon\Web\Validation\Query\Rule\ExclusiveGroupKeyRule;
 use Tests\TestCase;
 
 class MailAccountListQueryValidatorTest extends TestCase
@@ -29,25 +27,7 @@ class MailAccountListQueryValidatorTest extends TestCase
     public function testClass()
     {
         $validator = $this->getListQueryValidator();
-        $this->assertInstanceOf(CollectionQueryValidator::class, $validator);
-    }
-
-    public function testGetParameterRules() {
-
-        $validator = $this->getListQueryValidator();
-        $rules = $validator->getParameterRules($this->getJsonApiQuery());
-
-        $this->assertInstanceOf(RelfieldRule::class, $rules->peek());
-    }
-
-    public function testGetQueryRules() {
-
-        $validator = $this->getListQueryValidator();
-        $rules = $validator->getQueryRules($this->getJsonApiQuery());
-
-        $groupKeyRule = $rules->peek();
-        $this->assertInstanceOf(ExclusiveGroupKeyRule::class, $groupKeyRule);
-        $this->assertEquals(["fields", "relfield:fields"], $groupKeyRule->getGroups());
+        $this->assertInstanceOf(BaseListQueryValidator::class, $validator);
     }
 
 
@@ -61,7 +41,9 @@ class MailAccountListQueryValidatorTest extends TestCase
 
         $errors = new ValidationErrors();
         $validator->validate($this->getJsonApiQuery("include=MailAccount&fields[MailAccount]=name"), $errors);
-        $this->assertSame(0, $errors->count());
+        $this->assertSame(1, $errors->count());
+
+
 
         $errors = new ValidationErrors();
         $validator->validate($this->getJsonApiQuery("relfield:fields[MailAccount]=name,subscriptions"), $errors);
@@ -82,8 +64,8 @@ class MailAccountListQueryValidatorTest extends TestCase
         $validator = $this->getListQueryValidator();
         $names = $validator->getAllowedParameterNames($this->getJsonApiQuery());
 
-        $this->assertEquals([
-            "include", "relfield:fields[MailAccount]", "fields[MailAccount]"
+        $this->assertEqualsCanonicalizing([
+            "relfield:fields[MailAccount]", "fields[MailAccount]"
         ], $names);
     }
 
@@ -93,7 +75,7 @@ class MailAccountListQueryValidatorTest extends TestCase
         return new Query($query ?? "", new MailAccountDescription());
     }
 
-    private function getListQueryValidator() {
+    private function getListQueryValidator(): MailAccountListQueryValidator {
         return new MailAccountListQueryValidator();
     }
 }
