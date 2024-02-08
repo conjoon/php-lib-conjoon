@@ -158,8 +158,9 @@ class CollectionValidatorTest extends TestCase
 
         $resourceTarget = $this->createMockForAbstract(
             ResourceDescription::class,
-            ["getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
+            ["getType", "getAllRelationshipPaths", "getAllRelationshipResourceDescriptions"]
         );
+        $resourceTarget->expects($this->any())->method("getType")->willReturn("rd");
 
         $query->expects($this->any())->method("getResourceDescription")->willReturn($resourceTarget);
         $query->expects($this->any())

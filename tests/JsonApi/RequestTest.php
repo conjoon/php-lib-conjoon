@@ -66,7 +66,8 @@ class RequestTest extends TestCase
 
     protected function makeJsonApiRequest(Url $url, QueryValidator $validator): Request
     {
-        $resourceDescription = $this->createMockForAbstract(ResourceDescription::class);
+        $resourceDescription = $this->createMockForAbstract(ResourceDescription::class, ["getType"]);
+        $resourceDescription->expects($this->any())->method("getType")->willReturn("rd");
         $request = new HttpRequest($url, Method::GET);
 
         $pathParameters = new ParameterList();

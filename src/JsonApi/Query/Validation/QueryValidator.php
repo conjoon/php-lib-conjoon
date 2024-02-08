@@ -24,6 +24,7 @@ use Conjoon\Web\Validation\Query\QueryRuleList;
 use Conjoon\Web\Validation\Query\Rule\OnlyParameterNamesRule;
 use Conjoon\Web\Validation\Query\Rule\RequiredParameterNamesRule;
 use Conjoon\Web\Validation\QueryValidator as HttpQueryValidator;
+use RuntimeException;
 
 /**
  * Class for validating queries that target resource objects. Queries are checked for
@@ -55,7 +56,11 @@ class QueryValidator extends HttpQueryValidator
         $resourceTarget = $query->getResourceDescription();
 
         $list = new ParameterRuleList();
-        $includes = [$resourceTarget->getType()];
+        $type = $resourceTarget->getType();
+        if (!$type) {
+            throw new RuntimeException("Unexpected falsy value for getType() of " . get_class($resourceTarget));
+        }
+        $includes = [$type];
 
         if ($this->isAllowedParameterName("include", $query)) {
             $list[] = new IncludeRule($resourceTarget->getAllRelationshipPaths(true));
