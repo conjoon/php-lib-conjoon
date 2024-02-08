@@ -23,10 +23,8 @@ use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
-use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\Folder\ListMailFolder;
 use Conjoon\MailClient\Folder\MailFolderList;
-use Conjoon\MailClient\Data\Protocol\Imap\ImapClientException;
 use Conjoon\MailClient\MailClient;
 use Conjoon\MailClient\Message\Composer\AttachmentComposer;
 use Conjoon\MailClient\Message\Composer\BodyComposer;
@@ -208,7 +206,7 @@ class HordeClient implements MailClient
      *
      * @return Horde_Imap_Client_Socket
      *
-     * @throws ImapClientException if the MailAccount used with this Client does not share
+     * @throws MailClientException if the MailAccount used with this Client does not share
      * the same mailAccountId with the $key
      */
     public function connect(CompoundKey|string $key): Horde_Imap_Client_Socket
@@ -218,10 +216,10 @@ class HordeClient implements MailClient
             $account = $this->getMailAccount($key);
 
             if (!$account) {
-                throw new MailClientException(new ImapClientException(
+                throw new MailClientException(
                     "The passed \"key\" does not share the same id-value with " .
                     "the MailAccount this class was configured with."
-                ));
+                );
             }
 
             $this->socket = new Horde_Imap_Client_Socket(array(
@@ -301,7 +299,7 @@ class HordeClient implements MailClient
                 $mailFolderList[] = new ListMailFolder($folderKey, $properties);
             }
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
 
         return $mailFolderList;
@@ -317,9 +315,9 @@ class HordeClient implements MailClient
             $client = $this->connect($folderKey);
 
             if (!$this->doesMailboxExist($folderKey)) {
-                throw new MailClientException(new MailFolderNotFoundException(
+                throw new MailClientException(
                     "The mailbox \"{$folderKey->getId()}\" was not found for this account."
-                ));
+                );
             }
 
             $results = $this->queryItems(
@@ -343,7 +341,7 @@ class HordeClient implements MailClient
                 $query->getFields()
             );
         } catch (Horde_Imap_Client_Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -367,7 +365,7 @@ class HordeClient implements MailClient
                 "totalMessages" => $status["messages"]
             ];
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -413,7 +411,7 @@ class HordeClient implements MailClient
 
             return true;
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -458,7 +456,7 @@ class HordeClient implements MailClient
             $plainPart = new MessagePart($d["plain"]["content"], $d["plain"]["charset"], MimeType::TEXT_PLAIN);
             $body->setTextPlain($plainPart);
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
 
 
@@ -495,7 +493,7 @@ class HordeClient implements MailClient
 
             $client->store($mailFolderId, $options);
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
 
         return true;
@@ -509,18 +507,18 @@ class HordeClient implements MailClient
     {
 
         if ($messageItemDraft->getMessageKey()) {
-            throw new MailClientException(new ImapClientException(
+            throw new MailClientException(
                 "Cannot create a MessageItemDraft that already has a MessageKey"
-            ));
+            );
         }
 
         try {
             $client = $this->connect($folderKey);
 
             if (!$this->doesMailboxExist($folderKey)) {
-                throw new MailClientException(new MailFolderNotFoundException(
+                throw new MailClientException(
                     "The mailbox \"{$folderKey->getId()}\" was not found for this account."
-                ));
+                );
             }
 
             $fullText = $this->getHeaderComposer()->compose("", $messageItemDraft);
@@ -537,7 +535,7 @@ class HordeClient implements MailClient
 
             return $messageItemDraft->setMessageKey($newKey);
         } catch (Horde_Imap_Client_Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -549,9 +547,9 @@ class HordeClient implements MailClient
     {
 
         if ($messageBodyDraft->getMessageKey()) {
-            throw new MailClientException(new ImapClientException(
+            throw new MailClientException(
                 "Cannot create a MessageBodyDraft that already has a MessageKey"
-            ));
+            );
         }
 
         try {
@@ -568,7 +566,7 @@ class HordeClient implements MailClient
                 $messageBodyDraft
             );
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -582,9 +580,8 @@ class HordeClient implements MailClient
         $key = $messageBodyDraft->getMessageKey();
 
         if (!$key) {
-            throw new MailClientException(new ImapClientException(
-                "Cannot update a MessageBodyDraft that doesn't have a MessageKey"
-            ));
+            throw new MailClientException(
+                "Cannot update a MessageBodyDraft that doesn't have a MessageKey");
         }
 
         try {
@@ -608,7 +605,7 @@ class HordeClient implements MailClient
 
             return $newDraft;
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -644,7 +641,7 @@ class HordeClient implements MailClient
 
             return $messageItemDraft->setMessageKey($newKey);
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -673,7 +670,7 @@ class HordeClient implements MailClient
             // check if message is a draft
             $flags = $item->getFlags();
             if (!in_array(Horde_Imap_Client::FLAG_DRAFT, $flags)) {
-                throw new MailClientException(new ImapClientException("The specified message is not a Draft-Message."));
+                throw new MailClientException("The specified message is not a Draft-Message.");
             }
 
             $target = $item->getFullMsg(false);
@@ -701,10 +698,7 @@ class HordeClient implements MailClient
 
             return true;
         } catch (Exception $e) {
-            if ($e instanceof ImapClientException) {
-                throw $e;
-            }
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -716,9 +710,9 @@ class HordeClient implements MailClient
     {
 
         if ($messageKey->getMailAccountId() !== $folderKey->getMailAccountId()) {
-            throw new MailClientException(new ImapClientException(
+            throw new MailClientException(
                 "The \"messageKey\" and the \"folderKey\" do not share the same mailAccountId."
-            ));
+            );
         }
 
         if ($messageKey->getMailFolderId() === $folderKey->getId()) {
@@ -742,7 +736,7 @@ class HordeClient implements MailClient
             );
 
             if (!is_array($res)) {
-                throw new MailClientException(new ImapClientException("Moving the message was not successful."));
+                throw new MailClientException("Moving the message was not successful.");
             }
 
             return new MessageKey(
@@ -751,7 +745,7 @@ class HordeClient implements MailClient
                 (string)$res[$messageKey->getId()]
             );
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -797,7 +791,7 @@ class HordeClient implements MailClient
                 array_filter($ret["data"], fn ($item) => $item !== null)
             );
         } catch (Exception $e) {
-            throw new MailClientException(new ImapClientException($e->getMessage(), 0, $e));
+            throw new MailClientException($e->getMessage(), 0, $e);
         }
     }
 
@@ -856,10 +850,10 @@ class HordeClient implements MailClient
         $account = $this->getMailAccount($account->getId());
 
         if (!$account) {
-            throw new MailClientException(new ImapClientException(
+            throw new MailClientException(
                 "The passed \"account\" does not share the same id-value with " .
                 "the MailAccount this class was configured with."
-            ));
+            );
         }
 
         if ($this->mailer) {

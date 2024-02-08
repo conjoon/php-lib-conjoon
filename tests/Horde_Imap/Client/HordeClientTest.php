@@ -29,7 +29,6 @@ use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\MailAddress;
 use Conjoon\MailClient\Data\MailAddressList;
 use Conjoon\MailClient\Data\Resource\Query\MessageItemQuery;
-use Conjoon\MailClient\Exception\MailFolderNotFoundException;
 use Conjoon\MailClient\Folder\MailFolderList;
 use Conjoon\MailClient\MailClient;
 use Conjoon\MailClient\Message\Composer\HeaderComposer;
@@ -204,33 +203,28 @@ class HordeClientTest extends TestCase
 
 
     /**
-     * tests getMessageItemList with MailFolderNotFoundException
+     * tests getMessageItemList with MailClientException
      */
-    public function testGetMessageItemListMailFolderNotFoundException()
+    public function testGetMessageItemListMailClientException()
     {
         $folderKey = $this->createFolderKey(
             $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org")->getId(),
             "INBOX"
         );
 
-        try {
-            $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
-                            ->disableOriginalConstructor()
-                            ->getMock();
-            $client = $this->getMockBuilder(HordeClient::class)
-                            ->disableOriginalConstructor()
-                            ->onlyMethods(["connect", "doesMailboxExist"])
-                            ->getMock();
+        $this->expectException(MailClientException::class);
+        $socket = $this->getMockBuilder(Horde_Imap_Client_Socket::class)
+                        ->disableOriginalConstructor()
+                        ->getMock();
+        $client = $this->getMockBuilder(HordeClient::class)
+                        ->disableOriginalConstructor()
+                        ->onlyMethods(["connect", "doesMailboxExist"])
+                        ->getMock();
 
-            $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
-            $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
+        $client->expects($this->once())->method("connect")->with($folderKey)->willReturn($socket);
+        $client->expects($this->once())->method("doesMailboxExist")->with($folderKey)->willReturn(false);
 
-            $client->getMessageItemList($folderKey, $this->createMessageItemListQuery());
-            $this->fail("Exception was expected");
-        } catch (Exception $e) {
-            $this->assertInstanceOf(MailClientException::class, $e);
-            $this->assertInstanceOf(MailFolderNotFoundException::class, $e->getOwnedException());
-        }
+        $client->getMessageItemList($folderKey, $this->createMessageItemListQuery());
     }
 
 
@@ -1040,7 +1034,6 @@ class HordeClientTest extends TestCase
             $this->fail("Exception expected");
         } catch (Exception $e) {
             $this->assertInstanceOf(MailClientException::class, $e);
-            $this->assertInstanceOf(MailFolderNotFoundException::class, $e->getOwnedException());
         }
     }
 

@@ -14,27 +14,12 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Exception;
 
 use Conjoon\Data\Resource\Exception\RepositoryException;
-use Exception;
 
 /**
  * Class MailClientException
  *
  * @package Conjoon\MailClient\Exception
  */
-class MailClientException extends RepositoryException implements OwningException
+class MailClientException extends RepositoryException
 {
-    private Exception $ownedException;
-
-    public function __construct(string|Exception $ownedException, int $code = 0, \Throwable $previous = null) {
-        if (is_string($ownedException)) {
-            parent::__construct($ownedException, $code, $previous);
-            return;
-        }
-        $this->ownedException = $ownedException;
-    }
-
-    public function getOwnedException(): Exception
-    {
-        return $this->ownedException;
-    }
 }
