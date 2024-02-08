@@ -13,15 +13,14 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Resource;
 
-use Conjoon\Core\Contract\Jsonable;
 use Conjoon\Core\ParameterBag;
-use Conjoon\Data\Resource\Exception\NotFoundException as ResourceNotFoundException;
 use Conjoon\Data\Resource\Exception\RepositoryException;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
-use Conjoon\JsonApi\Exception\BadRequestException;
 use Conjoon\JsonApi\Request;
+use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
+use Conjoon\Web\Validation\Exception\ValidationException;
 
 
 abstract class ResourceResolver {
@@ -32,7 +31,7 @@ abstract class ResourceResolver {
      * @param Request $jsonApiRequest
      * @return Resource
      *
-     * @throws ResourceNotFoundException|RepositoryException|UnknownResourceException
+     * @throws ValidationException|RepositoryException|UnknownResourceException|UnexpectedResolveException
      *
      * @see resolveToResource
      */
@@ -41,7 +40,7 @@ abstract class ResourceResolver {
         $errors = $jsonApiRequest->validate();
 
         if ($errors->count() > 0) {
-            $exc = new BadRequestException();
+            $exc = new ValidationException();
             $exc->setErrors($errors);
             throw $exc;
         }
@@ -65,7 +64,7 @@ abstract class ResourceResolver {
      * @param ParameterBag|null $parameterBag
      * @return Resource
      *
-     * @throws ResourceNotFoundException|RepositoryException|UnknownResourceException
+     * @throws RepositoryException|UnknownResourceException|UnexpectedResolveException
      */
     abstract protected function resolveToResource(
         ResourceDescription $resourceDescription,

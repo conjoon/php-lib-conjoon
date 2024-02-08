@@ -12,6 +12,7 @@
 declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi;
+
 use Conjoon\Core\ParameterBag;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
@@ -20,6 +21,7 @@ use Conjoon\Illuminate\Auth\ImapUser;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\JsonApi\ResourceResolver;
 use Conjoon\JsonApi\Resource\ResourceResolver as JsonApiResourceResolver;
+use Conjoon\MailClient\Service\MailFolderService;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
 use Tests\TestCase;
 
@@ -27,13 +29,15 @@ class ResourceResolverTest extends TestCase
 {
     public function testClass(): void
     {
-        $this->assertInstanceOf(JsonApiResourceResolver::class, new ResourceResolver($this->getUser()));
+        $this->assertInstanceOf(JsonApiResourceResolver::class,
+            $this->getResourceResolver()
+        );
     }
 
-    public function testUnknowResourceException() {
+    public function testUnknownResourceException() {
         $this->expectException(UnknownResourceException::class);
 
-        $resourceResolver = new ResourceResolver($this->getUser());
+        $resourceResolver = $this->getResourceResolver();
 
         $resolveToResource = $this->makeAccessible($resourceResolver, "resolveToResource");
 
@@ -42,6 +46,13 @@ class ResourceResolverTest extends TestCase
             new ParameterList(),
             new ParameterBag()
         ]);
+    }
+
+    private function getResourceResolver(): ResourceResolver {
+        return new ResourceResolver(
+            $this->getUser(),
+            $this->createMockForAbstract(MailFolderService::class)
+        );
     }
 
     private function getUser(): ImapUser {

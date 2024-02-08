@@ -49,6 +49,10 @@ abstract class AbstractError implements ErrorObject
      */
     private ErrorSource $source;
 
+    public static function make(object $source, string $details = "", int $code = 0): static {
+        return new static($source, $details, $code);
+    }
+
     /**
      * Constructor.
      *
