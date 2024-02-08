@@ -18,6 +18,7 @@ use Conjoon\Data\Resource\Exception\RepositoryException;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\JsonApi\Request;
+use Conjoon\JsonApi\Resource\Exception\ResourceNotFoundException;
 use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
 use Conjoon\Web\Validation\Exception\ValidationException;
@@ -31,7 +32,7 @@ abstract class ResourceResolver {
      * @param Request $jsonApiRequest
      * @return Resource
      *
-     * @throws ValidationException|RepositoryException|UnknownResourceException|UnexpectedResolveException
+     * @throws ValidationException|ResourceNotFoundException|RepositoryException|UnknownResourceException|UnexpectedResolveException
      *
      * @see resolveToResource
      */
@@ -64,7 +65,7 @@ abstract class ResourceResolver {
      * @param ParameterBag|null $parameterBag
      * @return Resource
      *
-     * @throws RepositoryException|UnknownResourceException|UnexpectedResolveException
+     * @throws RepositoryException|ResourceNotFoundException|UnknownResourceException|UnexpectedResolveException
      */
     abstract protected function resolveToResource(
         ResourceDescription $resourceDescription,

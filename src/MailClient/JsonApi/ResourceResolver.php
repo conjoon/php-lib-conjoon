@@ -17,6 +17,7 @@ use Conjoon\Core\ParameterBag;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Illuminate\Auth\ImapUser;
+use Conjoon\JsonApi\Resource\Exception\ResourceNotFoundException;
 use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\JsonApi\Resource\Resource;
 use Conjoon\JsonApi\Resource\ResourceResolver as JsonApiResourceResolver;
@@ -71,7 +72,7 @@ class ResourceResolver extends JsonApiResourceResolver {
         $mailAccount = $this->user->getMailAccount($mailAccountId);
 
         if (!$mailAccount) {
-            throw new UnexpectedResolveException(
+            throw new ResourceNotFoundException(
                 "No MailAccount for the specified \"mailAccountId\" available. ".
                 "\"mailAccountId\" was {$mailAccountId}");
         }
