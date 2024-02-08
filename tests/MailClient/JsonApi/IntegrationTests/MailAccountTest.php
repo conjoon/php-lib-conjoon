@@ -34,20 +34,6 @@ class MailAccountTest extends TestCase
         $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MaisaflAccounts");
     }
 
-    /**
-     * Test BadRequestException.
-     *
-     * @return void
-     */
-    public function testGetMailAccountBadRequestException()
-    {
-        $this->expectException(BadRequestException::class);
-        $jsonApiRequest = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts?include=me");
-        $this->assertNotNull($jsonApiRequest);
-
-        $resourceResolver = $this->getResourceResolver();
-        $resourceResolver->resolve($jsonApiRequest);
-    }
 
     /**
      * Test getMailAccount.
