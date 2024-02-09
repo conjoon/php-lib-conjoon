@@ -107,7 +107,7 @@ class PnFilterRuleTest extends TestCase
      */
     public function testGetLogicalOperators()
     {
-        $operators = ["OR", "||"];
+        $operators = ["OR", "||", "AND", "&&"];
         $rule = new PnFilterRule([]);
 
         $this->assertEqualsCanonicalizing(
@@ -179,6 +179,15 @@ class PnFilterRuleTest extends TestCase
                             ["="  => ["subject"  => "Hello World"]],
                             [">=" => ["size"     => 1657]]
                         ]]
+                    ]
+                ],
+                "result" => true
+            ],
+            [
+                "filter" => [
+                    "AND" => [
+                        ["==" => ["id" => 4]],
+                        ["="  => ["subject"  => "Hello World"]]
                     ]
                 ],
                 "result" => true

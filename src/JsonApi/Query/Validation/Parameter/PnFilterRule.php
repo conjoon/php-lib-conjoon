@@ -30,6 +30,7 @@ namespace Conjoon\JsonApi\Query\Validation\Parameter;
 
 use Conjoon\Data\Validation\ValidationError;
 use Conjoon\Data\Validation\ValidationErrors;
+use Conjoon\Math\Expression\Notation\NotationTrait;
 use Conjoon\Math\Expression\Operator\FunctionalOperator;
 use Conjoon\Math\Expression\Operator\LogicalOperator;
 use Conjoon\Math\Expression\Operator\RelationalOperator;
@@ -52,6 +53,8 @@ use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
  */
 class PnFilterRule extends JsonEncodedRule
 {
+    use NotationTrait;
+
     /**
      * @var array<int, string>
      */
@@ -128,66 +131,6 @@ class PnFilterRule extends JsonEncodedRule
         }
 
         return true;
-    }
-
-
-    /**
-     * Returns true if the passed argument is a valid operator or function.
-     *
-     * @param string $value
-     * @return bool
-     */
-    public function isValidOperator(string $value): bool
-    {
-        return in_array($value, $this->getRelationalOperators()) ||
-               $this->isLogicalOperator($value) ||
-               in_array($value, $this->getFunctions());
-    }
-
-
-    /**
-     * Returns true if the submitted argument is a logical operator according to this implementation.
-     *
-     * @param string $value
-     *
-     * @return bool
-     */
-    public function isLogicalOperator(string $value): bool
-    {
-        return in_array($value, $this->getLogicalOperators());
-    }
-
-
-    /**
-     * Returns the list of relational operators supported with this rule.
-     *
-     * @return string[]
-     */
-    public function getRelationalOperators(): array
-    {
-        return array_merge(array_map(fn($enum) => $enum->value, RelationalOperator::cases()), ["="]);
-    }
-
-
-    /**
-     * Returns the list of logical operators supported with this rule.
-     *
-     * @return string[]
-     */
-    public function getLogicalOperators(): array
-    {
-        return [LogicalOperator::OR->value, "OR"];
-    }
-
-
-    /**
-     * Returns the list of functions supported with this rule.
-     *
-     * @return string[]
-     */
-    public function getFunctions(): array
-    {
-        return array_map(fn($enum) => $enum->value, FunctionalOperator::cases());
     }
 
 
