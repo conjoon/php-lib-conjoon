@@ -1,24 +1,21 @@
 <?php
 
+/**
+ * This file is part of the conjoon/php-lib-conjoon project.
+ *
+ * (c) 2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
+ *
+ * For full copyright and license information, please consult the LICENSE-file distributed
+ * with this source code.
+ */
 
 declare(strict_types=1);
 
 namespace Conjoon\Math\Expression\Notation;
 
-use Conjoon\Data\Validation\ValidationError;
-use Conjoon\Data\Validation\ValidationErrors;
-use Conjoon\Math\Expression\Expression;
-use Conjoon\Math\Expression\LogicalExpression;
 use Conjoon\Math\Expression\Operator\FunctionalOperator;
 use Conjoon\Math\Expression\Operator\LogicalOperator;
 use Conjoon\Math\Expression\Operator\RelationalOperator;
-use Conjoon\Math\InvalidOperandException;
-use Conjoon\Math\Operand;
-use Conjoon\Math\OperandList;
-use Conjoon\Math\Value;
-use Conjoon\Net\Uri\Component\Query\Parameter;
-use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
-use RuntimeException;
 
 trait NotationTrait
 {
