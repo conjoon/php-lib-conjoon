@@ -34,7 +34,6 @@ trait NotationTrait
     }
 
 
-
     /**
      * Returns true if the submitted argument is a logical operator.
      *
@@ -45,6 +44,32 @@ trait NotationTrait
     public function isLogicalOperator(string $value): bool
     {
         return in_array($value, $this->getLogicalOperators());
+    }
+
+
+    /**
+     * Returns true if the submitted argument is a relational operator.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function isRelationalOperator(string $value): bool
+    {
+        return in_array($value, $this->getRelationalOperators());
+    }
+
+
+    /**
+     * Returns true if the submitted argument is a functional operator.
+     *
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function isFunctionalOperator(string $value): bool
+    {
+        return in_array($value, $this->getFunctionalOperators());
     }
 
 
@@ -74,8 +99,21 @@ trait NotationTrait
      * Returns the list of functions supported.
      *
      * @return string[]
+     *
+     * @deprecated use getFunctionalOperators
      */
     public function getFunctions(): array
+    {
+        return $this->getFunctionalOperators();
+    }
+
+
+    /**
+     * Returns the list of functions supported.
+     *
+     * @return string[]
+     */
+    public function getFunctionalOperators(): array
     {
         return array_map(fn($enum) => $enum->value, FunctionalOperator::cases());
     }
