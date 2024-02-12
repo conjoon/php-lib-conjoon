@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Tests\Conjoon\MailClient\JsonApi;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
