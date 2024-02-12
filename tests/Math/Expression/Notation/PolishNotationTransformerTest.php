@@ -18,8 +18,7 @@ use Conjoon\Core\Exception\UnexpectedTypeException;
 use Conjoon\Data\ParameterBag;
 use Conjoon\Math\Expression\Expression;
 use Conjoon\Math\Expression\Notation\PolishNotation;
-use Conjoon\Math\Expression\Notation\PolishNotationToExpression;
-use Conjoon\Math\Expression\Notation\ToExpression;
+use Conjoon\Math\Expression\Notation\PolishNotationTransformer;
 use Conjoon\Math\Expression\Operator\Operator;
 use Conjoon\Math\Expression\RelationalExpression;
 use Conjoon\Math\Expression\Operator\RelationalOperator;
@@ -32,7 +31,7 @@ use Conjoon\Math\VariableName;
 use Tests\TestCase;
 
 
-class PolishNotationToExpressionTest extends TestCase
+class PolishNotationTransformerTest extends TestCase
 {
 
     public function testTransform() {
@@ -50,7 +49,7 @@ class PolishNotationToExpressionTest extends TestCase
         ];
         $bag = new ParameterBag(["filter" => json_encode($jsonFilter)]);
 
-        $transformer = new PolishNotationToExpression();
+        $transformer = new PolishNotationTransformer();
         $expression = $transformer->transform($jsonFilter);
 
         $this->assertSame("|| IN id (o, [GMAIL], INBOX) == id 5 || IN foo (1, 2, 2) IN BAR (1, 2, 3)", $expression->toString(new PolishNotation()));

@@ -26,7 +26,7 @@ use Conjoon\Math\Value;
 use Conjoon\Math\VariableName;
 
 
-class PolishNotationToExpression
+class PolishNotationTransformer
 {
     use NotationTrait;
 
