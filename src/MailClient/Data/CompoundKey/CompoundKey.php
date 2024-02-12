@@ -42,6 +42,9 @@ abstract class CompoundKey extends Identifier implements Stringable
      */
     protected string $mailAccountId;
 
+    public static function new(): static {
+        return new static(... func_get_args());
+    }
 
     /**
      * CompoundKey constructor.

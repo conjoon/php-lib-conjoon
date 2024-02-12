@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Illuminate\Auth\ImapUser;
@@ -21,8 +21,10 @@ use Conjoon\JsonApi\Resource\Exception\ResourceNotFoundException;
 use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\JsonApi\Resource\Resource;
 use Conjoon\JsonApi\Resource\ResourceResolver as JsonApiResourceResolver;
+use Conjoon\MailClient\Data\Resource\Query\DefaultMailFolderListQuery;
 use Conjoon\MailClient\Service\MailFolderService;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
+use Conjoon\MailClient\Data\Resource\Query\MailFolderListQuery;
 
 
 class ResourceResolver extends JsonApiResourceResolver {
@@ -77,9 +79,13 @@ class ResourceResolver extends JsonApiResourceResolver {
                 "\"mailAccountId\" was {$mailAccountId}");
         }
 
-        $this->mailFolderService->getMailFolderChildList(
-            $mailAccount, new MailFolderListQuery($parameterBag)
-        );
+        $parameterBag = $parameterBag ?? new ParameterBag();
+
+
+        return new Resource($this->mailFolderService->getMailFolderChildList(
+            $mailAccount,
+            new DefaultMailFolderListQuery($parameterBag)
+        ));
 
 
     }

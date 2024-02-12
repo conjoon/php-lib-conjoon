@@ -19,8 +19,11 @@ use Conjoon\Http\HeaderList;
 use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
 use Conjoon\Illuminate\Auth\ImapUser;
+use Conjoon\MailClient\Data\CompoundKey\FolderKey;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Transformer\Response\JsonApiStrategy as MailClientJsonApiStrategy;
+use Conjoon\MailClient\Folder\MailFolder;
+use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
 use Conjoon\MailClient\Service\MailFolderService;
@@ -64,7 +67,7 @@ trait IntegrationTestTrait
 
         return new MailClientResourceResolver(
             $imapUser,
-            $this->createMockForAbstract(MailFolderService::class)
+            $this->getMockForMailFolderService()
         );
     }
 
@@ -92,5 +95,32 @@ trait IntegrationTestTrait
             "outbox_password" => "outboxPassword",
             "outbox_secure"   => "ssl"
         ]);
+    }
+
+    protected function getMockForMailFolderService():MailFolderService {
+
+        $mailFolderChildList = $this->getMailFolderChildList();
+
+        $mailFolderService = $this->createMockForAbstract(MailFolderService::class, ["getMailFolderChildList"]);
+
+        $mailFolderService->expects($this->any())->method("getMailFolderChildList")->with(
+            $this->callback(
+                function (MailAccount $mailAccount)  {
+                    $this->assertSame($mailAccount->getId(), $this->getMailAccount()->getId());
+                    return true;
+                }
+            )
+        )->willReturn($mailFolderChildList);
+
+        return $mailFolderService;
+
+    }
+
+    private function getMailFolderChildList(): MailFolderChildList {
+        $mailFolderChildList = new MailFolderChildList();
+        $mailFolderChildList[] = new MailFolder(FolderKey::new("1", "2"), ["name" => "__int_1__"]);
+        $mailFolderChildList[] = new MailFolder(FolderKey::new("1", "3"), ["name" => "__int_2__"]);
+
+        return $mailFolderChildList;
     }
 }

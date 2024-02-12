@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\JsonApi\Resource;
 
-use Conjoon\Core\ParameterBag;
+use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Resource\Exception\RepositoryException;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
