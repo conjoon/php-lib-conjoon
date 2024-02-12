@@ -3,7 +3,7 @@
 /**
  * This file is part of the conjoon/php-lib-conjoon project.
  *
- * (c) 2022-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
+ * (c) 2021-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
  *
  * For full copyright and license information, please consult the LICENSE-file distributed
  * with this source code.
@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
+use Conjoon\Data\Filter\Filter;
 use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 
@@ -27,8 +28,16 @@ abstract class MailFolderListQuery extends RepositoryQuery
      */
     abstract public function getFields(): array;
 
+    /**
+     * Returns filter information for this query.
+     * Returns null if no filter information is  available.
+     *
+     * @return Filter|null
+     */
+    abstract public function getFilter(): ?Filter;
 
-    function getResourceDescription(): MailFolderDescription
+
+    final function getResourceDescription(): MailFolderDescription
     {
         return new MailFolderDescription();
     }

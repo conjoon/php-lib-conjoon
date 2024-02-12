@@ -14,7 +14,9 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\Filter\Filter;
+use Conjoon\JsonApi\Query\Validation\Parameter\ToExpression;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\Math\Expression\Notation\PolishNotationTransformer;
 
 
 class DefaultMailFolderListQuery extends MailFolderListQuery
@@ -23,7 +25,7 @@ class DefaultMailFolderListQuery extends MailFolderListQuery
      * @Override
      */
     public function getFields(): array {
-        $defaultFields = $this->getResourceTarget()->getDefaultFields();
+        $defaultFields = $this->getResourceDescription()->getDefaultFields();
 
         $relfields = $this->{"relfield:fields[MailFolder]"};
         $fields    = $this->{"fields[MailFolder]"};
@@ -36,7 +38,9 @@ class DefaultMailFolderListQuery extends MailFolderListQuery
 
         foreach ($relfields as $relfield) {
             $prefix    = substr($relfield, 0, 1);
-            $fieldName = substr($relfield, 1);
+            if ($prefix === "-") {
+                $fieldName = substr($relfield, 1);
+            }
 
             if ($prefix === "-") {
                 $defaultFields = array_filter($defaultFields, fn ($field) => $field !== $fieldName);
@@ -55,14 +59,7 @@ class DefaultMailFolderListQuery extends MailFolderListQuery
      */
     public function getFilter(): ?Filter {
 
+        return new Filter((new PolishNotationTransformer())->transform(json_decode($this->filter, true)));
     }
 
-
-    /**
-     * @Override
-     */
-    function getResourceDescription(): MailFolderDescription
-    {
-        return new MailFolderDescription();
-    }
 }
