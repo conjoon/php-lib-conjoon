@@ -48,6 +48,7 @@ use Conjoon\Util\JsonStrategy;
  *   $bag->snafu = "foobar"; // adds a new property "snafu"
  *
  *
+ * @deprected use Conjoon\Data\ParameterBag
  * Class ParameterBag
  * @package Conjoon\Core
  *

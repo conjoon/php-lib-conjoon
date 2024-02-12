@@ -45,6 +45,7 @@ use Conjoon\Util\JsonStrategy;
  * This ResourceQuery delegates all method calls involving getters to the ParameterBag
  * using __call, including querying the properties using __get.
  *
+ * @deprecated use Conjoon\Data\Resource\RepositoryQuery
  * Class ResourceQuery
  * @package Conjoon\Core
  */

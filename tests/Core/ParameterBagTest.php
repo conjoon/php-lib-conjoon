@@ -36,6 +36,7 @@ use InvalidArgumentException;
 use Tests\TestCase;
 
 /**
+ * @deprecated
  * Class ParameterBagTest
  * @package Tests\Conjoon\Core
  */

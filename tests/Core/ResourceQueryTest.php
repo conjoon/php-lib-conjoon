@@ -37,6 +37,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
 /**
+ * @deprecated
  * Class ResourceQueryTest
  * @package Tests\Conjoon\Core
  */
