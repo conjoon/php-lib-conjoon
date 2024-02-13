@@ -3,7 +3,7 @@
 /**
  * This file is part of the conjoon/php-lib-conjoon project.
  *
- * (c) 2022-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
+ * (c) 2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
  *
  * For full copyright and license information, please consult the LICENSE-file distributed
  * with this source code.
@@ -18,10 +18,8 @@ use Conjoon\Core\Contract\StringStrategy;
 
 /**
  * Represents the name of a variable, i.e. a symbolic name for some storage location.
- *
- * @deprecated use Identifier
  */
-class VariableName implements Operand
+class Identifier implements Operand
 {
     /**
      * @var string
@@ -30,13 +28,13 @@ class VariableName implements Operand
 
 
     /**
-     * Creates a new VariableName.
+     * Creates a new Identifier.
      *
      * @param string $name
      *
-     * @return VariableName
+     * @return Identifier
      */
-    public static function make(string $name): VariableName
+    public static function make(string $name): Identifier
     {
         return new self($name);
     }
@@ -101,5 +99,9 @@ class VariableName implements Operand
         }
 
         return $stringStrategy->toString($this);
+    }
+
+    public function __toString() {
+        return $this->toString();
     }
 }
