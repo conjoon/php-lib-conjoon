@@ -42,7 +42,8 @@ class MailAccountTest extends TestCase
         "outbox_user"     => "user",
         "outbox_password" => "password outbox",
         "outbox_secure"   => "ssl",
-        "subscriptions"    => ["[Gmail]"]
+        "subscriptions"   => ["[Gmail]"],
+        "dissolveNamespaces" => ["[Gmail]"]
     ];
 
 
@@ -75,8 +76,8 @@ class MailAccountTest extends TestCase
         $account = new MailAccount($config);
 
         foreach ($config as $property => $value) {
-            if ($property === "from" || $property === "replyTo") {
-                $method = $property == "from" ? "getFrom" : "getReplyTo";
+            if ($property === "from" || $property === "replyTo" || $property === "dissolveNamespaces") {
+                $method = $property == "from" ? "getFrom" : ($property === "replyTo" ? "getReplyTo" : "getDissolveNamespaces");
             } else {
                 $camelKey = "_" . str_replace("_", " ", strtolower($property));
                 $camelKey = ltrim(str_replace(" ", "", ucwords($camelKey)), "_");
