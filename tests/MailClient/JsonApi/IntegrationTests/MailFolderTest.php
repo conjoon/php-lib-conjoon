@@ -20,6 +20,7 @@ use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\JsonApi\Resource\Resource;
 use Conjoon\Net\Uri\Component\Path\Parameter;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
+use Conjoon\Web\Validation\Exception\ValidationException;
 use Tests\TestCase;
 use Tests\TestTrait;
 
@@ -52,6 +53,20 @@ class MailFolderTest extends TestCase
         $resolveToMailFolder->invokeArgs($resourceResolver, [new ParameterList(), null]);
     }
 
+    /**
+     * Test ValidationException.
+     *
+     * @return void
+     */
+    public function testValidationException()
+    {
+        $this->expectException(ValidationException::class);
+        $request = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts/1/MailFolders?include=MailAccount");
+        $this->assertNotNull($request);
+
+        $resourceResolver = $this->getResourceResolver();
+        $resourceResolver->resolve($request);
+    }
 
 
     /**

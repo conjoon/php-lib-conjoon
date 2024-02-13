@@ -15,6 +15,7 @@ namespace Tests\Conjoon\MailClient\JsonApi\IntegrationTests;
 
 use Conjoon\Http\Exception\NotFoundException;
 use Conjoon\JsonApi\Exception\BadRequestException;
+use Conjoon\Web\Validation\Exception\ValidationException;
 use Tests\TestCase;
 use Tests\TestTrait;
 
@@ -32,6 +33,21 @@ class MailAccountTest extends TestCase
     {
         $this->expectException(NotFoundException::class);
         $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MaisaflAccounts");
+    }
+
+    /**
+     * Test ValidationException.
+     *
+     * @return void
+     */
+    public function testValidationException()
+    {
+        $this->expectException(ValidationException::class);
+        $request = $this->buildJsonApiRequest("https://localhost:8080/rest-api/v1/MailAccounts?include=MailAccount");
+        $this->assertNotNull($request);
+
+        $resourceResolver = $this->getResourceResolver();
+        $resourceResolver->resolve($request);
     }
 
 
