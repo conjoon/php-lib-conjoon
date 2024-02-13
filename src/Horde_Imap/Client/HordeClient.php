@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Conjoon\Horde_Imap\Client;
 
 use Conjoon\MailClient\Exception\MailClientException;
+use Conjoon\Math\Expression\Operator\FunctionalOperator;
 use Conjoon\Mime\MimeType;
 use Conjoon\Data\Sort\SortInfoList;
 use Conjoon\Data\Filter\Filter;
@@ -245,6 +246,18 @@ class HordeClient implements MailClient
     {
         $fields = $query->getFields();
 
+        $filter = $query->getFilter();
+        $filterIds = null;
+
+        if ($filter !== null) {
+            $expression = $filter->getExpression();
+            $identifier =  ((string)$expression->getOperands()[0]) ?? null;
+            if ($expression->getOperator() == FunctionalOperator::IN
+                && in_array(strtolower($identifier), ["mailfolder.id", "id"])) {
+                $filterIds = array_map(fn ($op) => strtolower($op), $expression->getOperands()[1]?->value());
+            }
+        }
+
         try {
             $client = $this->connect($mailAccount->getId());
 
@@ -257,6 +270,13 @@ class HordeClient implements MailClient
             $mailFolderList = new MailFolderList();
 
             foreach ($mailboxes as $folderId => $mailbox) {
+
+                // check if $folderId is in filter list
+                if ($filterIds && !in_array(strtolower($folderId), $filterIds)) {
+                    continue;
+                }
+
+
                 $args = ["name" => $folderId];
 
                 if ($this->isMailboxSelectable($mailbox)) {

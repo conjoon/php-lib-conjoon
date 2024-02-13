@@ -16,6 +16,9 @@ namespace Tests\Conjoon\Horde_Imap\Client;
 use Conjoon\Core\Contract\Arrayable;
 use Conjoon\Core\Contract\JsonStrategy;
 use Conjoon\MailClient\Exception\MailClientException;
+use Conjoon\Math\Expression\Operator\FunctionalOperator;
+use Conjoon\Math\Identifier;
+use Conjoon\Math\OperandList;
 use Conjoon\Mime\MimeType;
 use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Sort\SortDirection;
@@ -683,8 +686,17 @@ class HordeClientTest extends TestCase
     /**
      * Tests getMailFolderList testtemplate
      */
-    public function getMailFolderListTemplate(MailFolderListQuery $query)
+    public function getMailFolderListTemplate(MailFolderListQuery $query, array $shouldReturn = null)
     {
+        $mailFoldersReturned = $shouldReturn;
+
+        if ($mailFoldersReturned === null) {
+            $mailFoldersReturned = [
+                "INBOX" => ["delimiter" => ".", "attributes" => []],
+                "INBOX.Folder" => ["delimiter" => ":", "attributes" => ["\\noselect"]]
+            ];
+        }
+
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
 
         $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
@@ -693,10 +705,7 @@ class HordeClientTest extends TestCase
             "*",
             Horde_Imap_Client::MBOX_ALL,
             ["attributes" => true]
-        )->andReturn([
-            "INBOX" => ["delimiter" => ".", "attributes" => []],
-            "INBOX.Folder" => ["delimiter" => ":", "attributes" => ["\\noselect"]]
-        ]);
+        )->andReturn($mailFoldersReturned);
 
         $inline = [[] , []];
         $args = ["INBOX"];
@@ -858,6 +867,45 @@ class HordeClientTest extends TestCase
         $this->getMailFolderListTemplate($query);
     }
 
+    /**
+     * Tests passing filter that includes ids of mailboxes.
+     * @runInSeparateProcess
+     * @preserveGlobalState disabled
+     */
+    public function testGetMailFolderListWithFilterQuery()
+    {
+        $filter = new Filter(new FunctionalExpression(
+            FunctionalOperator::IN,
+            OperandList::make(Identifier::make("id"),
+            Value::make(["INBOX.Filter.considered"]))
+        ));
+
+        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFilter"], [new ParameterBag()]);
+        $query->expects($this->any())->method("getFilter")->willReturn($filter);
+
+        // horde mock
+        $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");
+        $imapStub = Mockery::mock("overload:" . Horde_Imap_Client_Socket::class);
+        $imapStub->shouldReceive("listMailboxes")->with(
+            "*",
+            Horde_Imap_Client::MBOX_ALL,
+            ["attributes" => true]
+        )->andReturn([
+            "INBOX.notconsidered" => ["delimiter" => ":", "attributes" => []],
+            "INBOX.Filter.considered" => ["delimiter" => ":", "attributes" => []]
+        ]);
+
+        $client = $this->createClient();
+
+        $mailFolderList = $client->getMailFolderList(
+            $account,
+            $query
+        );
+
+        $this->assertSame(1, $mailFolderList->count());
+        $listMailFolder = $mailFolderList[0];
+        $this->assertSame("INBOX.Filter.considered", $listMailFolder->getFolderKey()->getId());
+    }
 
 
     /**
