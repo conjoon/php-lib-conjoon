@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\Filter\Filter;
-use Conjoon\JsonApi\Query\Validation\Parameter\ToExpression;
-use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\MailClient\Data\Resource\MailFolderListOptions;
+use Conjoon\MailClient\Data\Resource\DefaultMailFolderListOptions;
 use Conjoon\Math\Expression\Notation\PolishNotationTransformer;
 
 
@@ -52,6 +52,17 @@ class DefaultMailFolderListQuery extends MailFolderListQuery
         }
 
         return $defaultFields;
+    }
+
+    public function getOptions(): ?MailFolderListOptions {
+
+
+        if ($this->{"options[MailFolder]"}) {
+            $options = json_decode($this->{"options[MailFolder]"}, true);
+            return new DefaultMailFolderListOptions($options["dissolveNamespaces"] ?? []);
+        }
+
+        return null;
     }
 
     /**

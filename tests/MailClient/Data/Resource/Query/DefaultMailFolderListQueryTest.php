@@ -54,6 +54,28 @@ class DefaultMailFolderListQueryTest extends TestCase
         );
     }
 
+    public function testGetOptions() {
+
+        // no options available
+        $bag = new ParameterBag(["options" => "{}"]);
+        $resourceQuery = $this->createMailFolderListQuery($bag);
+        $this->assertNull($resourceQuery->getOptions());
+
+        // options available, no dissolveNamespaces set
+        $jsonFilter = [];
+        $bag = new ParameterBag(["options[MailFolder]" => json_encode($jsonFilter)]);
+        $resourceQuery = $this->createMailFolderListQuery($bag);
+        $this->assertNotNull($resourceQuery->getOptions());
+        $this->assertEqualsCanonicalizing([], $resourceQuery->getOptions()->getDissolveNamespaces());
+
+        // options available, dissolveNamespaces is set
+        $jsonFilter = ["dissolveNamespaces" => ["INBOX", "[GMAIL]"]];
+        $bag = new ParameterBag(["options[MailFolder]" => json_encode($jsonFilter)]);
+        $resourceQuery = $this->createMailFolderListQuery($bag);
+        $this->assertNotNull($resourceQuery->getOptions());
+        $this->assertEqualsCanonicalizing(["INBOX", "[GMAIL]"], $resourceQuery->getOptions()->getDissolveNamespaces());
+    }
+
 
     private function createMailFolderListQuery(?ParameterBag $parameterBag = null): DefaultMailFolderListQuery {
         if (!$parameterBag) {

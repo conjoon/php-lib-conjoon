@@ -16,6 +16,7 @@ namespace Conjoon\MailClient\Data\Resource\Query;
 use Conjoon\Data\Filter\Filter;
 use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\MailClient\Data\Resource\MailFolderListOptions;
 
 
 abstract class MailFolderListQuery extends RepositoryQuery
@@ -35,6 +36,9 @@ abstract class MailFolderListQuery extends RepositoryQuery
      * @return Filter|null
      */
     abstract public function getFilter(): ?Filter;
+
+
+    abstract public function getOptions(): ?MailFolderListOptions;
 
 
     final function getResourceDescription(): MailFolderDescription

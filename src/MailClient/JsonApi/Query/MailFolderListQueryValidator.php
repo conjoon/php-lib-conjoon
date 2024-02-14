@@ -47,7 +47,7 @@ class MailFolderListQueryValidator extends BaseListQueryValidator
 
         $res = array_filter($names, fn($name) => !in_array($name, ["sort", "include"]));
         $res[] = "filter";
-
+        $res[] = "options[MailFolder]";
         return $res;
     }
 }
