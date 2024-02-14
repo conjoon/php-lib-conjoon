@@ -154,7 +154,7 @@ class MailAccount implements Jsonable, Arrayable
     /**
      * @var array
      */
-    protected array $dissolveNamespaces = ["INBOX", "[GMAIL]", "[Google Mail]"];
+    protected array $dissolveNamespaces = [];
 
     /**
      * MailAccount constructor.

@@ -1,28 +1,12 @@
 <?php
 
 /**
- * conjoon
- * php-lib-conjoon
- * Copyright (C) 2019-2022 Thorsten Suckow-Homberg https://github.com/conjoon/php-lib-conjoon
+ * This file is part of the conjoon/php-lib-conjoon project.
  *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without restriction,
- * including without limitation the rights to use, copy, modify, merge,
- * publish, distribute, sublicense, and/or sell copies of the Software,
- * and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
+ * (c) 2019-2024 Thorsten Suckow-Homberg <thorsten@suckow-homberg.de>
  *
- * The above copyright notice and this permission notice shall be included
- * in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
- * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
- * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
- * USE OR OTHER DEALINGS IN THE SOFTWARE.
+ * For full copyright and license information, please consult the LICENSE-file distributed
+ * with this source code.
  */
 
 declare(strict_types=1);
@@ -84,17 +68,18 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      */
     public function listToTree(
         MailFolderList $mailFolderList,
-        array $root,
         MailFolderListQuery $query
     ): MailFolderChildList {
         $folders = [];
+
+        $dissolveNamespaces = $query->getOptions()?->getDissolveNamespaces() ?? [];
 
         $fields = $query->getFields();
         $includeChildNodes = in_array("data", $fields);
         $systemFolderTypes = [];
 
         foreach ($mailFolderList as $mailbox) {
-            if ($this->shouldSkipMailFolder($mailbox, $root, $includeChildNodes)) {
+            if ($this->shouldSkipMailFolder($mailbox, $dissolveNamespaces, $includeChildNodes)) {
                 continue;
             }
 
@@ -146,8 +131,8 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
 
             $tmp = $this->getMailFolderWithId($parentKey, $folders);
             foreach ($mailFolders as $item) {
-                foreach ($root as $rootId) {
-                    if (strtolower($parentKey) === strtolower($rootId)) {
+                foreach ($dissolveNamespaces as $namespaceId) {
+                    if (strtolower($parentKey) === strtolower($namespaceId)) {
                         $mailFolderChildList[] = $item;
                         continue 2;
                     }
@@ -225,16 +210,16 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
      * Returns true if the specified MailFolder should be ignored,
      * which is true if either the \noselect or \nonexistent attribute
      * is set for this ListMailFolder, or if the id of the Mailbox does not indicate
-     * a child relationship with the specified $root id.
+     * a child relationship with the specified $dissolveNamespaces.
      *
      * @param ListMailFolder $listMailFolder
-     * @param array $root
+     * @param array $dissolveNamespaces
      * @param bool $includeChildNodes if set to false, the mail folder will be skipped if
      * it is not in the list of root folders
      *
      * @return boolean
      */
-    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $root, bool $includeChildNodes = true): bool
+    protected function shouldSkipMailFolder(ListMailFolder $listMailFolder, array $dissolveNamespaces, bool $includeChildNodes = true): bool
     {
 
         $delim = $listMailFolder->getDelimiter();
@@ -242,18 +227,18 @@ class DefaultMailFolderTreeBuilder implements MailFolderTreeBuilder
         $idParts = explode($delim, $id);
         $depthChild = count($idParts);
 
-        if (!count($root) && !$includeChildNodes && $depthChild > 1) {
+        if (!count($dissolveNamespaces) && !$includeChildNodes && $depthChild > 1) {
             return true;
         }
 
-        foreach ($root as $globalId) {
+        foreach ($dissolveNamespaces as $namespaceId) {
             // the id of the folder is not found in the globalId, skip
             // id: JUNK.Drafts   globalId: INBOX"
-            if (stripos($id, $globalId) === false) {
+            if (stripos($id, $namespaceId) === false) {
                 return true;
             }
 
-            $depthRoot = count(explode($delim, $globalId));
+            $depthRoot = count(explode($delim, $namespaceId));
             // id is part of globalId - if no childNodes should be returned, skip
             // this one.
             if (!$includeChildNodes && $depthRoot < $depthChild) {
