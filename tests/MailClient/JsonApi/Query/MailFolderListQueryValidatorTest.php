@@ -20,6 +20,7 @@ use Conjoon\JsonApi\Query\Validation\Parameter\PnFilterRule;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\MailClient\JsonApi\Query\BaseListQueryValidator;
 use Conjoon\MailClient\JsonApi\Query\MailFolderListQueryValidator;
+use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
 use Tests\TestCase;
 
 class MailFolderListQueryValidatorTest extends TestCase
@@ -36,7 +37,8 @@ class MailFolderListQueryValidatorTest extends TestCase
         $validator = $this->getListQueryValidator();
         $rules = $validator->getParameterRules($this->getJsonApiQuery());
 
-        $this->assertInstanceOf(PnFilterRule::class, $rules->peek());
+        $this->assertNotNull($rules->findBy(fn($rule) => $rule instanceof JsonEncodedRule));
+        $this->assertNotNull($rules->findBy(fn($rule) => $rule instanceof PnFilterRule));
     }
 
 
@@ -61,6 +63,13 @@ class MailFolderListQueryValidatorTest extends TestCase
             ), $errors);
         $this->assertSame(0, $errors->count());
 
+        $errors = new ValidationErrors();
+        $validator->validate(
+            $this->getJsonApiQuery(
+                "options[MailFolder]=ABC"
+            ), $errors);
+        $this->assertSame(1, $errors->count());
+        $this->assertStringContainsStringIgnoringCase("could not decode", $errors[0]->getDetails());
 
     }
 

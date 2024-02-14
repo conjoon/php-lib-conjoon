@@ -17,6 +17,7 @@ use Conjoon\JsonApi\Query\Query;
 use Conjoon\Net\Uri\Component\Query as HttpQuery;
 use Conjoon\JsonApi\Query\Validation\Parameter\PnFilterRule;
 use Conjoon\Web\Validation\Parameter\ParameterRuleList;
+use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
 
 /**
  * Query Validator for MailFolder collection requests.
@@ -33,6 +34,7 @@ class MailFolderListQueryValidator extends BaseListQueryValidator
 
         $list = parent::getParameterRules($query);
         $list[] = new PnFilterRule($this->getAvailableFields($resourceTarget));
+        $list[] = new JsonEncodedRule("options[MailFolder]");
 
         return $list;
     }
