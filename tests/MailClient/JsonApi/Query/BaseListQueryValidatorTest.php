@@ -58,7 +58,7 @@ class BaseListQueryValidatorTest extends TestCase
         $names = $validator->getAllowedParameterNames($this->getJsonApiQuery());
 
         $this->assertEqualsCanonicalizing([
-            "relfield:fields[rd]", "fields[rd]"
+            "relfield:fields[rd]", "fields[rd]", "include", "sort"
         ], $names);
     }
 

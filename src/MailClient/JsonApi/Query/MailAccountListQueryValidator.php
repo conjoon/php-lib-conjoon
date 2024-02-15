@@ -29,15 +29,19 @@ use Conjoon\Web\Validation\Parameter\ParameterRuleList;
  */
 class MailAccountListQueryValidator extends BaseListQueryValidator
 {
-
     /**
      * @Override
      */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
-        $names = parent::getAllowedParameterNames($query);
+        /**
+         * @type Query $query
+         */
+        $resourceTarget = $query->getResourceDescription();
 
-        return array_filter($names, fn($name) => !in_array($name, ["sort", "include"]));
+        $res = [];
+        $res[] = "fields[$resourceTarget]";
+        $res[] = "relfield:fields[$resourceTarget]";
+        return $res;
     }
-
 }

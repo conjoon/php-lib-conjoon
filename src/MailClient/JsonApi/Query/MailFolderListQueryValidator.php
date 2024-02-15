@@ -45,9 +45,14 @@ class MailFolderListQueryValidator extends BaseListQueryValidator
      */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
-        $names = parent::getAllowedParameterNames($query);
+        /**
+         * @type Query $query
+         */
+        $resourceTarget = $query->getResourceDescription();
 
-        $res = array_filter($names, fn($name) => !in_array($name, ["sort", "include"]));
+        $res = [];
+        $res[] = "fields[$resourceTarget]";
+        $res[] = "relfield:fields[$resourceTarget]";
         $res[] = "filter";
         $res[] = "options[MailFolder]";
         return $res;

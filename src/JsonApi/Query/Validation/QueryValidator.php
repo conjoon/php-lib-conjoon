@@ -104,7 +104,7 @@ class QueryValidator extends HttpQueryValidator
     public function getAllowedParameterNames(HttpQuery $query): array
     {
         /**
-         * @type Query $query
+         * @type JsonApiQuery $query
          */
         $resourceTarget = $query->getResourceDescription();
 

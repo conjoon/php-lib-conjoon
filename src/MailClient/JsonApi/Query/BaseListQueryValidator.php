@@ -16,6 +16,7 @@ namespace Conjoon\MailClient\JsonApi\Query;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\JsonApi\Query\Query;
+use Conjoon\JsonApi\Query\Query as JsonApiQuery;
 use Conjoon\Web\Validation\Query\Rule\ExclusiveGroupKeyRule;
 use Conjoon\Web\Validation\Query\QueryRuleList;
 use Conjoon\JsonApi\Extensions\Query\Validation\Parameter\RelfieldRule;
@@ -47,19 +48,21 @@ abstract class BaseListQueryValidator extends CollectionQueryValidator
         return $list;
     }
 
-
+    /**
+     * @Override
+     */
     public function getAllowedParameterNames(HttpQuery $query): array
     {
+
         /**
-         * @type Query $query
+         * @type JsonApiQuery $query
          */
-        $resourceTarget = $query->getResourceDescription();
+        $resourceDescription = $query->getResourceDescription();
 
-        $exp = [];
-        $exp[] = "fields[$resourceTarget]";
-        $exp[] = "relfield:fields[$resourceTarget]";
-
-        return $exp;
+        return array_merge(
+            parent::getAllowedParameterNames($query),
+            ["relfield:fields[{$resourceDescription}]"]
+        );
     }
 
 
