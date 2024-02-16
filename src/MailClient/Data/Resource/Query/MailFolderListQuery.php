@@ -43,6 +43,6 @@ abstract class MailFolderListQuery extends RepositoryQuery
 
     final function getResourceDescription(): MailFolderDescription
     {
-        return new MailFolderDescription();
+        return MailFolderDescription::getInstance();
     }
 }

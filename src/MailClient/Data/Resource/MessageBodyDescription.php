@@ -34,8 +34,8 @@ class MessageBodyDescription extends ResourceDescription
     public function getRelationships(): ResourceDescriptionList
     {
         $list = new ResourceDescriptionList();
-        $list[] = new MailFolderDescription();
-        $list[] = new MessageItemDescription();
+        $list[] = MailFolderDescription::getInstance();
+        $list[] = MessageItemDescription::getInstance();
 
         // MessageBody.MailFolder
         // MessageBody.MessageItem

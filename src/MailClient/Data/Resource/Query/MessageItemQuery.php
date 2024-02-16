@@ -52,6 +52,6 @@ abstract class MessageItemQuery extends RepositoryQuery
      */
     public function getResourceDescription(): MessageItemDescription
     {
-        return new MessageItemDescription();
+        return MessageItemDescription::getInstance();
     }
 }

@@ -45,6 +45,6 @@ abstract class MessageBodyQuery extends RepositoryQuery
      */
     public function getResourceDescription(): MessageBodyDescription
     {
-        return new MessageBodyDescription();
+        return MessageBodyDescription::getInstance();
     }
 }

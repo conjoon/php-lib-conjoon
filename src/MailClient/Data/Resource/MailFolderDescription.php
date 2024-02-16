@@ -38,7 +38,7 @@ class MailFolderDescription extends ResourceDescription
     public function getRelationships(): ResourceDescriptionList
     {
         $list = new ResourceDescriptionList();
-        $list[] = new MailAccountDescription();
+        $list[] = MailAccountDescription::getInstance();
 
         return $list;
     }
