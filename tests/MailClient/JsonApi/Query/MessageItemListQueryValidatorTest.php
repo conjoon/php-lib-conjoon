@@ -92,6 +92,13 @@ class MessageItemListQueryValidatorTest extends TestCase
         $errors = new ValidationErrors();
         $validator->validate(
             $this->getJsonApiQuery(
+                "{$pageString}&fields[MessageItem]="
+            ), $errors);
+        $this->assertSame(0, $errors->count());
+
+        $errors = new ValidationErrors();
+        $validator->validate(
+            $this->getJsonApiQuery(
                 "{$pageString}&options[MessageBody]=" . json_encode(["textHtml" => ["length" => 200]])
             ), $errors);
         $this->assertSame(0, $errors->count());
