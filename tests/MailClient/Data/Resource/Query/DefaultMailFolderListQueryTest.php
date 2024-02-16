@@ -14,7 +14,6 @@ declare(strict_types=1);
 namespace Tests\Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\ParameterBag;
-use Conjoon\Math\Expression\Notation\ToExpression;
 use Conjoon\MailClient\Data\Resource\Query\DefaultMailFolderListQuery;
 use Conjoon\MailClient\Data\Resource\Query\MailFolderListQuery;
 use Conjoon\Math\Expression\Notation\PolishNotation;
