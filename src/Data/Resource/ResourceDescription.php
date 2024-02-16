@@ -15,6 +15,7 @@ namespace Conjoon\Data\Resource;
 
 use Conjoon\Core\Contract\Stringable as ConjoonStringable;
 use Conjoon\Core\Contract\StringStrategy;
+use Conjoon\JsonApi\Resource\Resource;
 use Stringable;
 
 /**
@@ -24,6 +25,24 @@ use Stringable;
  */
 abstract class ResourceDescription implements ConjoonStringable, Stringable
 {
+    protected static ?ResourceDescription $self = null;
+
+    public static function getInstance(): static
+    {
+        if (!static::$self) {
+            static::$self = new static;
+        }
+
+        return static::$self;
+    }
+
+    /**
+     * @deprecated use getInstance()
+     */
+    public function __construct() {
+
+    }
+
     /**
      * Returns the type of this entity used as an identifier with clients and
      * requests, e.g. its class-name.

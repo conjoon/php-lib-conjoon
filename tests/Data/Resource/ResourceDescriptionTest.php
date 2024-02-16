@@ -37,6 +37,34 @@ class ResourceDescriptionTest extends TestCase
         $this->assertInstanceOf(\Stringable::class, $resource);
     }
 
+    public function testGetInstance(): void
+    {
+        $c = new class extends ResourceDescription {
+
+            public function getType(): string
+            {
+                return "";
+            }
+
+            public function getRelationships(): ResourceDescriptionList
+            {
+                return ResourceDescriptionList::new();
+            }
+
+            public function getFields(): array
+            {
+                return [];
+            }
+
+            public function getDefaultFields(): array
+            {
+                return [];
+            }
+        };
+
+        $this->assertInstanceOf(ResourceDescription::class, $c::getInstance());
+        $this->assertSame($c::getInstance(), $c::getInstance());
+    }
 
     /**
      * tests getAllRelationshipTypes()
