@@ -14,15 +14,10 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\JsonApi\Query;
 
 use Conjoon\JsonApi\Query\Query;
-use Conjoon\Math\Expression\Operator\RelationalOperator;
 use Conjoon\Net\Uri\Component\Query as HttpQuery;
-use Conjoon\JsonApi\Query\Validation\Parameter\PnFilterRule;
 use Conjoon\Web\Validation\Parameter\ParameterRuleList;
 use Conjoon\Web\Validation\Parameter\Rule\IntegerValueRule;
 use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
-use Conjoon\Web\Validation\Query\QueryRuleList;
-use Conjoon\Web\Validation\Query\Rule\ExclusiveGroupKeyRule;
-use PHPUnit\Framework\Constraint\Operator;
 
 /**
  * Query Validator for MessageItemList requests.
@@ -63,7 +58,6 @@ class MessageItemListQueryValidator extends BaseListQueryValidator
         $res = [];
         $res[] = "fields[$resourceTarget]";
         $res[] = "relfield:fields[$resourceTarget]";
-
         $res[] = "fields[MessageBody]";
         $res[] = "relfield:fields[MessageBody]";
         $res[] = "sort";

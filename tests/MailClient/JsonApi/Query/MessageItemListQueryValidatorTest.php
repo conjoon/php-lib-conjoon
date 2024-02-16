@@ -87,20 +87,32 @@ class MessageItemListQueryValidatorTest extends TestCase
 
         $validator = $this->getListQueryValidator();
 
+        $pageString = "page[start]=100&page[limit]=100";
+
         $errors = new ValidationErrors();
         $validator->validate(
             $this->getJsonApiQuery(
-                "options[MailFolder]=" . json_encode(["dissolveNamespaces" => ["INBOX", "[GMAIL]"]])
+                "{$pageString}&options[MessageBody]=" . json_encode(["textHtml" => ["length" => 200]])
             ), $errors);
         $this->assertSame(0, $errors->count());
 
         $errors = new ValidationErrors();
         $validator->validate(
             $this->getJsonApiQuery(
-                "options[MailFolder]=ABC"
+                "page[start]=100&page[limit]=100"
+            ), $errors);
+        $this->assertSame(0, $errors->count());
+
+        $errors = new ValidationErrors();
+        $validator->validate(
+            $this->getJsonApiQuery(
+                "page[start]=100&page[limit]=-100"
             ), $errors);
         $this->assertSame(1, $errors->count());
-        $this->assertStringContainsStringIgnoringCase("could not decode", $errors[0]->getDetails());
+        $this->assertStringContainsString(
+            "parameter \"page[limit]\"'s value \"-100\" is not >= 1",
+            $errors[0]->getDetails()
+        );
 
     }
 
