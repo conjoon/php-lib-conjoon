@@ -30,9 +30,11 @@ declare(strict_types=1);
 namespace Conjoon\MailClient\Data\Resource\Query;
 
 use Conjoon\Data\Resource\RepositoryQuery;
+use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Sort\SortInfoList;
-use Conjoon\Data\Filter\Filter;
+use Conjoon\MailClient\Data\Resource\DefaultMessageBodyOptions;
 use Conjoon\MailClient\Data\Resource\MessageItemDescription;
+use Conjoon\MailClient\Data\Resource\Options;
 
 /**
  * RepositoryQuery implementation for querying MessageItemList.
@@ -47,14 +49,20 @@ abstract class MessageItemListQuery extends RepositoryQuery
      */
     abstract public function getStart(): int;
 
+    /**
+     * Returns a ResourceDescriptionList of all resources that should be considered
+     * with this query.
+     *
+     * @return ResourceDescriptionList|null
+     */
+    abstract public function getInclude(): ResourceDescriptionList;
 
     /**
      * Returns the limit specified for this query.
-     * Returns "null" if no limit was specified.
      *
-     * @return int|null
+     * @return int
      */
-    abstract public function getLimit(): ?int;
+    abstract public function getLimit(): int;
 
 
     /**
@@ -67,28 +75,24 @@ abstract class MessageItemListQuery extends RepositoryQuery
 
 
     /**
-     * Returns filter information for this query.
-     * Returns null if no filter information is  available.
+     * Returns the fields that should be queried for the specified ResourceDescription's
+     * className.
      *
-     * @return Filter|null
-     */
-    abstract public function getFilter(): ?Filter;
-
-
-    /**
-     * Returns the fields that should be queried. If no fields where specified, this implementation
-     * will return the default fields of the resource target for this query.
+     * @param string|null $className
      *
-     * @return array
+     * @return ?array Returns the array of fields that should be queried, or null if the
+     * specified ResourceDescription was not found in this class ResourceDescriptionList
      */
-    abstract public function getFields(): array;
+    abstract public function getFields(string $className = null): ?array;
 
+
+    abstract public function getOptions(string $className = null): ?DefaultMessageBodyOptions;
 
     /**
      * This RepositoryQuery targets MessageItem.
      */
     public function getResourceDescription(): MessageItemDescription
     {
-        return new MessageItemDescription();
+        return MessageItemDescription::getInstance();
     }
 }
