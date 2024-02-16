@@ -25,15 +25,17 @@ use Stringable;
  */
 abstract class ResourceDescription implements ConjoonStringable, Stringable
 {
-    protected static ?ResourceDescription $self = null;
+
+    private static array $instances = [];
 
     public static function getInstance(): static
     {
-        if (!static::$self) {
-            static::$self = new static;
+        $cls = get_called_class();
+        if (!array_key_exists($cls, static::$instances)) {
+            static::$instances[$cls] =  new $cls();
         }
 
-        return static::$self;
+        return static::$instances[$cls];
     }
 
     /**

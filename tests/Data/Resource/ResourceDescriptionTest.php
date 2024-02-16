@@ -39,11 +39,10 @@ class ResourceDescriptionTest extends TestCase
 
     public function testGetInstance(): void
     {
-        $c = new class extends ResourceDescription {
-
+        $a = new class extends ResourceDescription {
             public function getType(): string
             {
-                return "";
+                return "A";
             }
 
             public function getRelationships(): ResourceDescriptionList
@@ -62,8 +61,31 @@ class ResourceDescriptionTest extends TestCase
             }
         };
 
-        $this->assertInstanceOf(ResourceDescription::class, $c::getInstance());
-        $this->assertSame($c::getInstance(), $c::getInstance());
+        $b = new class extends ResourceDescription {
+            public function getType(): string
+            {
+                return "B";
+            }
+
+            public function getRelationships(): ResourceDescriptionList
+            {
+                return ResourceDescriptionList::new();
+            }
+
+            public function getFields(): array
+            {
+                return [];
+            }
+
+            public function getDefaultFields(): array
+            {
+                return [];
+            }
+        };
+
+        $this->assertInstanceOf(ResourceDescription::class, $a::getInstance());
+        $this->assertSame($b::getInstance(), $b::getInstance());
+        $this->assertNotSame($a::getInstance(), $b::getInstance());
     }
 
     /**
