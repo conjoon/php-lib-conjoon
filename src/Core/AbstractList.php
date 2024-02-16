@@ -70,13 +70,22 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
 
 
     /**
+     * @deprecated use new()
+     */
+    public static function make(...$items): static
+    {
+        return static::new(...$items);
+    }
+
+
+    /**
      * Factory method for easily creating instances of the implementing class.
      *
      * @param mixed ...$items
-     *
+
      * @return static
      */
-    public static function make(...$items): static
+    public static function new(...$items): static
     {
         $self = new static();
 
@@ -87,7 +96,6 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
         return $self;
     }
 
-
     /**
      * Returns the class name of the entity-type this list should maintain
      * entries of.
@@ -95,6 +103,7 @@ abstract class AbstractList implements Arrayable, ArrayAccess, Iterator, Countab
      * @return string
      */
     abstract public function getEntityType(): string;
+
 
     /**
      * Applies the map function to this data and returns it.
