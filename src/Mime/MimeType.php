@@ -39,4 +39,16 @@ enum MimeType: string
     case TEXT_PLAIN = "text/plain";
 
     case IMAGE_JPEG = "image/jpeg";
+
+    public static function fromString(string $value): ?MimeType {
+
+        $value = strtoupper($value);
+
+        return match ($value) {
+            "TEXTHTML" => MimeType::TEXT_HTML,
+            "TEXTPLAIN" => MimeType::TEXT_PLAIN,
+            "IMAGEJPEG" => MimeType::IMAGE_JPEG,
+            default => MimeType::tryFrom($value)
+        };
+    }
 }
