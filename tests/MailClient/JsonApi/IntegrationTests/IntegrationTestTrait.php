@@ -20,13 +20,17 @@ use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
 use Conjoon\Illuminate\Auth\ImapUser;
 use Conjoon\MailClient\Data\CompoundKey\FolderKey;
+use Conjoon\MailClient\Data\CompoundKey\MessageKey;
 use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Transformer\Response\JsonApiStrategy as MailClientJsonApiStrategy;
 use Conjoon\MailClient\Folder\MailFolder;
 use Conjoon\MailClient\Folder\MailFolderChildList;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\MailClient\JsonApi\ResourceResolver as MailClientResourceResolver;
+use Conjoon\MailClient\Message\MessageItem;
+use Conjoon\MailClient\Message\MessageItemList;
 use Conjoon\MailClient\Service\MailFolderService;
+use Conjoon\MailClient\Service\MessageItemService;
 use Conjoon\Net\Url;
 use Conjoon\JsonApi\Request as JsonApiRequest;
 
@@ -67,7 +71,8 @@ trait IntegrationTestTrait
 
         return new MailClientResourceResolver(
             $imapUser,
-            $this->getMockForMailFolderService()
+            $this->getMockForMailFolderService(),
+            $this->getMockForMessageItemService()
         );
     }
 
@@ -97,6 +102,15 @@ trait IntegrationTestTrait
         ]);
     }
 
+    protected function getMessageItemList(): MessageItemList {
+        $messageItem = new MessageItem(MessageKey::new("1", "2", "3"));
+
+        $messageItemList = new MessageItemList();
+        $messageItemList[]= $messageItem;
+
+        return $messageItemList;
+    }
+
     protected function getMockForMailFolderService():MailFolderService {
 
         $mailFolderChildList = $this->getMailFolderChildList();
@@ -111,6 +125,26 @@ trait IntegrationTestTrait
                 }
             )
         )->willReturn($mailFolderChildList);
+
+        return $mailFolderService;
+    }
+
+    protected function getMockForMessageItemService():MessageItemService {
+
+        $messageItemList = $this->getMessageItemList();
+
+        $mailFolderService = $this->createMockForAbstract(
+            MessageItemService::class, ["getMessageItemList"]);
+
+        $mailFolderService->expects($this->any())->method("getMessageItemList")->with(
+            $this->callback(
+                function (FolderKey $folderKey)  {
+                    $this->assertSame($folderKey->getMailAccountId(), $this->getMailAccount()->getId());
+                    $this->assertSame($folderKey->getId(), "2");
+                    return true;
+                }
+            )
+        )->willReturn($messageItemList);
 
         return $mailFolderService;
 

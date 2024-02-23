@@ -22,6 +22,7 @@ use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\JsonApi\ResourceResolver;
 use Conjoon\JsonApi\Resource\ResourceResolver as JsonApiResourceResolver;
 use Conjoon\MailClient\Service\MailFolderService;
+use Conjoon\MailClient\Service\MessageItemService;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
 use Tests\TestCase;
 
@@ -51,7 +52,9 @@ class ResourceResolverTest extends TestCase
     private function getResourceResolver(): ResourceResolver {
         return new ResourceResolver(
             $this->getUser(),
-            $this->createMockForAbstract(MailFolderService::class)
+            $this->createMockForAbstract(MailFolderService::class),
+            $this->createMockForAbstract(MessageItemService::class)
+
         );
     }
 
