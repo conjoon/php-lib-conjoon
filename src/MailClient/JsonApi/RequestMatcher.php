@@ -21,6 +21,8 @@ use Conjoon\JsonApi\Request as JsonApiRequest;
 use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
+use Conjoon\MailClient\JsonApi\Query\MessageItemListQueryValidator;
 use Conjoon\Net\Uri\Component\Path\Parameter;
 use Conjoon\Net\Uri\Component\Path\ParameterList as PathParameters;
 use Conjoon\Net\Uri\Component\Path\Template;
@@ -35,12 +37,14 @@ final class RequestMatcher extends JsonApiRequestMatcher
 {
     public const TEMPLATES = [
         MailAccountDescription::class => "MailAccounts",
-        MailFolderDescription::class => "MailAccounts/{mailAccountId}/MailFolders"
+        MailFolderDescription::class => "MailAccounts/{mailAccountId}/MailFolders",
+        MessageItemDescription::class => "MailAccounts/{mailAccountId}/MailFolders/{mailFolderId}/MessageItems"
     ];
 
     public const VALIDATORS = [
         MailAccountDescription::class => MailAccountListQueryValidator::class,
-        MailFolderDescription::class => MailFolderListQueryValidator::class
+        MailFolderDescription::class => MailFolderListQueryValidator::class,
+        MessageItemDescription::class => MessageItemListQueryValidator::class
     ];
 
 

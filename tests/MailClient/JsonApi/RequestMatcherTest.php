@@ -21,8 +21,10 @@ use Conjoon\Http\Request;
 use Conjoon\Http\RequestMethod;
 use Conjoon\MailClient\Data\Resource\MailAccountDescription;
 use Conjoon\MailClient\Data\Resource\MailFolderDescription;
+use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Conjoon\MailClient\JsonApi\Query\MailAccountListQueryValidator;
 use Conjoon\MailClient\JsonApi\Query\MailFolderListQueryValidator;
+use Conjoon\MailClient\JsonApi\Query\MessageItemListQueryValidator;
 use Conjoon\MailClient\JsonApi\RequestMatcher;
 use Conjoon\JsonApi\RequestMatcher as JsonApiRequestMatcher;
 use Conjoon\Net\Url;
@@ -82,6 +84,22 @@ class RequestMatcherTest extends TestCase
         $this->assertTrue($jsonApiRequest->targetsCollection());
 
         $this->assertEquals(["mailAccountId" => "1"], $jsonApiRequest->getPathParameters()->toArray());
+    }
+
+
+    public function testMessageItemsMatch(): void
+    {
+        $matcher = new RequestMatcher();
+
+        $request = $this->makeRequest("https://localhost:8080/rest-api/MailAccounts/1/MailFolders/2/MessageItems?query=value");
+        $jsonApiRequest  = $matcher->match($request);
+
+        $this->assertNotNull($jsonApiRequest);
+        $this->assertInstanceOf(MessageItemDescription::class, $jsonApiRequest->getResourceDescription());
+        $this->assertInstanceOf(MessageItemListQueryValidator::class, $jsonApiRequest->getQueryValidator());
+        $this->assertTrue($jsonApiRequest->targetsCollection());
+
+        $this->assertEquals(["mailAccountId" => "1", "mailFolderId" => 2], $jsonApiRequest->getPathParameters()->toArray());
     }
 
 
