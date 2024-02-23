@@ -25,9 +25,12 @@ abstract class MailFolderListQuery extends RepositoryQuery
      * Returns the fields that should be queried. If no fields where specified, this implementation
      * will return the default fields of the resource target for this query.
      *
-     * @return array
+     * @param string|null $className
+     *
+     * @return ?array Returns the array of fields that should be queried, or null if the
+     *  specified ResourceDescription was not found in this class ResourceDescriptionList
      */
-    abstract public function getFields(): array;
+    abstract public function getFields(string $className = null): ?array;
 
     /**
      * Returns filter information for this query.

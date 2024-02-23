@@ -21,41 +21,9 @@ use Conjoon\Math\Expression\Notation\PolishNotationTransformer;
 
 class DefaultMailFolderListQuery extends MailFolderListQuery
 {
-    /**
-     * @Override
-     */
-    public function getFields(): array {
-        $defaultFields = $this->getResourceDescription()->getDefaultFields();
-
-        $relfields = $this->{"relfield:fields[MailFolder]"};
-        $fields    = $this->{"fields[MailFolder]"};
-
-        if (!$relfields) {
-            return $fields ? explode(",", $fields) : $defaultFields;
-        }
-
-        $relfields = explode(",", $relfields);
-
-        foreach ($relfields as $relfield) {
-            $prefix    = substr($relfield, 0, 1);
-            if ($prefix === "-") {
-                $fieldName = substr($relfield, 1);
-            }
-
-            if ($prefix === "-") {
-                $defaultFields = array_filter($defaultFields, fn ($field) => $field !== $fieldName);
-            } else {
-                if (!in_array($fieldName, $defaultFields)) {
-                    $defaultFields[] = $fieldName;
-                }
-            }
-        }
-
-        return $defaultFields;
-    }
+    use QueryTrait;
 
     public function getOptions(): ?MailFolderListOptions {
-
 
         if ($this->{"options[MailFolder]"}) {
             $options = json_decode($this->{"options[MailFolder]"}, true);
@@ -69,7 +37,6 @@ class DefaultMailFolderListQuery extends MailFolderListQuery
      * @Override
      */
     public function getFilter(): ?Filter {
-
         return new Filter((new PolishNotationTransformer())->transform(json_decode($this->filter, true)));
     }
 
