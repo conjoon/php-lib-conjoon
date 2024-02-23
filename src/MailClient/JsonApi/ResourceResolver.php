@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\JsonApi;
 
+use Conjoon\Core\Util\ArrayUtil;
 use Conjoon\Data\ParameterBag;
 use Conjoon\Data\Resource\Exception\UnknownResourceException;
 use Conjoon\Data\Resource\ResourceDescription;
@@ -21,8 +22,13 @@ use Conjoon\JsonApi\Resource\Exception\ResourceNotFoundException;
 use Conjoon\JsonApi\Resource\Exception\UnexpectedResolveException;
 use Conjoon\JsonApi\Resource\Resource;
 use Conjoon\JsonApi\Resource\ResourceResolver as JsonApiResourceResolver;
+use Conjoon\MailClient\Data\CompoundKey\FolderKey;
+use Conjoon\MailClient\Data\MailAccount;
 use Conjoon\MailClient\Data\Resource\Query\DefaultMailFolderListQuery;
+use Conjoon\MailClient\Data\Resource\Query\DefaultMessageItemListQuery;
+use Conjoon\MailClient\Message\MessageItem;
 use Conjoon\MailClient\Service\MailFolderService;
+use Conjoon\MailClient\Service\MessageItemService;
 use Conjoon\Net\Uri\Component\Path\ParameterList;
 use Conjoon\MailClient\Data\Resource\Query\MailFolderListQuery;
 
@@ -33,9 +39,16 @@ class ResourceResolver extends JsonApiResourceResolver {
 
     private MailFolderService $mailFolderService;
 
-    public function __construct(ImapUser $user, MailFolderService $mailFolderService) {
+    private MessageItemService $messageItemService;
+
+    public function __construct(
+        ImapUser $user,
+        MailFolderService $mailFolderService,
+        MessageItemService $messageItemService
+    ) {
         $this->user = $user;
         $this->mailFolderService = $mailFolderService;
+        $this->messageItemService = $messageItemService;
     }
 
     /**
@@ -55,22 +68,56 @@ class ResourceResolver extends JsonApiResourceResolver {
             return $this->resolveToMailFolder($pathParameters, $parameterBag);
         }
 
+        if ($resourceDescription->getType() === "MessageItem") {
+            return $this->resolveToMessageItem($pathParameters, $parameterBag);
+        }
+
         throw new UnknownResourceException(
             "Cannot resolve to ResourceDescription: \"{$resourceDescription}\""
         );
 
     }
 
+    private function resolveToMessageItem(ParameterList $pathParameters, ?ParameterBag $parameterBag): Resource {
+        $pps = $pathParameters->toArray();
+
+        ["mailAccountId" => $mailAccountId,
+        "mailFolderId" => $mailFolderId] = $this->getPathParameters(["mailAccountId", "mailFolderId"], $pps);
+
+        $mailAccount = $this->getMailAccount($mailAccountId);
+
+        $parameterBag = $parameterBag ?? new ParameterBag();
+
+        return new Resource($this->messageItemService->getMessageItemList(
+            FolderKey::new($mailAccount, $mailFolderId),
+            new DefaultMessageItemListQuery($parameterBag)
+        ));
+
+    }
 
     private function resolveToMailFolder(ParameterList $pathParameters, ?ParameterBag $parameterBag): Resource {
 
         $pps = $pathParameters->toArray();
 
-        if (!array_key_exists("mailAccountId", $pps)) {
-            throw new UnexpectedResolveException("Expected \"mailAccountId\" in path parameters");
-        }
-        $mailAccountId = $pps["mailAccountId"];
+        ["mailAccountId" => $mailAccountId] = $this->getPathParameters(["mailAccountId"], $pps);
 
+        $mailAccount = $this->getMailAccount($mailAccountId);
+        $parameterBag = $parameterBag ?? new ParameterBag();
+
+        return new Resource($this->mailFolderService->getMailFolderChildList(
+            $mailAccount,
+            new DefaultMailFolderListQuery($parameterBag)
+        ));
+    }
+
+
+    /**
+     * @param string $mailAccountId
+     * @return MailAccount|null
+     *
+     * @throws ResourceNotFoundException
+     */
+    private function getMailAccount(string $mailAccountId): ?MailAccount {
         $mailAccount = $this->user->getMailAccount($mailAccountId);
 
         if (!$mailAccount) {
@@ -79,15 +126,25 @@ class ResourceResolver extends JsonApiResourceResolver {
                 "\"mailAccountId\" was {$mailAccountId}");
         }
 
-        $parameterBag = $parameterBag ?? new ParameterBag();
+        return $mailAccount;
+    }
 
 
-        return new Resource($this->mailFolderService->getMailFolderChildList(
-            $mailAccount,
-            new DefaultMailFolderListQuery($parameterBag)
-        ));
+    /**
+     * @param array $keys
+     * @param array $haystack
+     * @return array
+     *
+     * @throws UnexpectedResolveException
+     */
+    private function getPathParameters(array $keys, array $haystack): array {
+        if (!ArrayUtil::hasOnly($haystack, $keys)) {
+            throw new UnexpectedResolveException(
+                "Expected ". implode(",", $keys) ." in path parameters"
+            );
+        }
 
-
+        return ArrayUtil::only($haystack, $keys);
     }
 
 }
