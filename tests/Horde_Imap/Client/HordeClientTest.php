@@ -876,12 +876,17 @@ class HordeClientTest extends TestCase
     {
         $filter = new Filter(new FunctionalExpression(
             FunctionalOperator::IN,
-            OperandList::make(Identifier::make("id"),
+            OperandList::new(Identifier::make("id"),
             Value::make(["INBOX.Filter.considered"]))
         ));
 
-        $query = $this->createMockForAbstract(MailFolderListQuery::class, ["getFilter"], [new ParameterBag()]);
+        $query = $this->createMockForAbstract(
+            MailFolderListQuery::class,
+            ["getFilter"],
+            [new ParameterBag()]
+        );
         $query->expects($this->any())->method("getFilter")->willReturn($filter);
+        $query->expects($this->any())->method("getFields")->willReturn([]);
 
         // horde mock
         $account = $this->getTestUserStub()->getMailAccount("dev_sys_conjoon_org");

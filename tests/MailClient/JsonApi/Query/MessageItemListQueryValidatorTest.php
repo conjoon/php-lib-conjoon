@@ -16,11 +16,8 @@ namespace Tests\Conjoon\MailClient\JsonApi\Query;
 
 use Conjoon\Data\Validation\ValidationErrors;
 use Conjoon\JsonApi\Query\Query;
-use Conjoon\JsonApi\Query\Validation\Parameter\PnFilterRule;
-use Conjoon\MailClient\Data\Resource\MailFolderDescription;
 use Conjoon\MailClient\Data\Resource\MessageItemDescription;
 use Conjoon\MailClient\JsonApi\Query\BaseListQueryValidator;
-use Conjoon\MailClient\JsonApi\Query\MailFolderListQueryValidator;
 use Conjoon\Web\Validation\Parameter\Rule\IntegerValueRule;
 use Conjoon\Web\Validation\Parameter\Rule\JsonEncodedRule;
 use Conjoon\MailClient\JsonApi\Query\MessageItemListQueryValidator;
@@ -118,6 +115,17 @@ class MessageItemListQueryValidatorTest extends TestCase
         $this->assertSame(1, $errors->count());
         $this->assertStringContainsString(
             "parameter \"page[limit]\"'s value \"-100\" is not >= 1",
+            $errors[0]->getDetails()
+        );
+
+        $errors = new ValidationErrors();
+        $validator->validate(
+            $this->getJsonApiQuery(
+                "{$pageString}&filter={\"IN\" : {\"id\": [1, 2, 3]}"
+            ), $errors);
+        $this->assertSame(1, $errors->count());
+        $this->assertStringContainsString(
+            "found additional parameters \"filter\"",
             $errors[0]->getDetails()
         );
 

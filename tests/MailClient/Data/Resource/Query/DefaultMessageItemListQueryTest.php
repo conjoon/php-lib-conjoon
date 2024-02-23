@@ -59,6 +59,12 @@ class DefaultMessageItemListQueryTest extends TestCase
         );
     }
 
+    public function testGetFilter() {
+        $bag = new ParameterBag([]);
+        $resourceQuery = $this->createMessageItemListQuery($bag);
+        $this->assertNull($resourceQuery->getFilter());
+    }
+
 
     public function testGetOptions() {
 

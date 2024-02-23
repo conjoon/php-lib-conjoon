@@ -29,6 +29,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
+use Conjoon\Data\Filter\Filter;
 use Conjoon\Data\Resource\RepositoryQuery;
 use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Sort\SortInfoList;
@@ -72,6 +73,16 @@ abstract class MessageItemListQuery extends RepositoryQuery
      * @return SortInfoList|null
      */
     abstract public function getSort(): ?SortInfoList;
+
+    /**
+     * Returns filter information for this query.
+     * Returns null if no filter information is  available.
+     * Returns the fields that should be queried for the specified ResourceDescription's
+     * className.
+     *
+     * @return Filter|null
+     */
+    abstract public function getFilter(): ?Filter;
 
 
     /**

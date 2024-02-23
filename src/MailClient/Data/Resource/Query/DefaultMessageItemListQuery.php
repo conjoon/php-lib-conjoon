@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Conjoon\MailClient\Data\Resource\Query;
 
+use Conjoon\Data\Filter\Filter;
 use Conjoon\Data\Resource\ResourceDescription;
 use Conjoon\Data\Resource\ResourceDescriptionList;
 use Conjoon\Data\Sort\SortDirection;
@@ -82,5 +83,10 @@ class DefaultMessageItemListQuery extends MessageItemListQuery
         }
 
         return new DefaultMessageBodyOptions($opts);
+    }
+
+    public function getFilter(): ?Filter
+    {
+        return null;
     }
 }
